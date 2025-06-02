@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Interactive Motion Simulations - Main Menu</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      overflow: hidden;
+    }
+    .wrapper {
+      display: flex;
+      height: 100%;
+      background: linear-gradient(to right, #09203f 0%, #537895 100%);
+    }
+    nav {
+      width: 220px;
+      background: rgba(0, 0, 0, 0.6); /* semi-transparent */
+      color: white;
+      display: flex;
+      flex-direction: column;
+      padding: 1rem;
+    }
+    nav h2 {
+      margin-top: 0;
+      margin-bottom: 1rem;
+      font-weight: normal;
+    }
+    nav a {
+      color: #ccc;
+      text-decoration: none;
+      padding: 0.5rem 0.75rem;
+      margin-bottom: 0.3rem;
+      border-radius: 4px;
+    }
+    nav a.active, nav a:hover {
+      background: #4a90e2;
+      color: white;
+    }
+    main {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 1rem;
+      overflow-y: auto;
+    }
+    #description {
+      background: white;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgb(0 0 0 / 0.1);
+      max-width: 600px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrapper">
+  <nav>
+    <h2>Simulations</h2>
+    <a href="index.html" class="active">Main Menu</a>
+    <a href="projectile.html">Projectile Motion</a>
+    <a href="oscillatory.html">Buoyancy</a>
+    <a href="sharmonic.html">Force</a>
+    <a href="circular.html">Acceleration</a>
+    <a href="random.html">Velocity</a>
+    <a href="linear.html">Work</a>
+    <a href="translational.html">Fusion</a>
+    <a href="accelerated.html">Fission</a>
+    <a href="decelerated.html">Fission</a>
+    <a href="periodic.html">Fission</a>
+  </nav>
+
+  <main>
+    <h1 style="color: white;">Welcome to Interactive Physics Simulations</h1>
+    <div id="description">
+      <p>Select a simulation from the menu to explore physics concepts interactively.</p>
+      <ul>
+        <li>Projectile Motion</li>
+        <li>Buoyancy</li>
+        <li>Force</li>
+        <li>Acceleration</li>
+        <li>Velocity</li>
+        <li>Work</li>
+        <li>Nuclear Fusion</li>
+        <li>Nuclear Fission</li>
+      </ul>
+    </div>
+  </main>
+</div>
+
+</body>
+</html>
