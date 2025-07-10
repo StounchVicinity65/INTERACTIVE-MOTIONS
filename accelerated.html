@@ -1,6 +1,37 @@
-<h1>Accelerated Motion</h1>
-<div id="controls">
-  <label>Acceleration: <input type="number" id="acceleration" value="2"></label>
-  <button onclick="simulateAcceleration()">Simulate</button>
-</div>
-<script src="js/accelerated.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Accelerated Motion Simulation</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      text-align: center;
+      background: #f0f0f0;
+    }
+    #controls {
+      margin: 1rem;
+    }
+    canvas {
+      border: 1px solid #ccc;
+      display: block;
+      margin: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Accelerated Motion</h1>
+
+  <div id="controls">
+    <label>Acceleration: <input type="number" id="acceleration" value="2" step="0.1"></label>
+    <button onclick="simulateAcceleration()">Simulate</button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+  <script src="js/accelerated.js"></script>
+
+</body>
+</html>
