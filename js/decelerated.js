@@ -13,24 +13,33 @@ function setup() {
 }
 
 function simulateDeceleration() {
-  x = 100; // Start on the left
+  x = width - 100; // Start on the right
   v = parseFloat(speedInput.value);
   a = -abs(parseFloat(decelInput.value)); // Deceleration is negative
   loop();
 }
 
 function draw() {
-  background(240);
+  // Sky and road background
+  background('#15273C');
+  fill(60);
+  rect(0, height * 0.65, width, height * 0.35); // Road
+  stroke(255);
+  strokeWeight(2);
+  line(0, height * 0.825, width, height * 0.825); // Lane
 
-  fill(0);
-  text("🐢", x, height / 2); // Turtle emoji to suggest slowing down
+  // Draw turtle
+  noStroke();
+  fill(255);
+  text("🐢", x, height * 0.65 - 25); // Turtle above the road
 
   v += a * 0.1;
-  if (v < 0) v = 0; // Don't allow it to reverse direction
+  if (v < 0) v = 0;
 
-  x += v;
+  x -= v; // Move right to left
 
-  if (v === 0 || x > width + 50) {
-    noLoop(); // Stop if motion ends or goes off-screen
+  if (v === 0 || x < -50) {
+    noLoop(); // Stop when velocity is zero or off-screen
   }
 }
+
