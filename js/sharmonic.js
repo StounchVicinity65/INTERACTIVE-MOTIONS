@@ -1,34 +1,38 @@
 let kInput, massInput;
-let x = 0, v = 0, a = 0, k = 0.5, m = 2;
+let y, vy = 0, ay = 0, k = 0.5, m = 2;
+let restY;
 
 function setup() {
   createCanvas(windowWidth - 240, windowHeight);
   kInput = document.getElementById('k');
   massInput = document.getElementById('mass');
+  restY = height / 2;
+  y = restY + 100;
   noLoop();
 }
 
 function simulateSHM() {
   k = float(kInput.value);
   m = float(massInput.value);
-  x = 100;
-  v = 0;
+  vy = 0;
+  y = restY + 100;
   loop();
 }
 
 function draw() {
-  background('#15273C'); // Dark background
-  a = -(k / m) * x;
-  v += a;
-  v *= 0.99; // Damping
-  x += v;
+  background('#15273C');
+  
+  // Vertical SHM: a = -k/m * (displacement from rest)
+  ay = -(k / m) * (y - restY);
+  vy += ay;
+  vy *= 0.99; // damping
+  y += vy;
 
-  stroke(255); // White string
+  stroke(255);
   strokeWeight(2);
-  line(width / 2, 0, width / 2 + x, height / 2); // String
+  line(width / 2, 0, width / 2, y); // vertical spring/string
 
   noStroke();
-  fill(255, 100, 100); // Ball color
-  ellipse(width / 2 + x, height / 2, 50); // Ball
+  fill(255, 100, 100);
+  ellipse(width / 2, y, 50); // Ball hanging vertically
 }
-
