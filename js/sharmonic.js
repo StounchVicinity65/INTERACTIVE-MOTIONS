@@ -17,14 +17,17 @@ function simulateSHM() {
 }
 
 function draw() {
-  background('#15273C');  // Dark background
+  background('#15273C'); // Dark background
   a = -(k / m) * x;
   v += a;
   v *= 0.99; // Damping
   x += v;
 
-  fill(255, 100, 100);  // Ball color
-  noStroke();
-  ellipse(width / 2 + x, height / 2, 50);  // Oscillating ball
-}
+  stroke(255); // White string
+  strokeWeight(2);
+  line(width / 2, 0, width / 2 + x, height / 2); // String
 
+  noStroke();
+  fill(255, 100, 100); // Ball color
+  ellipse(width / 2 + x, height / 2, 50); // Ball
+}
