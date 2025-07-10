@@ -1,13 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-<head> ... </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Simple Harmonic Motion</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      text-align: center;
+      background: #f0f0f0;
+    }
+    #controls {
+      margin: 1rem;
+    }
+    canvas {
+      border: 1px solid #ccc;
+      display: block;
+      margin: auto;
+    }
+  </style>
+</head>
 <body>
+
   <h1>Simple Harmonic Motion</h1>
   <div id="controls">
     <label>Spring Constant (k): <input type="number" id="k" value="0.5"></label>
     <label>Mass (m): <input type="number" id="mass" value="2"></label>
     <button onclick="simulateSHM()">Simulate</button>
   </div>
+
+  <!-- Add p5.js before your JS file -->
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
   <script src="js/sharmonic.js"></script>
+
 </body>
 </html>
