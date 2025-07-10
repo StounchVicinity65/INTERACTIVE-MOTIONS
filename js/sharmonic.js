@@ -1,5 +1,6 @@
 let kInput, massInput;
 let x = 0, v = 0, a = 0, k = 0.5, m = 2;
+let baseX, ballX;
 
 function setup() {
   createCanvas(windowWidth - 240, windowHeight);
@@ -9,8 +10,8 @@ function setup() {
 }
 
 function simulateSHM() {
-  k = float(kInput.value);
-  m = float(massInput.value);
+  k = parseFloat(kInput.value);
+  m = parseFloat(massInput.value);
   x = 100;
   v = 0;
   loop();
@@ -19,24 +20,22 @@ function simulateSHM() {
 function draw() {
   background('#15273C');
 
-  // Physics
+  // Physics update
   a = -(k / m) * x;
   v += a;
-  v *= 0.99; // Damping
+  v *= 0.99; // damping
   x += v;
 
-  // Anchor point (left fixed)
-  let baseX = width / 2 - 150;
-  let ballX = baseX + x;
+  baseX = width / 2 - 150;
+  ballX = baseX + x;
 
-  // Draw "string"
-  stroke(255);
+  // Draw string
+  stroke(255); // white
   strokeWeight(3);
   line(baseX, height / 2, ballX, height / 2);
 
-  // Draw mass (ball)
+  // Draw ball
   noStroke();
   fill(255, 100, 100);
   ellipse(ballX, height / 2, 50);
 }
-
