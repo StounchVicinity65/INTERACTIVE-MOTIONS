@@ -30,12 +30,12 @@ function draw() {
   ballX = baseX + x;
 
   // Draw string
-  stroke(255); // white
+  stroke(0); // black string
   strokeWeight(3);
   line(baseX, height / 2, ballX, height / 2);
 
   // Draw ball
   noStroke();
-  fill(255, 100, 100);
+  fill(255, 100, 100); // red-ish
   ellipse(ballX, height / 2, 50);
 }
