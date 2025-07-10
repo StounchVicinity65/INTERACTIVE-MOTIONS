@@ -1,6 +1,5 @@
 let kInput, massInput;
 let x = 0, v = 0, a = 0, k = 0.5, m = 2;
-let baseX, ballX;
 
 function setup() {
   createCanvas(windowWidth - 240, windowHeight);
@@ -20,22 +19,24 @@ function simulateSHM() {
 function draw() {
   background('#15273C');
 
-  // Physics update
+  // SHM physics
   a = -(k / m) * x;
   v += a;
-  v *= 0.99; // damping
+  v *= 0.99;
   x += v;
 
-  baseX = width / 2 - 150;
-  ballX = baseX + x;
+  const anchorX = width / 2;
+  const anchorY = 100;
+  const ballX = anchorX + x;
+  const ballY = anchorY + 200;
 
-  // Draw string
-  stroke(0); // black string
+  // Draw string (white)
+  stroke(255);
   strokeWeight(3);
-  line(baseX, height / 2, ballX, height / 2);
+  line(anchorX, anchorY, ballX, ballY);
 
   // Draw ball
   noStroke();
-  fill(255, 100, 100); // red-ish
-  ellipse(ballX, height / 2, 50);
+  fill(255, 100, 100);
+  ellipse(ballX, ballY, 50);
 }
