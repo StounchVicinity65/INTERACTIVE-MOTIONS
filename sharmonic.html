@@ -3,14 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Simple Harmonic Motion (Pendulum) Simulation</title>
+  <title>Simple Harmonic Motion</title>
   <style>
     body {
       margin: 0;
       font-family: sans-serif;
       text-align: center;
-      background: #15273C;
-      color: white;
+      background: white;
     }
     #controls {
       margin: 1rem;
@@ -27,8 +26,7 @@
   <h1>Simple Harmonic Motion</h1>
 
   <div id="controls">
-    <label>Initial Angle (°): <input type="number" id="angle" value="15"></label>
-    <label>Length (px): <input type="number" id="length" value="200"></label>
+    <label>Initial Angle (degrees): <input type="number" id="angle" value="30" min="-90" max="90"></label>
     <button onclick="simulateSHM()">Simulate</button>
   </div>
 
@@ -37,4 +35,3 @@
 
 </body>
 </html>
-
