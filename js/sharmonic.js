@@ -1,28 +1,48 @@
-let kInput, massInput;
-let x = 0, v = 0, a = 0, k = 0.5, m = 2;
+let angleInput;
+let theta = 0;        // current angle (radians)
+let omega = 0;        // angular velocity
+let alpha = 0;        // angular acceleration
+const g = 9.8;        // gravity
+const L = 200;        // length of pendulum arm (pixels)
+const damping = 0.995;
 
 function setup() {
   createCanvas(windowWidth - 240, windowHeight);
-  kInput = document.getElementById('k');
-  massInput = document.getElementById('mass');
+  angleInput = document.getElementById('angle');
   noLoop();
 }
 
 function simulateSHM() {
-  k = float(kInput.value);
-  m = float(massInput.value);
-  x = 100;
-  v = 0;
+  // Convert degrees to radians for initial angle
+  theta = radians(parseFloat(angleInput.value));
+  omega = 0;
   loop();
 }
 
 function draw() {
-  background(240);
-  a = -(k / m) * x;
-  v += a;
-  v *= 0.99; // Damping
-  x += v;
+  background(255);
 
+  // Pendulum physics (small angle approx)
+  alpha = -(g / L) * theta;
+  omega += alpha;
+  omega *= damping; // some damping
+  theta += omega;
+
+  // Origin point (fixed)
+  let originX = width / 2;
+  let originY = height / 4;
+
+  // Position of the ball
+  let ballX = originX + L * sin(theta);
+  let ballY = originY + L * cos(theta);
+
+  // Draw string
+  stroke(0);
+  strokeWeight(2);
+  line(originX, originY, ballX, ballY);
+
+  // Draw bob
+  noStroke();
   fill(255, 100, 100);
-  ellipse(width / 2 + x, height / 2, 50);
+  ellipse(ballX, ballY, 50);
 }
