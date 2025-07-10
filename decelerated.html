@@ -9,16 +9,15 @@
       margin: 0;
       font-family: sans-serif;
       text-align: center;
-      background: #15273C;
-      color: white;
+      background: #f0f0f0;
     }
     #controls {
       margin: 1rem;
     }
     canvas {
+      border: 1px solid #ccc;
       display: block;
       margin: auto;
-      border: 1px solid #ccc;
     }
   </style>
 </head>
@@ -27,7 +26,7 @@
   <h1>Decelerated Motion</h1>
 
   <div id="controls">
-    <label>Initial Speed: <input type="number" id="speed" value="10"></label>
+    <label>Initial Speed: <input type="number" id="speed" value="8"></label>
     <label>Deceleration: <input type="number" id="deceleration" value="1"></label>
     <button onclick="simulateDeceleration()">Simulate</button>
   </div>
@@ -37,5 +36,6 @@
 
 </body>
 </html>
+
 
 
