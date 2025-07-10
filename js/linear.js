@@ -1,4 +1,6 @@
-let speedInput, posX = 0, speed = 3;
+let speedInput;
+let posX = 0;
+let speed = 3;
 
 function setup() {
   createCanvas(windowWidth - 240, windowHeight);
@@ -14,8 +16,12 @@ function simulateLinear() {
 
 function draw() {
   background(240);
+
   fill(0, 200, 150);
-  ellipse(posX, height / 2, 40);
+  noStroke();
+  ellipse(posX, height / 2, 40); // Moving ball
+
   posX += speed;
-  if (posX > width) posX = 0;
+
+  }
 }
