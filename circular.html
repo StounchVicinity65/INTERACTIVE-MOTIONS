@@ -1,7 +1,37 @@
-<h1>Circular Motion</h1>
-<div id="controls">
-  <label>Radius: <input type="number" id="radius" value="100"></label>
-  <label>Speed: <input type="number" id="speed" value="5"></label>
-  <button onclick="simulateCircular()">Simulate</button>
-</div>
-<script src="js/circular.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Circular Motion</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      text-align: center;
+      background: #f0f0f0;
+    }
+    #controls {
+      margin: 1rem;
+    }
+    canvas {
+      border: 1px solid #ccc;
+      display: block;
+      margin: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Circular Motion</h1>
+  <div id="controls">
+    <label>Radius: <input type="number" id="radius" value="100"></label>
+    <label>Speed: <input type="number" id="speed" value="5"></label>
+    <button onclick="simulateCircular()">Simulate</button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+  <script src="js/circular.js"></script>
+
+</body>
+</html>
