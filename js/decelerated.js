@@ -55,7 +55,7 @@ function draw() {
 
   // Turtle emoji
   fill(0);
-  text("🐢", x, roadY + roadHeight / 2);
+  text("🚗", x, roadY + roadHeight / 2);
 
   // Motion update
   v += a * 0.1;
