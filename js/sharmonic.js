@@ -9,36 +9,22 @@ function setup() {
 }
 
 function simulateSHM() {
-  k = parseFloat(kInput.value);
-  m = parseFloat(massInput.value);
+  k = float(kInput.value);
+  m = float(massInput.value);
   x = 100;
   v = 0;
   loop();
 }
 
 function draw() {
-  background('#15273C');
-
-  // SHM calculation
+  background('#15273C');  // Dark background
   a = -(k / m) * x;
   v += a;
-  v *= 0.99;
+  v *= 0.99; // Damping
   x += v;
 
-  const anchorX = width / 2;
-  const anchorY = 100;
-  const stringLength = 200;
-
-  const ballX = anchorX + x;
-  const ballY = anchorY + stringLength;
-
-  // Draw fixed vertical string
-  stroke(255);
-  strokeWeight(3);
-  line(anchorX, anchorY, anchorX, anchorY + stringLength);
-
-  // Draw ball (moves horizontally only)
+  fill(255, 100, 100);  // Ball color
   noStroke();
-  fill(255, 100, 100);
-  ellipse(ballX, ballY, 50);
+  ellipse(width / 2 + x, height / 2, 50);  // Oscillating ball
 }
+
