@@ -19,7 +19,7 @@ function simulateSHM() {
 function draw() {
   background('#15273C');
 
-  // SHM physics
+  // SHM calculation
   a = -(k / m) * x;
   v += a;
   v *= 0.99;
@@ -27,15 +27,17 @@ function draw() {
 
   const anchorX = width / 2;
   const anchorY = 100;
-  const ballX = anchorX + x;
-  const ballY = anchorY + 200;
+  const stringLength = 200;
 
-  // Draw string (white)
+  const ballX = anchorX + x;
+  const ballY = anchorY + stringLength;
+
+  // Draw fixed vertical string
   stroke(255);
   strokeWeight(3);
-  line(anchorX, anchorY, ballX, ballY);
+  line(anchorX, anchorY, anchorX, anchorY + stringLength);
 
-  // Draw ball
+  // Draw ball (moves horizontally only)
   noStroke();
   fill(255, 100, 100);
   ellipse(ballX, ballY, 50);
