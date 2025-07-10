@@ -20,6 +20,7 @@ function draw() {
   background(240);
   a = -(k / m) * x;
   v += a;
+  v *= 0.99; // Damping
   x += v;
 
   fill(255, 100, 100);
