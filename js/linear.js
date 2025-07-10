@@ -9,9 +9,14 @@ function setup() {
 }
 
 function simulateLinear() {
-  speed = parseFloat(speedInput.value);
-  posX = 0;
-  loop();
+  const val = parseFloat(speedInput.value);
+  if (!isNaN(val) && val >= 0) {
+    speed = val;
+    posX = 0;
+    loop();
+  } else {
+    alert("Please enter a valid non-negative speed.");
+  }
 }
 
 function draw() {
@@ -21,4 +26,3 @@ function draw() {
   posX += speed;
   if (posX > width) posX = 0;
 }
-
