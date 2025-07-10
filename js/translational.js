@@ -42,5 +42,5 @@ function draw() {
 
   textSize(40);
   textAlign(CENTER, CENTER);
-  text('😊', posX, posY);
+  text('😀', posX, posY);
 }
