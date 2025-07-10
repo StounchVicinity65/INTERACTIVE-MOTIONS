@@ -1,41 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Projectile Motion Simulation</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: sans-serif;
-      text-align: center;
-      background: #f0f0f0;
+let angleInput, speedInput;
+let projectile = null;
+
+function setup() {
+  createCanvas(windowWidth - 240, windowHeight);
+  angleInput = document.getElementById('angle');
+  speedInput = document.getElementById('speed');
+}
+
+function launchProjectile() {
+  let angle = radians(parseFloat(angleInput.value));
+  let speed = parseFloat(speedInput.value);
+  projectile = {
+    x: 220,
+    y: height - 220,
+    vx: speed * cos(angle),
+    vy: -speed * sin(angle),
+    t: 0,
+    angle: angle
+  };
+}
+
+function draw() {
+  background(240);
+  noStroke();
+
+  if (projectile) {
+    projectile.t += 0.1;
+    let x = projectile.x + projectile.vx * projectile.t;
+    let y = projectile.y + projectile.vy * projectile.t + 0.5 * 9.8 * sq(projectile.t);
+
+    // Draw arrow at (x, y) with orientation based on velocity
+    let dx = projectile.vx;
+    let dy = projectile.vy + 9.8 * projectile.t;
+    let theta = atan2(dy, dx);
+
+    push();
+    translate(x, y);
+    rotate(theta);
+    fill(255, 50, 50);
+    triangle(-15, -5, -15, 5, 0, 0); // Arrowhead
+    rect(-25, -3, 10, 6);            // Arrow shaft
+    pop();
+
+    // Stop animation when projectile goes below ground
+    if (y > height) {
+      projectile = null;
     }
-    #controls {
-      margin: 1rem;
-    }
-    canvas {
-      border: 1px solid #ccc;
-      display: block;
-      margin: auto;
-    }
-  </style>
-</head>
-<body>
-
-  <h1>Projectile Motion</h1>
-
-  <div id="controls">
-    <label>Angle: <input type="number" id="angle" value="45">°</label>
-    <label>Speed: <input type="number" id="speed" value="10"> units</label>
-    <button onclick="launchProjectile()">Launch</button>
-  </div>
-
-  
-  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
-
-  
-  <script src="js/projectile.js"></script>
-
-</body>
-</html>
+  }
+}
