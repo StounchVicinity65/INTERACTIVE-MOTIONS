@@ -1,5 +1,7 @@
 let accelInput;
-let x, v, a;
+let x = 0;
+let v = 0;
+let a = -2; // default to move left
 
 function setup() {
   createCanvas(windowWidth - 240, windowHeight);
@@ -10,64 +12,58 @@ function setup() {
 }
 
 function simulateAcceleration() {
-  a = -abs(parseFloat(accelInput.value));  // Negative to move left
-  x = width - 50;  // Start near right edge
+  x = width - 100;  // Start near right edge
   v = 0;
+  a = -abs(parseFloat(accelInput.value)); // Ensure it's negative to move left
   loop();
 }
 
 function draw() {
-  // Sky (background)
-  background(135, 206, 235);  // light blue sky
+  background(135, 206, 235); // Sky blue
 
-  // Grass (top and bottom)
-  fill(60, 179, 113); // medium sea green
+  // Grass top and bottom
+  fill(60, 179, 113);
   rect(0, 0, width, height * 0.3);
   rect(0, height * 0.7, width, height * 0.3);
 
   // Road
-  fill(50);
   let roadY = height * 0.5;
   let roadHeight = 100;
+  fill(50);
   rect(0, roadY, width, roadHeight);
 
-  // Lane lines (dashed)
+  // Lane stripes
   stroke(255);
   strokeWeight(4);
-  let dashWidth = 30;
-  let gapWidth = 20;
-  let yLine = roadY + roadHeight / 2;
-  for (let i = 0; i < width; i += dashWidth + gapWidth) {
-    line(i, yLine, i + dashWidth, yLine);
+  for (let i = 0; i < width; i += 40) {
+    line(i, roadY + roadHeight / 2, i + 20, roadY + roadHeight / 2);
   }
   noStroke();
 
-  // Trees (simple circles + rectangles) on both sides
-  let treeSpacing = 150;
-  for (let i = 0; i < width; i += treeSpacing) {
+  // Trees (left and right sides)
+  let spacing = 120;
+  for (let i = 0; i < width; i += spacing) {
     // Left side tree
-    fill(139, 69, 19); // brown trunk
-    rect(i + 20, roadY - 40, 10, 40);
-    fill(34, 139, 34); // green leaves
-    ellipse(i + 25, roadY - 60, 40, 50);
+    fill(139, 69, 19);
+    rect(i + 20, roadY - 60, 10, 40);
+    fill(34, 139, 34);
+    ellipse(i + 25, roadY - 70, 40);
 
     // Right side tree
     fill(139, 69, 19);
-    rect(i + 50, roadY + roadHeight, 10, 40);
+    rect(i + 60, roadY + roadHeight + 20, 10, 40);
     fill(34, 139, 34);
-    ellipse(i + 55, roadY + roadHeight + 20, 40, 50);
+    ellipse(i + 65, roadY + roadHeight + 20, 40);
   }
 
-  // Draw the car emoji
-  fill(255, 0, 100);
+  // Car (🚗)
+  fill(0);
   text("🚗", x, roadY + roadHeight / 2);
 
-  // Update position and velocity
+  // Physics update
   v += a * 0.1;
   x += v;
 
-  // Stop animation if car goes off screen left
-  if (x < -50) {
-    noLoop();
-  }
+  // Stop if off screen
+  if (x < -50) noLoop();
 }
