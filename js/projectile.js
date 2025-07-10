@@ -29,7 +29,7 @@ function draw() {
     let x = projectile.x + projectile.vx * projectile.t;
     let y = projectile.y + projectile.vy * projectile.t + 0.5 * 9.8 * sq(projectile.t);
 
-    text("🦯", x, y);  // Draw emoji instead of shape
+    text("🪨", x, y);  // Draw emoji instead of shape
 
     if (y > height) {
       projectile = null;
