@@ -16,5 +16,10 @@ function draw() {
   background(240);
   fill(150, 100, 255);
   ellipse(pos, height / 2, 40);
-  if (pos < target) pos += 2;
+  
+  if (pos < target) {
+    pos += 2;
+  } else {
+    noLoop(); // Stop when target is reached
+  }
 }
