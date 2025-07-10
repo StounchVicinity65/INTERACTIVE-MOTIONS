@@ -9,19 +9,16 @@ function setup() {
 }
 
 function simulateLinear() {
-  speed = float(speedInput.value);
+  speed = parseFloat(speedInput.value);
   posX = 0;
   loop();
 }
 
 function draw() {
   background(240);
-
   fill(0, 200, 150);
-  noStroke();
-  ellipse(posX, height / 2, 40); // Moving ball
-
+  ellipse(posX, height / 2, 40);
   posX += speed;
-
-  }
+  if (posX > width) posX = 0;
 }
+
