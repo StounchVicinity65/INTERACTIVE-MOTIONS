@@ -31,7 +31,7 @@ function draw() {
   // Draw turtle
   noStroke();
   fill(255);
-  text("🐢", x, height * 0.65 - 25); // Turtle above the road
+  text("🚗", x, height * 0.65 - 25); // Turtle above the road
 
   v += a * 0.1;
   if (v < 0) v = 0;
