@@ -31,3 +31,4 @@ function draw() {
   fill(255, 100, 100); // Ball color
   ellipse(width / 2 + x, height / 2, 50); // Ball
 }
+
