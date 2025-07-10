@@ -17,12 +17,26 @@ function simulateSHM() {
 }
 
 function draw() {
-  background(240);
+  background('#15273C');
+
+  // Physics
   a = -(k / m) * x;
   v += a;
   v *= 0.99; // Damping
   x += v;
 
+  // Anchor point (left fixed)
+  let baseX = width / 2 - 150;
+  let ballX = baseX + x;
+
+  // Draw "string"
+  stroke(255);
+  strokeWeight(3);
+  line(baseX, height / 2, ballX, height / 2);
+
+  // Draw mass (ball)
+  noStroke();
   fill(255, 100, 100);
-  ellipse(width / 2 + x, height / 2, 50);
+  ellipse(ballX, height / 2, 50);
 }
+
