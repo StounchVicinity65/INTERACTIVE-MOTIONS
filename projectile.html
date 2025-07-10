@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Projectile Motion Simulation</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      text-align: center;
+      background: #f0f0f0;
+    }
+    #controls {
+      margin: 1rem;
+    }
+    canvas {
+      border: 1px solid #ccc;
+      display: block;
+      margin: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Projectile Motion</h1>
+
+  <div id="controls">
+    <label>Angle: <input type="number" id="angle" value="45">°</label>
+    <label>Speed: <input type="number" id="speed" value="10"> units</label>
+    <button onclick="launchProjectile()">Launch</button>
+  </div>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+
+  
+  <script src="js/projectile.js"></script>
+
+</body>
+</html>
