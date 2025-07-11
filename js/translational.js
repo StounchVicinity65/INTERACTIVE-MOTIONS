@@ -1,46 +1,48 @@
-let displacementInput, angleInput;
-let posX = 100, posY = 300;
-let targetX, targetY;
-let vx = 0, vy = 0;
-let moving = false;
+let positionInput, velocityInput;
+let x = 0;
+let v = 0;
+let running = false;
 
 function setup() {
-  createCanvas(windowWidth - 240, windowHeight);
-  displacementInput = document.getElementById('displacement');
-  angleInput = document.getElementById('angle');
+  createCanvas(windowWidth - 240, windowHeight * 0.6);
+  positionInput = document.getElementById('position');
+  velocityInput = document.getElementById('velocity');
   noLoop();
 }
 
-function simulateTranslational() {
-  let displacement = float(displacementInput.value);
-  let angleDeg = float(angleInput.value);
-  let angleRad = radians(angleDeg);
-
-  vx = cos(angleRad) * 2;
-  vy = sin(angleRad) * 2;
-
-  targetX = posX + displacement * cos(angleRad);
-  targetY = posY + displacement * sin(angleRad);
-
-  moving = true;
+function startTranslation() {
+  x = parseFloat(positionInput.value);
+  v = parseFloat(velocityInput.value);
+  running = true;
   loop();
 }
 
-function draw() {
-  background(240);
-
-  if (moving) {
-    posX += vx;
-    posY += vy;
-
-    // Stop when close to target
-    if (dist(posX, posY, targetX, targetY) < 2) {
-      moving = false;
-      noLoop();
-    }
-  }
-
-  textSize(40);
-  textAlign(CENTER, CENTER);
-  text('😀', posX, posY);
+function stopTranslation() {
+  running = false;
+  noLoop();
 }
+
+function draw() {
+  background('#dbeafe');
+
+  if (!running) return;
+
+  // Draw ground line
+  stroke(100);
+  strokeWeight(2);
+  line(0, height / 2 + 50, width, height / 2 + 50);
+
+  // Draw moving object (circle)
+  fill(255, 100, 100);
+  noStroke();
+  ellipse(x, height / 2 + 50, 40);
+
+  // Update position
+  x += v;
+
+  // Bounce back if hitting edges
+  if (x > width - 20 || x < 20) {
+    v = -v;
+  }
+}
+
