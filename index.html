@@ -82,38 +82,12 @@
     main {
       flex-grow: 1;
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       align-items: flex-start;
+      gap: 2rem;
       padding: 2rem;
       position: relative;
       z-index: 1;
-    }
-
-    #unitInfoBox {
-      background: rgba(0, 0, 0, 0.6);
-      color: #eee;
-      padding: 1.5rem;
-      border-radius: 12px;
-      max-width: 360px;
-      font-size: 0.95rem;
-      line-height: 1.6;
-      box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
-    }
-
-    #unitInfoBox h2 {
-      margin-top: 0;
-      color: #90cdf4;
-      font-size: 1.2rem;
-    }
-
-    #unitInfoBox h3 {
-      margin-top: 1.2rem;
-      color: #aad5ff;
-    }
-
-    #unitInfoBox p {
-      margin-top: 0.5rem;
-      margin-bottom: 1rem;
     }
 
     #descriptionBox {
@@ -141,12 +115,40 @@
       line-height: 1.6;
     }
 
+    #unitInfoBox {
+      background: rgba(0, 0, 0, 0.7);
+      color: #f0f0f0;
+      padding: 2rem;
+      border-radius: 14px;
+      max-width: 500px;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.35);
+      overflow-y: auto;
+      max-height: 90vh;
+    }
+
+    #unitInfoBox h2 {
+      margin-top: 0;
+      color: #90cdf4;
+      font-size: 1.5rem;
+    }
+
+    #unitInfoBox h3 {
+      margin-top: 1.5rem;
+      color: #aad5ff;
+    }
+
+    #unitInfoBox p {
+      margin-top: 0.4rem;
+      margin-bottom: 1rem;
+    }
+
     #sidebarRight {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.5rem;
-      margin-top: -20px;
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      z-index: 5;
     }
 
     #qrPlaceholder {
@@ -156,17 +158,6 @@
       padding: 6px;
       border-radius: 6px;
       box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
-      margin-top: 0;
-    }
-
-    #palestineFlag {
-      position: fixed;
-      top: 12px;
-      right: 12px;
-      width: 60px;
-      z-index: 1000;
-      border-radius: 4px;
-      box-shadow: 0 0 6px rgba(0,0,0,0.3);
     }
 
     @media (max-width: 800px) {
@@ -183,12 +174,6 @@
   </style>
 </head>
 <body>
-
-  <img
-    id="palestineFlag"
-    src="https://upload.wikimedia.org/wikipedia/commons/0/00/Flag_of_Palestine.svg"
-    alt="Palestine Flag"
-  />
 
   <div class="wrapper">
     <nav role="navigation" aria-label="Simulation navigation">
@@ -207,28 +192,6 @@
     </nav>
 
     <main>
-      <!-- Unit Info Box -->
-      <div id="unitInfoBox">
-        <h2>Understanding the Units</h2>
-        <p>This simulation uses simplified units that help explain how objects move in a visual environment. Here's how to read the values:</p>
-
-        <h3> Pixel (px)</h3>
-        <p>A pixel is the smallest unit of space on the screen. All distances are measured in pixels.</p>
-
-        <h3> Speed: px/frame</h3>
-        <p>This tells how far an object moves every animation frame. Higher value = faster movement.</p>
-
-        <h3> Acceleration: px/frame²</h3>
-        <p>This is how much the object's speed changes per frame. Positive = speeding up, negative = slowing down.</p>
-
-        <h3> Rotation Speed: rad/frame</h3>
-        <p>Used in circular motion. This means how many radians (angles) are rotated per frame.</p>
-
-        <h3> Frame</h3>
-        <p> Each frame is like a step in time. The simulation usually runs at 60 frames per second.</p>
-      </div>
-
-      <!-- Welcome + List -->
       <div id="descriptionBox">
         <h1>Welcome to Interactive Motion Simulations</h1>
         <p>Select a simulation from the menu to explore different kinds of motions interactively.</p>
@@ -245,14 +208,40 @@
         </ul>
       </div>
 
-      <!-- QR Code -->
-      <div id="sidebarRight">
-        <div id="qrPlaceholder"></div>
+      <div id="unitInfoBox">
+        <h2>📏 Understanding Units in Simulations</h2>
+
+        <h3>Why Pixels Instead of Meters?</h3>
+        <p>We use <strong>pixels</strong> because your computer screen is made of them. Simulations run on screen space—not real-world meters. Measuring in pixels makes drawing, collision, and animation easier to handle inside a canvas.</p>
+
+        <h3>Why Frame Instead of Seconds?</h3>
+        <p>We use <strong>frames</strong> because animations are updated frame-by-frame, usually at 60 frames per second. Rather than syncing with real time, this keeps motion smooth and predictable regardless of FPS.</p>
+
+        <h3>📌 px (Pixels)</h3>
+        <p>A pixel is a dot on your screen. All sizes and positions in your simulation are defined in how many pixels wide/tall they are. For example, a car 50px wide is 50 pixels across your screen.</p>
+
+        <h3>➡️ px/frame (Speed)</h3>
+        <p>This means the object moves a certain number of pixels every animation frame. A speed of 5 px/frame means the object shifts 5 pixels on every update.</p>
+
+        <h3>⬆️ px/frame² (Acceleration)</h3>
+        <p>This unit describes how much speed changes per frame. For example, +1 px/frame² increases your speed by 1 pixel each frame—starting from 0 to 1 → 2 → 3 → ... etc.</p>
+
+        <h3>🔁 rad/frame (Angular Speed)</h3>
+        <p>Used for circular motion or rotation. 1 radian ≈ 57.3°. If something rotates at 0.05 rad/frame, it slowly spins 0.05 radians every frame. Useful in circular or oscillatory simulations.</p>
+
+        <h3>⏱️ frame (Time Step)</h3>
+        <p>Each frame is one cycle of animation. If your browser runs at 60 FPS, then 1 frame = 1/60th of a second. All movement, speed, and acceleration are calculated using this time step.</p>
+
+        <h3>⚙️ Summary</h3>
+        <p>These units make simulations simple and hardware-friendly. While not “real-world units,” they behave consistently and can be converted to meters/seconds using calibration or scale.</p>
       </div>
     </main>
+
+    <div id="sidebarRight">
+      <div id="qrPlaceholder"></div>
+    </div>
   </div>
 
-  <!-- QR Code Generator -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
     new QRCode(document.getElementById("qrPlaceholder"), {
@@ -266,4 +255,5 @@
   </script>
 </body>
 </html>
+
 
