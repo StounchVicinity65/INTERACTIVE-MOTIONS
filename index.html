@@ -210,16 +210,17 @@
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
 
-    // Bigger orbits and dots for bigger animation inside same canvas
+    // Doubled radius again, bigger circles and bounce
     const particles = [
-      { radius: 140, angle: 0, color: "#f87171", speed: 0.03, bounce: 0, bounceSpeed: 0.03 },
-      { radius: 90, angle: Math.PI / 2, color: "#60a5fa", speed: 0.045, bounce: 0, bounceSpeed: 0.045 },
-      { radius: 50, angle: Math.PI, color: "#34d399", speed: 0.065, bounce: 0, bounceSpeed: 0.07 }
+      { radius: 280, angle: 0, color: "#f87171", speed: 0.03, bounce: 0, bounceSpeed: 0.03 },
+      { radius: 180, angle: Math.PI / 2, color: "#60a5fa", speed: 0.045, bounce: 0, bounceSpeed: 0.045 },
+      { radius: 100, angle: Math.PI, color: "#34d399", speed: 0.065, bounce: 0, bounceSpeed: 0.07 }
     ];
 
     function clearCanvas() {
-      // Remove blue translucent box by clearing normally
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // Instead of full clear, draw a transparent rect to create trails
+      ctx.fillStyle = 'rgba(13, 32, 63, 0.15)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
 
     function drawOrbitPath(radius) {
@@ -253,7 +254,7 @@
         ctx.shadowBlur = 14;
 
         ctx.beginPath();
-        ctx.arc(x, y, 15, 0, 2 * Math.PI); // bigger circle radius 15
+        ctx.arc(x, y, 15, 0, 2 * Math.PI);
         ctx.fillStyle = p.color;
         ctx.fill();
 
