@@ -1,43 +1,51 @@
-let radius = 100;
-let angle = 0;
-let speedInput;
-let angularSpeed = 0.05;
-let centerX, centerY;
+let particles = [];
+let numParticles = 20;
+let running = false;
+let countInput;
 
 function setup() {
-createCanvas(windowWidth - 240, windowHeight * 0.6);
-angleMode(RADIANS);
-speedInput = document.getElementById('speed');
-centerX = width / 2;
-centerY = height / 2;
-noLoop();
+  createCanvas(windowWidth - 240, windowHeight * 0.6);
+  countInput = document.getElementById('count');
+  noLoop();
 }
 
-function simulateCircular() {
-angularSpeed = parseFloat(speedInput.value);
-angle = 0;
-loop();
+function startRandomMotion() {
+  numParticles = parseInt(countInput.value);
+  particles = [];
+  for (let i = 0; i < numParticles; i++) {
+    particles.push({
+      x: random(width),
+      y: random(height),
+      vx: random(-2, 2),
+      vy: random(-2, 2),
+      size: random(8, 16)
+    });
+  }
+  running = true;
+  loop();
+}
+
+function stopRandomMotion() {
+  running = false;
+  noLoop();
 }
 
 function draw() {
-background('#dbeafe');
+  background('#dbeafe');
 
-// Draw circle path
-noFill();
-stroke(100);
-strokeWeight(2);
-ellipse(centerX, centerY, radius * 2);
+  if (!running) return;
 
-// Calculate position
-let x = centerX + radius * cos(angle);
-let y = centerY + radius * sin(angle);
+  fill(255, 100, 100);
+  noStroke();
 
-// Draw object
-fill(255, 100, 100);
-noStroke();
-ellipse(x, y, 30);
+  for (let p of particles) {
+    p.x += p.vx;
+    p.y += p.vy;
 
-// Angle update
-angle += angularSpeed * 0.05;
-if (angle > TWO_PI) angle = 0;
+    // Bounce off edges
+    if (p.x < 0 || p.x > width) p.vx *= -1;
+    if (p.y < 0 || p.y > height) p.vy *= -1;
+
+    ellipse(p.x, p.y, p.size);
+  }
 }
