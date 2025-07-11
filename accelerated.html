@@ -3,30 +3,76 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Accelerated Motion Simulation</title>
+  <title>🚗 Accelerated Motion</title>
   <style>
     body {
       margin: 0;
       font-family: sans-serif;
       text-align: center;
-      background: #f0f0f0;
+      background: #09203f;
+      color: white;
+    }
+    h1 {
+      margin-top: 1rem;
+    }
+    #definition {
+      max-width: 800px;
+      margin: 1rem auto;
+      background: #00000055;
+      color: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(255,255,255,0.1);
+      font-size: 1rem;
     }
     #controls {
-      margin: 1rem;
+      max-width: 600px;
+      margin: 1rem auto;
+      padding: 1rem;
+      background: #00000055;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(255,255,255,0.1);
+    }
+    label {
+      margin: 0 1rem;
+    }
+    input {
+      padding: 4px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      margin-top: 0.5rem;
+      border: none;
+      background: #2563eb;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #1d4ed8;
     }
     canvas {
-      border: 1px solid #ccc;
       display: block;
-      margin: auto;
+      margin: 1rem auto;
+      max-width: 100%;
+      height: auto;
+      border: 1px solid #ccc;
+      background: #dbeafe;
     }
   </style>
 </head>
 <body>
 
-  <h1>Accelerated Motion</h1>
+  <h1>🚗 Accelerated Motion</h1>
+
+  <div id="definition">
+    <p><strong>Definition:</strong> Accelerated motion occurs when an object's velocity changes over time due to a constant net force. It can result in speeding up, slowing down, or changing direction.</p>
+  </div>
 
   <div id="controls">
-    <label>Acceleration (m/s^2): <input type="number" id="acceleration" value="2" step="0.1"></label>
+    <label>Acceleration (m/s²): <input type="number" id="acceleration" value="2" step="0.1"></label>
     <button onclick="simulateAcceleration()">Simulate</button>
   </div>
 
@@ -35,3 +81,4 @@
 
 </body>
 </html>
+
