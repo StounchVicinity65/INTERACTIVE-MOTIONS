@@ -19,7 +19,7 @@ function simulateSHM() {
 }
 
 function draw() {
-  background(#dbeafe); 
+  background('#dbeafe');  // Soft blue background
 
   // SHM physics
   alpha = -(g / L) * theta;
@@ -35,11 +35,6 @@ function draw() {
   let bobX = originX + L * sin(theta);
   let bobY = originY + L * cos(theta);
 
-  // Draw equilibrium line
-  stroke(180);
-  strokeWeight(1);
-  line(originX - L - 20, originY + L, originX + L + 20, originY + L);
-
   // Draw pendulum string
   stroke(0);
   strokeWeight(2);
@@ -50,4 +45,5 @@ function draw() {
   fill(255, 100, 100);
   ellipse(bobX, bobY, 40);
 }
+
 
