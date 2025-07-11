@@ -83,7 +83,7 @@
       max-width: 360px;
       color: #222;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-      transform: translateY(-20px); /* Move up */
+      transform: translateY(-20px);
     }
 
     #descriptionBox h1 {
@@ -107,7 +107,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      /* no white background now */
+      background: transparent;
     }
 
     #sidebarRight {
@@ -180,7 +180,7 @@
       </div>
 
       <div id="animationBox">
-        <canvas id="mainCanvas" width="300" height="300"></canvas>
+        <canvas id="mainCanvas" width="350" height="350"></canvas>
       </div>
 
       <div id="sidebarRight">
@@ -190,30 +190,80 @@
     </main>
   </div>
 
-  <!-- Animation + QR Code -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
-    const canvas = document.getElementById('mainCanvas');
-    const ctx = canvas.getContext('2d');
-    let angle = 0;
+    const canvas = document.getElementById("mainCanvas");
+    const ctx = canvas.getContext("2d");
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+
+    const particles = [
+      { radius: 80, angle: 0, color: "#f87171", speed: 0.03, bounce: 0, bounceSpeed: 0.03 },
+      { radius: 50, angle: Math.PI / 2, color: "#60a5fa", speed: 0.045, bounce: 0, bounceSpeed: 0.045 },
+      { radius: 30, angle: Math.PI, color: "#34d399", speed: 0.065, bounce: 0, bounceSpeed: 0.07 }
+    ];
+
+    // Clear with slight opacity for trails
+    function clearCanvas() {
+      ctx.fillStyle = 'rgba(13, 32, 63, 0.15)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function drawOrbitPath(radius) {
+      ctx.beginPath();
+      ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([5, 10]);
+      ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
 
     function animate() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      clearCanvas();
+
+      // Draw orbits
+      for (let p of particles) {
+        drawOrbitPath(p.radius);
+      }
+
       ctx.save();
-      ctx.translate(150, 150);
-      ctx.rotate(angle);
-      ctx.fillStyle = '#2563eb';
-      ctx.beginPath();
-      ctx.arc(70, 0, 12, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.translate(centerX, centerY);
+
+      for (let p of particles) {
+        // Bounce calculation (vertical movement on orbit)
+        p.bounce += p.bounceSpeed;
+        let bounceOffset = Math.sin(p.bounce) * 6;
+
+        let x = p.radius * Math.cos(p.angle);
+        let y = p.radius * Math.sin(p.angle) + bounceOffset;
+
+        // Glow effect
+        let glowRadius = 16;
+        ctx.shadowColor = p.color;
+        ctx.shadowBlur = 14;
+
+        // Draw particle
+        ctx.beginPath();
+        ctx.arc(x, y, 10, 0, 2 * Math.PI);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+
+        ctx.shadowBlur = 0; // reset shadow for next draw
+
+        p.angle += p.speed;
+        if (p.angle > 2 * Math.PI) p.angle -= 2 * Math.PI;
+      }
+
       ctx.restore();
-      angle += 0.04;
       requestAnimationFrame(animate);
     }
+
     animate();
 
+    // Generate QR code
     new QRCode(document.getElementById("qrPlaceholder"), {
-      text: "https://your-link.com", // replace with your actual URL
+      text: "https://stounchvicinity65.github.io/INTERACTIVE-MOTIONS/", // Replace with your URL
       width: 100,
       height: 100,
       colorDark: "#000000",
@@ -223,5 +273,6 @@
   </script>
 </body>
 </html>
+
 
  
