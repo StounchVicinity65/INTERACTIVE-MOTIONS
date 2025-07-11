@@ -1,10 +1,10 @@
 let accelInput;
 let x = 0;
 let v = 0;
-let a = -2; // default to move left
+let a = 2;
 
 function setup() {
-  createCanvas(windowWidth - 240, windowHeight);
+  createCanvas(windowWidth - 240, windowHeight * 0.6);
   accelInput = document.getElementById('acceleration');
   noLoop();
   textSize(48);
@@ -12,19 +12,19 @@ function setup() {
 }
 
 function simulateAcceleration() {
-  x = width - 100;  // Start near right edge
+  x = 50; // Start on the left
   v = 0;
-  a = -abs(parseFloat(accelInput.value)); // Ensure it's negative to move left
+  a = parseFloat(accelInput.value);
   loop();
 }
 
 function draw() {
   background(135, 206, 235); // Sky blue
 
-  // Grass top and bottom
+  // Grass
   fill(60, 179, 113);
-  rect(0, 0, width, height * 0.3);
-  rect(0, height * 0.7, width, height * 0.3);
+  rect(0, 0, width, height * 0.2); // Top grass
+  rect(0, height * 0.8, width, height * 0.2); // Bottom grass
 
   // Road
   let roadY = height * 0.5;
@@ -32,7 +32,7 @@ function draw() {
   fill(50);
   rect(0, roadY, width, roadHeight);
 
-  // Lane stripes
+  // Lane markings
   stroke(255);
   strokeWeight(4);
   for (let i = 0; i < width; i += 40) {
@@ -40,23 +40,19 @@ function draw() {
   }
   noStroke();
 
-  // Trees (left and right sides)
+  // Trees
   let spacing = 120;
   for (let i = 0; i < width; i += spacing) {
-    // Left side tree
-    fill(139, 69, 19);
+    fill(139, 69, 19); // trunk
     rect(i + 20, roadY - 60, 10, 40);
-    fill(34, 139, 34);
+    fill(34, 139, 34); // leaves
     ellipse(i + 25, roadY - 70, 40);
 
-    // Right side tree
-    fill(139, 69, 19);
     rect(i + 60, roadY + roadHeight + 20, 10, 40);
-    fill(34, 139, 34);
     ellipse(i + 65, roadY + roadHeight + 20, 40);
   }
 
-  // Car (🚗)
+  // Car
   fill(0);
   text("🚗", x, roadY + roadHeight / 2);
 
@@ -64,6 +60,6 @@ function draw() {
   v += a * 0.1;
   x += v;
 
-  // Stop if off screen
-  if (x < -50) noLoop();
+  // Stop condition
+  if (x > width + 50) noLoop();
 }
