@@ -2,7 +2,8 @@ let angleInput, speedInput;
 let projectile = null;
 
 function setup() {
-  createCanvas(windowWidth - 240, windowHeight * 0.6);
+  const canvasHeight = 400; // Fixed height for visibility
+  createCanvas(windowWidth - 240, canvasHeight);
   angleInput = document.getElementById('angle');
   speedInput = document.getElementById('speed');
   noLoop();
