@@ -26,7 +26,6 @@
       background-size: cover;
     }
 
-    /* Optional gradient overlay for readability */
     body::before {
       content: "";
       position: absolute;
@@ -84,10 +83,37 @@
       flex-grow: 1;
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
       padding: 2rem;
       position: relative;
       z-index: 1;
+    }
+
+    #unitInfoBox {
+      background: rgba(0, 0, 0, 0.6);
+      color: #eee;
+      padding: 1.5rem;
+      border-radius: 12px;
+      max-width: 360px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+    }
+
+    #unitInfoBox h2 {
+      margin-top: 0;
+      color: #90cdf4;
+      font-size: 1.2rem;
+    }
+
+    #unitInfoBox h3 {
+      margin-top: 1.2rem;
+      color: #aad5ff;
+    }
+
+    #unitInfoBox p {
+      margin-top: 0.5rem;
+      margin-bottom: 1rem;
     }
 
     #descriptionBox {
@@ -157,6 +183,7 @@
   </style>
 </head>
 <body>
+
   <img
     id="palestineFlag"
     src="https://upload.wikimedia.org/wikipedia/commons/0/00/Flag_of_Palestine.svg"
@@ -180,6 +207,28 @@
     </nav>
 
     <main>
+      <!-- Unit Info Box -->
+      <div id="unitInfoBox">
+        <h2>Understanding the Units</h2>
+        <p>This simulation uses simplified units that help explain how objects move in a visual environment. Here's how to read the values:</p>
+
+        <h3> Pixel (px)</h3>
+        <p>A pixel is the smallest unit of space on the screen. All distances are measured in pixels.</p>
+
+        <h3> Speed: px/frame</h3>
+        <p>This tells how far an object moves every animation frame. Higher value = faster movement.</p>
+
+        <h3> Acceleration: px/frame²</h3>
+        <p>This is how much the object's speed changes per frame. Positive = speeding up, negative = slowing down.</p>
+
+        <h3> Rotation Speed: rad/frame</h3>
+        <p>Used in circular motion. This means how many radians (angles) are rotated per frame.</p>
+
+        <h3> Frame</h3>
+        <p> Each frame is like a step in time. The simulation usually runs at 60 frames per second.</p>
+      </div>
+
+      <!-- Welcome + List -->
       <div id="descriptionBox">
         <h1>Welcome to Interactive Motion Simulations</h1>
         <p>Select a simulation from the menu to explore different kinds of motions interactively.</p>
@@ -196,6 +245,7 @@
         </ul>
       </div>
 
+      <!-- QR Code -->
       <div id="sidebarRight">
         <div id="qrPlaceholder"></div>
       </div>
@@ -216,3 +266,4 @@
   </script>
 </body>
 </html>
+
