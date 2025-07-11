@@ -1,12 +1,13 @@
 let angleInput, speedInput;
 let projectile = null;
+let trail = [];
 
 function setup() {
   createCanvas(windowWidth - 240, windowHeight * 0.6);
   angleInput = document.getElementById('angle');
   speedInput = document.getElementById('speed');
   noLoop();
-  angleMode(RADIANS); // Ensure radians for rotation
+  angleMode(RADIANS);
 }
 
 function launchProjectile() {
@@ -19,11 +20,13 @@ function launchProjectile() {
     vy: -speed * sin(angle),
     t: 0
   };
+  trail = []; // Clear old trail
   loop();
 }
 
 function resetSimulation() {
   projectile = null;
+  trail = [];
   clear();
   background('#dbeafe');
   noLoop();
@@ -31,6 +34,16 @@ function resetSimulation() {
 
 function draw() {
   background('#dbeafe');
+
+  // Draw trail
+  stroke(100, 100, 255);
+  strokeWeight(3);
+  noFill();
+  beginShape();
+  for (let pos of trail) {
+    vertex(pos.x, pos.y);
+  }
+  endShape();
 
   if (projectile) {
     projectile.t += 0.1;
@@ -40,12 +53,14 @@ function draw() {
     let vx = projectile.vx;
     let vy = projectile.vy + 9.8 * projectile.t;
 
-    let angle = atan2(vy, vx); // Direction of velocity
+    trail.push({ x, y }); // Save current position
 
+    // Draw arrowhead
+    let angle = atan2(vy, vx);
     push();
     translate(x, y);
     rotate(angle);
-    fill(0); // Black arrowhead
+    fill(0);
     noStroke();
     drawArrowhead();
     pop();
@@ -63,4 +78,5 @@ function drawArrowhead() {
   vertex(-10, 5);
   endShape(CLOSE);
 }
+
 
