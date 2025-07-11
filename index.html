@@ -108,7 +108,16 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      /* background removed to fix blue box issue */
+      background: none !important; /* Removes any background */
+      box-shadow: none !important;
+      border: none !important;
+    }
+
+    canvas {
+      background: transparent !important;
+      box-shadow: none !important;
+      border: none !important;
+      display: block;
     }
 
     #sidebarRight {
@@ -126,7 +135,6 @@
       padding: 6px;
       border-radius: 6px;
       box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
-      margin-top: 0;
     }
 
     #palestineFlag {
@@ -223,7 +231,7 @@
 
     function drawOrbitPath(radius) {
       ctx.beginPath();
-      ctx.strokeStyle = 'rgba(255,255,255,0.15)';
+      ctx.strokeStyle = 'rgba(255,255,255,0.1)';
       ctx.lineWidth = 1;
       ctx.setLineDash([5, 10]);
       ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
