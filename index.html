@@ -25,7 +25,8 @@
     .wrapper {
       display: flex;
       height: 100%;
-      background: linear-gradient(to right, var(--main-bg-gradient-start) 0%, var(--main-bg-gradient-end) 100%);
+      background: linear-gradient(to right, var(--main-bg-gradient-start), var(--main-bg-gradient-end));
+      position: relative;
     }
     nav {
       width: 220px;
@@ -34,6 +35,7 @@
       display: flex;
       flex-direction: column;
       padding: 1rem;
+      z-index: 2;
     }
     nav > .logo {
       font-size: 2rem;
@@ -41,8 +43,7 @@
       text-align: center;
     }
     nav h2 {
-      margin-top: 0;
-      margin-bottom: 1rem;
+      margin: 0 0 1rem;
       font-weight: normal;
       text-align: center;
       letter-spacing: 1px;
@@ -54,16 +55,12 @@
       margin-bottom: 0.3rem;
       border-radius: 4px;
       transition: background-color 0.3s ease, color 0.3s ease;
-      user-select: none;
     }
     nav a.active, nav a:hover {
       background: var(--nav-hover-bg);
       color: var(--nav-active-color);
       box-shadow: 0 0 8px rgba(74, 144, 226, 0.7);
-    }
-    nav a.active {
       font-weight: bold;
-      aria-current: page;
     }
     main {
       flex-grow: 1;
@@ -71,34 +68,62 @@
       flex-direction: column;
       padding: 1rem;
       overflow-y: auto;
+      position: relative;
+      z-index: 1;
+      color: white;
       opacity: 0;
       animation: fadeIn 0.7s forwards;
       animation-delay: 0.2s;
     }
     main h1 {
-      color: white;
+      margin-top: 2rem;
       margin-bottom: 1rem;
       text-align: center;
       user-select: none;
     }
     #description {
-      background: white;
-      padding: 1rem;
-      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.95);
+      color: #222;
+      padding: 1.2rem;
+      border-radius: 10px;
       box-shadow: 0 0 8px rgb(0 0 0 / 0.1);
-      max-width: 600px;
+      max-width: 640px;
       margin: auto;
       font-size: 1.1rem;
-      line-height: 1.5;
+      line-height: 1.6;
     }
     #description ul {
       padding-left: 1.2rem;
     }
+    #description li {
+      margin-bottom: 0.5rem;
+    }
+
+    /* Subtle animated background particles */
+    .particles {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(white 1px, transparent 1px);
+      background-size: 40px 40px;
+      opacity: 0.05;
+      animation: float 20s linear infinite;
+      z-index: 0;
+    }
+    @keyframes float {
+      0% {
+        background-position: 0 0;
+      }
+      100% {
+        background-position: 100px 100px;
+      }
+    }
+
     @keyframes fadeIn {
       to {
         opacity: 1;
       }
     }
+
     @media (max-width: 600px) {
       .wrapper {
         flex-direction: column;
@@ -126,6 +151,8 @@
 <body>
 
 <div class="wrapper">
+  <div class="particles"></div>
+
   <nav role="navigation" aria-label="Simulation navigation">
     <div class="logo" aria-hidden="true">⚛</div>
     <h2>Simulations</h2>
@@ -142,19 +169,19 @@
   </nav>
 
   <main>
-    <h1>Welcome to Interactive Motion Simulations</h1>
+    <h1>🌌 Welcome to Interactive Motion Simulations</h1>
     <div id="description">
-      <p>Select a simulation from the menu to explore different kinds of motions interactively.</p>
+      <p>Explore different kinds of motion through interactive simulations:</p>
       <ul>
-        <li>Projectile Motion</li>
-        <li>Oscillatory Motion</li>
-        <li>Simple Harmonic Motion</li>
-        <li>Circular Motion</li>
-        <li>Random Motion</li>
-        <li>Linear Motion</li>
-        <li>Translational Motion</li>
-        <li>Accelerated Motion</li>
-        <li>Decelerated Motion</li>
+        <li>🎯 Projectile Motion</li>
+        <li>🌊 Oscillatory Motion</li>
+        <li>🧲 Simple Harmonic Motion</li>
+        <li>🔄 Circular Motion</li>
+        <li>🎲 Random Motion</li>
+        <li>📏 Linear Motion</li>
+        <li>🚚 Translational Motion</li>
+        <li>🚀 Accelerated Motion</li>
+        <li>🛑 Decelerated Motion</li>
       </ul>
     </div>
   </main>
@@ -162,3 +189,4 @@
 
 </body>
 </html>
+
