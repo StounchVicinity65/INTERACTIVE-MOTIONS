@@ -24,6 +24,7 @@
       height: 100vh;
       overflow: hidden;
       background: linear-gradient(to right, var(--main-bg-start), var(--main-bg-end));
+      position: relative;
     }
 
     .wrapper {
@@ -102,8 +103,8 @@
     }
 
     #animationBox {
-      width: 350px;
-      height: 350px;
+      width: 500px;
+      height: 500px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -118,10 +119,6 @@
       margin-top: -20px;
     }
 
-    #sidebarRight img {
-      width: 60px;
-    }
-
     #qrPlaceholder {
       width: 110px;
       height: 110px;
@@ -130,6 +127,16 @@
       border-radius: 6px;
       box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
       margin-top: 0;
+    }
+
+    #palestineFlag {
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      width: 60px;
+      z-index: 1000;
+      border-radius: 4px;
+      box-shadow: 0 0 6px rgba(0,0,0,0.3);
     }
 
     @media (max-width: 800px) {
@@ -146,6 +153,13 @@
   </style>
 </head>
 <body>
+  <img
+    id="palestineFlag"
+    src="https://upload.wikimedia.org/wikipedia/commons/0/00/Flag_of_Palestine.svg"
+    alt="Palestine Flag"
+    aria-hidden="true"
+  />
+
   <div class="wrapper">
     <nav role="navigation" aria-label="Simulation navigation">
       <div class="logo" aria-hidden="true">⚛</div>
@@ -180,11 +194,10 @@
       </div>
 
       <div id="animationBox">
-        <canvas id="mainCanvas" width="350" height="350"></canvas>
+        <canvas id="mainCanvas" width="500" height="500"></canvas>
       </div>
 
       <div id="sidebarRight">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/0/00/Flag_of_Palestine.svg" alt="Palestine Flag">
         <div id="qrPlaceholder"></div>
       </div>
     </main>
@@ -203,7 +216,6 @@
       { radius: 30, angle: Math.PI, color: "#34d399", speed: 0.065, bounce: 0, bounceSpeed: 0.07 }
     ];
 
-    // Clear with slight opacity for trails
     function clearCanvas() {
       ctx.fillStyle = 'rgba(13, 32, 63, 0.15)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -222,7 +234,6 @@
     function animate() {
       clearCanvas();
 
-      // Draw orbits
       for (let p of particles) {
         drawOrbitPath(p.radius);
       }
@@ -231,25 +242,21 @@
       ctx.translate(centerX, centerY);
 
       for (let p of particles) {
-        // Bounce calculation (vertical movement on orbit)
         p.bounce += p.bounceSpeed;
         let bounceOffset = Math.sin(p.bounce) * 6;
 
         let x = p.radius * Math.cos(p.angle);
         let y = p.radius * Math.sin(p.angle) + bounceOffset;
 
-        // Glow effect
-        let glowRadius = 16;
         ctx.shadowColor = p.color;
         ctx.shadowBlur = 14;
 
-        // Draw particle
         ctx.beginPath();
         ctx.arc(x, y, 10, 0, 2 * Math.PI);
         ctx.fillStyle = p.color;
         ctx.fill();
 
-        ctx.shadowBlur = 0; // reset shadow for next draw
+        ctx.shadowBlur = 0;
 
         p.angle += p.speed;
         if (p.angle > 2 * Math.PI) p.angle -= 2 * Math.PI;
@@ -261,11 +268,10 @@
 
     animate();
 
-    // Generate QR code
     new QRCode(document.getElementById("qrPlaceholder"), {
-      text: "https://stounchvicinity65.github.io/INTERACTIVE-MOTIONS/", // Replace with your URL
-      width: 100,
-      height: 100,
+      text: "https://stounchvicinity65.github.io/INTERACTIVE-MOTIONS/",
+      width: 125,
+      height: 125,
       colorDark: "#000000",
       colorLight: "#ffffff",
       correctLevel: QRCode.CorrectLevel.H
@@ -273,6 +279,7 @@
   </script>
 </body>
 </html>
+
 
 
  
