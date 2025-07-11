@@ -24,7 +24,7 @@ function simulateOscillation() {
 }
 
 function draw() {
-  background('#e0f7fa'); // sky blue
+  background('#dbeafe'); 
 
   // Draw equilibrium line
   stroke(0);
