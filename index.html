@@ -120,7 +120,7 @@
       color: #f0f0f0;
       padding: 2rem;
       border-radius: 14px;
-      max-width: 500px;
+      max-width: 1000px;
       font-size: 0.95rem;
       line-height: 1.7;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.35);
@@ -212,28 +212,31 @@
         <h2>📏 Understanding Units in Simulations</h2>
 
         <h3>Why Pixels Instead of Meters?</h3>
-        <p>We use <strong>pixels</strong> because your computer screen is made of them. Simulations run on screen space—not real-world meters. Measuring in pixels makes drawing, collision, and animation easier to handle inside a canvas.</p>
+        <p>Most screens use pixels to display content, not meters. Since we’re working within a computer screen, measuring positions and distances in <strong>pixels</strong> is logical and precise for visual rendering. 1px is a real measurable dot on the screen.</p>
 
-        <h3>Why Frame Instead of Seconds?</h3>
-        <p>We use <strong>frames</strong> because animations are updated frame-by-frame, usually at 60 frames per second. Rather than syncing with real time, this keeps motion smooth and predictable regardless of FPS.</p>
+        <h3>Why Frames Instead of Seconds?</h3>
+        <p>In p5.js and most animation libraries, simulations are updated per frame. Using <strong>frames</strong> makes time handling simpler for animation. If your simulation runs at 60 frames per second (FPS), then each frame is 1/60th of a second. So, 1 px/frame ≈ 60 px/sec (if your FPS is 60).</p>
 
         <h3>📌 px (Pixels)</h3>
-        <p>A pixel is a dot on your screen. All sizes and positions in your simulation are defined in how many pixels wide/tall they are. For example, a car 50px wide is 50 pixels across your screen.</p>
+        <p>A pixel is the smallest visual unit on a screen. If a ball is drawn at 300 px, it appears 300 pixels from the left edge of the canvas. It’s not a physical measurement—it’s screen-relative.</p>
 
         <h3>➡️ px/frame (Speed)</h3>
-        <p>This means the object moves a certain number of pixels every animation frame. A speed of 5 px/frame means the object shifts 5 pixels on every update.</p>
+        <p>This defines how much the object moves in 1 frame. For example, 5 px/frame means every time draw() runs, the object shifts 5 pixels. If you want smoother motion, decrease the speed.</p>
 
         <h3>⬆️ px/frame² (Acceleration)</h3>
-        <p>This unit describes how much speed changes per frame. For example, +1 px/frame² increases your speed by 1 pixel each frame—starting from 0 to 1 → 2 → 3 → ... etc.</p>
+        <p>This tells us how much the <strong>speed changes per frame</strong>. An acceleration of 1 px/frame² means the object speeds up by 1 pixel every frame. So: 0 → 1 → 2 → 3 px/frame and so on.</p>
 
         <h3>🔁 rad/frame (Angular Speed)</h3>
-        <p>Used for circular motion or rotation. 1 radian ≈ 57.3°. If something rotates at 0.05 rad/frame, it slowly spins 0.05 radians every frame. Useful in circular or oscillatory simulations.</p>
+        <p><strong>Radians per frame</strong> is how fast an object rotates. 1 radian ≈ 57.3 degrees. A value of 0.1 rad/frame means an object turns 0.1 radians each frame. Use this in spinning or orbiting animations.</p>
 
         <h3>⏱️ frame (Time Step)</h3>
-        <p>Each frame is one cycle of animation. If your browser runs at 60 FPS, then 1 frame = 1/60th of a second. All movement, speed, and acceleration are calculated using this time step.</p>
+        <p>A frame is one visual update cycle. All calculations (motion, acceleration, etc.) use “per frame” values. This simplifies logic and keeps movement consistent across machines.</p>
 
-        <h3>⚙️ Summary</h3>
-        <p>These units make simulations simple and hardware-friendly. While not “real-world units,” they behave consistently and can be converted to meters/seconds using calibration or scale.</p>
+        <h3>🎯 Why Not Use Real Units?</h3>
+        <p>We could use meters/seconds, but it’s unnecessary unless you need physical accuracy. For learning and interactivity, <strong>pixels and frames are simpler</strong>, and easily understood by watching the screen.</p>
+
+        <h3>🧠 Final Note</h3>
+        <p>You can always convert between real-world units and pixel/frame using scale factors. But in a canvas simulation, keeping it all in screen units helps you <strong>focus on concepts, not conversions</strong>.</p>
       </div>
     </main>
 
@@ -255,5 +258,6 @@
   </script>
 </body>
 </html>
+
 
 
