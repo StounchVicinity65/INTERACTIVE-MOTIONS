@@ -14,21 +14,20 @@
       --main-bg-gradient-end: #537895;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       height: 100vh;
       overflow: hidden;
+      background: linear-gradient(to right, var(--main-bg-gradient-start), var(--main-bg-gradient-end));
     }
 
     .wrapper {
       display: flex;
       height: 100%;
-      background: linear-gradient(to right, var(--main-bg-gradient-start), var(--main-bg-gradient-end));
+      position: relative;
     }
 
     nav {
@@ -40,7 +39,7 @@
       padding: 1rem;
     }
 
-    nav > .logo {
+    nav .logo {
       font-size: 2rem;
       margin-bottom: 0.5rem;
       text-align: center;
@@ -58,7 +57,7 @@
       padding: 0.5rem 0.75rem;
       margin-bottom: 0.3rem;
       border-radius: 4px;
-      transition: background-color 0.3s, color 0.3s;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
     nav a.active, nav a:hover {
@@ -69,80 +68,102 @@
 
     main {
       flex-grow: 1;
-      padding: 1rem;
-      overflow-y: auto;
-      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      opacity: 0;
+      animation: fadeIn 0.8s forwards;
+      animation-delay: 0.3s;
     }
 
-    main h1 {
+    .left-content {
+      flex-basis: 30%;
       color: white;
-      text-align: center;
+      margin-left: 1rem;
       user-select: none;
     }
 
-    #description {
-      background: white;
-      padding: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
-      max-width: 600px;
-      margin: 1rem auto;
-      font-size: 1.1rem;
-      line-height: 1.5;
+    .left-content h1 {
+      font-size: 1.8rem;
     }
 
-    #description ul {
-      padding-left: 1.2rem;
+    .center-content {
+      flex-basis: 40%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
-    #introCanvas {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      width: 150px;
-      height: 150px;
-    }
-
-    #sound-toggle {
-      position: absolute;
-      bottom: 1rem;
-      right: 1rem;
-      background: transparent;
-      border: none;
-      font-size: 1.5rem;
+    .right-content {
+      flex-basis: 30%;
       color: white;
+      text-align: right;
+      padding-right: 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+
+    canvas {
+      width: 280px;
+      height: 280px;
+    }
+
+    #motionList {
+      list-style: none;
+      padding: 0;
+      font-size: 1.05rem;
+      margin-top: 1rem;
+    }
+
+    #motionList li {
+      margin: 0.3rem 0;
+    }
+
+    #flag {
+      width: 60px;
+      border-radius: 4px;
+      margin-bottom: 0.5rem;
+    }
+
+    #qrPlaceholder {
+      width: 100px;
+      height: 100px;
+      background: white;
+      border-radius: 4px;
+      margin-top: 0.5rem;
+    }
+
+    #soundToggle {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      padding: 0.4rem 0.8rem;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 5px;
       cursor: pointer;
-      transition: transform 0.2s;
     }
 
-    #sound-toggle:hover {
-      transform: scale(1.2);
+    #soundToggle:hover {
+      background: #1d4ed8;
     }
 
-    @media (max-width: 600px) {
-      .wrapper {
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    @media (max-width: 800px) {
+      main {
         flex-direction: column;
       }
-
-      nav {
-        width: 100%;
-        flex-direction: row;
-        overflow-x: auto;
-      }
-
-      nav a {
-        flex: 1 0 auto;
-        margin: 0 0.2rem;
+      .right-content {
+        align-items: center;
         text-align: center;
-      }
-
-      #introCanvas {
-        display: none;
-      }
-
-      #sound-toggle {
-        bottom: 0.5rem;
-        right: 0.5rem;
+        padding-right: 0;
       }
     }
   </style>
@@ -150,8 +171,8 @@
 <body>
 
 <div class="wrapper">
-  <nav aria-label="Simulation navigation">
-    <div class="logo" aria-hidden="true">⚛</div>
+  <nav>
+    <div class="logo">⚛</div>
     <h2>Simulations</h2>
     <a href="index.html" class="active">Main Menu</a>
     <a href="projectile.html">Projectile Motion</a>
@@ -166,12 +187,23 @@
   </nav>
 
   <main>
-    <canvas id="introCanvas"></canvas>
-    <button id="sound-toggle" aria-label="Toggle Sound">🔈</button>
-    <h1>Welcome to Interactive Motion Simulations</h1>
-    <div id="description">
+    <button id="soundToggle">🔇 Sound</button>
+
+    <div class="left-content">
+      <h1>Welcome to Interactive Motion Simulations</h1>
       <p>Select a simulation from the menu to explore different kinds of motions interactively.</p>
-      <ul>
+    </div>
+
+    <div class="center-content">
+      <canvas id="atomCanvas" width="280" height="280"></canvas>
+    </div>
+
+    <div class="right-content">
+      <div>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/00/Flag_of_Palestine.svg" alt="Palestine Flag" id="flag" />
+        <div id="qrPlaceholder" title="QR code will appear here"></div>
+      </div>
+      <ul id="motionList">
         <li>Projectile Motion</li>
         <li>Oscillatory Motion</li>
         <li>Simple Harmonic Motion</li>
@@ -187,54 +219,45 @@
 </div>
 
 <script>
-  // --- Intro Animation ---
-  const canvas = document.getElementById('introCanvas');
+  const canvas = document.getElementById('atomCanvas');
   const ctx = canvas.getContext('2d');
-  canvas.width = 150;
-  canvas.height = 150;
+  let t = 0;
 
-  let angle = 0;
   function drawAtom() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 1.5;
 
-    ctx.strokeStyle = 'white';
-    ctx.lineWidth = 1;
+    for (let i = 0; i < 3; i++) {
+      ctx.save();
+      ctx.translate(canvas.width / 2, canvas.height / 2);
+      ctx.rotate((Math.PI / 3) * i + t * 0.01);
+      ctx.beginPath();
+      ctx.ellipse(0, 0, 80, 30, 0, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    }
 
-    // Draw nucleus
+    // Nucleus
+    ctx.fillStyle = "#ffcc00";
     ctx.beginPath();
-    ctx.arc(75, 75, 5, 0, Math.PI * 2);
-    ctx.fillStyle = 'white';
+    ctx.arc(canvas.width / 2, canvas.height / 2, 8, 0, Math.PI * 2);
     ctx.fill();
 
-    // Draw electron orbit
-    ctx.beginPath();
-    ctx.ellipse(75, 75, 35, 15, 0, 0, Math.PI * 2);
-    ctx.stroke();
-
-    // Draw electron
-    let ex = 75 + 35 * Math.cos(angle);
-    let ey = 75 + 15 * Math.sin(angle);
-    ctx.beginPath();
-    ctx.arc(ex, ey, 5, 0, Math.PI * 2);
-    ctx.fillStyle = '#4a90e2';
-    ctx.fill();
-
-    angle += 0.05;
+    t++;
     requestAnimationFrame(drawAtom);
   }
 
   drawAtom();
 
-  // --- Sound Toggle (placeholder) ---
-  const toggleBtn = document.getElementById("sound-toggle");
-  let soundOn = true;
-  toggleBtn.addEventListener("click", () => {
+  // Sound toggle (demo only)
+  let soundOn = false;
+  const soundBtn = document.getElementById('soundToggle');
+  soundBtn.onclick = () => {
     soundOn = !soundOn;
-    toggleBtn.textContent = soundOn ? "🔈" : "🔇";
-  });
+    soundBtn.textContent = soundOn ? "🔊 Sound" : "🔇 Sound";
+  };
 </script>
 
 </body>
 </html>
-
-
