@@ -67,12 +67,12 @@
   <h1>➡️ Translational Motion</h1>
 
   <div id="definition">
-    <p><strong>Definition:</strong> Translational motion occurs when an object moves in a straight line from one point to another. The position changes over time along the path without rotation.</p>
+    <p><strong>Definition:</strong> Translational motion occurs when an object moves in a straight line in a given direction. Here we visualize multiple objects moving simultaneously with the same displacement and angle.</p>
   </div>
 
   <div id="controls">
-    <label>Initial Position (px): <input type="number" id="position" value="50" min="0"></label>
-    <label>Velocity (px/frame): <input type="number" id="velocity" value="3" step="0.1"></label>
+    <label>Displacement (px): <input type="number" id="displacement" value="300" min="0"></label>
+    <label>Angle (°): <input type="number" id="angle" value="0" min="0" max="360"></label>
     <button onclick="startTranslation()">Start</button>
     <button onclick="stopTranslation()">Stop</button>
   </div>
@@ -82,4 +82,5 @@
 
 </body>
 </html>
+
 
