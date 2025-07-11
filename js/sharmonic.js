@@ -7,42 +7,41 @@ const L = 200;        // length of pendulum arm (pixels)
 const damping = 0.995;
 
 function setup() {
-  createCanvas(windowWidth - 240, windowHeight);
+  createCanvas(windowWidth - 240, windowHeight * 0.6);
   angleInput = document.getElementById('angle');
   noLoop();
 }
 
 function simulateSHM() {
-  // Convert degrees to radians for initial angle
   theta = radians(parseFloat(angleInput.value));
   omega = 0;
   loop();
 }
 
 function draw() {
-  background(255);
+  background(255); // white background only for SHM as per your layout rule
 
-  // Pendulum physics (small angle approx)
+  // Physics update
   alpha = -(g / L) * theta;
   omega += alpha;
-  omega *= damping; // some damping
+  omega *= damping;
   theta += omega;
 
-  // Origin point (fixed)
+  // Origin
   let originX = width / 2;
-  let originY = height / 4;
+  let originY = 50;
 
-  // Position of the ball
-  let ballX = originX + L * sin(theta);
-  let ballY = originY + L * cos(theta);
+  // Pendulum bob position
+  let bobX = originX + L * sin(theta);
+  let bobY = originY + L * cos(theta);
 
-  // Draw string
+  // Draw pendulum string
   stroke(0);
   strokeWeight(2);
-  line(originX, originY, ballX, ballY);
+  line(originX, originY, bobX, bobY);
 
   // Draw bob
-  noStroke();
   fill(255, 100, 100);
-  ellipse(ballX, ballY, 50);
+  noStroke();
+  ellipse(bobX, bobY, 40);
 }
