@@ -58,7 +58,6 @@ function draw() {
     // Draw arrowhead at particle position, rotated to angle
     push();
     translate(p.x, p.y);
-    rotate(angle);
     drawArrowhead();
     pop();
   }
