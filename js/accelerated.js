@@ -12,9 +12,9 @@ function setup() {
 }
 
 function simulateAcceleration() {
-  x = 50; // Start on the left
+  x = width - 50; // Start from right edge
   v = 0;
-  a = parseFloat(accelInput.value);
+  a = -abs(parseFloat(accelInput.value)); // Ensure it's negative to move leftward
   loop();
 }
 
@@ -23,8 +23,8 @@ function draw() {
 
   // Grass
   fill(60, 179, 113);
-  rect(0, 0, width, height * 0.2); // Top grass
-  rect(0, height * 0.8, width, height * 0.2); // Bottom grass
+  rect(0, 0, width, height * 0.2);
+  rect(0, height * 0.8, width, height * 0.2);
 
   // Road
   let roadY = height * 0.5;
@@ -43,12 +43,16 @@ function draw() {
   // Trees
   let spacing = 120;
   for (let i = 0; i < width; i += spacing) {
-    fill(139, 69, 19); // trunk
+    // Top
+    fill(139, 69, 19);
     rect(i + 20, roadY - 60, 10, 40);
-    fill(34, 139, 34); // leaves
+    fill(34, 139, 34);
     ellipse(i + 25, roadY - 70, 40);
 
+    // Bottom
+    fill(139, 69, 19);
     rect(i + 60, roadY + roadHeight + 20, 10, 40);
+    fill(34, 139, 34);
     ellipse(i + 65, roadY + roadHeight + 20, 40);
   }
 
@@ -60,7 +64,8 @@ function draw() {
   v += a * 0.1;
   x += v;
 
-  // Stop condition
-  if (x > width + 50) noLoop();
+  // Stop when out of screen on left
+  if (x < -50) noLoop();
 }
+
 
