@@ -1,24 +1,45 @@
-let amplitudeInput, frequencyInput;
-let t = 0, amplitude = 100, frequency = 1;
+let amplitudeInput, freqInput;
+let A = 50;
+let f = 0.5;
+let t = 0;
+let baseY;
+let running = false;
 
 function setup() {
-  createCanvas(windowWidth - 240, windowHeight);
+  createCanvas(windowWidth - 240, windowHeight * 0.6);
   amplitudeInput = document.getElementById('amplitude');
-  frequencyInput = document.getElementById('frequency');
+  freqInput = document.getElementById('frequency');
+  baseY = height / 2;
   noLoop();
+  textAlign(CENTER, CENTER);
+  textSize(36);
 }
 
 function simulateOscillation() {
-  amplitude = float(amplitudeInput.value);
-  frequency = float(frequencyInput.value);
+  A = parseFloat(amplitudeInput.value);
+  f = parseFloat(freqInput.value);
   t = 0;
+  running = true;
   loop();
 }
 
 function draw() {
-  background(240);
-  let y = height / 2 + amplitude * sin(TWO_PI * frequency * t);
-  fill(100, 100, 255);
-  ellipse(width / 2, y, 50);
-  t += 0.02;
+  background('#e0f7fa');
+
+  // Water surface
+  noStroke();
+  fill('#4dd0e1');
+  rect(0, baseY + 60, width, height - baseY - 60);
+
+  // Oscillation
+  if (running) t += 0.05;
+  let y = baseY + A * sin(TWO_PI * f * t);
+
+  // Draw object (a floating buoy)
+  fill(255, 100, 100);
+  ellipse(width / 2, y, 60, 60);
+
+  // Stop after a long duration if needed
+  if (t > 60) noLoop();
 }
+
