@@ -3,11 +3,11 @@ let theta = 0;        // current angle (radians)
 let omega = 0;        // angular velocity
 let alpha = 0;        // angular acceleration
 const g = 9.8;        // gravity
-const L = 200;        // length of pendulum arm (pixels)
+const L = 200;        // pendulum length (pixels)
 const damping = 0.995;
 
 function setup() {
-  createCanvas(windowWidth - 240, windowHeight * 0.6);
+  createCanvas(windowWidth - 240, windowHeight * 0.6); // consistent height
   angleInput = document.getElementById('angle');
   noLoop();
 }
@@ -19,9 +19,9 @@ function simulateSHM() {
 }
 
 function draw() {
-  background(255); // white background only for SHM as per your layout rule
+  background(#dbeafe); // white canvas for SHM only
 
-  // Physics update
+  // SHM physics
   alpha = -(g / L) * theta;
   omega += alpha;
   omega *= damping;
@@ -29,19 +29,25 @@ function draw() {
 
   // Origin
   let originX = width / 2;
-  let originY = 50;
+  let originY = 60;
 
   // Pendulum bob position
   let bobX = originX + L * sin(theta);
   let bobY = originY + L * cos(theta);
+
+  // Draw equilibrium line
+  stroke(180);
+  strokeWeight(1);
+  line(originX - L - 20, originY + L, originX + L + 20, originY + L);
 
   // Draw pendulum string
   stroke(0);
   strokeWeight(2);
   line(originX, originY, bobX, bobY);
 
-  // Draw bob
-  fill(255, 100, 100);
+  // Draw pendulum bob
   noStroke();
+  fill(255, 100, 100);
   ellipse(bobX, bobY, 40);
 }
+
