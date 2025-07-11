@@ -12,9 +12,11 @@
       color: white;
       text-align: center;
     }
+
     h1 {
       margin-top: 1rem;
     }
+
     #definition {
       background: #00000055;
       padding: 1rem;
@@ -24,6 +26,7 @@
       font-size: 1rem;
       box-shadow: 0 0 10px rgba(255,255,255,0.1);
     }
+
     #controls {
       background: #00000055;
       padding: 1rem;
@@ -31,27 +34,40 @@
       margin: 1rem auto;
       border-radius: 8px;
       box-shadow: 0 0 8px rgba(255,255,255,0.1);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
     }
+
     label {
-      margin-right: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: white;
     }
+
     input {
-      padding: 4px;
+      padding: 4px 6px;
       border-radius: 4px;
       border: 1px solid #ccc;
+      width: 80px;
     }
+
     button {
       padding: 0.5rem 1rem;
-      margin-top: 0.5rem;
       background: #2563eb;
       border: none;
       color: white;
       border-radius: 5px;
       cursor: pointer;
     }
+
     button:hover {
       background: #1d4ed8;
     }
+
     canvas {
       display: block;
       margin: 1rem auto;
@@ -69,13 +85,16 @@
   </div>
 
   <div id="controls">
-    <label>Initial Speed (px/frame):
+    <label>
+      Initial Speed (px/frame):
       <input type="number" id="speed" value="8">
     </label>
-    <label>Deceleration (px/frame²):
+
+    <label>
+      Deceleration (px/frame²):
       <input type="number" id="deceleration" value="1">
     </label>
-    <br>
+
     <button onclick="simulateDeceleration()">Simulate</button>
   </div>
 
@@ -84,6 +103,7 @@
 
 </body>
 </html>
+
 
 
 
