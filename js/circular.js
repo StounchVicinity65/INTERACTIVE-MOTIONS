@@ -1,25 +1,43 @@
-let radiusInput, speedInput;
-let angle = 0, radius = 100, speed = 5;
+let radius = 100;
+let angle = 0;
+let speedInput;
+let angularSpeed = 0.05;
+let centerX, centerY;
 
 function setup() {
-  createCanvas(windowWidth - 240, windowHeight);
-  radiusInput = document.getElementById('radius');
-  speedInput = document.getElementById('speed');
-  noLoop();
+createCanvas(windowWidth - 240, windowHeight * 0.6);
+angleMode(RADIANS);
+speedInput = document.getElementById('speed');
+centerX = width / 2;
+centerY = height / 2;
+noLoop();
 }
 
 function simulateCircular() {
-  radius = float(radiusInput.value);
-  speed = float(speedInput.value);
-  angle = 0;
-  loop();
+angularSpeed = parseFloat(speedInput.value);
+angle = 0;
+loop();
 }
 
 function draw() {
-  background(240);
-  let x = width / 2 + radius * cos(angle);
-  let y = height / 2 + radius * sin(angle);
-  fill(255, 200, 0);
-  ellipse(x, y, 40);
-  angle += speed * 0.01;
+background('#dbeafe');
+
+// Draw circle path
+noFill();
+stroke(100);
+strokeWeight(2);
+ellipse(centerX, centerY, radius * 2);
+
+// Calculate position
+let x = centerX + radius * cos(angle);
+let y = centerY + radius * sin(angle);
+
+// Draw object
+fill(255, 100, 100);
+noStroke();
+ellipse(x, y, 30);
+
+// Angle update
+angle += angularSpeed * 0.05;
+if (angle > TWO_PI) angle = 0;
 }
