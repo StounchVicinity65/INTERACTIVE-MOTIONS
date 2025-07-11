@@ -24,18 +24,19 @@ function simulateOscillation() {
 }
 
 function draw() {
-  background('#e0f7fa');
+  background('#e0f7fa'); // sky blue
 
-  // Water surface
-  noStroke();
-  fill('#4dd0e1');
-  rect(0, baseY + 60, width, height - baseY - 60);
+  // Draw equilibrium line
+  stroke(0);
+  strokeWeight(2);
+  line(0, baseY, width, baseY);
 
   // Oscillation
   if (running) t += 0.05;
   let y = baseY + A * sin(TWO_PI * f * t);
 
-  // Draw object (a floating buoy)
+  // Draw object (oscillating circle)
+  noStroke();
   fill(255, 100, 100);
   ellipse(width / 2, y, 60, 60);
 
