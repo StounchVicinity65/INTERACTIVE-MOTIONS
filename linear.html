@@ -7,17 +7,56 @@
   <style>
     body {
       margin: 0;
+      background: #09203f;
       font-family: sans-serif;
+      color: white;
       text-align: center;
-      background: #f0f0f0;
+    }
+    h1 {
+      margin-top: 1rem;
+    }
+    #definition {
+      background: #00000055;
+      padding: 1rem;
+      max-width: 800px;
+      margin: 1rem auto;
+      border-radius: 8px;
+      font-size: 1rem;
+      box-shadow: 0 0 10px rgba(255,255,255,0.1);
     }
     #controls {
-      margin: 1rem;
+      background: #00000055;
+      padding: 1rem;
+      max-width: 600px;
+      margin: 1rem auto;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(255,255,255,0.1);
+    }
+    label {
+      margin-right: 1rem;
+    }
+    input {
+      padding: 4px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    button {
+      padding: 0.5rem 1rem;
+      margin-top: 0.5rem;
+      background: #2563eb;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #1d4ed8;
     }
     canvas {
-      border: 1px solid #ccc;
       display: block;
-      margin: auto;
+      margin: 1rem auto;
+      border: 1px solid #ccc;
+      background: #dbeafe;
     }
   </style>
 </head>
@@ -25,8 +64,14 @@
 
   <h1>Linear Motion</h1>
 
+  <div id="definition">
+    <p><strong>Definition:</strong> Linear motion is the movement of an object along a straight line with constant speed or velocity.</p>
+  </div>
+
   <div id="controls">
-    <label>Speed: <input type="number" id="speed" value="3" min="0" step="0.1"></label>
+    <label>Speed (px/frame):
+      <input type="number" id="speed" value="3" min="0" step="0.1">
+    </label>
     <button onclick="simulateLinear()">Simulate</button>
   </div>
 
@@ -35,4 +80,5 @@
 
 </body>
 </html>
+
 
