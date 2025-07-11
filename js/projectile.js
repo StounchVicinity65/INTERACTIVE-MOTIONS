@@ -40,7 +40,7 @@ function draw() {
     fill(255, 50, 50);
     noStroke();
     textSize(36);
-    text("➡️", x, y);
+    text("➡", x, y);
 
     // stop when projectile goes below ground
     if (y > height) {
