@@ -3,7 +3,7 @@ let posX = 0;
 let speed = 3;
 
 function setup() {
-  createCanvas(windowWidth - 240, windowHeight);
+  createCanvas(windowWidth - 240, windowHeight * 0.6);
   speedInput = document.getElementById('speed');
   noLoop();
 }
@@ -20,9 +20,20 @@ function simulateLinear() {
 }
 
 function draw() {
-  background(240);
+  background('#dbeafe');
+
+  // Draw environment
+  stroke(180);
+  strokeWeight(2);
+  line(0, height / 2 + 25, width, height / 2 + 25); // Ground line
+
+  noStroke();
   fill(0, 200, 150);
   ellipse(posX, height / 2, 40);
+
   posX += speed;
-  if (posX > width) posX = 0;
+  if (posX > width + 20) {
+    posX = -20;
+  }
 }
+
