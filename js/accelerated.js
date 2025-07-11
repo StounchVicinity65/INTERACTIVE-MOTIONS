@@ -63,3 +63,4 @@ function draw() {
   // Stop condition
   if (x > width + 50) noLoop();
 }
+
