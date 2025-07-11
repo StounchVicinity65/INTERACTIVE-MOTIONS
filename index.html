@@ -103,19 +103,18 @@
     }
 
     #animationBox {
-      width: 620px;
-      height: 620px;
+      width: 650px;
+      height: 650px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 20px;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      box-shadow: 0 0 24px rgba(255, 255, 255, 0.1);
       padding: 1rem;
     }
 
     canvas {
       background: transparent !important;
-      box-shadow: none !important;
       border: none !important;
       display: block;
     }
@@ -201,7 +200,7 @@
       </div>
 
       <div id="animationBox">
-        <canvas id="mainCanvas" width="600" height="600"></canvas>
+        <canvas id="mainCanvas" width="640" height="640"></canvas>
       </div>
 
       <div id="sidebarRight">
@@ -276,7 +275,7 @@
     animate();
 
     new QRCode(document.getElementById("qrPlaceholder"), {
-      text: "https://stounchvicinity65.github.io/INTERACTIVE-MOTIONS/",
+      text: "https://your-link.com",
       width: 100,
       height: 100,
       colorDark: "#000000",
