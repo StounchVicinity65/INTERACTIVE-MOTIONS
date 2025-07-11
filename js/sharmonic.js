@@ -19,7 +19,7 @@ function simulateSHM() {
 }
 
 function draw() {
-  background(#dbeafe); // white canvas for SHM only
+  background(#dbeafe); 
 
   // SHM physics
   alpha = -(g / L) * theta;
