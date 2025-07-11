@@ -3,36 +3,81 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Projectile Motion Simulation</title>
+  <title>🎯 Projectile Motion</title>
   <style>
     body {
       margin: 0;
-      font-family: sans-serif;
+      font-family: Arial, sans-serif;
       text-align: center;
-      background: #f0f0f0;
+      background: #f0f4f8;
+    }
+    h1 {
+      margin-top: 1rem;
+      color: #333;
     }
     #controls {
-      margin: 1rem;
+      margin: 1rem auto;
+      padding: 1rem;
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      width: fit-content;
+    }
+    label {
+      margin: 0 1rem;
     }
     canvas {
-      border: 1px solid #ccc;
       display: block;
-      margin: auto;
+      margin: 1rem auto;
+      border: 1px solid #ccc;
+      background: #dbeafe;
+    }
+    #info {
+      max-width: 600px;
+      margin: 1rem auto;
+      padding: 1rem;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    button {
+      padding: 0.5rem 1rem;
+      margin-top: 0.5rem;
+      border: none;
+      background: #2563eb;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #1d4ed8;
     }
   </style>
 </head>
 <body>
 
-  <h1>Projectile Motion</h1>
+  <h1>🎯 Projectile Motion</h1>
 
   <div id="controls">
-    <label>Angle: <input type="number" id="angle" value="45">°</label>
-    <label>Speed: <input type="number" id="speed" value="10"> m/s</label>
+    <label title="Initial angle of projection in degrees">Angle (°):
+      <input type="number" id="angle" value="45">
+    </label>
+    <label title="Initial speed of the object">Speed:
+      <input type="number" id="speed" value="10">
+    </label>
+    <br>
     <button onclick="launchProjectile()">Launch</button>
+    <button onclick="resetSimulation()">Reset</button>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
   <script src="js/projectile.js"></script>
 
+  <div id="info">
+    <h3>What is Projectile Motion?</h3>
+    <p>Projectile motion is the curved path an object follows under the influence of gravity. The motion has both horizontal and vertical components.</p>
+  </div>
+
 </body>
 </html>
+
