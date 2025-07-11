@@ -108,7 +108,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: transparent;
+      /* background removed to fix blue box issue */
     }
 
     #sidebarRight {
@@ -210,7 +210,6 @@
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
 
-    // Doubled radius again, bigger circles and bounce
     const particles = [
       { radius: 280, angle: 0, color: "#f87171", speed: 0.03, bounce: 0, bounceSpeed: 0.03 },
       { radius: 180, angle: Math.PI / 2, color: "#60a5fa", speed: 0.045, bounce: 0, bounceSpeed: 0.045 },
@@ -218,7 +217,6 @@
     ];
 
     function clearCanvas() {
-      // Instead of full clear, draw a transparent rect to create trails
       ctx.fillStyle = 'rgba(13, 32, 63, 0.15)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
