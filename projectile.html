@@ -7,21 +7,31 @@
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: sans-serif;
       text-align: center;
       background: #09203f;
+      color: white;
     }
     h1 {
       margin-top: 1rem;
-      color: white;
+    }
+    #definition {
+      max-width: 800px;
+      margin: 1rem auto;
+      background: #00000055; /* translucent black */
+      color: #fff;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(255,255,255,0.1);
+      font-size: 1rem;
     }
     #controls {
+      max-width: 600px;
       margin: 1rem auto;
       padding: 1rem;
-      background: #0f2c4d;
+      background: #00000055; /* translucent black */
       border-radius: 8px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.2);
-      width: fit-content;
+      box-shadow: 0 0 8px rgba(255,255,255,0.1);
       color: white;
     }
     label {
@@ -31,23 +41,6 @@
       padding: 4px;
       border-radius: 4px;
       border: 1px solid #ccc;
-    }
-    canvas {
-      display: block;
-      margin: 1rem auto;
-      max-width: 100%;
-      height: auto;
-      border: 1px solid #ccc;
-      background: #dbeafe;
-    }
-    #info {
-      max-width: 600px;
-      margin: 1rem auto;
-      padding: 1rem;
-      background: #0f2c4d;
-      color: white;
-      border-radius: 8px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.2);
     }
     button {
       padding: 0.5rem 1rem;
@@ -61,27 +54,34 @@
     button:hover {
       background: #1d4ed8;
     }
+    canvas {
+      display: block;
+      margin: 1rem auto;
+      max-width: 100%;
+      height: auto;
+      border: 1px solid #ccc;
+      background: #dbeafe;
+    }
   </style>
 </head>
 <body>
 
   <h1>🎯 Projectile Motion</h1>
 
+  <div id="definition">
+    <p><strong>Definition:</strong> Projectile motion is the curved path an object follows under the influence of gravity. The motion has both horizontal and vertical components.</p>
+  </div>
+
   <div id="controls">
     <label title="Initial angle of projection in degrees">Angle (°):
-      <input type="number" id="angle" value="45">
+      <input type="number" id="angle" value="45" min="0" max="90" step="1">
     </label>
     <label title="Initial speed of the object">Speed:
-      <input type="number" id="speed" value="10">
+      <input type="number" id="speed" value="10" min="0" step="0.1">
     </label>
     <br>
     <button onclick="launchProjectile()">Launch</button>
     <button onclick="resetSimulation()">Reset</button>
-  </div>
-
- <div id="info">
-    <h3>What is Projectile Motion?</h3>
-    <p>Projectile motion is the curved path an object follows under the influence of gravity. The motion has both horizontal and vertical components.</p>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
