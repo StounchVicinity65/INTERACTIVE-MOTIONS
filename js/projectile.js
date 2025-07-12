@@ -41,7 +41,7 @@ function draw() {
   background('#dbeafe');
 
   // Draw trail
-  stroke(100, 100, 255);
+  stroke(100, 100, 255); // Blue stroke for the trail
   strokeWeight(3);
   noFill();
   beginShape();
@@ -66,7 +66,7 @@ function draw() {
     translate(x, y);
     rotate(angle);
     fill(0);
-    noStroke();
+    noStroke(); // Ensure no stroke for arrowhead
     drawArrowhead();
     pop();
 
@@ -76,11 +76,14 @@ function draw() {
   }
 
   // --- ADDED CODE TO DISPLAY FPS ---
+  push(); // Save current drawing style before changing for FPS
   fill(0); // Set text color to black
   textSize(16); // Set text size for FPS
   textAlign(LEFT, TOP); // Align text to top-left for FPS
+  noStroke(); // <--- THIS IS THE KEY CHANGE: Remove stroke for the text
   // Display the current frame rate, rounded to 1 decimal place
   text(`FPS: ${frameRate().toFixed(1)}`, 10, 30); // Position text at (10, 30)
+  pop(); // Restore previous drawing style
   // --- END ADDED CODE ---
 }
 
@@ -91,4 +94,3 @@ function drawArrowhead() {
   vertex(-10, 5);
   endShape(CLOSE);
 }
-
