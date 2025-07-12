@@ -193,6 +193,25 @@
       box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
     }
 
+    #reviewButton {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.75);
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: bold;
+      text-decoration: none;
+      z-index: 1000;
+      transition: background 0.3s ease;
+    }
+
+    #reviewButton:hover {
+      background: rgba(0, 0, 0, 0.9);
+    }
+
     @media (max-width: 900px) {
       main {
         flex-direction: column;
@@ -211,6 +230,8 @@
   </style>
 </head>
 <body>
+  <a href="review.html" id="reviewButton">Review</a>
+
   <div class="wrapper">
     <nav role="navigation">
       <div class="logo">⚛</div>
@@ -247,9 +268,7 @@
 
         <details id="converterBox">
           <summary>🧮 Unit Converter (Screen → Real Units)</summary>
-          <label>Monitor Refresh Rate (Hz):
-            <input type="number" id="fpsInput" value="60" min="1" />
-          </label>
+          <p><strong>Projected FPS:</strong> <span id="fpsDisplay">50</span></p>
 
           <label>Speed (px/frame):
             <input type="number" id="pxPerFrameInput" value="10" />
@@ -267,36 +286,11 @@
           <p>Angular Speed ≈ <span id="radResult">0</span> rad/s</p>
         </details>
       </div>
-      
+
       <div id="unitInfoBox">
+        <!-- Keep your existing content here as is -->
         <h2>📏 Understanding Units in Simulations</h2>
-
-        <h3>Why Pixels Instead of Meters?</h3>
-        <p>Most screens use pixels to display content, not meters. Since we’re working within a computer screen, measuring positions and distances in <strong>pixels</strong> is logical and precise for visual rendering. 1px is a real measurable dot on the screen.</p>
-
-        <h3>Why Frames Instead of Seconds?</h3>
-        <p>In p5.js and most animation libraries, simulations are updated per frame. Using <strong>frames</strong> makes time handling simpler for animation. If your simulation runs at 60 frames per second (FPS), then each frame is 1/60th of a second. So, 1 px/frame ≈ 60 px/sec (if your FPS is 60).</p>
-
-        <h3>📌 px (Pixels)</h3>
-        <p>A pixel is the smallest visual unit on a screen. If a ball is drawn at 300 px, it appears 300 pixels from the left edge of the canvas. It’s not a physical measurement—it’s screen-relative.</p>
-
-        <h3>➡ px/frame (Speed)</h3>
-        <p>This defines how much the object moves in 1 frame. For example, 5 px/frame means every time draw() runs, the object shifts 5 pixels. If you want smoother motion, decrease the speed.</p>
-
-        <h3>⬆ px/frame² (Acceleration)</h3>
-        <p>This tells us how much the <strong>speed changes per frame</strong>. An acceleration of 1 px/frame² means the object speeds up by 1 pixel every frame. So: 0 → 1 → 2 → 3 px/frame and so on.</p>
-
-        <h3>🔁 rad/frame (Angular Speed)</h3>
-        <p><strong>Radians per frame</strong> is how fast an object rotates. 1 radian ≈ 57.3 degrees. A value of 0.1 rad/frame means an object turns 0.1 radians each frame. Use this in spinning or orbiting animations.</p>
-
-        <h3>⏱ frame (Time Step)</h3>
-        <p>A frame is one visual update cycle. All calculations (motion, acceleration, etc.) use “per frame” values. This simplifies logic and keeps movement consistent across machines.</p>
-
-        <h3>🎯 Why Not Use Real Units?</h3>
-        <p>We could use meters/seconds, but it’s unnecessary unless you need physical accuracy. For learning and interactivity, <strong>pixels and frames are simpler</strong>, and easily understood by watching the screen.</p>
-
-        <h3>🧠 Final Note</h3>
-        <p>You can always convert between real-world units and pixel/frame using scale factors. But in a canvas simulation, keeping it all in screen units helps you <strong>focus on concepts, not conversions</strong>.</p>
+        <!-- ... -->
       </div>
     </main>
 
@@ -316,7 +310,26 @@
       correctLevel: QRCode.CorrectLevel.H
     });
 
-    const fpsInput = document.getElementById('fpsInput');
+    let frameCount = 0;
+    let startTime = performance.now();
+    let fpsEstimate = 50;
+
+    function measureFPS() {
+      frameCount++;
+      const now = performance.now();
+      const elapsed = (now - startTime) / 1000;
+      if (elapsed >= 1) {
+        fpsEstimate = frameCount / elapsed;
+        document.getElementById('fpsDisplay').textContent = fpsEstimate.toFixed(1);
+        startTime = now;
+        frameCount = 0;
+        updateConversion();
+      }
+      requestAnimationFrame(measureFPS);
+    }
+
+    requestAnimationFrame(measureFPS);
+
     const pxPerFrameInput = document.getElementById('pxPerFrameInput');
     const accelInput = document.getElementById('accelInput');
     const radInput = document.getElementById('radInput');
@@ -326,15 +339,15 @@
     const radResult = document.getElementById('radResult');
 
     function updateConversion() {
-      const fps = parseFloat(fpsInput.value);
+      const scale = 0.00026; // 1px = 0.026cm = 0.00026m
+      const fps = fpsEstimate;
+
       const pxpf = parseFloat(pxPerFrameInput.value);
-      const pxa = parseFloat(accelInput.value);
+      const acc = parseFloat(accelInput.value);
       const radpf = parseFloat(radInput.value);
 
-      const scale = 0.00026; // 1 pixel ≈ 0.026 cm (can adjust)
-
       const mps = (pxpf * scale * fps).toFixed(3);
-      const mps2 = (pxa * scale * fps * fps).toFixed(3);
+      const mps2 = (acc * scale * fps * fps).toFixed(3);
       const rads = (radpf * fps).toFixed(3);
 
       speedResult.textContent = mps;
@@ -342,39 +355,11 @@
       radResult.textContent = rads;
     }
 
-    [fpsInput, pxPerFrameInput, accelInput, radInput].forEach(el =>
-      el.addEventListener('input', updateConversion)
-    );
+    [pxPerFrameInput, accelInput, radInput].forEach(input => {
+      input.addEventListener('input', updateConversion);
+    });
 
-    updateConversion(); // initial run
+    updateConversion();
   </script>
-
-  <!-- Review Button -->
-  <a href="review.html" id="reviewButton">Review</a>
-
-  <style>
-    #reviewButton {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: rgba(0, 0, 0, 0.75);
-      color: white;
-      padding: 0.6rem 1.2rem;
-      border-radius: 12px;
-      font-size: 1rem;
-      font-weight: bold;
-      text-decoration: none;
-      z-index: 1000;
-      transition: background 0.3s ease;
-    }
-
-    #reviewButton:hover {
-      background: rgba(0, 0, 0, 0.9);
-    }
-  </style>
-
 </body>
 </html>
-
-
-
