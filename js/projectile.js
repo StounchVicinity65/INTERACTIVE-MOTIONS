@@ -8,6 +8,11 @@ function setup() {
   speedInput = document.getElementById('speed');
   noLoop();
   angleMode(RADIANS);
+
+  // --- Setup for FPS Display ---
+  textSize(16); // Set text size for FPS display
+  textAlign(LEFT, TOP); // Align text to top-left for FPS display
+  // --- End Setup for FPS Display ---
 }
 
 function launchProjectile() {
@@ -69,6 +74,14 @@ function draw() {
       noLoop();
     }
   }
+
+  // --- ADDED CODE TO DISPLAY FPS ---
+  fill(0); // Set text color to black
+  textSize(16); // Set text size for FPS
+  textAlign(LEFT, TOP); // Align text to top-left for FPS
+  // Display the current frame rate, rounded to 1 decimal place
+  text(`FPS: ${frameRate().toFixed(1)}`, 10, 30); // Position text at (10, 30)
+  // --- END ADDED CODE ---
 }
 
 function drawArrowhead() {
@@ -78,5 +91,4 @@ function drawArrowhead() {
   vertex(-10, 5);
   endShape(CLOSE);
 }
-
 
