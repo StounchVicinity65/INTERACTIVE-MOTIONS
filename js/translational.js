@@ -2,7 +2,7 @@ let displacementInput, angleInput;
 let particles = [];
 let displacement = 300;
 let angle = 0;
-let speed = 2;  // pixels per frame
+let speed = 2; // pixels per frame
 let startPositions = [];
 
 function setup() {
@@ -16,6 +16,11 @@ function setup() {
     particles.push(createVector(100 + i * 60, height / 2));
   }
   startPositions = particles.map(p => p.copy());
+
+  // --- Setup for FPS Display ---
+  textSize(16); // Set text size for FPS display
+  textAlign(LEFT, TOP); // Align text to top-left for FPS display
+  // --- End Setup for FPS Display ---
 }
 
 function startTranslation() {
@@ -62,6 +67,17 @@ function draw() {
   if (allDone) {
     noLoop();
   }
+
+  // --- ADDED CODE TO DISPLAY FPS ---
+  push(); // Save current drawing style before changing for FPS
+  fill(0); // Set text color to black
+  textSize(16); // Set text size for FPS
+  textAlign(LEFT, TOP); // Align text to top-left for FPS
+  noStroke(); // Ensure no stroke for the text
+  // Display the current frame rate, rounded to 1 decimal place
+  text(`FPS: ${frameRate().toFixed(1)}`, 10, 30); // Position text at (10, 30)
+  pop(); // Restore previous drawing style
+  // --- END ADDED CODE ---
 }
 
 // Draw black arrowhead pointing right along x-axis (before rotation)
@@ -74,7 +90,5 @@ function drawArrowhead() {
   vertex(-10, 7);
   endShape(CLOSE);
 }
-
-
 
 
