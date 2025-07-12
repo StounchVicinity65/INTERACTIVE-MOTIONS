@@ -7,8 +7,8 @@ function setup() {
   createCanvas(windowWidth - 240, windowHeight * 0.6);
   accelInput = document.getElementById('acceleration');
   noLoop();
-  textSize(48);
-  textAlign(CENTER, CENTER);
+  textSize(48); // Original text size for the car/main elements
+  textAlign(CENTER, CENTER); // Original text alignment for the car/main elements
 }
 
 function simulateAcceleration() {
@@ -58,7 +58,13 @@ function draw() {
 
   // Car
   fill(0);
+  // Use push/pop to ensure car's text size/alignment isn't affected by FPS display settings
+  push();
+  textSize(48);
+  textAlign(CENTER, CENTER);
   text("🚗", x, roadY + roadHeight / 2);
+  pop();
+
 
   // Physics update
   v += a * 0.1;
@@ -66,6 +72,14 @@ function draw() {
 
   // Stop when out of screen on left
   if (x < -50) noLoop();
+
+  // --- ADDED CODE TO DISPLAY FPS ---
+  fill(0); // Set text color to black
+  textSize(16); // Set text size for FPS
+  textAlign(LEFT, TOP); // Align text to top-left for FPS
+  // Display the current frame rate, rounded to 1 decimal place
+  text(`FPS: ${frameRate().toFixed(1)}`, 10, 30); // Position text at (10, 30)
+  // --- END ADDED CODE ---
 }
 
 
