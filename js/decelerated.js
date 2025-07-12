@@ -8,8 +8,15 @@ function setup() {
   speedInput = document.getElementById('speed');
   decelInput = document.getElementById('deceleration');
   noLoop();
+  
+  // Original text settings for the car emoji
   textSize(48);
   textAlign(CENTER, CENTER);
+
+  // --- Setup for FPS Display ---
+  // We'll set text size and alignment for FPS here, but use push/pop in draw to isolate.
+  // This setup mainly ensures fonts are loaded for these sizes.
+  // --- End Setup for FPS Display ---
 }
 
 function simulateDeceleration() {
@@ -55,14 +62,27 @@ function draw() {
 
   // Car emoji (or you can use a better image if preferred)
   fill(0);
+  // Use push/pop to ensure car's text size/alignment isn't affected by FPS display settings
+  push();
+  textSize(48); // Set size specifically for the car
+  textAlign(CENTER, CENTER); // Center align for the car
   text("🚗", x, roadY + roadHeight / 2);
+  pop();
 
   // Physics update
   v += a * 0.1;
   if (v < 0) v = 0;
-  x -= v;
+  x -= v; // Car moves to the left as x decreases
 
   if (v === 0 || x < -50) noLoop();
+
+  // --- ADDED CODE TO DISPLAY FPS ---
+  fill(0); // Set text color to black
+  textSize(16); // Set text size for FPS
+  textAlign(LEFT, TOP); // Align text to top-left for FPS
+  // Display the current frame rate, rounded to 1 decimal place
+  text(`FPS: ${frameRate().toFixed(1)}`, 10, 30); // Position text at (10, 30)
+  // --- END ADDED CODE ---
 }
 
 
