@@ -331,7 +331,7 @@
       const pxa = parseFloat(accelInput.value);
       const radpf = parseFloat(radInput.value);
 
-      const scale = 0.01; // 1 pixel ≈ 1 cm (can adjust)
+      const scale = 0.00026; // 1 pixel ≈ 0.026 cm (can adjust)
 
       const mps = (pxpf * scale * fps).toFixed(3);
       const mps2 = (pxa * scale * fps * fps).toFixed(3);
