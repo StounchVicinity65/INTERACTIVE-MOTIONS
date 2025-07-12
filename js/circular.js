@@ -11,6 +11,11 @@ function setup() {
   centerX = width / 2;
   centerY = height / 2;
   noLoop();
+
+  // --- Setup for FPS Display ---
+  textSize(16); // Set text size for FPS display
+  textAlign(LEFT, TOP); // Align text to top-left for FPS display
+  // --- End Setup for FPS Display ---
 }
 
 function simulateCircular() {
@@ -40,5 +45,12 @@ function draw() {
   // Update angle
   angle += angularSpeed;
   if (angle > TWO_PI) angle -= TWO_PI;
-}
 
+  // --- ADDED CODE TO DISPLAY FPS ---
+  fill(0); // Set text color to black
+  textSize(16); // Set text size for FPS display (already set in setup, but good practice if draw is called directly or settings change)
+  textAlign(LEFT, TOP); // Align text to top-left for FPS display (already set in setup)
+  // Display the current frame rate, rounded to 1 decimal place
+  text(`FPS: ${frameRate().toFixed(1)}`, 10, 30); // Position text at (10, 30)
+  // --- END ADDED CODE ---
+}
