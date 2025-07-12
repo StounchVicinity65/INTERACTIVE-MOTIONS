@@ -268,7 +268,7 @@
         </details>
       </div>
       
-<div id="unitInfoBox">
+      <div id="unitInfoBox">
         <h2>📏 Understanding Units in Simulations</h2>
 
         <h3>Why Pixels Instead of Meters?</h3>
@@ -299,7 +299,6 @@
         <p>You can always convert between real-world units and pixel/frame using scale factors. But in a canvas simulation, keeping it all in screen units helps you <strong>focus on concepts, not conversions</strong>.</p>
       </div>
     </main>
-
 
     <div id="sidebarRight">
       <div id="qrPlaceholder"></div>
@@ -349,10 +348,33 @@
 
     updateConversion(); // initial run
   </script>
+
+  <!-- Review Button -->
+  <a href="review.html" id="reviewButton">Review</a>
+
+  <style>
+    #reviewButton {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.75);
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: bold;
+      text-decoration: none;
+      z-index: 1000;
+      transition: background 0.3s ease;
+    }
+
+    #reviewButton:hover {
+      background: rgba(0, 0, 0, 0.9);
+    }
+  </style>
+
 </body>
 </html>
-
-
 
 
 
