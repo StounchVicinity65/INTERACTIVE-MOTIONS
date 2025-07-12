@@ -48,7 +48,6 @@
       display: flex;
       flex-direction: column;
       padding: 1rem;
-      z-index: 1;
     }
 
     nav .logo {
@@ -82,22 +81,23 @@
     main {
       flex-grow: 1;
       display: flex;
-      justify-content: flex-start;
-      align-items: flex-start;
+      flex-wrap: wrap;
       gap: 2rem;
       padding: 2rem;
       position: relative;
       z-index: 1;
+      overflow-y: auto;
     }
 
-    #descriptionBox {
+    #descriptionBox, #converterBox {
       background: white;
       padding: 1.5rem;
       border-radius: 12px;
-      max-width: 360px;
       color: #222;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-      transform: translateY(-20px);
+      max-width: 360px;
+      min-width: 320px;
+      flex: 1 0 auto;
     }
 
     #descriptionBox h1 {
@@ -120,23 +120,24 @@
       color: #f0f0f0;
       padding: 2rem;
       border-radius: 14px;
-      max-width: 1000px;
       font-size: 0.95rem;
       line-height: 1.7;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.35);
-      overflow-y: auto;
+      max-width: 1000px;
       max-height: 90vh;
+      overflow-y: auto;
+      flex: 2 1 60%;
     }
 
     #unitInfoBox h2 {
-      margin-top: 0;
       color: #90cdf4;
       font-size: 1.5rem;
+      margin-top: 0;
     }
 
     #unitInfoBox h3 {
-      margin-top: 1.5rem;
       color: #aad5ff;
+      margin-top: 1.5rem;
     }
 
     #unitInfoBox p {
@@ -160,11 +161,44 @@
       box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
     }
 
+    #toggleConverterBtn {
+      display: inline-block;
+      margin-bottom: 1rem;
+      background: #4a90e2;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    label {
+      display: block;
+      margin-top: 0.6rem;
+    }
+
+    input {
+      width: 100%;
+      padding: 0.4rem;
+      margin-top: 0.2rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    output {
+      display: block;
+      margin-top: 0.5rem;
+      font-weight: bold;
+    }
+
     @media (max-width: 800px) {
       main {
         flex-direction: column;
         align-items: center;
-        gap: 1rem;
       }
 
       #sidebarRight {
@@ -176,10 +210,10 @@
 <body>
 
   <div class="wrapper">
-    <nav role="navigation" aria-label="Simulation navigation">
-      <div class="logo" aria-hidden="true">⚛</div>
+    <nav role="navigation">
+      <div class="logo">⚛</div>
       <h2>Simulations</h2>
-      <a href="index.html" class="active" aria-current="page">Main Menu</a>
+      <a href="index.html" class="active">Main Menu</a>
       <a href="projectile.html">Projectile Motion</a>
       <a href="oscillatory.html">Oscillatory Motion</a>
       <a href="sharmonic.html">Simple Harmonic Motion</a>
@@ -208,7 +242,20 @@
         </ul>
       </div>
 
-      <div id="unitInfoBox">
+      <div id="converterBox">
+        <button id="toggleConverterBtn" onclick="toggleConverter()">Show Unit Converter</button>
+        <div id="converterContent" class="hidden">
+          <label for="pixelInput">Pixels:</label>
+          <input type="number" id="pixelInput" placeholder="Enter pixels" />
+          
+          <label for="scaleInput">Scale (px = 1 meter):</label>
+          <input type="number" id="scaleInput" placeholder="Pixels per meter" value="100" />
+
+          <output id="realWorldOutput">Real-world: -- meters</output>
+        </div>
+      </div>
+
+    <div id="unitInfoBox">
         <h2>📏 Understanding Units in Simulations</h2>
 
         <h3>Why Pixels Instead of Meters?</h3>
@@ -220,16 +267,16 @@
         <h3>📌 px (Pixels)</h3>
         <p>A pixel is the smallest visual unit on a screen. If a ball is drawn at 300 px, it appears 300 pixels from the left edge of the canvas. It’s not a physical measurement—it’s screen-relative.</p>
 
-        <h3>➡️ px/frame (Speed)</h3>
+        <h3>➡ px/frame (Speed)</h3>
         <p>This defines how much the object moves in 1 frame. For example, 5 px/frame means every time draw() runs, the object shifts 5 pixels. If you want smoother motion, decrease the speed.</p>
 
-        <h3>⬆️ px/frame² (Acceleration)</h3>
+        <h3>⬆ px/frame² (Acceleration)</h3>
         <p>This tells us how much the <strong>speed changes per frame</strong>. An acceleration of 1 px/frame² means the object speeds up by 1 pixel every frame. So: 0 → 1 → 2 → 3 px/frame and so on.</p>
 
         <h3>🔁 rad/frame (Angular Speed)</h3>
         <p><strong>Radians per frame</strong> is how fast an object rotates. 1 radian ≈ 57.3 degrees. A value of 0.1 rad/frame means an object turns 0.1 radians each frame. Use this in spinning or orbiting animations.</p>
 
-        <h3>⏱️ frame (Time Step)</h3>
+        <h3>⏱ frame (Time Step)</h3>
         <p>A frame is one visual update cycle. All calculations (motion, acceleration, etc.) use “per frame” values. This simplifies logic and keeps movement consistent across machines.</p>
 
         <h3>🎯 Why Not Use Real Units?</h3>
@@ -239,6 +286,7 @@
         <p>You can always convert between real-world units and pixel/frame using scale factors. But in a canvas simulation, keeping it all in screen units helps you <strong>focus on concepts, not conversions</strong>.</p>
       </div>
     </main>
+
 
     <div id="sidebarRight">
       <div id="qrPlaceholder"></div>
@@ -255,9 +303,33 @@
       colorLight: "#ffffff",
       correctLevel: QRCode.CorrectLevel.H
     });
+
+    function toggleConverter() {
+      const content = document.getElementById('converterContent');
+      content.classList.toggle('hidden');
+    }
+
+    const pixelInput = document.getElementById("pixelInput");
+    const scaleInput = document.getElementById("scaleInput");
+    const output = document.getElementById("realWorldOutput");
+
+    pixelInput.addEventListener("input", convert);
+    scaleInput.addEventListener("input", convert);
+
+    function convert() {
+      const px = parseFloat(pixelInput.value);
+      const scale = parseFloat(scaleInput.value);
+      if (!isNaN(px) && scale > 0) {
+        const meters = px / scale;
+        output.textContent = `Real-world: ${meters.toFixed(3)} meters`;
+      } else {
+        output.textContent = "Real-world: -- meters";
+      }
+    }
   </script>
 </body>
 </html>
+
 
 
 
