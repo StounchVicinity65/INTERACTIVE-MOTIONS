@@ -35,6 +35,7 @@
     .stars {
       display: flex;
       justify-content: center;
+      flex-direction: row;
       margin: 1rem 0;
     }
 
@@ -98,21 +99,22 @@
   <div class="review-container">
     <h1>⭐ Rate This Website</h1>
 
-    <form id="reviewForm">
+    <form id="reviewForm" action="https://docs.google.com/forms/d/1-EPknhS4Qla-xnZKbpzoIqm9XN9zhD7fPN7rKnU0gZQ/edit" method="POST">
       <div class="stars">
-        <input type="radio" name="star" id="star5" value="5"><label for="star5">★</label>
-        <input type="radio" name="star" id="star4" value="4"><label for="star4">★</label>
-        <input type="radio" name="star" id="star3" value="3"><label for="star3">★</label>
-        <input type="radio" name="star" id="star2" value="2"><label for="star2">★</label>
         <input type="radio" name="star" id="star1" value="1"><label for="star1">★</label>
+        <input type="radio" name="star" id="star2" value="2"><label for="star2">★</label>
+        <input type="radio" name="star" id="star3" value="3"><label for="star3">★</label>
+        <input type="radio" name="star" id="star4" value="4"><label for="star4">★</label>
+        <input type="radio" name="star" id="star5" value="5"><label for="star5">★</label>
       </div>
 
-      <textarea placeholder="Write your thoughts..."></textarea>
+      <textarea name="feedback" placeholder="Write your thoughts..." required></textarea>
 
-      <button type="button" onclick="alert('Thanks for your feedback!')">Submit</button>
+      <button type="submit">Submit</button>
     </form>
 
     <a href="index.html" class="back">← Back to Main Menu</a>
   </div>
 </body>
 </html>
+
