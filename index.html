@@ -441,47 +441,7 @@ color: #90cdf4;
       colorDark: "#000000",
       colorLight: "#ffffff",
       correctLevel: QRCode.CorrectLevel.H
-
-        const idleMessage = document.createElement('div');
-  idleMessage.textContent = 'You there? Or just admiring the background?';
-  idleMessage.style.position = 'fixed';
-  idleMessage.style.bottom = '20px';
-  idleMessage.style.left = '50%';
-  idleMessage.style.transform = 'translateX(-50%)';
-  idleMessage.style.background = 'rgba(0, 0, 0, 0.7)';
-  idleMessage.style.color = '#fff';
-  idleMessage.style.padding = '12px 20px';
-  idleMessage.style.borderRadius = '12px';
-  idleMessage.style.fontSize = '1.1rem';
-  idleMessage.style.zIndex = '10000';
-  idleMessage.style.opacity = '0';
-  idleMessage.style.transition = 'opacity 0.5s ease';
-  idleMessage.style.pointerEvents = 'none';
-  document.body.appendChild(idleMessage);
-
-  let idleTimer;
-  function showIdleMessage() {
-    idleMessage.style.opacity = '1';
-  }
-
-  function hideIdleMessage() {
-    idleMessage.style.opacity = '0';
-  }
-
-  function resetIdleTimer() {
-    hideIdleMessage();
-    clearTimeout(idleTimer);
-    idleTimer = setTimeout(showIdleMessage, 60000);
-  }
-
-  ['mousemove', 'keydown', 'scroll', 'touchstart'].forEach(event => {
-    window.addEventListener(event, resetIdleTimer, false);
-  });
-
-  resetIdleTimer();
-</script>
-   
+    });
   </script>
 </body>
 </html>
-
