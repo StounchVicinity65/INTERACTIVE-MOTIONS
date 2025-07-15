@@ -218,6 +218,26 @@
       background: rgba(0, 0, 0, 0.9);
     }
 
+#aboutButton {
+  position: fixed;
+  top: 60px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.75);
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-decoration: none;
+  z-index: 1000;
+  transition: background 0.3s ease;
+}
+
+#aboutButton:hover {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+
     @media (max-width: 900px) {
       main {
         flex-direction: column;
@@ -337,6 +357,8 @@
     </div>
 
     <a href="review.html" id="reviewButton">Review</a>
+    <a href="aboutus.html" id="aboutButton">About Us</a>
+
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
