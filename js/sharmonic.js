@@ -34,7 +34,7 @@ function draw() {
 
   // Origin
   let originX = width / 2;
-  let originY = 120;
+  let originY = 160;
 
   // Pendulum bob position
   let bobX = originX + L * sin(theta);
