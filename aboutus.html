@@ -5,25 +5,49 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>About Us - Motion Simulation Project</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: linear-gradient(to right, #09203f, #537895);
+      height: 100vh;
+      background: url('https://scontent.fdac183-1.fna.fbcdn.net/v/t39.30808-6/506464250_1184081803519181_2821931254461692640_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_ohc=QuJmgH_L-TwQ7kNvwG9ONkh&_nc_oc=Adk9zyOycyAcLdNYM8YtacG0y8sAeRYksr8oIHYLCVIubJLczuFHdB0kd2tcnY-SleU&_nc_zt=23&_nc_ht=scontent.fdac183-1.fna&_nc_gid=XbyfwxZWJd9TvdAVrCOjRA&oh=00_AfTbTrbix-WQB0VRUmtKSNfc1FHgXpVUFWZsndaXw2AMiA&oe=687EFA0F') no-repeat center center fixed;
+      background-size: cover;
+      position: relative;
       color: #f0f0f0;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 0;
+    }
+
+    .wrapper {
+      position: relative;
+      z-index: 1;
       padding: 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
     }
 
     .container {
       max-width: 800px;
-      margin: auto;
-      background: rgba(0, 0, 0, 0.6);
+      background: rgba(0, 0, 0, 0.7);
       padding: 2rem;
       border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     }
 
     h1, h2 {
       color: #90cdf4;
+      margin-top: 0;
     }
 
     ul {
@@ -49,23 +73,31 @@
     a.back:hover {
       background: #357ab8;
     }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 1rem;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Bazlul Huq Khan School & College Science Fair 2025</h1>
-    <h2>Project Name: Interactive Simulation (Group Project)</h2>
+  <div class="wrapper">
+    <div class="container">
+      <h1>Bazlul Huq Khan School & College Science Fair 2025</h1>
+      <h2>Project Name: Interactive Simulation (Group Project)</h2>
 
-    <h3>Group Members:</h3>
-    <ul>
-      <li>1) Khandoker Shafowan Wafa, ID: 20180447, Class-9 (Blue)</li>
-      <li>2) Taief Bin Akbar, ID: 20240340, Class-9 (Blue)</li>
-      <li>3) Sahin Mahmud Robi, ID: 20220177, Class-9 (Blue)</li>
-      <li>4) Noor Hussain, ID: 20210232, Class-9 (Blue)</li>
-      <li>5) Omar Wahid, ID: 20240250, Class-9 (Blue)</li>
-    </ul>
+      <h3>Group Members:</h3>
+      <ul>
+        <li>1) Khandoker Shafowan Wafa, ID: 20180447, Class-9 (Blue)</li>
+        <li>2) Taief Bin Akbar, ID: 20240340, Class-9 (Blue)</li>
+        <li>3) Sahin Mahmud Robi, ID: 20220177, Class-9 (Blue)</li>
+        <li>4) Noor Hussain, ID: 20210232, Class-9 (Blue)</li>
+        <li>5) Omar Wahid, ID: 20240250, Class-9 (Blue)</li>
+      </ul>
 
-    <a class="back" href="index.html">← Back to Main Menu</a>
+      <a class="back" href="index.html">← Back to Main Menu</a>
+    </div>
   </div>
 </body>
 </html>
