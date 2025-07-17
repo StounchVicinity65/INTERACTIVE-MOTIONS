@@ -11,6 +11,7 @@
       text-align: center;
       background: #09203f;
       color: white;
+      overflow-x: hidden; /* prevent horizontal scroll if any */
     }
 
     .back-btn {
@@ -23,6 +24,7 @@
       padding: 6px 12px;
       border-radius: 6px;
       font-size: 14px;
+      z-index: 10;
     }
 
     .back-btn:hover {
@@ -35,32 +37,33 @@
     }
 
     #definition {
-      max-width: 1000px;
+      max-width: 1100px;  /* wider for length */
       margin: 1rem auto;
       background: #00000055;
-      padding: 1.2rem;
+      padding: 1rem 2rem; /* horizontal padding increased for spaciousness */
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(255,255,255,0.1);
       display: flex;
       justify-content: space-between;
       gap: 2rem;
       text-align: left;
+      flex-wrap: wrap;
+      line-height: 1.5;
+      font-size: 16px;
     }
 
-    #definition div {
-      flex: 1;
+    #definition > div {
+      flex: 1 1 45%; /* responsive, side by side */
+      min-width: 280px;
     }
 
     #controls {
       max-width: 700px;
-      margin: 1rem auto;
-      padding: 1rem;
+      margin: 1rem auto 2rem; /* bottom margin to separate from canvas */
+      padding: 1rem 1.5rem;
       background: #00000055;
       border-radius: 8px;
       box-shadow: 0 0 8px rgba(255,255,255,0.1);
-    }
-
-    .input-group {
       display: flex;
       justify-content: center;
       gap: 2rem;
@@ -72,6 +75,7 @@
       flex-direction: column;
       align-items: center;
       font-size: 14px;
+      min-width: 140px;
     }
 
     input {
@@ -84,12 +88,14 @@
 
     button {
       padding: 0.5rem 1rem;
-      margin-top: 1rem;
+      margin-top: auto; /* vertically center with inputs */
       border: none;
       background: #2563eb;
       color: white;
       border-radius: 5px;
       cursor: pointer;
+      align-self: center;
+      min-width: 110px;
     }
 
     button:hover {
@@ -98,11 +104,13 @@
 
     canvas {
       display: block;
-      margin: 1rem auto;
-      max-width: 100%;
+      margin: 0 auto 2rem;
+      max-width: 90vw;
+      max-height: 60vh;
       height: auto;
       border: 1px solid #ccc;
       background: #dbeafe;
+      border-radius: 6px;
     }
   </style>
 </head>
@@ -122,14 +130,12 @@
   </div>
 
   <div id="controls">
-    <div class="input-group">
-      <label>Angular Speed (rad/s)
-        <input type="number" id="speed" value="0.05" step="0.01" min="0.01" max="45">
-      </label>
-      <label>Radius (m)
-        <input type="number" id="radius" value="2" step="0.1" min="0.1" max="2.8">
-      </label>
-    </div>
+    <label>Angular Speed (rad/s)
+      <input type="number" id="speed" value="0.05" step="0.01" min="0.01" max="45" />
+    </label>
+    <label>Radius (m)
+      <input type="number" id="radius" value="2" step="0.1" min="0.1" max="2.8" />
+    </label>
     <button onclick="simulateCircular()">Simulate</button>
   </div>
 
@@ -140,4 +146,5 @@
 
 </body>
 </html>
+
 
