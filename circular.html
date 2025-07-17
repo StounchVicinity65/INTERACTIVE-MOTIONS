@@ -15,14 +15,26 @@
     h1 {
       margin-top: 1rem;
     }
+
     #definition {
-      max-width: 800px;
+      max-width: 900px;
       margin: 1rem auto;
       background: #00000055;
       padding: 1rem;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(255,255,255,0.1);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      text-align: left;
     }
+
+    #definition p {
+      flex: 1 1 45%;
+      margin: 0;
+    }
+
     #controls {
       max-width: 600px;
       margin: 1rem auto;
@@ -31,26 +43,33 @@
       border-radius: 8px;
       box-shadow: 0 0 8px rgba(255,255,255,0.1);
     }
+
     label {
-      margin: 0 1rem;
+      display: block;
+      margin: 0.6rem 0;
     }
+
     input {
       padding: 4px;
       border-radius: 4px;
       border: 1px solid #ccc;
+      width: 120px;
     }
+
     button {
       padding: 0.5rem 1rem;
-      margin-top: 0.5rem;
+      margin-top: 1rem;
       border: none;
       background: #2563eb;
       color: white;
       border-radius: 5px;
       cursor: pointer;
     }
+
     button:hover {
       background: #1d4ed8;
     }
+
     canvas {
       display: block;
       margin: 1rem auto;
@@ -58,6 +77,19 @@
       height: auto;
       border: 1px solid #ccc;
       background: #dbeafe;
+    }
+
+    a.back {
+      display: inline-block;
+      margin-top: 1.5rem;
+      color: #ccc;
+      text-decoration: none;
+      font-size: 1rem;
+    }
+
+    a.back:hover {
+      color: white;
+      text-decoration: underline;
     }
   </style>
 </head>
@@ -67,12 +99,18 @@
 
   <div id="definition">
     <p><strong>Definition:</strong> Circular motion is a movement of an object along the circumference of a circle. It can be uniform (with constant angular speed) or non-uniform (with changing speed).</p>
+    <p><strong>সংজ্ঞা:</strong> বৃত্তাকার গতি হল একটি বস্তুর বৃত্তের পরিধি বরাবর চলাচল। এটি সুষম হতে পারে (স্থিতিশীল কৌণিক গতিতে) বা অসুষম (গতির পরিবর্তনের সাথে)।</p>
   </div>
 
   <div id="controls">
     <label>Angular Speed (rad/s): <input type="number" id="speed" value="0.05" step="0.01" min="0.01"></label>
+    <label>Radius (meter): <input type="number" id="radius" value="2" step="0.1" min="0.1"></label>
     <button onclick="simulateCircular()">Simulate</button>
   </div>
+
+  <canvas id="circularCanvas"></canvas>
+
+  <a href="index.html" class="back">← Back to Main Menu</a>
 
   <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
   <script src="js/circular.js"></script>
