@@ -1,4 +1,4 @@
-let radius = 100;
+let radius = 100; // Default radius in pixels
 let angle = 0;
 let speedInput;
 let angularSpeed = 0.05;
@@ -12,14 +12,18 @@ function setup() {
   centerY = height / 2;
   noLoop();
 
-  // --- Setup for FPS Display ---
-  textSize(16); // Set text size for FPS display
-  textAlign(LEFT, TOP); // Align text to top-left for FPS display
-  // --- End Setup for FPS Display ---
+  // FPS display setup
+  textSize(16);
+  textAlign(LEFT, TOP);
 }
 
 function simulateCircular() {
   angularSpeed = parseFloat(speedInput.value);
+
+  // Get radius from input (in meters), convert to pixels (1m = 100px)
+  const rMeters = parseFloat(document.getElementById('radius').value);
+  radius = isNaN(rMeters) ? 1 * 100 : rMeters * 100;
+
   angle = 0;
   loop();
 }
@@ -33,7 +37,7 @@ function draw() {
   strokeWeight(2);
   ellipse(centerX, centerY, radius * 2);
 
-  // Calculate position on path
+  // Calculate position
   let x = centerX + radius * cos(angle);
   let y = centerY + radius * sin(angle);
 
@@ -46,11 +50,8 @@ function draw() {
   angle += angularSpeed;
   if (angle > TWO_PI) angle -= TWO_PI;
 
-  // --- ADDED CODE TO DISPLAY FPS ---
-  fill(0); // Set text color to black
-  textSize(16); // Set text size for FPS display (already set in setup, but good practice if draw is called directly or settings change)
-  textAlign(LEFT, TOP); // Align text to top-left for FPS display (already set in setup)
-  // Display the current frame rate, rounded to 1 decimal place
-  text(`FPS: ${frameRate().toFixed(1)}`, 10, 30); // Position text at (10, 30)
-  // --- END ADDED CODE ---
+  // Display FPS
+  fill(0);
+  text(`FPS: ${frameRate().toFixed(1)}`, 10, 30);
 }
+
