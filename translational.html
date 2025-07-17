@@ -35,10 +35,10 @@
     }
 
     #definition {
-      max-width: 800px;
+      max-width: 1000px;
       margin: 1rem auto;
       background: #00000055;
-      padding: 1rem;
+      padding: 1.2rem;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(255,255,255,0.1);
       display: flex;
@@ -52,7 +52,7 @@
     }
 
     #controls {
-      max-width: 600px;
+      max-width: 700px;
       margin: 1rem auto;
       padding: 1rem;
       background: #00000055;
@@ -60,20 +60,31 @@
       box-shadow: 0 0 8px rgba(255,255,255,0.1);
     }
 
+    .input-group {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
     label {
-      margin: 0 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 14px;
     }
 
     input {
       padding: 4px;
       border-radius: 4px;
       border: 1px solid #ccc;
-      width: 80px;
+      width: 100px;
+      text-align: center;
     }
 
     button {
       padding: 0.5rem 1rem;
-      margin-top: 0.5rem;
+      margin-top: 1rem;
       border: none;
       background: #2563eb;
       color: white;
@@ -103,17 +114,22 @@
 
   <div id="definition">
     <div>
-      <p><strong>Definition:</strong> Translational motion is the motion in which every particle of an object moves along parallel paths, with identical displacement and velocity over time.</strong> </p>
+      <p><strong>Definition:</strong> Translational motion is the motion in which every particle of an object moves along parallel paths, with identical displacement and velocity over time.</p>
     </div>
     <div>
-      <p><strong>সংজ্ঞা:</strong> চলন গতি হলো এমন একটি গতি, যেখানে বস্তুর প্রতিটি কণিকা একই দূরত্বে, একই দিকে ও একই বেগে একসাথে চলতে থাকে।</strong> </p>
+      <p><strong>সংজ্ঞা:</strong> চলন গতি হলো এমন একটি গতি, যেখানে বস্তুর প্রতিটি কণিকা একই দূরত্বে, একই দিকে ও একই বেগে একসাথে চলতে থাকে।</p>
     </div>
   </div>
 
   <div id="controls">
-    <label>Displacement (m): <input type="number" id="displacement" value="300" min="0"></label>
-    <label>Angle (°): <input type="number" id="angle" value="0" min="0" max="360"></label>
-    <br>
+    <div class="input-group">
+      <label>Displacement (m)
+        <input type="number" id="displacement" value="300" min="0">
+      </label>
+      <label>Angle (°)
+        <input type="number" id="angle" value="0" min="0" max="360">
+      </label>
+    </div>
     <button onclick="startTranslation()">Start</button>
     <button onclick="stopTranslation()">Stop</button>
   </div>
