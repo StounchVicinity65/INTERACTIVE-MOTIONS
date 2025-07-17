@@ -79,7 +79,7 @@
       font-weight: bold;
     }
 
-    main {
+    main { /* Added 'main' back as a container for description and unit info boxes */
       flex-grow: 1;
       display: flex;
       justify-content: flex-start;
@@ -153,7 +153,19 @@
       width: 100%;
       padding: 0.4rem;
       font-size: 0.9rem;
+      /* Added styling for input fields for better look on dark background */
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      border-radius: 4px;
     }
+
+    #converterBox input[type="number"]:focus {
+      outline: none;
+      border-color: #4a90e2;
+      box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.5);
+    }
+
 
     #converterBox p {
       margin-top: 0.8rem;
@@ -246,10 +258,11 @@
   </style>
 </head>
 <body>
+
   <div class="wrapper">
     <nav role="navigation">
       <div class="logo">⚛</div>
-      <h2>Simulations • গতি প্রয়োগ</h2>
+      <h2>• Simulations •</h2>
       <a href="index.html" class="active">Main Menu</a>
       <a href="projectile.html">Projectile Motion • প্রাসের গতি</a>
       <a href="oscillatory.html">Oscillatory Motion • দোলন গতি</a>
@@ -262,8 +275,7 @@
       <a href="decelerated.html">Decelerated Motion • মন্দিত গতি</a>
     </nav>
 
-    <main>
-      <div id="descriptionSection">
+    <main> <div id="descriptionSection">
         <div id="descriptionBox">
           <h1>Welcome to Interactive Motion Simulations</h1>
           <p>Select a simulation from the menu to explore different kinds of motions interactively.</p>
@@ -273,7 +285,7 @@
             <li>Simple Harmonic Motion • সরল স্পন্দন গতি</li>
             <li>Circular Motion • বৃত্তাকার গতি</li>
             <li>Random Motion • এলোমেলো গতি</li>
-            <li>Linear Motion •  সরলরৈখিক গতি</li>
+            <li>Linear Motion • সরলরৈখিক গতি</li>
             <li>Translational Motion • চলন গতি</li>
             <li>Accelerated Motion • ত্বরিত গতি</li>
             <li>Decelerated Motion • মন্দিত গতি</li>
@@ -281,52 +293,67 @@
         </div>
 
         <details id="converterBox">
-          <summary>🧮 Unit Converter (Screen → SI)</summary>
+          <summary>🧮 Unit Converter (Screen → Real Units) • একক রূপান্তরক (স্ক্রিন → বাস্তব একক)</summary>
+          <label for="fpsInput">Monitor Refresh Rate (Hz):</label>
+          <input type="number" id="fpsInput" value="60" min="1" />
 
-          <div class="inline-group">
-            <label for="fpsInput">Frames/Second (FPS):</label>
-            <input type="number" id="fpsInput" value="60" min="1" />
-            <label>
-              <input type="checkbox" id="autoFPS" />
-              Auto
-            </label>
-          </div>
-
-          <label>Speed (px/frame):
-            <input type="number" id="pxPerFrameInput" value="10" />
+          <label>
+            <input type="checkbox" id="autoFPS"> Auto-detect FPS (স্বয়ংক্রিয় FPS সনাক্ত করুন)
           </label>
-          <p>Speed ≈ <span id="speedResult">0</span> m/s</p>
 
-          <label>Acceleration (px/frame²):
+          <label for="pxPerFrameInput">Speed (px/frame):</label>
+          <p class="inline-group">
+             <input type="number" id="pxPerFrameInput" value="10" />
+             <span>Speed ≈ <span id="speedResult">0</span> m/s</span>
+          </p>
+
+          <label for="accelInput">Acceleration (px/frame²):</label>
+          <p class="inline-group">
             <input type="number" id="accelInput" value="1" />
-          </label>
-          <p>Acceleration ≈ <span id="accelResult">0</span> m/s²</p>
+            <span>Acceleration ≈ <span id="accelResult">0</span> m/s²</span>
+          </p>
 
-          <label>Angular Speed (rad/frame):
+          <label for="radInput">Angular Speed (rad/frame):</label>
+          <p class="inline-group">
             <input type="number" id="radInput" value="0.1" />
-          </label>
-          <p>Angular Speed ≈ <span id="radResult">0</span> rad/s</p>
+            <span>Angular Speed ≈ <span id="radResult">0</span> rad/s</span>
+          </p>
         </details>
       </div>
 
       <div id="unitInfoBox">
-        <h2>📏 Understanding Units in Simulations • ইউনিট ব্যাখ্যা</h2>
+        <h2>📏 Understanding Units in Simulations (সিমুলেশনে একক পরিচিতি)</h2>
 
-        <h3>Scale Explanation</h3>
-        <p>These simulations use a screen-based scale. According to CSS standards, 1 pixel is 1/96 inch, which is approximately <strong>0.00026 meters</strong>. This scale lets us convert screen movement to real-world meters.</p>
-
-        <p><strong>Why?</strong> Because p5.js and canvas animations are updated per frame, using pixels instead of physical meters. Seconds are avoided since time is frame-based (~60 frames per second).</p>
-
-        <h3>Internal Units Behind SI Labels</h3>
+        <h3>🔧 Units Used in These Simulations (এই সিমুলেশনে ব্যবহৃত এককসমূহ)</h3>
+        <p>In these simulations, we use a scaled representation to bridge screen-based animations with real-world physics concepts. Here's how it works:</p>
+        <p>এই সিমুলেশনগুলিতে, আমরা স্ক্রিন-ভিত্তিক অ্যানিমেশনগুলিকে বাস্তব-বিশ্বের পদার্থবিজ্ঞানের ধারণার সাথে সংযুক্ত করার জন্য একটি স্কেলড উপস্থাপনা ব্যবহার করি। এটি যেভাবে কাজ করে:</p>
         <ul>
-          <li><strong>m/s</strong> shown is actually: <code>px/frame × 0.00026 × fps</code></li>
-          <li><strong>m/s²</strong> shown is: <code>px/frame² × 0.00026 × fps²</code></li>
-          <li><strong>rad/s</strong> shown is: <code>rad/frame × fps</code></li>
+          <li><strong>Distance (দূরত্ব):</strong> On screen, distance is measured in pixels (px). For real-world comparison, we've set a scale where <strong>1 meter (m) in the simulation represents 0.00026 meters in real-world scale</strong>. This specific scale is chosen because p5.js animations are fundamentally updated based on pixels, and the actual physical size of a pixel varies across displays. We based our conversion on CSS information, where 1 CSS pixel is defined as 1/96th of a CSS inch, and one ninety-sixth (1/96th) of a CSS inch is approximately 0.00026 meters.</li>
+          <li><strong>Time (সময়):</strong> Instead of seconds (s), time is measured in <strong>frames (frame)</strong>. This is because p5.js and most animation libraries update simulations per frame, making time handling simpler for real-time animation logic.</li>
+          <li><strong>Velocity (বেগ):</strong> Represented as px/frame on screen.</li>
+          <li><strong>Acceleration (ত্বরণ):</strong> Represented as px/frame² on screen.</li>
+          <li><strong>Angular Speed (কৌণিক বেগ):</strong> Represented as rad/frame on screen.</li>
+          <li><strong>Angle (কোণ):</strong> Radians or Degrees — <strong>remains the same</strong>.</li>
+          <li><strong>Particle Count (কণার সংখ্যা):</strong> Unchanged (just a number).</li>
         </ul>
+        <p>This scaled system allows us to maintain accurate visual logic while making the underlying animation math easier. It helps learners focus more on physical <em>concepts</em> rather than complex unit conversions in a visual environment.</p>
+        <p>এই স্কেলড সিস্টেমটি ভিজ্যুয়াল লজিককে সঠিক রেখে অ্যানিমেশনের গণিতকে সহজ করে তোলে। এটি শিক্ষার্থীদের জটিল একক রূপান্তরের পরিবর্তে পদার্থবিজ্ঞানের <em>ধারণাগুলির</em> উপর মনোযোগ দিতে সহায়তা করে।</p>
 
-        <p><strong>বাংলায়:</strong> এই সিমুলেশনগুলো স্কেল হিসাবে 1 px ≈ 0.00026 মিটার ধরে চলে। পিক্সেল এবং ফ্রেম ব্যবহার করা হয়, কারণ p5.js প্রতি ফ্রেমে আপডেট হয়। তাই বাস্তব ইউনিট (m/s, m/s², rad/s) দেখানো হলেও এগুলো মূলত px ও frame থেকে হিসাব করা।</p>
+        <h3>Why the Scale Factor (স্কেল ফ্যাক্টর কেন)?</h3>
+        <p>Most screens use pixels to display content, and the physical size of a pixel can vary significantly between devices. Since we’re working within a computer screen for visual representation, measuring positions and distances in <strong>pixels</strong> is logical. To connect these screen pixels to real-world SI units (like meters), a specific scale factor is applied. As mentioned, 1 CSS pixel is 1/96th of a CSS inch, and 1/96th of a CSS inch is approximately 0.00026 meters. This conversion is used to provide a reference to real-world dimensions.</p>
+        <p>বেশিরভাগ স্ক্রিন বিষয়বস্তু প্রদর্শনের জন্য পিক্সেল ব্যবহার করে, এবং একটি পিক্সেলের ভৌত আকার বিভিন্ন ডিভাইসে উল্লেখযোগ্যভাবে পরিবর্তিত হতে পারে। যেহেতু আমরা ভিজ্যুয়াল উপস্থাপনার জন্য কম্পিউটার স্ক্রিনের মধ্যে কাজ করছি, তাই অবস্থান এবং দূরত্ব <strong>পিক্সেল</strong>-এ পরিমাপ করা যৌক্তিক। এই স্ক্রিন পিক্সেলগুলিকে বাস্তব-বিশ্বের SI এককগুলির (যেমন মিটার) সাথে সংযুক্ত করতে, একটি নির্দিষ্ট স্কেল ফ্যাক্টর প্রয়োগ করা হয়। যেমনটি উল্লেখ করা হয়েছে, 1 CSS পিক্সেল 1/96 CSS ইঞ্চির সমান, এবং 1/96 CSS ইঞ্চি প্রায় 0.00026 মিটার। এই রূপান্তরটি বাস্তব-বিশ্বের মাত্রার একটি রেফারেন্স প্রদান করতে ব্যবহৃত হয়।</p>
 
-        <h3>Summary Mapping of Units</h3>
+        <h3>Why Frames Instead of Seconds? (সেকেন্ডের পরিবর্তে ফ্রেম কেন?)</h3>
+        <p>In p5.js and most animation libraries, simulations are updated per frame. Using <strong>frames</strong> (frame) makes time handling simpler for animation logic. If your simulation runs at 60 frames per second (FPS), then each frame represents 1/60th of a second. Using frames helps keep movement consistent and simplifies the underlying code for visual updates.</p>
+        <p>p5.js এবং বেশিরভাগ অ্যানিমেশন লাইব্রেরিতে, সিমুলেশনগুলি প্রতি ফ্রেমে আপডেট হয়। <strong>ফ্রেম</strong> ব্যবহার করে অ্যানিমেশন লজিকের জন্য সময় পরিচালনা সহজ হয়। যদি আপনার সিমুলেশন প্রতি সেকেন্ডে 60 ফ্রেমে (FPS) চলে, তাহলে প্রতিটি ফ্রেম সেকেন্ডের 1/60 তম অংশকে প্রতিনিধিত্ব করে। ফ্রেম ব্যবহার গতিকে সুসংগত রাখতে এবং ভিজ্যুয়াল আপডেটের জন্য অন্তর্নিহিত কোডকে সরল করতে সহায়তা করে।</p>
+
+        <h3>Final Note (শেষ কথা)</h3>
+        <p>While the unit converter displays results in meters per second (m/s), meters per second squared (m/s²), and radians per second (rad/s) for your convenience and understanding of SI units, it's important to remember that these values in the simulation actually represent <strong>pixels per frame (px/frame)</strong>, <strong>pixels per frame squared (px/frame²)</strong>, and <strong>radians per frame (rad/frame)</strong> respectively. This approach helps you <strong>focus on the physics concepts</strong> directly as you observe the animation on screen, rather than getting bogged down in complex, real-time unit conversions.</p>
+        <p>যদিও ইউনিট কনভার্টারটি আপনার সুবিধার জন্য এবং SI এককগুলি বোঝার জন্য ফলাফল মিটার প্রতি সেকেন্ড (m/s), মিটার প্রতি সেকেন্ড স্কোয়ার্ড (m/s²) এবং রেডিয়ান প্রতি সেকেন্ড (rad/s) এ প্রদর্শন করে, তবে মনে রাখা গুরুত্বপূর্ণ যে সিমুলেশনের এই মানগুলি আসলে <strong>পিক্সেল প্রতি ফ্রেম (px/frame)</strong>, <strong>পিক্সেল প্রতি ফ্রেম স্কোয়ার্ড (px/frame²)</strong> এবং <strong>রেডিয়ান প্রতি ফ্রেম (rad/frame)</strong> কে প্রতিনিধিত্ব করে। এই পদ্ধতিটি আপনাকে স্ক্রিনে অ্যানিমেশন পর্যবেক্ষণ করার সময় সরাসরি <strong>পদার্থবিজ্ঞানের ধারণাগুলির উপর মনোযোগ দিতে</strong> সাহায্য করে, জটিল, রিয়েল-টাইম একক রূপান্তরের ঝামেলায় না গিয়ে।</p>
+
+        <hr>
+
+        <h4>Here's a quick summary of the unit conversions used:</h4>
         <ul>
           <li><strong>Distance:</strong> Meters (m) → Pixels (px)</li>
           <li><strong>Time:</strong> Seconds (s) → Frames (frame)</li>
@@ -337,9 +364,7 @@
           <li><strong>Particle Count:</strong> Unchanged (just a number)</li>
         </ul>
       </div>
-    </main>
-
-    <div id="sidebarRight">
+    </main> <div id="sidebarRight">
       <div id="qrPlaceholder"></div>
     </div>
 
@@ -359,25 +384,30 @@
     const accelResult = document.getElementById('accelResult');
     const radResult = document.getElementById('radResult');
 
-    let measuredFPS = 60;
+    let measuredFPS = 60; // Default or initial value
 
+    // Function to measure actual FPS of the browser
     function measureFPS() {
-      let last = performance.now(), frames = 0;
+      let lastTime = performance.now();
+      let framesCount = 0;
+
       function loop() {
-        const now = performance.now();
-        frames++;
-        if (now - last >= 1000) {
-          measuredFPS = frames;
+        const currentTime = performance.now();
+        framesCount++;
+
+        // Update FPS every second
+        if (currentTime - lastTime >= 1000) {
+          measuredFPS = framesCount;
           if (autoFPS.checked) {
             fpsInput.value = measuredFPS;
-            updateConversion();
+            updateConversion(); // Update conversion when auto-FPS changes
           }
-          frames = 0;
-          last = now;
+          framesCount = 0;
+          lastTime = currentTime;
         }
         requestAnimationFrame(loop);
       }
-      loop();
+      requestAnimationFrame(loop); // Start the loop
     }
 
     function updateConversion() {
@@ -386,7 +416,15 @@
       const pxa = parseFloat(accelInput.value);
       const radpf = parseFloat(radInput.value);
 
-      const scale = 0.00026; // CSS: 1 px ≈ 0.026 cm
+      // Validate inputs to prevent NaN results
+      if (isNaN(fps) || isNaN(pxpf) || isNaN(pxa) || isNaN(radpf) || fps <= 0) {
+        speedResult.textContent = 'N/A';
+        accelResult.textContent = 'N/A';
+        radResult.textContent = 'N/A';
+        return;
+      }
+
+      const scale = 0.00026; // CSS: 1 px ≈ 0.026 cm or 0.00026 m
 
       const mps = (pxpf * scale * fps).toFixed(3);
       const mps2 = (pxa * scale * fps * fps).toFixed(3);
@@ -397,13 +435,16 @@
       radResult.textContent = rads;
     }
 
+    // Event listeners for all input fields and the checkbox
     [fpsInput, pxPerFrameInput, accelInput, radInput, autoFPS].forEach(el =>
       el.addEventListener('input', updateConversion)
     );
 
-    measureFPS();
-    updateConversion();
+    // Initial calls
+    measureFPS(); // Start measuring FPS
+    updateConversion(); // Initial conversion calculation
 
+    // QR Code generation
     new QRCode(document.getElementById("qrPlaceholder"), {
       text: "https://stounchvicinity65.github.io/INTERACTIVE-MOTIONS/",
       width: 100,
@@ -415,4 +456,3 @@
   </script>
 </body>
 </html>
-
