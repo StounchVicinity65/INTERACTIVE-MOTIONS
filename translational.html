@@ -11,8 +11,6 @@
       text-align: center;
       background: #09203f;
       color: white;
-      position: relative;
-      min-height: 100vh;
     }
 
     .back-btn {
@@ -24,8 +22,7 @@
       background: #00000055;
       padding: 6px 12px;
       border-radius: 6px;
-      font-size: 13px;
-      z-index: 10;
+      font-size: 14px;
     }
 
     .back-btn:hover {
@@ -35,69 +32,64 @@
 
     h1 {
       margin-top: 3rem;
-      font-size: 22px;
     }
 
     #definition {
       max-width: 1000px;
-      margin: 1rem auto 0.6rem;
+      margin: 1rem auto;
       background: #00000055;
-      padding: 1rem 1.2rem;
+      padding: 1.2rem;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(255,255,255,0.1);
       display: flex;
       justify-content: space-between;
       gap: 2rem;
       text-align: left;
-      font-size: 14px;
-      min-height: 100px;
     }
 
     #definition div {
       flex: 1;
-      line-height: 1.4;
     }
 
     #controls {
       max-width: 700px;
-      margin: 0 auto 1rem;
-      padding: 0.8rem 1rem;
+      margin: 1rem auto;
+      padding: 1rem;
       background: #00000055;
       border-radius: 8px;
       box-shadow: 0 0 8px rgba(255,255,255,0.1);
+    }
+
+    .input-group {
       display: flex;
       justify-content: center;
-      gap: 1.8rem;
+      gap: 2rem;
       flex-wrap: wrap;
-      font-size: 13px;
     }
 
     label {
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-width: 120px;
+      font-size: 14px;
     }
 
     input {
       padding: 4px;
       border-radius: 4px;
       border: 1px solid #ccc;
-      width: 90px;
+      width: 100px;
       text-align: center;
-      font-size: 13px;
     }
 
     button {
-      padding: 0.4rem 0.9rem;
+      padding: 0.5rem 1rem;
       margin-top: 1rem;
       border: none;
       background: #2563eb;
       color: white;
       border-radius: 5px;
       cursor: pointer;
-      align-self: center;
-      font-size: 14px;
     }
 
     button:hover {
@@ -106,12 +98,11 @@
 
     canvas {
       display: block;
-      margin: 0.6rem auto 1.2rem;
+      margin: 1rem auto;
       max-width: 100%;
       height: auto;
       border: 1px solid #ccc;
       background: #dbeafe;
-      min-height: 320px; /* more vertical space */
     }
   </style>
 </head>
@@ -131,12 +122,14 @@
   </div>
 
   <div id="controls">
-    <label>Displacement (m)
-      <input type="number" id="displacement" value="300" min="0" />
-    </label>
-    <label>Angle (°)
-      <input type="number" id="angle" value="0" min="0" max="360" />
-    </label>
+    <div class="input-group">
+      <label>Displacement (m)
+        <input type="number" id="displacement" value="300" min="0">
+      </label>
+      <label>Angle (°)
+        <input type="number" id="angle" value="0" min="0" max="360">
+      </label>
+    </div>
     <button onclick="startTranslation()">Start</button>
     <button onclick="stopTranslation()">Stop</button>
   </div>
@@ -146,6 +139,7 @@
 
 </body>
 </html>
+
 
 
 
