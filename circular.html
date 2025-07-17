@@ -8,12 +8,27 @@
     body {
       margin: 0;
       font-family: sans-serif;
-      text-align: center;
       background: #09203f;
       color: white;
     }
+
+    a.back {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      color: #ccc;
+      text-decoration: none;
+      font-size: 1rem;
+    }
+
+    a.back:hover {
+      color: white;
+      text-decoration: underline;
+    }
+
     h1 {
-      margin-top: 1rem;
+      text-align: center;
+      margin-top: 3rem;
     }
 
     #definition {
@@ -42,6 +57,7 @@
       background: #00000055;
       border-radius: 8px;
       box-shadow: 0 0 8px rgba(255,255,255,0.1);
+      text-align: center;
     }
 
     label {
@@ -78,22 +94,12 @@
       border: 1px solid #ccc;
       background: #dbeafe;
     }
-
-    a.back {
-      display: inline-block;
-      margin-top: 1.5rem;
-      color: #ccc;
-      text-decoration: none;
-      font-size: 1rem;
-    }
-
-    a.back:hover {
-      color: white;
-      text-decoration: underline;
-    }
   </style>
 </head>
 <body>
+
+  <!-- Top-left back button -->
+  <a href="index.html" class="back">← Back to Main Menu</a>
 
   <h1>🌀 Circular Motion</h1>
 
@@ -110,10 +116,9 @@
 
   <canvas id="circularCanvas"></canvas>
 
-  <a href="index.html" class="back">← Back to Main Menu</a>
-
   <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
   <script src="js/circular.js"></script>
 
 </body>
 </html>
+
