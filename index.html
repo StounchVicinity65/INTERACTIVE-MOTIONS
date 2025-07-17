@@ -1,3 +1,8 @@
+Sure, I'll update the HTML to incorporate the changes you requested, including the updated motion list with Bangla translations and the revised unit descriptions to clarify the scaling and p5.js context.
+
+Here's the refurbished HTML code:
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -98,13 +103,13 @@
     }
 
     #descriptionBox {
-  background: rgba(0, 0, 0, 0.7);
-  padding: 1.5rem;
-  border-radius: 12px;
-  color: #f0f0f0;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-  transform: translateY(-10px);
-}
+      background: rgba(0, 0, 0, 0.7);
+      padding: 1.5rem;
+      border-radius: 12px;
+      color: #f0f0f0;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+      transform: translateY(-10px);
+    }
 
 
     #descriptionBox h1 {
@@ -123,12 +128,12 @@
     }
 
     #converterBox {
-  background: rgba(0, 0, 0, 0.7);
-  padding: 1.2rem;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-  color: #f0f0f0;
-}
+      background: rgba(0, 0, 0, 0.7);
+      padding: 1.2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+      color: #f0f0f0;
+    }
 
 
     #converterBox summary {
@@ -136,7 +141,7 @@
       cursor: pointer;
       margin-bottom: 1rem;
       font-size: 1.1rem;
-color: #90cdf4;
+      color: #90cdf4;
     }
 
     #converterBox label {
@@ -221,24 +226,24 @@ color: #90cdf4;
       background: rgba(0, 0, 0, 0.9);
     }
 
-#aboutButton {
-  position: fixed;
-  top: 60px;
-  right: 20px;
-  background: rgba(0, 0, 0, 0.75);
-  color: white;
-  padding: 0.6rem 1.2rem;
-  border-radius: 12px;
-  font-size: 1rem;
-  font-weight: bold;
-  text-decoration: none;
-  z-index: 1000;
-  transition: background 0.3s ease;
-}
+    #aboutButton {
+      position: fixed;
+      top: 60px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.75);
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: bold;
+      text-decoration: none;
+      z-index: 1000;
+      transition: background 0.3s ease;
+    }
 
-#aboutButton:hover {
-  background: rgba(0, 0, 0, 0.9);
-}
+    #aboutButton:hover {
+      background: rgba(0, 0, 0, 0.9);
+    }
 
 
     @media (max-width: 900px) {
@@ -279,17 +284,17 @@ color: #90cdf4;
       <div id="descriptionSection">
         <div id="descriptionBox">
           <h1>Welcome to Interactive Motion Simulations</h1>
-          <p>Select a simulation from the menu to explore different kinds of motions interactively.</p>
+          <p>Select a simulation from the menu to explore different kinds of motions interactively:</p>
           <ul>
-            <li>Projectile Motion</li>
-            <li>Oscillatory Motion</li>
-            <li>Simple Harmonic Motion</li>
-            <li>Circular Motion</li>
-            <li>Random Motion</li>
-            <li>Linear Motion</li>
-            <li>Translational Motion</li>
-            <li>Accelerated Motion</li>
-            <li>Decelerated Motion</li>
+            <li>Projectile Motion (প্রাসের গতি)</li>
+            <li>Oscillatory Motion (দোলন গতি)</li>
+            <li>Simple Harmonic Motion (সরল স্পন্দন গতি)</li>
+            <li>Circular Motion (বৃত্তাকার গতি)</li>
+            <li>Random Motion (এলোমেলো গতি)</li>
+            <li>Linear Motion (রৈখিক গতি)</li>
+            <li>Translational Motion (চলন গতি)</li>
+            <li>Accelerated Motion (ত্বরিত গতি)</li>
+            <li>Decelerated Motion (মন্দিত গতি)</li>
           </ul>
         </div>
 
@@ -322,48 +327,35 @@ color: #90cdf4;
         </details>
       </div>
 
-     <div id="unitInfoBox">
-        <h2>📏 Understanding Units in Simulations</h2>
+      <div id="unitInfoBox">
+        <h2>📏 Understanding Units in Simulations (সিমুলেশনে একক পরিচিতি)</h2>
 
-        <h3>🔧 Units Used in These Simulations</h3>
-<p>In these simulations, we blend screen-based units with traditional SI units for simplicity and interactivity. Here's how:</p>
-<ul>
-  <li><strong>Distance:</strong> Meters (m) → <strong>Pixels (px)</strong></li>
-  <li><strong>Time:</strong> Seconds (s) → <strong>Frames (frame)</strong></li>
-  <li><strong>Velocity:</strong> m/s → <strong>px/frame</strong></li>
-  <li><strong>Acceleration:</strong> m/s² → <strong>px/frame²</strong></li>
-  <li><strong>Angular Speed:</strong> rad/s → <strong>rad/frame</strong></li>
-  <li><strong>Angle:</strong> Radians or Degrees — <strong>remains the same</strong></li>
-  <li><strong>Particle Count:</strong> Unchanged (just a number)</li>
-</ul>
-<p>This hybrid system lets us maintain accurate visual logic while making the math easier for real-time animations. It also helps learners focus more on physical <em>concepts</em> rather than unit conversions.</p>
+        <h3>🔧 Units Used in These Simulations (এই সিমুলেশনে ব্যবহৃত এককসমূহ)</h3>
+        <p>In these simulations, we use a scaled representation to bridge screen-based animations with real-world physics concepts. Here's how it works:</p>
+        <p>এই সিমুলেশনগুলিতে, আমরা স্ক্রিন-ভিত্তিক অ্যানিমেশনগুলিকে বাস্তব-বিশ্বের পদার্থবিজ্ঞানের ধারণার সাথে সংযুক্ত করার জন্য একটি স্কেলড উপস্থাপনা ব্যবহার করি। এটি যেভাবে কাজ করে:</p>
+        <ul>
+          <li><strong>Distance (দূরত্ব):</strong> On screen, distance is measured in pixels (px). For real-world comparison, we've set a scale where **1 meter (m) in the simulation represents 0.00026 meters in real-world scale**. This specific scale is chosen because p5.js animations are fundamentally updated based on pixels, and the actual physical size of a pixel varies across displays. We based our conversion on CSS information, where 1 CSS pixel is defined as 1/96th of a CSS inch, and One ninety-sixth (1/96th) of a CSS inch is approximately 0.00026 meters.</li>
+          <li><strong>Time (সময়):</strong> Instead of seconds (s), time is measured in **frames (frame)**. This is because p5.js and most animation libraries update simulations per frame, making time handling simpler for real-time animation logic.</li>
+          <li><strong>Velocity (বেগ):</strong> Represented as px/frame on screen.</li>
+          <li><strong>Acceleration (ত্বরণ):</strong> Represented as px/frame² on screen.</li>
+          <li><strong>Angular Speed (কৌণিক বেগ):</strong> Represented as rad/frame on screen.</li>
+          <li><strong>Angle (কোণ):</strong> Radians or Degrees — **remains the same**.</li>
+          <li><strong>Particle Count (কণার সংখ্যা):</strong> Unchanged (just a number).</li>
+        </ul>
+        <p>This scaled system allows us to maintain accurate visual logic while making the underlying animation math easier. It helps learners focus more on physical *concepts* rather than complex unit conversions in a visual environment.</p>
+        <p>এই স্কেলড সিস্টেমটি ভিজ্যুয়াল লজিককে সঠিক রেখে অ্যানিমেশনের গণিতকে সহজ করে তোলে। এটি শিক্ষার্থীদের জটিল একক রূপান্তরের পরিবর্তে পদার্থবিজ্ঞানের *ধারণাগুলির* উপর মনোযোগ দিতে সহায়তা করে।</p>
 
-        <h3>Why Pixels Instead of Meters?</h3>
-        <p>Most screens use pixels to display content, not meters. Since we’re working within a computer screen, measuring positions and distances in <strong>pixels</strong> is logical and precise for visual rendering. 1px is a real measurable dot on the screen.</p>
+        <h3>Why the Scale Factor (স্কেল ফ্যাক্টর কেন)?</h3>
+        <p>Most screens use pixels to display content, and the physical size of a pixel can vary significantly between devices. Since we’re working within a computer screen for visual representation, measuring positions and distances in **pixels** is logical. To connect these screen pixels to real-world SI units (like meters), a specific scale factor is applied. As mentioned, 1 CSS pixel is 1/96th of a CSS inch, and 1/96th of a CSS inch is approximately 0.00026 meters. This conversion is used to provide a reference to real-world dimensions.</p>
+        <p>বেশিরভাগ স্ক্রিন বিষয়বস্তু প্রদর্শনের জন্য পিক্সেল ব্যবহার করে, এবং একটি পিক্সেলের ভৌত আকার বিভিন্ন ডিভাইসে উল্লেখযোগ্যভাবে পরিবর্তিত হতে পারে। যেহেতু আমরা ভিজ্যুয়াল উপস্থাপনার জন্য কম্পিউটার স্ক্রিনের মধ্যে কাজ করছি, তাই অবস্থান এবং দূরত্ব **পিক্সেল**-এ পরিমাপ করা যৌক্তিক। এই স্ক্রিন পিক্সেলগুলিকে বাস্তব-বিশ্বের SI এককগুলির (যেমন মিটার) সাথে সংযুক্ত করতে, একটি নির্দিষ্ট স্কেল ফ্যাক্টর প্রয়োগ করা হয়। যেমনটি উল্লেখ করা হয়েছে, 1 CSS পিক্সেল 1/96 CSS ইঞ্চির সমান, এবং 1/96 CSS ইঞ্চি প্রায় 0.00026 মিটার। এই রূপান্তরটি বাস্তব-বিশ্বের মাত্রার একটি রেফারেন্স প্রদান করতে ব্যবহৃত হয়।</p>
 
-        <h3>Why Frames Instead of Seconds?</h3>
-        <p>In p5.js and most animation libraries, simulations are updated per frame. Using <strong>frames</strong> makes time handling simpler for animation. If your simulation runs at 60 frames per second (FPS), then each frame is 1/60th of a second. So, 1 px/frame ≈ 60 px/sec (if your FPS is 60).</p>
+        <h3>Why Frames Instead of Seconds? (সেকেন্ডের পরিবর্তে ফ্রেম কেন?)</h3>
+        <p>In p5.js and most animation libraries, simulations are updated per frame. Using **frames** (frame) makes time handling simpler for animation logic. If your simulation runs at 60 frames per second (FPS), then each frame represents 1/60th of a second. Using frames helps keep movement consistent and simplifies the underlying code for visual updates.</p>
+        <p>p5.js এবং বেশিরভাগ অ্যানিমেশন লাইব্রেরিতে, সিমুলেশনগুলি প্রতি ফ্রেমে আপডেট হয়। **ফ্রেম** ব্যবহার করে অ্যানিমেশন লজিকের জন্য সময় পরিচালনা সহজ হয়। যদি আপনার সিমুলেশন প্রতি সেকেন্ডে 60 ফ্রেমে (FPS) চলে, তাহলে প্রতিটি ফ্রেম সেকেন্ডের 1/60 তম অংশকে প্রতিনিধিত্ব করে। ফ্রেম ব্যবহার গতিকে সুসংগত রাখতে এবং ভিজ্যুয়াল আপডেটের জন্য অন্তর্নিহিত কোডকে সরল করতে সহায়তা করে।</p>
 
-        <h3>📌 px (Pixels)</h3>
-        <p>A pixel is the smallest visual unit on a screen. If a ball is drawn at 300 px, it appears 300 pixels from the left edge of the canvas. It’s not a physical measurement—it’s screen-relative.</p>
-
-        <h3>➡ px/frame (Speed)</h3>
-        <p>This defines how much the object moves in 1 frame. For example, 5 px/frame means every time draw() runs, the object shifts 5 pixels. If you want smoother motion, decrease the speed.</p>
-
-        <h3>⬆ px/frame² (Acceleration)</h3>
-        <p>This tells us how much the <strong>speed changes per frame</strong>. An acceleration of 1 px/frame² means the object speeds up by 1 pixel every frame. So: 0 → 1 → 2 → 3 px/frame and so on.</p>
-
-        <h3>🔁 rad/frame (Angular Speed)</h3>
-        <p><strong>Radians per frame</strong> is how fast an object rotates. 1 radian ≈ 57.3 degrees. A value of 0.1 rad/frame means an object turns 0.1 radians each frame. Use this in spinning or orbiting animations.</p>
-
-        <h3>⏱ frame (Time Step)</h3>
-        <p>A frame is one visual update cycle. All calculations (motion, acceleration, etc.) use “per frame” values. This simplifies logic and keeps movement consistent across machines.</p>
-
-        <h3>🎯 Why Not Use Real Units?</h3>
-        <p>We could use meters/seconds, but it’s unnecessary unless you need physical accuracy. For learning and interactivity, <strong>pixels and frames are simpler</strong>, and easily understood by watching the screen.</p>
-
-        <h3>🧠 Final Note</h3>
-        <p>You can always convert between real-world units and pixel/frame using scale factors. But in a canvas simulation, keeping it all in screen units helps you <strong>focus on concepts, not conversions</strong>.</p>
+        <h3>Final Note (শেষ কথা)</h3>
+        <p>While the unit converter displays results in meters per second (m/s), meters per second squared (m/s²), and radians per second (rad/s) for your convenience and understanding of SI units, it's important to remember that these values in the simulation actually represent **pixels per frame (px/frame)**, **pixels per frame squared (px/frame²)**, and **radians per frame (rad/frame)** respectively. This approach helps you **focus on the physics concepts** directly as you observe the animation on screen, rather than getting bogged down in complex, real-time unit conversions.</p>
+        <p>যদিও ইউনিট কনভার্টারটি আপনার সুবিধার জন্য এবং SI এককগুলি বোঝার জন্য ফলাফল মিটার প্রতি সেকেন্ড (m/s), মিটার প্রতি সেকেন্ড স্কোয়ার্ড (m/s²) এবং রেডিয়ান প্রতি সেকেন্ড (rad/s) এ প্রদর্শন করে, তবে মনে রাখা গুরুত্বপূর্ণ যে সিমুলেশনের এই মানগুলি আসলে **পিক্সেল প্রতি ফ্রেম (px/frame)**, **পিক্সেল প্রতি ফ্রেম স্কোয়ার্ড (px/frame²)** এবং **রেডিয়ান প্রতি ফ্রেম (rad/frame)** কে প্রতিনিধিত্ব করে। এই পদ্ধতিটি আপনাকে স্ক্রিনে অ্যানিমেশন পর্যবেক্ষণ করার সময় সরাসরি **পদার্থবিজ্ঞানের ধারণাগুলির উপর মনোযোগ দিতে** সাহায্য করে, জটিল, রিয়েল-টাইম একক রূপান্তরের ঝামেলায় না গিয়ে।</p>
       </div>
     </main>
 
@@ -416,10 +408,15 @@ color: #90cdf4;
       const pxa = parseFloat(accelInput.value);
       const radpf = parseFloat(radInput.value);
 
-      const scale = 0.00026; // 1 px ≈ 0.026 cm
+      // 1 CSS inch = 96 CSS pixels
+      // 1 CSS inch = 1 standard inch
+      // 1 inch = 0.0254 meters
+      // So, 1 CSS pixel = (1/96) * 1 inch = (1/96) * 0.0254 meters = 0.00026458333... meters
+      // Using the approximation 0.00026 meters per pixel for the scale factor
+      const scale_meters_per_px = 0.00026;
 
-      const mps = (pxpf * scale * fps).toFixed(3);
-      const mps2 = (pxa * scale * fps * fps).toFixed(3);
+      const mps = (pxpf * scale_meters_per_px * fps).toFixed(3);
+      const mps2 = (pxa * scale_meters_per_px * fps * fps).toFixed(3);
       const rads = (radpf * fps).toFixed(3);
 
       speedResult.textContent = mps;
@@ -445,3 +442,4 @@ color: #90cdf4;
   </script>
 </body>
 </html>
+```
