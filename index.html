@@ -6,113 +6,280 @@
   <title>Interactive Motion Simulations - Main Menu</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --nav-bg: rgba(0, 0, 0, 0.6);
+      --nav-hover-bg: #4a90e2;
+      --nav-text-color: #ccc;
+      --nav-active-color: white;
+    }
+    * {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: linear-gradient(to right, #09203f, #537895);
-      color: #f0f0f0;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+      background: url('https://i.pinimg.com/originals/54/f8/e3/54f8e332b488dfdb2d3cc2efce8a536a.gif') no-repeat center center fixed;
+      background-size: cover;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(to right, rgba(9,32,63,0.7), rgba(83,120,149,0.7));
+      z-index: 0;
     }
     body.bangla {
-      font-family: "Noto Serif Bengali", serif;
+      font-family: 'Noto Serif Bengali', Arial, sans-serif;
     }
     .wrapper {
       display: flex;
-      min-height: 100vh;
+      height: 100%;
+      position: relative;
+      z-index: 1;
     }
     nav {
-      width: 240px;
-      background: rgba(0,0,0,0.7);
-      padding: 1rem;
+      width: 220px;
+      background: var(--nav-bg);
+      color: var(--nav-text-color);
       display: flex;
       flex-direction: column;
-      align-items: center;
+      padding: 1rem;
+      z-index: 1;
     }
     nav .logo {
       font-size: 2rem;
+      text-align: center;
       margin-bottom: 0.5rem;
     }
     nav h2 {
-      color: #90cdf4;
-      margin: 0.5rem 0 1rem;
+      text-align: center;
+      margin: 0 0 1rem;
+      font-weight: normal;
+      font-size: 1.2rem;
     }
     nav a {
-      display: block;
-      width: 100%;
+      color: var(--nav-text-color);
       text-decoration: none;
-      color: #f0f0f0;
-      padding: 0.5rem;
-      border-radius: 5px;
-      transition: background 0.3s;
-      text-align: center;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      margin-bottom: 0.3rem;
+      transition: background-color 0.3s, color 0.3s;
+      font-size: 0.95rem;
     }
+    nav a.active,
     nav a:hover {
-      background: #2563eb;
-    }
-    nav a.active {
-      background: #1d4ed8;
+      background: var(--nav-hover-bg);
+      color: var(--nav-active-color);
+      font-weight: bold;
     }
     main {
-      flex: 1;
-      padding: 2rem;
-    }
-    #descriptionBox, #converterBox, #unitInfoBox {
-      background: rgba(0,0,0,0.55);
-      padding: 1rem;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
-    }
-    details {
-      cursor: pointer;
-    }
-    #sidebarRight {
-      width: 120px;
-      padding: 1rem;
+      flex-grow: 1;
       display: flex;
+      justify-content: flex-start;
       align-items: flex-start;
-      justify-content: center;
+      gap: 2rem;
+      padding: 2rem;
+      position: relative;
+      z-index: 1;
     }
-    #qrPlaceholder {
-      background: white;
-      padding: 0.5rem;
-      border-radius: 8px;
+    #descriptionSection {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      max-width: 360px;
+      min-width: 360px;
     }
-    #reviewButton, #aboutButton {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      margin-left: 0.5rem;
-      display: inline-block;
-      padding: 0.5rem 1rem;
-      background: #2563eb;
-      border-radius: 6px;
-      color: white;
-      text-decoration: none;
+    #descriptionBox {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 1.5rem;
+      border-radius: 12px;
+      color: #f0f0f0;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+      transform: translateY(-10px);
+      min-height: 300px;
+    }
+    #descriptionBox h1 {
+      margin-top: 0;
+      font-size: 1.4rem;
+      color: #90cdf4;
+    }
+    #descriptionBox ul {
+      padding-left: 1.2rem;
       margin-top: 0.5rem;
     }
+    #descriptionBox li {
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+    #converterBox {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 1.2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+      color: #f0f0f0;
+      min-height: 60px; /* Collapsed height */
+      width: 100%;
+      transition: min-height 0.3s ease;
+    }
+    #converterBox[open] {
+      min-height: 250px; /* Expanded height */
+    }
+    #converterBox summary {
+      font-weight: bold;
+      cursor: pointer;
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+      color: #90cdf4;
+      list-style: none; /* Remove default marker */
+    }
+    #converterBox summary::-webkit-details-marker {
+      display: none; /* Remove default arrow in WebKit browsers */
+    }
+    #converterBox label {
+      display: block;
+      margin-top: 0.6rem;
+      margin-bottom: 0.2rem;
+      font-size: 0.95rem;
+    }
+    #converterBox .inline-group {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      min-height: 2rem;
+    }
+    #converterBox input[type="number"] {
+      width: 100%;
+      max-width: 150px;
+      padding: 0.4rem;
+      font-size: 0.9rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      border-radius: 4px;
+    }
+    #converterBox input[type="number"]:focus {
+      outline: none;
+      border-color: #4a90e2;
+      box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.5);
+    }
+    #converterBox p {
+      margin-top: 0.8rem;
+      font-size: 0.95rem;
+    }
+    #unitInfoBox {
+      background: rgba(0, 0, 0, 0.7);
+      color: #f0f0f0;
+      padding: 2rem;
+      border-radius: 14px;
+      max-width: 1000px;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.35);
+      overflow-y: auto;
+      max-height: 90vh;
+      min-width: 600px;
+    }
+    #unitInfoBox h2 {
+      margin-top: 0;
+      color: #90cdf4;
+      font-size: 1.5rem;
+    }
+    #unitInfoBox h3 {
+      margin-top: 1.5rem;
+      color: #aad5ff;
+      font-size: 1.2rem;
+    }
+    #sidebarRight {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      z-index: 5;
+    }
+    #qrPlaceholder {
+      width: 110px;
+      height: 110px;
+      background: white;
+      padding: 6px;
+      border-radius: 6px;
+      box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+    }
+    #reviewButton,
     #aboutButton {
-      bottom: 60px;
-      background: #4a90e2;
+      position: fixed;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.75);
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: bold;
+      text-decoration: none;
+      z-index: 1000;
+      transition: background 0.3s ease;
+    }
+    #reviewButton {
+      top: 20px;
+    }
+    #aboutButton {
+      top: 60px;
+    }
+    #reviewButton:hover,
+    #aboutButton:hover {
+      background: rgba(0, 0, 0, 0.9);
     }
     #languageToggle {
       position: fixed;
-      top: 10px;
-      right: 10px;
-      z-index: 999;
-      background: #2563eb;
-      border: none;
+      top: 105px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.75);
       color: white;
-      padding: 0.4rem 0.8rem;
-      border-radius: 6px;
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: 25px;
+      font-size: 1rem;
+      font-weight: bold;
       cursor: pointer;
+      z-index: 1000;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    #languageToggle:active {
+      transform: translateY(0);
+    }
+    .lang-en, .lang-bn {
+      transition: opacity 0.3s ease;
     }
     .hidden {
-      display: none;
+      display: none !important;
     }
-    .inline-group {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
+    @media (max-width: 900px) {
+      main {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+      #descriptionSection {
+        max-width: 90vw;
+        min-width: auto;
+      }
+      #unitInfoBox {
+        max-width: 90vw;
+        min-width: auto;
+      }
+      #sidebarRight {
+        display: none;
+      }
+      #languageToggle {
+        top: 140px;
+        right: 10px;
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+      }
     }
   </style>
 </head>
@@ -129,15 +296,42 @@
         <span class="lang-en">Main Menu</span>
         <span class="lang-bn hidden">প্রধান মেনু</span>
       </a>
-      <a href="projectile.html"><span class="lang-en">Projectile Motion</span><span class="lang-bn hidden">প্রাসের গতি</span></a>
-      <a href="oscillatory.html"><span class="lang-en">Oscillatory Motion</span><span class="lang-bn hidden">দোলন গতি</span></a>
-      <a href="sharmonic.html"><span class="lang-en">Simple Harmonic Motion</span><span class="lang-bn hidden">সরল স্পন্দন গতি</span></a>
-      <a href="circular.html"><span class="lang-en">Circular Motion</span><span class="lang-bn hidden">বৃত্তাকার গতি</span></a>
-      <a href="random.html"><span class="lang-en">Random Motion</span><span class="lang-bn hidden">এলোমেলো গতি</span></a>
-      <a href="linear.html"><span class="lang-en">Linear Motion</span><span class="lang-bn hidden">সরলরৈখিক গতি</span></a>
-      <a href="translational.html"><span class="lang-en">Translational Motion</span><span class="lang-bn hidden">চলন গতি</span></a>
-      <a href="accelerated.html"><span class="lang-en">Accelerated Motion</span><span class="lang-bn hidden">ত্বরিত গতি</span></a>
-      <a href="decelerated.html"><span class="lang-en">Decelerated Motion</span><span class="lang-bn hidden">মন্দিত গতি</span></a>
+      <a href="projectile.html">
+        <span class="lang-en">Projectile Motion</span>
+        <span class="lang-bn hidden">প্রাসের গতি</span>
+      </a>
+      <a href="oscillatory.html">
+        <span class="lang-en">Oscillatory Motion</span>
+        <span class="lang-bn hidden">দোলন গতি</span>
+      </a>
+      <a href="sharmonic.html">
+        <span class="lang-en">Simple Harmonic Motion</span>
+        <span class="lang-bn hidden">সরল স্পন্দন গতি</span>
+      </a>
+      <a href="circular.html">
+        <span class="lang-en">Circular Motion</span>
+        <span class="lang-bn hidden">বৃত্তাকার গতি</span>
+      </a>
+      <a href="random.html">
+        <span class="lang-en">Random Motion</span>
+        <span class="lang-bn hidden">এলোমেলো গতি</span>
+      </a>
+      <a href="linear.html">
+        <span class="lang-en">Linear Motion</span>
+        <span class="lang-bn hidden">সরলরৈখিক গতি</span>
+      </a>
+      <a href="translational.html">
+        <span class="lang-en">Translational Motion</span>
+        <span class="lang-bn hidden">চলন গতি</span>
+      </a>
+      <a href="accelerated.html">
+        <span class="lang-en">Accelerated Motion</span>
+        <span class="lang-bn hidden">ত্বরিত গতি</span>
+      </a>
+      <a href="decelerated.html">
+        <span class="lang-en">Decelerated Motion</span>
+        <span class="lang-bn hidden">মন্দিত গতি</span>
+      </a>
     </nav>
     <main>
       <div id="descriptionSection">
@@ -151,15 +345,42 @@
             <span class="lang-bn hidden">বিভিন্ন ধরনের গতি ইন্টারেক্টিভভাবে অন্বেষণ করতে মেনু থেকে একটি সিমুলেশন নির্বাচন করুন।</span>
           </p>
           <ul>
-            <li><span class="lang-en">Projectile Motion</span><span class="lang-bn hidden">প্রাসের গতি</span></li>
-            <li><span class="lang-en">Oscillatory Motion</span><span class="lang-bn hidden">দোলন গতি</span></li>
-            <li><span class="lang-en">Simple Harmonic Motion</span><span class="lang-bn hidden">সরল স্পন্দন গতি</span></li>
-            <li><span class="lang-en">Circular Motion</span><span class="lang-bn hidden">বৃত্তাকার গতি</span></li>
-            <li><span class="lang-en">Random Motion</span><span class="lang-bn hidden">এলোমেলো গতি</span></li>
-            <li><span class="lang-en">Linear Motion</span><span class="lang-bn hidden">সরলরৈখিক গতি</span></li>
-            <li><span class="lang-en">Translational Motion</span><span class="lang-bn hidden">চলন গতি</span></li>
-            <li><span class="lang-en">Accelerated Motion</span><span class="lang-bn hidden">ত্বরিত গতি</span></li>
-            <li><span class="lang-en">Decelerated Motion</span><span class="lang-bn hidden">মন্দিত গতি</span></li>
+            <li>
+              <span class="lang-en">Projectile Motion</span>
+              <span class="lang-bn hidden">প্রাসের গতি</span>
+            </li>
+            <li>
+              <span class="lang-en">Oscillatory Motion</span>
+              <span class="lang-bn hidden">দোলন গতি</span>
+            </li>
+            <li>
+              <span class="lang-en">Simple Harmonic Motion</span>
+              <span class="lang-bn hidden">সরল স্পন্দন গতি</span>
+            </li>
+            <li>
+              <span class="lang-en">Circular Motion</span>
+              <span class="lang-bn hidden">বৃত্তাকার গতি</span>
+            </li>
+            <li>
+              <span class="lang-en">Random Motion</span>
+              <span class="lang-bn hidden">এলোমেলো গতি</span>
+            </li>
+            <li>
+              <span class="lang-en">Linear Motion</span>
+              <span class="lang-bn hidden">সরলরৈখিক গতি</span>
+            </li>
+            <li>
+              <span class="lang-en">Translational Motion</span>
+              <span class="lang-bn hidden">চলন গতি</span>
+            </li>
+            <li>
+              <span class="lang-en">Accelerated Motion</span>
+              <span class="lang-bn hidden">ত্বরিত গতি</span>
+            </li>
+            <li>
+              <span class="lang-en">Decelerated Motion</span>
+              <span class="lang-bn hidden">মন্দিত গতি</span>
+            </li>
           </ul>
         </div>
         <details id="converterBox">
@@ -215,58 +436,254 @@
         </details>
       </div>
       <div id="unitInfoBox">
+        <h2>
+          <span class="lang-en">📏 Understanding Units in Simulations</span>
+          <span class="lang-bn hidden">📏 সিমুলেশনে একক পরিচিতি</span>
+        </h2>
         <h3>
-          <span class="lang-en">📏 Unit Mapping</span>
-          <span class="lang-bn hidden">📏 একক রূপান্তর</span>
+          <span class="lang-en">🔧 Units Used in These Simulations</span>
+          <span class="lang-bn hidden">🔧 এই সিমুলেশনে ব্যবহৃত এককসমূহ</span>
         </h3>
+        <p class="lang-en">In these simulations, we use a scaled representation to bridge screen-based animations with real-world physics concepts. Here's how it works:</p>
+        <p class="lang-bn hidden">এই সিমুলেশনগুলিতে, আমরা স্ক্রিন-ভিত্তিক অ্যানিমেশনগুলিকে বাস্তব-বিশ্বের পদার্থবিজ্ঞানের ধারণার সাথে সংযুক্ত করার জন্য একটি স্কেলড উপস্থাপনা ব্যবহার করি। এটি যেভাবে কাজ করে:</p>
         <ul>
-          <li><span class="lang-en">Distance: Meters (m) → Pixels (px)</span><span class="lang-bn hidden">দূরত্ব: মিটার (m) → পিক্সেল (px)</span></li>
-          <li><span class="lang-en">Time: Seconds (s) → Frames (frame)</span><span class="lang-bn hidden">সময়: সেকেন্ড (s) → ফ্রেম (frame)</span></li>
-          <li><span class="lang-en">Velocity: m/s → px/frame</span><span class="lang-bn hidden">বেগ: m/s → px/frame</span></li>
-          <li><span class="lang-en">Acceleration: m/s² → px/frame²</span><span class="lang-bn hidden">ত্বরণ: m/s² → px/frame²</span></li>
-          <li><span class="lang-en">Angular Speed: rad/s → rad/frame</span><span class="lang-bn hidden">কৌণিক গতি: rad/s → rad/frame</span></li>
-          <li><span class="lang-en">Angle: Radians or Degrees — remains the same</span><span class="lang-bn hidden">কোণ: রেডিয়ান বা ডিগ্রি — অপরিবর্তিত</span></li>
-          <li><span class="lang-en">Particle Count: Unchanged (just a number)</span><span class="lang-bn hidden">কণার সংখ্যা: অপরিবর্তিত (শুধু একটি সংখ্যা)</span></li>
+          <li>
+            <strong>
+              <span class="lang-en">Distance:</span>
+              <span class="lang-bn hidden">দূরত্ব:</span>
+            </strong>
+            <span class="lang-en">On screen, distance is measured in pixels (px). For real-world comparison, we've set a scale where <strong>1 meter (m) in the simulation represents 0.00026 meters in real-world scale</strong>. This specific scale is chosen because p5.js animations are fundamentally updated based on pixels, and the actual physical size of a pixel varies across displays. We based our conversion on CSS information, where 1 CSS pixel is defined as 1/96th of a CSS inch, and one ninety-sixth (1/96th) of a CSS inch is approximately 0.00026 meters.</span>
+            <span class="lang-bn hidden">স্ক্রিনে, দূরত্ব পিক্সেল (px) এ পরিমাপ করা হয়। বাস্তব-বিশ্বের তুলনার জন্য, আমরা এমন একটি স্কেল সেট করেছি যেখানে <strong>সিমুলেশনে ১ মিটার (m) বাস্তব-বিশ্বের স্কেলে ০.০০০২৬ মিটারকে প্রতিনিধিত্ব করে</strong>। এই নির্দিষ্ট স্কেলটি বেছে নেওয়া হয়েছে কারণ p5.js অ্যানিমেশনগুলি মূলত পিক্সেলের উপর ভিত্তি করে আপডেট হয় এবং একটি পিক্সেলের প্রকৃত ভৌত আকার বিভিন্ন ডিসপ্লেতে পরিবর্তিত হয়।</span>
+          </li>
+          <li>
+            <strong>
+              <span class="lang-en">Time:</span>
+              <span class="lang-bn hidden">সময়:</span>
+            </strong>
+            <span class="lang-en">Instead of seconds (s), time is measured in <strong>frames (frame)</strong>. This is because p5.js and most animation libraries update simulations per frame, making time handling simpler for real-time animation logic.</span>
+            <span class="lang-bn hidden">সেকেন্ড (s) এর পরিবর্তে, সময় <strong>ফ্রেম (frame)</strong> এ পরিমাপ করা হয়। এর কারণ হল p5.js এবং বেশিরভাগ অ্যানিমেশন লাইব্রেরি প্রতি ফ্রেমে সিমুলেশন আপডেট করে।</span>
+          </li>
+          <li>
+            <strong>
+              <span class="lang-en">Velocity:</span>
+              <span class="lang-bn hidden">বেগ:</span>
+            </strong>
+            <span class="lang-en">Represented as px/frame on screen.</span>
+            <span class="lang-bn hidden">স্ক্রিনে px/frame হিসাবে উপস্থাপিত।</span>
+          </li>
+          <li>
+            <strong>
+              <span class="lang-en">Acceleration:</span>
+              <span class="lang-bn hidden">ত্বরণ:</span>
+            </strong>
+            <span class="lang-en">Represented as px/frame² on screen.</span>
+            <span class="lang-bn hidden">স্ক্রিনে px/frame² হিসাবে উপস্থাপিত।</span>
+          </li>
+          <li>
+            <strong>
+              <span class="lang-en">Angular Speed:</span>
+              <span class="lang-bn hidden">কৌণিক বেগ:</span>
+            </strong>
+            <span class="lang-en">Represented as rad/frame on screen.</span>
+            <span class="lang-bn hidden">স্ক্রিনে rad/frame হিসাবে উপস্থাপিত।</span>
+          </li>
+          <li>
+            <strong>
+              <span class="lang-en">Angle:</span>
+              <span class="lang-bn hidden">কোণ:</span>
+            </strong>
+            <span class="lang-en">Radians or Degrees — <strong>remains the same</strong>.</span>
+            <span class="lang-bn hidden">রেডিয়ান বা ডিগ্রি — <strong>একই থাকে</strong>।</span>
+          </li>
+          <li>
+            <strong>
+              <span class="lang-en">Particle Count:</span>
+              <span class="lang-bn hidden">কণার সংখ্যা:</span>
+            </strong>
+            <span class="lang-en">Unchanged (just a number).</span>
+            <span class="lang-bn hidden">অপরিবর্তিত (শুধুমাত্র একটি সংখ্যা)।</span>
+          </li>
+        </ul>
+        <p class="lang-en">This scaled system allows us to maintain accurate visual logic while making the underlying animation math easier. It helps learners focus more on physical <em>concepts</em> rather than complex unit conversions in a visual environment.</p>
+        <p class="lang-bn hidden">এই স্কেলড সিস্টেমটি ভিজ্যুয়াল লজিককে সঠিক রেখে অ্যানিমেশনের গণিতকে সহজ করে তোলে। এটি শিক্ষার্থীদের জটিল একক রূপান্তরের পরিবর্তে পদার্থবিজ্ঞানের <em>ধারণাগুলির</em> উপর মনোযোগ দিতে সহায়তা করে।</p>
+        <h3>
+          <span class="lang-en">Why the Scale Factor?</span>
+          <span class="lang-bn hidden">স্কেল ফ্যাক্টর কেন?</span>
+        </h3>
+        <p class="lang-en">Most screens use pixels to display content, and the physical size of a pixel can vary significantly between devices. Since we're working within a computer screen for visual representation, measuring positions and distances in <strong>pixels</strong> is logical. To connect these screen pixels to real-world SI units (like meters), a specific scale factor is applied.</p>
+        <p class="lang-bn hidden">বেশিরভাগ স্ক্রিন বিষয়বস্তু প্রদর্শনের জন্য পিক্সেল ব্যবহার করে, এবং একটি পিক্সেলের ভৌত আকার বিভিন্ন ডিভাইসে উল্লেখযোগ্যভাবে পরিবর্তিত হতে পারে। যেহেতু আমরা ভিজ্যুয়াল উপস্থাপনার জন্য কম্পিউটার স্ক্রিনের মধ্যে কাজ করছি, তাই অবস্থান এবং দূরত্ব <strong>পিক্সেল</strong>-এ পরিমাপ করা যৌক্তিক।</p>
+        <h3>
+          <span class="lang-en">Why Frames Instead of Seconds?</span>
+          <span class="lang-bn hidden">সেকেন্ডের পরিবর্তে ফ্রেম কেন?</span>
+        </h3>
+        <p class="lang-en">In p5.js and most animation libraries, simulations are updated per frame. Using <strong>frames</strong> (frame) makes time handling simpler for animation logic. If your simulation runs at 60 frames per second (FPS), then each frame represents 1/60th of a second.</p>
+        <p class="lang-bn hidden">p5.js এবং বেশিরভাগ অ্যানিমেশন লাইব্রেরিতে, সিমুলেশনগুলি প্রতি ফ্রেমে আপডেট হয়। <strong>ফ্রেম</strong> ব্যবহার করে অ্যানিমেশন লজিকের জন্য সময় পরিচালনা সহজ হয়।</p>
+        <h3>
+          <span class="lang-en">Final Note</span>
+          <span class="lang-bn hidden">শেষ কথা</span>
+        </h3>
+        <p class="lang-en">While the unit converter displays results in meters per second (m/s), meters per second squared (m/s²), and radians per second (rad/s) for your convenience and understanding of SI units, it's important to remember that these values in the simulation actually represent <strong>pixels per frame (px/frame)</strong>, <strong>pixels per frame squared (px/frame²)</strong>, and <strong>radians per frame (rad/frame)</strong> respectively.</p>
+        <p class="lang-bn hidden">যদিও ইউনিট কনভার্টারটি আপনার সুবিধার জন্য এবং SI এককগুলি বোঝার জন্য ফলাফল মিটার প্রতি সেকেন্ড (m/s), মিটার প্রতি সেকেন্ড স্কোয়ার্ড (m/s²) এবং রেডিয়ান প্রতি সেকেন্ড (rad/s) এ প্রদর্শন করে, তবে মনে রাখা গুরুত্বপূর্ণ যে সিমুলেশনের এই মানগুলি আসলে <strong>পিক্সেল প্রতি ফ্রেম (px/frame)</strong>, <strong>পিক্সেল প্রতি ফ্রেম স্কোয়ার্ড (px/frame²)</strong> এবং <strong>রেডিয়ান প্রতি ফ্রেম (rad/frame)</strong> কে প্রতিনিধিত্ব করে।</p>
+        <hr>
+        <h4>
+          <span class="lang-en">Here's a quick summary of the unit conversions used:</span>
+          <span class="lang-bn hidden">ব্যবহৃত একক রূপান্তরের একটি দ্রুত সংক্ষিপ্তসার:</span>
+        </h4>
+        <ul>
+          <li>
+            <strong>
+              <span class="lang-en">Distance:</span>
+              <span class="lang-bn hidden">দূরত্ব:</span>
+            </strong>
+            <span class="lang-en">Meters (m) → Pixels (px)</span>
+            <span class="lang-bn hidden">মিটার (m) → পিক্সেল (px)</span>
+          </li>
+          <li>
+            <strong>
+              <span class="lang-en">Time:</span>
+              <span class="lang-bn hidden">সময়:</span>
+            </strong>
+            <span class="lang-en">Seconds (s) → Frames (frame)</span>
+            <span class="lang-bn hidden">সেকেন্ড (s) → ফ্রেম (frame)</span>
+          </li>
+          <li>
+            <strong>
+              <span class="lang-en">Velocity:</span>
+              <span class="lang-bn hidden">বেগ:</span>
+            </strong>
+            <span class="lang-en">m/s → px/frame</span>
+            <span class="lang-bn hidden">মিটার/সেকেন্ড (m/s) → পিক্সেল/ফ্রেম (px/frame)</span>
+          </li>
+          <li>
+            <strong>
+              <span class="lang-en">Acceleration:</span>
+              <span class="lang-bn hidden">ত্বরণ:</span>
+            </strong>
+            <span class="lang-en">m/s² → px/frame²</span>
+            <span class="lang-bn hidden">মিটার/সেকেন্ড² (m/s²) → পিক্সেল/ফ্রেম² (px/frame²)</span>
+          </li>
+          <li>
+            <strong>
+              <span class="lang-en">Angular Speed:</span>
+              <span class="lang-bn hidden">কৌণিক বেগ:</span>
+            </strong>
+            <span class="lang-en">rad/s → rad/frame</span>
+            <span class="lang-bn hidden">রেডিয়ান/সেকেন্ড (rad/s) → রেডিয়ান/ফ্রেম (rad/frame)</span>
+          </li>
+          <li>
+            <strong>
+              <span class="lang-en">Angle:</span>
+              <span class="lang-bn hidden">কোণ:</span>
+            </strong>
+            <span class="lang-en">Radians or Degrees — remains the same</span>
+            <span class="lang-bn hidden">রেডিয়ান বা ডিগ্রি — অপরিবর্তিত থাকে</span>
+          </li>
+          <li>
+            <strong>
+              <span class="lang-en">Particle Count:</span>
+              <span class="lang-bn hidden">কণার সংখ্যা:</span>
+            </strong>
+            <span class="lang-en">Unchanged (just a number)</span>
+            <span class="lang-bn hidden">অপরিবর্তিত (শুধু একটি সংখ্যা)</span>
+          </li>
         </ul>
       </div>
     </main>
-    <div id="sidebarRight"><div id="qrPlaceholder"></div></div>
+    <div id="sidebarRight">
+      <div id="qrPlaceholder"></div>
+    </div>
     <a href="review.html" id="reviewButton">Review</a>
     <a href="aboutus.html" id="aboutButton">About Us</a>
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
     const toggleBtn = document.getElementById("languageToggle");
+    let currentLang = "en"; // default language
     toggleBtn.addEventListener("click", () => {
-      document.querySelectorAll(".lang-en").forEach(el => el.classList.toggle("hidden"));
-      document.querySelectorAll(".lang-bn").forEach(el => el.classList.toggle("hidden"));
-      document.body.classList.toggle("bangla");
+      if (currentLang === "en") {
+        document.querySelectorAll(".lang-en").forEach(el => el.classList.add("hidden"));
+        document.querySelectorAll(".lang-bn").forEach(el => el.classList.remove("hidden"));
+        document.body.classList.add("bangla");
+        currentLang = "bn";
+        toggleBtn.textContent = "English";
+      } else {
+        document.querySelectorAll(".lang-en").forEach(el => el.classList.remove("hidden"));
+        document.querySelectorAll(".lang-bn").forEach(el => el.classList.add("hidden"));
+        document.body.classList.remove("bangla");
+        currentLang = "en";
+        toggleBtn.textContent = "বাংলা";
+      }
+      updateConversion(); // Ensure converter updates after language switch
     });
-    new QRCode(document.getElementById("qrPlaceholder"), {
-      text: window.location.href,
-      width: 100,
-      height: 100
-    });
-    function updateConversions() {
-      const fps = parseFloat(document.getElementById("fpsInput").value) || 60;
-      const pxPerFrame = parseFloat(document.getElementById("pxPerFrameInput").value) || 0;
-      const accel = parseFloat(document.getElementById("accelInput").value) || 0;
-      const rad = parseFloat(document.getElementById("radInput").value) || 0;
-      const pixelToMeter = 0.00026;
-      const speedSI = (pxPerFrame * fps * pixelToMeter).toFixed(3);
-      const accelSI = (accel * fps * fps * pixelToMeter).toFixed(3);
-      const radSI = (rad * fps).toFixed(3);
-      document.getElementById("speedResult").textContent = speedSI;
-      document.getElementById("speedResult2").textContent = speedSI;
-      document.getElementById("accelResult").textContent = accelSI;
-      document.getElementById("accelResult2").textContent = accelSI;
-      document.getElementById("radResult").textContent = radSI;
-      document.getElementById("radResult2").textContent = radSI;
+    const fpsInput = document.getElementById('fpsInput');
+    const autoFPS = document.getElementById('autoFPS');
+    const pxPerFrameInput = document.getElementById('pxPerFrameInput');
+    const accelInput = document.getElementById('accelInput');
+    const radInput = document.getElementById('radInput');
+    const speedResult = document.getElementById('speedResult');
+    const speedResult2 = document.getElementById('speedResult2');
+    const accelResult = document.getElementById('accelResult');
+    const accelResult2 = document.getElementById('accelResult2');
+    const radResult = document.getElementById('radResult');
+    const radResult2 = document.getElementById('radResult2');
+    let measuredFPS = 60; // Default or initial value
+    function measureFPS() {
+      let lastTime = performance.now();
+      let framesCount = 0;
+      function loop() {
+        const currentTime = performance.now();
+        framesCount++;
+        if (currentTime - lastTime >= 1000) {
+          measuredFPS = framesCount;
+          if (autoFPS.checked) {
+            fpsInput.value = measuredFPS;
+            updateConversion();
+          }
+          framesCount = 0;
+          lastTime = currentTime;
+        }
+        requestAnimationFrame(loop);
+      }
+      requestAnimationFrame(loop);
     }
-    document.querySelectorAll("#fpsInput, #pxPerFrameInput, #accelInput, #radInput").forEach(el => {
-      el.addEventListener("input", updateConversions);
+    function updateConversion() {
+      const fps = parseFloat(fpsInput.value);
+      const pxpf = parseFloat(pxPerFrameInput.value);
+      const pxa = parseFloat(accelInput.value);
+      const radpf = parseFloat(radInput.value);
+      if (isNaN(fps) || isNaN(pxpf) || isNaN(pxa) || isNaN(radpf) || fps <= 0) {
+        speedResult.textContent = 'N/A';
+        speedResult2.textContent = 'N/A';
+        accelResult.textContent = 'N/A';
+        accelResult2.textContent = 'N/A';
+        radResult.textContent = 'N/A';
+        radResult2.textContent = 'N/A';
+        return;
+      }
+      const scale = 0.00026; // CSS: 1 px ≈ 0.026 cm or 0.00026 m
+      const mps = (pxpf * scale * fps).toFixed(3);
+      const mps2 = (pxa * scale * fps * fps).toFixed(3);
+      const rads = (radpf * fps).toFixed(3);
+      speedResult.textContent = mps;
+      speedResult2.textContent = mps;
+      accelResult.textContent = mps2;
+      accelResult2.textContent = mps2;
+      radResult.textContent = rads;
+      radResult2.textContent = rads;
+    }
+    [fpsInput, pxPerFrameInput, accelInput, radInput, autoFPS].forEach(el =>
+      el.addEventListener('input', updateConversion)
+    );
+    measureFPS();
+    updateConversion();
+    new QRCode(document.getElementById("qrPlaceholder"), {
+      text: "https://stounchvicinity65.github.io/INTERACTIVE-MOTIONS/",
+      width: 100,
+      height: 100,
+      colorDark: "#000000",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H
     });
-    updateConversions();
   </script>
 </body>
 </html>
