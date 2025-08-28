@@ -241,9 +241,9 @@
     /* Language Toggle Button */
     #languageToggle {
       position: fixed;
-      top: 100px;
+      top: 105px;
       right: 20px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: rgba(0, 0, 0, 0.9);
       color: white;
       padding: 0.8rem 1.5rem;
       border: none;
@@ -256,11 +256,7 @@
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     }
 
-    #languageToggle:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-      background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-    }
+    
 
     #languageToggle:active {
       transform: translateY(0);
@@ -652,4 +648,95 @@
   <span class="lang-en">Unchanged (just a number)</span>
   <span class="lang-bn hidden">অপরিবর্তিত (শুধু একটি সংখ্যা)</span>
 </li>
+</main> <div id="sidebarRight">
+      <div id="qrPlaceholder"></div>
+    </div>
 
+    <a href="review.html" id="reviewButton">Review</a>
+    <a href="aboutus.html" id="aboutButton">About Us</a>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script>
+    const fpsInput = document.getElementById('fpsInput');
+    const autoFPS = document.getElementById('autoFPS');
+    const pxPerFrameInput = document.getElementById('pxPerFrameInput');
+    const accelInput = document.getElementById('accelInput');
+    const radInput = document.getElementById('radInput');
+
+    const speedResult = document.getElementById('speedResult');
+    const accelResult = document.getElementById('accelResult');
+    const radResult = document.getElementById('radResult');
+
+    let measuredFPS = 60; // Default or initial value
+
+    // Function to measure actual FPS of the browser
+    function measureFPS() {
+      let lastTime = performance.now();
+      let framesCount = 0;
+
+      function loop() {
+        const currentTime = performance.now();
+        framesCount++;
+
+        // Update FPS every second
+        if (currentTime - lastTime >= 1000) {
+          measuredFPS = framesCount;
+          if (autoFPS.checked) {
+            fpsInput.value = measuredFPS;
+            updateConversion(); // Update conversion when auto-FPS changes
+          }
+          framesCount = 0;
+          lastTime = currentTime;
+        }
+        requestAnimationFrame(loop);
+      }
+      requestAnimationFrame(loop); // Start the loop
+    }
+
+    function updateConversion() {
+      const fps = parseFloat(fpsInput.value);
+      const pxpf = parseFloat(pxPerFrameInput.value);
+      const pxa = parseFloat(accelInput.value);
+      const radpf = parseFloat(radInput.value);
+
+      // Validate inputs to prevent NaN results
+      if (isNaN(fps) || isNaN(pxpf) || isNaN(pxa) || isNaN(radpf) || fps <= 0) {
+        speedResult.textContent = 'N/A';
+        accelResult.textContent = 'N/A';
+        radResult.textContent = 'N/A';
+        return;
+      }
+
+      const scale = 0.00026; // CSS: 1 px ≈ 0.026 cm or 0.00026 m
+
+      const mps = (pxpf * scale * fps).toFixed(3);
+      const mps2 = (pxa * scale * fps * fps).toFixed(3);
+      const rads = (radpf * fps).toFixed(3);
+
+      speedResult.textContent = mps;
+      accelResult.textContent = mps2;
+      radResult.textContent = rads;
+    }
+
+    // Event listeners for all input fields and the checkbox
+    [fpsInput, pxPerFrameInput, accelInput, radInput, autoFPS].forEach(el =>
+      el.addEventListener('input', updateConversion)
+    );
+
+    // Initial calls
+    measureFPS(); // Start measuring FPS
+    updateConversion(); // Initial conversion calculation
+
+    // QR Code generation
+    new QRCode(document.getElementById("qrPlaceholder"), {
+      text: "https://stounchvicinity65.github.io/INTERACTIVE-MOTIONS/",
+      width: 100,
+      height: 100,
+      colorDark: "#000000",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H
+    });
+  </script>
+</body>
+</html>
