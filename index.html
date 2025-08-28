@@ -11,11 +11,10 @@
       --nav-text-color: #ccc;
       --nav-active-color: white;
     }
-
     * {
       box-sizing: border-box;
     }
-    
+   
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -25,7 +24,6 @@
       background: url('https://i.pinimg.com/originals/54/f8/e3/54f8e332b488dfdb2d3cc2efce8a536a.gif') no-repeat center center fixed;
       background-size: cover;
     }
-
     body::before {
       content: "";
       position: absolute;
@@ -33,14 +31,12 @@
       background: linear-gradient(to right, rgba(9,32,63,0.7), rgba(83,120,149,0.7));
       z-index: 0;
     }
-
     .wrapper {
       display: flex;
       height: 100%;
       position: relative;
       z-index: 1;
     }
-
     nav {
       width: 220px;
       background: var(--nav-bg);
@@ -50,19 +46,16 @@
       padding: 1rem;
       z-index: 1;
     }
-
     nav .logo {
       font-size: 2rem;
       text-align: center;
       margin-bottom: 0.5rem;
     }
-
     nav h2 {
       text-align: center;
       margin: 0 0 1rem;
       font-weight: normal;
     }
-
     nav a {
       color: var(--nav-text-color);
       text-decoration: none;
@@ -71,14 +64,12 @@
       margin-bottom: 0.3rem;
       transition: background-color 0.3s, color 0.3s;
     }
-
     nav a.active,
     nav a:hover {
       background: var(--nav-hover-bg);
       color: var(--nav-active-color);
       font-weight: bold;
     }
-
     main {
       flex-grow: 1;
       display: flex;
@@ -89,14 +80,12 @@
       position: relative;
       z-index: 1;
     }
-
     #descriptionSection {
       display: flex;
       flex-direction: column;
       gap: 1rem;
       max-width: 360px;
     }
-
     #descriptionBox {
       background: rgba(0, 0, 0, 0.7);
       padding: 1.5rem;
@@ -105,22 +94,18 @@
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
       transform: translateY(-10px);
     }
-
     #descriptionBox h1 {
       margin-top: 0;
       font-size: 1.4rem;
       color: #90cdf4;
     }
-
     #descriptionBox ul {
       padding-left: 1.2rem;
       margin-top: 0.5rem;
     }
-
     #descriptionBox li {
       line-height: 1.6;
     }
-
     #converterBox {
       background: rgba(0, 0, 0, 0.7);
       padding: 1.2rem;
@@ -128,7 +113,6 @@
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
       color: #f0f0f0;
     }
-
     #converterBox summary {
       font-weight: bold;
       cursor: pointer;
@@ -136,19 +120,16 @@
       font-size: 1.1rem;
       color: #90cdf4;
     }
-
     #converterBox label {
       display: block;
       margin-top: 0.6rem;
       margin-bottom: 0.2rem;
     }
-
     #converterBox .inline-group {
       display: flex;
       align-items: center;
       gap: 1rem;
     }
-
     #converterBox input[type="number"] {
       width: 100%;
       padding: 0.4rem;
@@ -158,18 +139,15 @@
       color: white;
       border-radius: 4px;
     }
-
     #converterBox input[type="number"]:focus {
       outline: none;
       border-color: #4a90e2;
       box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.5);
     }
-
     #converterBox p {
       margin-top: 0.8rem;
       font-size: 0.95rem;
     }
-
     #unitInfoBox {
       background: rgba(0, 0, 0, 0.7);
       color: #f0f0f0;
@@ -182,25 +160,21 @@
       overflow-y: auto;
       max-height: 90vh;
     }
-
     #unitInfoBox h2 {
       margin-top: 0;
       color: #90cdf4;
       font-size: 1.5rem;
     }
-
     #unitInfoBox h3 {
       margin-top: 1.5rem;
       color: #aad5ff;
     }
-
     #sidebarRight {
       position: absolute;
       bottom: 20px;
       right: 20px;
       z-index: 5;
     }
-
     #qrPlaceholder {
       width: 110px;
       height: 110px;
@@ -209,7 +183,6 @@
       border-radius: 6px;
       box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
     }
-
     #reviewButton,
     #aboutButton {
       position: fixed;
@@ -224,26 +197,22 @@
       z-index: 1000;
       transition: background 0.3s ease;
     }
-
     #reviewButton {
       top: 20px;
     }
-
     #aboutButton {
       top: 60px;
     }
-
     #reviewButton:hover,
     #aboutButton:hover {
       background: rgba(0, 0, 0, 0.9);
     }
-
     /* Language Toggle Button */
     #languageToggle {
       position: fixed;
       top: 105px;
       right: 20px;
-      background: rgba(0, 0, 0, 0.9);
+      background: rgba(0, 0, 0, 0.75);
       color: white;
       padding: 0.8rem 1.5rem;
       border: none;
@@ -255,42 +224,33 @@
       transition: all 0.3s ease;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     }
-
-    
-
+   
     #languageToggle:active {
       transform: translateY(0);
     }
-
     /* Hidden elements for language switching */
     .lang-en, .lang-bn {
       transition: opacity 0.3s ease;
     }
-
     .hidden {
       display: none !important;
     }
-
     /* Bangla font support */
     body.bangla {
       font-family: 'SolaimanLipi', 'Kalpurush', Arial, sans-serif;
     }
-
     @media (max-width: 900px) {
       main {
         flex-direction: column;
         align-items: center;
         gap: 1rem;
       }
-
       #unitInfoBox {
         max-width: 90vw;
       }
-
       #sidebarRight {
         display: none;
       }
-
       #languageToggle {
         top: 140px;
         right: 10px;
@@ -300,35 +260,11 @@
     }
   </style>
 </head>
-<button id="languageToggle">বাংলা / English</button>
-
-<script>
-  const toggleBtn = document.getElementById("languageToggle");
-  let currentLang = "en"; // default language
-
-  toggleBtn.addEventListener("click", () => {
-    if (currentLang === "en") {
-      document.querySelectorAll(".lang-en").forEach(el => el.classList.add("hidden"));
-      document.querySelectorAll(".lang-bn").forEach(el => el.classList.remove("hidden"));
-      document.body.classList.add("bangla");
-      currentLang = "bn";
-      toggleBtn.textContent = "English";
-    } else {
-      document.querySelectorAll(".lang-en").forEach(el => el.classList.remove("hidden"));
-      document.querySelectorAll(".lang-bn").forEach(el => el.classList.add("hidden"));
-      document.body.classList.remove("bangla");
-      currentLang = "en";
-      toggleBtn.textContent = "বাংলা";
-    }
-  });
-</script>
-
 <body>
-
+  <button id="languageToggle">বাংলা / English</button>
   <div class="wrapper">
     <nav role="navigation">
       <div class="logo">⚛</div>
-    <a href="aboutus.html" id="aboutButton">About Us</a>
       <h2>
         <span class="lang-en">• Simulations •</span>
         <span class="lang-bn hidden">• সিমুলেশন •</span>
@@ -374,7 +310,6 @@
         <span class="lang-bn hidden">মন্দিত গতি</span>
       </a>
     </nav>
-
     <main>
       <div id="descriptionSection">
         <div id="descriptionBox">
@@ -425,7 +360,6 @@
             </li>
           </ul>
         </div>
-
         <details id="converterBox">
           <summary>
             <span class="lang-en">🧮 Unit Converter (Screen → Real Units)</span>
@@ -436,13 +370,11 @@
             <span class="lang-bn hidden">মনিটর রিফ্রেশ রেট (Hz):</span>
           </label>
           <input type="number" id="fpsInput" value="60" min="1" />
-
           <label>
             <input type="checkbox" id="autoFPS">
             <span class="lang-en">Auto-detect FPS</span>
             <span class="lang-bn hidden">স্বয়ংক্রিয় FPS সনাক্তকরণ</span>
           </label>
-
           <label for="pxPerFrameInput">
             <span class="lang-en">Speed (px/frame):</span>
             <span class="lang-bn hidden">গতি (px/frame):</span>
@@ -454,7 +386,6 @@
                <span class="lang-bn hidden">গতি ≈ <span id="speedResult2">0</span> m/s</span>
              </span>
           </p>
-
           <label for="accelInput">
             <span class="lang-en">Acceleration (px/frame²):</span>
             <span class="lang-bn hidden">ত্বরণ (px/frame²):</span>
@@ -466,7 +397,6 @@
               <span class="lang-bn hidden">ত্বরণ ≈ <span id="accelResult2">0</span> m/s²</span>
             </span>
           </p>
-
           <label for="radInput">
             <span class="lang-en">Angular Speed (rad/frame):</span>
             <span class="lang-bn hidden">কৌণিক গতি (rad/frame):</span>
@@ -479,23 +409,19 @@
             </span>
           </p>
         </details>
-         <a href="aboutus.html" id="aboutButton">About Us</a>
       </div>
-      <a href="aboutus.html" id="aboutButton">About Us</a>
       <div id="unitInfoBox">
         <h2>
           <span class="lang-en">📏 Understanding Units in Simulations</span>
           <span class="lang-bn hidden">📏 সিমুলেশনে একক পরিচিতি</span>
         </h2>
-
         <h3>
           <span class="lang-en">🔧 Units Used in These Simulations</span>
           <span class="lang-bn hidden">🔧 এই সিমুলেশনে ব্যবহৃত এককসমূহ</span>
         </h3>
-        
+       
         <p class="lang-en">In these simulations, we use a scaled representation to bridge screen-based animations with real-world physics concepts. Here's how it works:</p>
         <p class="lang-bn hidden">এই সিমুলেশনগুলিতে, আমরা স্ক্রিন-ভিত্তিক অ্যানিমেশনগুলিকে বাস্তব-বিশ্বের পদার্থবিজ্ঞানের ধারণার সাথে সংযুক্ত করার জন্য একটি স্কেলড উপস্থাপনা ব্যবহার করি। এটি যেভাবে কাজ করে:</p>
-
         <ul>
           <li>
             <strong>
@@ -554,33 +480,27 @@
             <span class="lang-bn hidden">অপরিবর্তিত (শুধুমাত্র একটি সংখ্যা)।</span>
           </li>
         </ul>
-
         <p class="lang-en">This scaled system allows us to maintain accurate visual logic while making the underlying animation math easier. It helps learners focus more on physical <em>concepts</em> rather than complex unit conversions in a visual environment.</p>
         <p class="lang-bn hidden">এই স্কেলড সিস্টেমটি ভিজ্যুয়াল লজিককে সঠিক রেখে অ্যানিমেশনের গণিতকে সহজ করে তোলে। এটি শিক্ষার্থীদের জটিল একক রূপান্তরের পরিবর্তে পদার্থবিজ্ঞানের <em>ধারণাগুলির</em> উপর মনোযোগ দিতে সহায়তা করে।</p>
-
         <h3>
           <span class="lang-en">Why the Scale Factor?</span>
           <span class="lang-bn hidden">স্কেল ফ্যাক্টর কেন?</span>
         </h3>
         <p class="lang-en">Most screens use pixels to display content, and the physical size of a pixel can vary significantly between devices. Since we're working within a computer screen for visual representation, measuring positions and distances in <strong>pixels</strong> is logical. To connect these screen pixels to real-world SI units (like meters), a specific scale factor is applied.</p>
         <p class="lang-bn hidden">বেশিরভাগ স্ক্রিন বিষয়বস্তু প্রদর্শনের জন্য পিক্সেল ব্যবহার করে, এবং একটি পিক্সেলের ভৌত আকার বিভিন্ন ডিভাইসে উল্লেখযোগ্যভাবে পরিবর্তিত হতে পারে। যেহেতু আমরা ভিজ্যুয়াল উপস্থাপনার জন্য কম্পিউটার স্ক্রিনের মধ্যে কাজ করছি, তাই অবস্থান এবং দূরত্ব <strong>পিক্সেল</strong>-এ পরিমাপ করা যৌক্তিক।</p>
-
         <h3>
           <span class="lang-en">Why Frames Instead of Seconds?</span>
           <span class="lang-bn hidden">সেকেন্ডের পরিবর্তে ফ্রেম কেন?</span>
         </h3>
         <p class="lang-en">In p5.js and most animation libraries, simulations are updated per frame. Using <strong>frames</strong> (frame) makes time handling simpler for animation logic. If your simulation runs at 60 frames per second (FPS), then each frame represents 1/60th of a second.</p>
         <p class="lang-bn hidden">p5.js এবং বেশিরভাগ অ্যানিমেশন লাইব্রেরিতে, সিমুলেশনগুলি প্রতি ফ্রেমে আপডেট হয়। <strong>ফ্রেম</strong> ব্যবহার করে অ্যানিমেশন লজিকের জন্য সময় পরিচালনা সহজ হয়।</p>
-
         <h3>
           <span class="lang-en">Final Note</span>
           <span class="lang-bn hidden">শেষ কথা</span>
         </h3>
         <p class="lang-en">While the unit converter displays results in meters per second (m/s), meters per second squared (m/s²), and radians per second (rad/s) for your convenience and understanding of SI units, it's important to remember that these values in the simulation actually represent <strong>pixels per frame (px/frame)</strong>, <strong>pixels per frame squared (px/frame²)</strong>, and <strong>radians per frame (rad/frame)</strong> respectively.</p>
         <p class="lang-bn hidden">যদিও ইউনিট কনভার্টারটি আপনার সুবিধার জন্য এবং SI এককগুলি বোঝার জন্য ফলাফল মিটার প্রতি সেকেন্ড (m/s), মিটার প্রতি সেকেন্ড স্কোয়ার্ড (m/s²) এবং রেডিয়ান প্রতি সেকেন্ড (rad/s) এ প্রদর্শন করে, তবে মনে রাখা গুরুত্বপূর্ণ যে সিমুলেশনের এই মানগুলি আসলে <strong>পিক্সেল প্রতি ফ্রেম (px/frame)</strong>, <strong>পিক্সেল প্রতি ফ্রেম স্কোয়ার্ড (px/frame²)</strong> এবং <strong>রেডিয়ান প্রতি ফ্রেম (rad/frame)</strong> কে প্রতিনিধিত্ব করে।</p>
-
         <hr>
-
         <h4>
           <span class="lang-en">Here's a quick summary of the unit conversions used:</span>
           <span class="lang-bn hidden">ব্যবহৃত একক রূপান্তরের একটি দ্রুত সংক্ষিপ্তসার:</span>
@@ -594,7 +514,6 @@
   <span class="lang-en">Meters (m) → Pixels (px)</span>
   <span class="lang-bn hidden">মিটার (m) → পিক্সেল (px)</span>
 </li>
-
 <li>
   <strong>
     <span class="lang-en">Time:</span>
@@ -603,7 +522,6 @@
   <span class="lang-en">Seconds (s) → Frames (frame)</span>
   <span class="lang-bn hidden">সেকেন্ড (s) → ফ্রেম (frame)</span>
 </li>
-
 <li>
   <strong>
     <span class="lang-en">Velocity:</span>
@@ -612,7 +530,6 @@
   <span class="lang-en">m/s → px/frame</span>
   <span class="lang-bn hidden">মিটার/সেকেন্ড (m/s) → পিক্সেল/ফ্রেম (px/frame)</span>
 </li>
-
 <li>
   <strong>
     <span class="lang-en">Acceleration:</span>
@@ -621,7 +538,6 @@
   <span class="lang-en">m/s² → px/frame²</span>
   <span class="lang-bn hidden">মিটার/সেকেন্ড² (m/s²) → পিক্সেল/ফ্রেম² (px/frame²)</span>
 </li>
-
 <li>
   <strong>
     <span class="lang-en">Angular Speed:</span>
@@ -630,7 +546,6 @@
   <span class="lang-en">rad/s → rad/frame</span>
   <span class="lang-bn hidden">রেডিয়ান/সেকেন্ড (rad/s) → রেডিয়ান/ফ্রেম (rad/frame)</span>
 </li>
-
 <li>
   <strong>
     <span class="lang-en">Angle:</span>
@@ -639,7 +554,6 @@
   <span class="lang-en">Radians or Degrees — remains the same</span>
   <span class="lang-bn hidden">রেডিয়ান বা ডিগ্রি — অপরিবর্তিত থাকে</span>
 </li>
-
 <li>
   <strong>
     <span class="lang-en">Particle Count:</span>
@@ -648,37 +562,53 @@
   <span class="lang-en">Unchanged (just a number)</span>
   <span class="lang-bn hidden">অপরিবর্তিত (শুধু একটি সংখ্যা)</span>
 </li>
-</main> <div id="sidebarRight">
+</ul>
+      </div>
+    </main> 
+    <div id="sidebarRight">
       <div id="qrPlaceholder"></div>
     </div>
-
     <a href="review.html" id="reviewButton">Review</a>
     <a href="aboutus.html" id="aboutButton">About Us</a>
   </div>
-
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
+    const toggleBtn = document.getElementById("languageToggle");
+    let currentLang = "en"; // default language
+    toggleBtn.addEventListener("click", () => {
+      if (currentLang === "en") {
+        document.querySelectorAll(".lang-en").forEach(el => el.classList.add("hidden"));
+        document.querySelectorAll(".lang-bn").forEach(el => el.classList.remove("hidden"));
+        document.body.classList.add("bangla");
+        currentLang = "bn";
+        toggleBtn.textContent = "English";
+      } else {
+        document.querySelectorAll(".lang-en").forEach(el => el.classList.remove("hidden"));
+        document.querySelectorAll(".lang-bn").forEach(el => el.classList.add("hidden"));
+        document.body.classList.remove("bangla");
+        currentLang = "en";
+        toggleBtn.textContent = "বাংলা";
+      }
+    });
     const fpsInput = document.getElementById('fpsInput');
     const autoFPS = document.getElementById('autoFPS');
     const pxPerFrameInput = document.getElementById('pxPerFrameInput');
     const accelInput = document.getElementById('accelInput');
     const radInput = document.getElementById('radInput');
-
     const speedResult = document.getElementById('speedResult');
+    const speedResult2 = document.getElementById('speedResult2');
     const accelResult = document.getElementById('accelResult');
+    const accelResult2 = document.getElementById('accelResult2');
     const radResult = document.getElementById('radResult');
-
+    const radResult2 = document.getElementById('radResult2');
     let measuredFPS = 60; // Default or initial value
-
     // Function to measure actual FPS of the browser
     function measureFPS() {
       let lastTime = performance.now();
       let framesCount = 0;
-
       function loop() {
         const currentTime = performance.now();
         framesCount++;
-
         // Update FPS every second
         if (currentTime - lastTime >= 1000) {
           measuredFPS = framesCount;
@@ -693,41 +623,39 @@
       }
       requestAnimationFrame(loop); // Start the loop
     }
-
     function updateConversion() {
       const fps = parseFloat(fpsInput.value);
       const pxpf = parseFloat(pxPerFrameInput.value);
       const pxa = parseFloat(accelInput.value);
       const radpf = parseFloat(radInput.value);
-
       // Validate inputs to prevent NaN results
       if (isNaN(fps) || isNaN(pxpf) || isNaN(pxa) || isNaN(radpf) || fps <= 0) {
         speedResult.textContent = 'N/A';
+        speedResult2.textContent = 'N/A';
         accelResult.textContent = 'N/A';
+        accelResult2.textContent = 'N/A';
         radResult.textContent = 'N/A';
+        radResult2.textContent = 'N/A';
         return;
       }
-
       const scale = 0.00026; // CSS: 1 px ≈ 0.026 cm or 0.00026 m
-
       const mps = (pxpf * scale * fps).toFixed(3);
       const mps2 = (pxa * scale * fps * fps).toFixed(3);
       const rads = (radpf * fps).toFixed(3);
-
       speedResult.textContent = mps;
+      speedResult2.textContent = mps;
       accelResult.textContent = mps2;
+      accelResult2.textContent = mps2;
       radResult.textContent = rads;
+      radResult2.textContent = rads;
     }
-
     // Event listeners for all input fields and the checkbox
     [fpsInput, pxPerFrameInput, accelInput, radInput, autoFPS].forEach(el =>
       el.addEventListener('input', updateConversion)
     );
-
     // Initial calls
     measureFPS(); // Start measuring FPS
     updateConversion(); // Initial conversion calculation
-
     // QR Code generation
     new QRCode(document.getElementById("qrPlaceholder"), {
       text: "https://stounchvicinity65.github.io/INTERACTIVE-MOTIONS/",
