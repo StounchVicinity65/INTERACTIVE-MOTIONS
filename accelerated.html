@@ -130,8 +130,26 @@
 
   <div id="controls">
     <label>Acceleration (m/s²):
-      <input type="number" id="acceleration" value="2" step="0.1">
+      <input type="number" id="acceleration" value="2" step="0.1" id="count" min="1" max="999">
     </label>
+    <script>
+const input = document.getElementById("acceleration");
+
+input.addEventListener("input", function() {
+  let val = parseInt(this.value);
+
+  // If user types above max, prevent it
+  if (val > this.max) {
+    this.value = this.max; // force max
+    alert("⚠️ Maximum threshold reached (999).");
+  }
+
+  // If user types below min, force min
+  if (val < this.min && this.value !== "") {
+    this.value = this.min;
+  }
+});
+</script>
     <button onclick="simulateAcceleration()">Simulate</button>
   </div>
 
