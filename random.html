@@ -131,7 +131,28 @@
 
   <div id="controls">
     <label>Number of Particles:
-      <input type="number" id="count" value="20" min="1" max="20000" />
+      <input type="number" id="count" value="20" min="1" max="999" />
+<input type="number" id="count" value="20" min="1" max="20000" />
+
+<script>
+const input = document.getElementById("count");
+
+input.addEventListener("input", function() {
+  let val = parseInt(this.value);
+
+  // If user types above max, prevent it
+  if (val > this.max) {
+    this.value = this.max; // force max
+    alert("⚠️ Maximum threshold reached (20000).");
+  }
+
+  // If user types below min, force min
+  if (val < this.min && this.value !== "") {
+    this.value = this.min;
+  }
+});
+</script>
+
     </label>
     <button onclick="startRandomMotion()">Start</button>
     <button onclick="stopRandomMotion()">Stop</button>
