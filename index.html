@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Interactive Motion Simulations - Main Menu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --nav-bg: rgba(0, 0, 0, 0.6);
@@ -14,7 +15,6 @@
     * {
       box-sizing: border-box;
     }
-   
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -23,6 +23,8 @@
       position: relative;
       background: url('https://i.pinimg.com/originals/54/f8/e3/54f8e332b488dfdb2d3cc2efce8a536a.gif') no-repeat center center fixed;
       background-size: cover;
+      font-size: 16px;
+      line-height: 1.5;
     }
     body::before {
       content: "";
@@ -30,6 +32,9 @@
       top: 0; left: 0; right: 0; bottom: 0;
       background: linear-gradient(to right, rgba(9,32,63,0.7), rgba(83,120,149,0.7));
       z-index: 0;
+    }
+    body.bangla {
+      font-family: 'Noto Serif Bengali', Arial, sans-serif;
     }
     .wrapper {
       display: flex;
@@ -55,6 +60,7 @@
       text-align: center;
       margin: 0 0 1rem;
       font-weight: normal;
+      font-size: 1.2rem;
     }
     nav a {
       color: var(--nav-text-color);
@@ -63,6 +69,7 @@
       border-radius: 4px;
       margin-bottom: 0.3rem;
       transition: background-color 0.3s, color 0.3s;
+      font-size: 0.95rem;
     }
     nav a.active,
     nav a:hover {
@@ -85,6 +92,7 @@
       flex-direction: column;
       gap: 1rem;
       max-width: 360px;
+      min-width: 360px;
     }
     #descriptionBox {
       background: rgba(0, 0, 0, 0.7);
@@ -93,6 +101,7 @@
       color: #f0f0f0;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
       transform: translateY(-10px);
+      min-height: 300px;
     }
     #descriptionBox h1 {
       margin-top: 0;
@@ -105,6 +114,7 @@
     }
     #descriptionBox li {
       line-height: 1.6;
+      font-size: 0.95rem;
     }
     #converterBox {
       background: rgba(0, 0, 0, 0.7);
@@ -112,6 +122,8 @@
       border-radius: 12px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
       color: #f0f0f0;
+      min-height: 250px;
+      width: 100%;
     }
     #converterBox summary {
       font-weight: bold;
@@ -124,14 +136,17 @@
       display: block;
       margin-top: 0.6rem;
       margin-bottom: 0.2rem;
+      font-size: 0.95rem;
     }
     #converterBox .inline-group {
       display: flex;
       align-items: center;
       gap: 1rem;
+      min-height: 2rem;
     }
     #converterBox input[type="number"] {
       width: 100%;
+      max-width: 150px;
       padding: 0.4rem;
       font-size: 0.9rem;
       background: rgba(255, 255, 255, 0.1);
@@ -159,6 +174,7 @@
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.35);
       overflow-y: auto;
       max-height: 90vh;
+      min-width: 600px;
     }
     #unitInfoBox h2 {
       margin-top: 0;
@@ -168,6 +184,7 @@
     #unitInfoBox h3 {
       margin-top: 1.5rem;
       color: #aad5ff;
+      font-size: 1.2rem;
     }
     #sidebarRight {
       position: absolute;
@@ -207,7 +224,6 @@
     #aboutButton:hover {
       background: rgba(0, 0, 0, 0.9);
     }
-    /* Language Toggle Button */
     #languageToggle {
       position: fixed;
       top: 105px;
@@ -224,20 +240,14 @@
       transition: all 0.3s ease;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
     }
-   
     #languageToggle:active {
       transform: translateY(0);
     }
-    /* Hidden elements for language switching */
     .lang-en, .lang-bn {
       transition: opacity 0.3s ease;
     }
     .hidden {
       display: none !important;
-    }
-    /* Bangla font support */
-    body.bangla {
-      font-family: 'SolaimanLipi', 'Kalpurush', Arial, sans-serif;
     }
     @media (max-width: 900px) {
       main {
@@ -245,8 +255,13 @@
         align-items: center;
         gap: 1rem;
       }
+      #descriptionSection {
+        max-width: 90vw;
+        min-width: auto;
+      }
       #unitInfoBox {
         max-width: 90vw;
+        min-width: auto;
       }
       #sidebarRight {
         display: none;
@@ -380,11 +395,11 @@
             <span class="lang-bn hidden">গতি (px/frame):</span>
           </label>
           <p class="inline-group">
-             <input type="number" id="pxPerFrameInput" value="10" />
-             <span>
-               <span class="lang-en">Speed ≈ <span id="speedResult">0</span> m/s</span>
-               <span class="lang-bn hidden">গতি ≈ <span id="speedResult2">0</span> m/s</span>
-             </span>
+            <input type="number" id="pxPerFrameInput" value="10" />
+            <span>
+              <span class="lang-en">Speed ≈ <span id="speedResult">0</span> m/s</span>
+              <span class="lang-bn hidden">গতি ≈ <span id="speedResult2">0</span> m/s</span>
+            </span>
           </p>
           <label for="accelInput">
             <span class="lang-en">Acceleration (px/frame²):</span>
@@ -419,7 +434,6 @@
           <span class="lang-en">🔧 Units Used in These Simulations</span>
           <span class="lang-bn hidden">🔧 এই সিমুলেশনে ব্যবহৃত এককসমূহ</span>
         </h3>
-       
         <p class="lang-en">In these simulations, we use a scaled representation to bridge screen-based animations with real-world physics concepts. Here's how it works:</p>
         <p class="lang-bn hidden">এই সিমুলেশনগুলিতে, আমরা স্ক্রিন-ভিত্তিক অ্যানিমেশনগুলিকে বাস্তব-বিশ্বের পদার্থবিজ্ঞানের ধারণার সাথে সংযুক্ত করার জন্য একটি স্কেলড উপস্থাপনা ব্যবহার করি। এটি যেভাবে কাজ করে:</p>
         <ul>
@@ -507,64 +521,64 @@
         </h4>
         <ul>
           <li>
-  <strong>
-    <span class="lang-en">Distance:</span>
-    <span class="lang-bn hidden">দূরত্ব:</span>
-  </strong>
-  <span class="lang-en">Meters (m) → Pixels (px)</span>
-  <span class="lang-bn hidden">মিটার (m) → পিক্সেল (px)</span>
-</li>
-<li>
-  <strong>
-    <span class="lang-en">Time:</span>
-    <span class="lang-bn hidden">সময়:</span>
-  </strong>
-  <span class="lang-en">Seconds (s) → Frames (frame)</span>
-  <span class="lang-bn hidden">সেকেন্ড (s) → ফ্রেম (frame)</span>
-</li>
-<li>
-  <strong>
-    <span class="lang-en">Velocity:</span>
-    <span class="lang-bn hidden">বেগ:</span>
-  </strong>
-  <span class="lang-en">m/s → px/frame</span>
-  <span class="lang-bn hidden">মিটার/সেকেন্ড (m/s) → পিক্সেল/ফ্রেম (px/frame)</span>
-</li>
-<li>
-  <strong>
-    <span class="lang-en">Acceleration:</span>
-    <span class="lang-bn hidden">ত্বরণ:</span>
-  </strong>
-  <span class="lang-en">m/s² → px/frame²</span>
-  <span class="lang-bn hidden">মিটার/সেকেন্ড² (m/s²) → পিক্সেল/ফ্রেম² (px/frame²)</span>
-</li>
-<li>
-  <strong>
-    <span class="lang-en">Angular Speed:</span>
-    <span class="lang-bn hidden">কোণীয় বেগ:</span>
-  </strong>
-  <span class="lang-en">rad/s → rad/frame</span>
-  <span class="lang-bn hidden">রেডিয়ান/সেকেন্ড (rad/s) → রেডিয়ান/ফ্রেম (rad/frame)</span>
-</li>
-<li>
-  <strong>
-    <span class="lang-en">Angle:</span>
-    <span class="lang-bn hidden">কোণ:</span>
-  </strong>
-  <span class="lang-en">Radians or Degrees — remains the same</span>
-  <span class="lang-bn hidden">রেডিয়ান বা ডিগ্রি — অপরিবর্তিত থাকে</span>
-</li>
-<li>
-  <strong>
-    <span class="lang-en">Particle Count:</span>
-    <span class="lang-bn hidden">কণার সংখ্যা:</span>
-  </strong>
-  <span class="lang-en">Unchanged (just a number)</span>
-  <span class="lang-bn hidden">অপরিবর্তিত (শুধু একটি সংখ্যা)</span>
-</li>
-</ul>
+            <strong>
+              <span class="lang-en">Distance:</span>
+              <span class="lang-bn hidden">দূরত্ব:</span>
+            </strong>
+            <span class="lang-en">Meters (m) → Pixels (px)</span>
+            <span class="lang-bn hidden">মিটার (m) → পিক্সেল (px)</span>
+          </li>
+          <li>
+            <strong>
+              <span class="lang-en">Time:</span>
+              <span class="lang-bn hidden">সময়:</span>
+            </strong>
+            <span class="lang-en">Seconds (s) → Frames (frame)</span>
+            <span class="lang-bn hidden">সেকেন্ড (s) → ফ্রেম (frame)</span>
+          </li>
+          <li>
+            <strong>
+              <span class="lang-en">Velocity:</span>
+              <span class="lang-bn hidden">বেগ:</span>
+            </strong>
+            <span class="lang-en">m/s → px/frame</span>
+            <span class="lang-bn hidden">মিটার/সেকেন্ড (m/s) → পিক্সেল/ফ্রেম (px/frame)</span>
+          </li>
+          <li>
+            <strong>
+              <span class="lang-en">Acceleration:</span>
+              <span class="lang-bn hidden">ত্বরণ:</span>
+            </strong>
+            <span class="lang-en">m/s² → px/frame²</span>
+            <span class="lang-bn hidden">মিটার/সেকেন্ড² (m/s²) → পিক্সেল/ফ্রেম² (px/frame²)</span>
+          </li>
+          <li>
+            <strong>
+              <span class="lang-en">Angular Speed:</span>
+              <span class="lang-bn hidden">কৌণিক বেগ:</span>
+            </strong>
+            <span class="lang-en">rad/s → rad/frame</span>
+            <span class="lang-bn hidden">রেডিয়ান/সেকেন্ড (rad/s) → রেডিয়ান/ফ্রেম (rad/frame)</span>
+          </li>
+          <li>
+            <strong>
+              <span class="lang-en">Angle:</span>
+              <span class="lang-bn hidden">কোণ:</span>
+            </strong>
+            <span class="lang-en">Radians or Degrees — remains the same</span>
+            <span class="lang-bn hidden">রেডিয়ান বা ডিগ্রি — অপরিবর্তিত থাকে</span>
+          </li>
+          <li>
+            <strong>
+              <span class="lang-en">Particle Count:</span>
+              <span class="lang-bn hidden">কণার সংখ্যা:</span>
+            </strong>
+            <span class="lang-en">Unchanged (just a number)</span>
+            <span class="lang-bn hidden">অপরিবর্তিত (শুধু একটি সংখ্যা)</span>
+          </li>
+        </ul>
       </div>
-    </main> 
+    </main>
     <div id="sidebarRight">
       <div id="qrPlaceholder"></div>
     </div>
@@ -589,6 +603,7 @@
         currentLang = "en";
         toggleBtn.textContent = "বাংলা";
       }
+      updateConversion(); // Ensure converter updates after language switch
     });
     const fpsInput = document.getElementById('fpsInput');
     const autoFPS = document.getElementById('autoFPS');
@@ -602,33 +617,30 @@
     const radResult = document.getElementById('radResult');
     const radResult2 = document.getElementById('radResult2');
     let measuredFPS = 60; // Default or initial value
-    // Function to measure actual FPS of the browser
     function measureFPS() {
       let lastTime = performance.now();
       let framesCount = 0;
       function loop() {
         const currentTime = performance.now();
         framesCount++;
-        // Update FPS every second
         if (currentTime - lastTime >= 1000) {
           measuredFPS = framesCount;
           if (autoFPS.checked) {
             fpsInput.value = measuredFPS;
-            updateConversion(); // Update conversion when auto-FPS changes
+            updateConversion();
           }
           framesCount = 0;
           lastTime = currentTime;
         }
         requestAnimationFrame(loop);
       }
-      requestAnimationFrame(loop); // Start the loop
+      requestAnimationFrame(loop);
     }
     function updateConversion() {
       const fps = parseFloat(fpsInput.value);
       const pxpf = parseFloat(pxPerFrameInput.value);
       const pxa = parseFloat(accelInput.value);
       const radpf = parseFloat(radInput.value);
-      // Validate inputs to prevent NaN results
       if (isNaN(fps) || isNaN(pxpf) || isNaN(pxa) || isNaN(radpf) || fps <= 0) {
         speedResult.textContent = 'N/A';
         speedResult2.textContent = 'N/A';
@@ -649,14 +661,11 @@
       radResult.textContent = rads;
       radResult2.textContent = rads;
     }
-    // Event listeners for all input fields and the checkbox
     [fpsInput, pxPerFrameInput, accelInput, radInput, autoFPS].forEach(el =>
       el.addEventListener('input', updateConversion)
     );
-    // Initial calls
-    measureFPS(); // Start measuring FPS
-    updateConversion(); // Initial conversion calculation
-    // QR Code generation
+    measureFPS();
+    updateConversion();
     new QRCode(document.getElementById("qrPlaceholder"), {
       text: "https://stounchvicinity65.github.io/INTERACTIVE-MOTIONS/",
       width: 100,
