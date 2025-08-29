@@ -27,16 +27,9 @@
       font-size: 14px;
       z-index: 10;
     }
+    .back-btn:hover { color: white; background: #00000088; }
 
-    .back-btn:hover {
-      color: white;
-      background: #00000088;
-    }
-
-    h1 {
-      margin-top: 3rem;
-      font-size: 2rem;
-    }
+    h1 { margin-top: 3rem; font-size: 2rem; }
 
     #definition {
       background: #00000055;
@@ -52,10 +45,7 @@
       font-size: 1rem;
       line-height: 1.4;
     }
-
-    #definition div {
-      flex: 1;
-    }
+    #definition div { flex: 1; }
 
     #controls {
       background: #00000055;
@@ -100,9 +90,22 @@
       font-size: 1rem;
     }
 
-    button:hover {
-      background: #1d4ed8;
+    button:hover { background: #1d4ed8; }
+
+    #languageToggle {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: #00000055;
+      color: white;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      z-index: 10;
     }
+    #languageToggle:hover { background: #00000088; }
 
     canvas {
       display: block;
@@ -116,31 +119,95 @@
 </head>
 <body>
 
-  <a href="index.html" class="back-btn">← Back</a>
+  <a href="index.html" class="back-btn"><span class="lang-en">← Back</span><span class="lang-bn hidden">← পিছনে</span></a>
 
-  <h1>↔ Linear Motion</h1>
+  <button id="languageToggle">বাংলা</button>
+
+  <h1><span class="lang-en">↔ Linear Motion</span><span class="lang-bn hidden">↔ রৈখিক গতি</span></h1>
 
   <div id="definition">
-    <div>
+    <div class="lang-en">
       <p><strong>Definition:</strong> Linear motion is the movement of an object in a straight line at a constant speed or velocity. It is the simplest form of motion, where direction and magnitude remain unchanged unless acted on by a force.</p>
     </div>
-    <div>
+    <div class="lang-bn hidden">
       <p><strong>সংজ্ঞা:</strong> সরলরৈখিক গতি হলো কোনো বস্তুর সরলরেখা বরাবর ধ্রুব গতি বা বেগে চলমান অবস্থা। এটি গতির সরলতম রূপ, যেখানে কোনো বল প্রয়োগ না করা পর্যন্ত দিক ও মান অপরিবর্তিত থাকে।</p>
     </div>
   </div>
 
   <div id="controls">
-    <label>Speed (m/s):
-      <input type="number" id="speed" value="3" min="0" step="0.1">
+    <label><span class="lang-en">Speed (m/s)</span><span class="lang-bn hidden">বেগ (মি/সেক)</span>:
+      <input type="number" id="speed" value="3" min="0" max="120" step="0.1">
     </label>
-    <button onclick="simulateLinear()">Simulate</button>
+    <button onclick="simulateLinear()"><span class="lang-en">Simulate</span><span class="lang-bn hidden">সিমুলেশন শুরু করুন</span></button>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
-  <script src="js/linear.js"></script>
 
+  <script>
+    const toggleBtn = document.getElementById("languageToggle");
+    let currentLang = 'en';
+    toggleBtn.addEventListener('click', () => {
+      const showEn = currentLang === 'bn';
+      document.querySelectorAll('.lang-en').forEach(el => el.classList.toggle('hidden', !showEn));
+      document.querySelectorAll('.lang-bn').forEach(el => el.classList.toggle('hidden', showEn));
+      currentLang = showEn ? 'en' : 'bn';
+      toggleBtn.textContent = showEn ? 'বাংলা' : 'English';
+    });
+
+    let speedInput = document.getElementById('speed');
+    let posX = 0;
+    let speed = 3;
+
+    function setup() {
+      let cnv = createCanvas(windowWidth - 240, windowHeight * 0.6);
+      cnv.parent(document.body);
+      noLoop();
+
+      speedInput.addEventListener('input', () => {
+        const val = parseFloat(speedInput.value);
+        if (val > 120) {
+          speedInput.value = 120;
+          alert(currentLang==='en' ? "⚠️ Maximum speed is 120 m/s." : "⚠️ সর্বোচ্চ বেগ 120 মি/সেক।");
+        } else if (val < 0) {
+          speedInput.value = 0;
+          alert(currentLang==='en' ? "⚠️ Minimum speed is 0 m/s." : "⚠️ সর্বনিম্ন বেগ 0 মি/সেক।");
+        }
+      });
+    }
+
+    function simulateLinear() {
+      const val = parseFloat(speedInput.value);
+      if (!isNaN(val) && val >=0 && val <= 120) {
+        speed = val;
+        posX = 0;
+        loop();
+      } else {
+        alert(currentLang==='en' ? "Enter a valid speed 0-120" : "0-120 মি/সেকের মধ্যে বেগ লিখুন");
+      }
+    }
+
+    function draw() {
+      background('#dbeafe');
+      stroke(180);
+      strokeWeight(2);
+      line(0, height/2+25, width, height/2+25);
+      noStroke();
+      fill(0,200,150);
+      ellipse(posX, height/2, 40);
+      posX += speed;
+      if(posX > width+20) posX = -20;
+      fill(0);
+      textSize(16);
+      text(`FPS: ${frameRate().toFixed(1)}`, 10, 30);
+    }
+
+    function windowResized() {
+      resizeCanvas(windowWidth - 240, windowHeight * 0.6);
+    }
+  </script>
 </body>
 </html>
+
 
 
 
