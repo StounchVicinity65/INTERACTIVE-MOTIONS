@@ -150,6 +150,8 @@
       <span class="lang-en">Initial Angle (°):</span>
       <span class="lang-bn hidden">প্রারম্ভিক কোণ (°):</span>
       <input type="number" id="angle" value="30" min="-90" max="90"/>
+      <span class="warning lang-en">⚠️ Maximum angle ±90°</span>
+      <span class="warning lang-bn hidden">⚠️ সর্বোচ্চ কোণ ±90°</span>
     </label>
     <button onclick="simulateSHM()">
       <span class="lang-en">Simulate</span>
@@ -180,7 +182,7 @@
       }
     });
 
-    // Validation for angle input
+    // Angle input validation
     const angleInput = document.getElementById('angle');
     angleInput.addEventListener('input', function() {
       let val = parseFloat(this.value);
@@ -194,5 +196,6 @@
 
 </body>
 </html>
+
 
 
