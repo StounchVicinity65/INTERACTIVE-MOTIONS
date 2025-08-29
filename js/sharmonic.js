@@ -10,17 +10,18 @@ function setup() {
   createCanvas(windowWidth - 240, windowHeight * 0.6);
   angleInput = document.getElementById('angle');
   noLoop();
+
+  textSize(16);
+  textAlign(LEFT, TOP);
 }
 
 function simulateSHM() {
   let angleDeg = parseFloat(angleInput.value);
 
-  // Check input range
-  if (angleDeg > 90 || angleDeg < -90) {
-    alert("⚠️ Maximum allowed angle is ±90°.");
-    angleDeg = Math.max(-90, Math.min(90, angleDeg));
-    angleInput.value = angleDeg;
-  }
+  // Clamp the value if outside ±90
+  if (angleDeg > 90) angleDeg = 90;
+  if (angleDeg < -90) angleDeg = -90;
+  angleInput.value = angleDeg;
 
   theta = radians(angleDeg);
   omega = 0;
@@ -36,15 +37,12 @@ function draw() {
   omega *= damping;
   theta += omega;
 
-  // Origin (lowered a bit so bob doesn’t clip)
   let originX = width / 2;
   let originY = 40;
 
-  // Pendulum bob position
   let bobX = originX + L * sin(theta);
   let bobY = originY + L * cos(theta);
 
-  // Draw pendulum
   stroke(0);
   strokeWeight(2);
   line(originX, originY, bobX, bobY);
@@ -53,7 +51,7 @@ function draw() {
   fill(255, 100, 100);
   ellipse(bobX, bobY, 40);
 
-  // FPS Display
+  // FPS
   push();
   fill(0);
   textSize(16);
@@ -65,5 +63,6 @@ function draw() {
 function windowResized() {
   resizeCanvas(windowWidth - 240, windowHeight * 0.6);
 }
+
 
 
