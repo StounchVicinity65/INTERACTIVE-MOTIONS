@@ -53,9 +53,7 @@
       font-size: 16px;
       line-height: 1.4;
     }
-    #definition div {
-      flex: 1;
-    }
+    #definition div { flex: 1; }
     #controls {
       max-width: 700px;
       margin: 1rem auto;
@@ -104,10 +102,6 @@
       transform: scale(1.05);
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     }
-    button:focus {
-      outline: 2px solid #4a90e2;
-      outline-offset: 2px;
-    }
     canvas {
       display: block;
       margin: 1rem auto;
@@ -129,30 +123,13 @@
       cursor: pointer;
       z-index: 10;
     }
-    #languageToggle:hover {
-      background: #00000088;
-    }
-    .lang-en, .lang-bn {
-      transition: opacity 0.3s ease;
-    }
-    .hidden {
-      display: none !important;
-    }
+    #languageToggle:hover { background: #00000088; }
+    .hidden { display: none !important; }
     @media (max-width: 600px) {
-      canvas {
-        width: 90vw;
-        height: auto;
-      }
-      #controls {
-        flex-direction: column;
-        gap: 1rem;
-      }
-      h1 {
-        font-size: 1.5rem;
-      }
-      #languageToggle {
-        top: 60px;
-      }
+      canvas { width: 90vw; height: auto; }
+      #controls { flex-direction: column; gap: 1rem; }
+      h1 { font-size: 1.5rem; }
+      #languageToggle { top: 60px; }
     }
   </style>
 </head>
@@ -165,7 +142,7 @@
   </h1>
   <div id="definition">
     <div class="lang-en">
-      <p><strong>Definition:</strong> Circular motion is a movement of an object along the circumference of a circle. It can be uniform (with constant angular speed) or non-uniform (with changing speed).</p>
+      <p><strong>Definition:</strong> Circular motion is a movement of an object along the circumference of a circle. It can be uniform (constant angular speed) or non-uniform (changing speed).</p>
     </div>
     <div class="lang-bn hidden">
       <p><strong>সংজ্ঞা:</strong> বৃত্তাকার গতি হল একটি বস্তুর বৃত্তের পরিধি বরাবর চলাচল। এটি সুষম হতে পারে (স্থিতিশীল কৌণিক গতিতে) বা অসুষম (গতির পরিবর্তনের সাথে)।</p>
@@ -175,26 +152,28 @@
     <label>
       <span class="lang-en">Angular Speed (rad/s):</span>
       <span class="lang-bn hidden">কৌণিক গতি (rad/s):</span>
-      <input type="number" id="speed" value="0.05" step="0.01" min="0.01" max="45" aria-label="Angular speed in radians per second">
+      <input type="number" id="speed" value="0.05" step="0.01" min="0.01" max="45">
     </label>
     <label>
       <span class="lang-en">Radius (m):</span>
       <span class="lang-bn hidden">ব্যাসার্ধ (m):</span>
-      <input type="number" id="radius" value="1" step="0.1" min="0.1" max="2.8" aria-label="Radius in meters">
+      <input type="number" id="radius" value="1" step="0.1" min="0.1" max="2.8">
     </label>
-    <button onclick="simulateCircular()" aria-label="Start circular motion simulation">
+    <button onclick="simulateCircular()">
       <span class="lang-en">Simulate</span>
       <span class="lang-bn hidden">সিমুলেট</span>
     </button>
-    <button onclick="resetSimulation()" aria-label="Reset circular motion simulation">
+    <button onclick="resetSimulation()">
       <span class="lang-en">Reset</span>
       <span class="lang-bn hidden">রিসেট</span>
     </button>
   </div>
+
   <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
   <script>
     const speedInput = document.getElementById('speed');
     const radiusInput = document.getElementById('radius');
+
     [speedInput, radiusInput].forEach(input => {
       input.addEventListener('input', function() {
         let val = parseFloat(this.value);
@@ -217,18 +196,17 @@
         document.body.classList.add('bangla');
         currentLang = 'bn';
         toggleBtn.textContent = 'English';
-        toggleBtn.setAttribute('aria-label', 'Switch to English');
       } else {
         document.querySelectorAll('.lang-en').forEach(el => el.classList.remove('hidden'));
         document.querySelectorAll('.lang-bn').forEach(el => el.classList.add('hidden'));
         document.body.classList.remove('bangla');
         currentLang = 'en';
         toggleBtn.textContent = 'বাংলা';
-        toggleBtn.setAttribute('aria-label', 'Switch to Bangla');
       }
     });
   </script>
   <script src="js/circular.js"></script>
 </body>
 </html>
+
 
