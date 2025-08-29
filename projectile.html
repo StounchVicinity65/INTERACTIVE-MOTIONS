@@ -147,7 +147,7 @@
     <label>
       <span class="lang-en">Angle (°)</span>
       <span class="lang-bn hidden">কোণ (°)</span>
-      <input type="number" id="angle" value="45" min="0" max="900000" step="1" />
+      <input type="number" id="angle" value="45" min="0" max="999" step="1" />
     </label>
 
     <label>
@@ -245,7 +245,7 @@
       const speedVal = parseFloat(speedEl.value) || 0;
 
       // clamp again defensively
-      const angleDeg = Math.max(0, Math.min(90, angleVal));
+      const angleDeg = Math.max(0, Math.min(999, angleVal));
       const speedNum = Math.max(0, Math.min(300, speedVal));
       angleEl.value = angleDeg;
       speedEl.value = speedNum;
