@@ -1,146 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>↔ Linear Motion</title>
+  <meta charset="UTF-8">
+  <title>Linear Motion Simulation</title>
   <style>
     body {
+      font-family: Arial, sans-serif;
+      display: flex;
       margin: 0;
-      background: #09203f;
-      font-family: sans-serif;
-      color: white;
-      text-align: center;
-      position: relative;
-      min-height: 100vh;
+      height: 100vh;
     }
-
-    .back-btn {
-      position: absolute;
-      top: 16px;
-      left: 16px;
-      text-decoration: none;
-      color: #ccc;
-      background: #00000055;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 14px;
-      z-index: 10;
+    #sidebar {
+      width: 220px;
+      background: #f8f9fa;
+      padding: 15px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
     }
-
-    .back-btn:hover {
-      color: white;
-      background: #00000088;
-    }
-
-    h1 {
-      margin-top: 3rem;
-      font-size: 2rem;
-    }
-
-    #definition {
-      background: #00000055;
-      padding: 1.2rem 1.5rem;
-      max-width: 1000px;
-      margin: 1rem auto;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(255,255,255,0.1);
-      display: flex;
-      justify-content: space-between;
-      gap: 2rem;
-      text-align: left;
-      font-size: 1rem;
-      line-height: 1.4;
-    }
-
-    #definition div {
+    #content {
       flex: 1;
-    }
-
-    #controls {
-      background: #00000055;
-      padding: 1rem;
-      max-width: 600px;
-      margin: 1rem auto;
-      border-radius: 8px;
-      box-shadow: 0 0 8px rgba(255,255,255,0.1);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 2rem;
-      font-size: 1rem;
-    }
-
-    label {
       display: flex;
       flex-direction: column;
       align-items: center;
-      font-weight: 500;
-      gap: 0.3rem;
-      min-width: 160px;
+      justify-content: center;
     }
-
-    input {
-      padding: 6px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      width: 100px;
-      text-align: center;
-      font-size: 1rem;
-    }
-
-    button {
-      padding: 0.5rem 1.2rem;
-      background: #2563eb;
-      border: none;
-      color: white;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-
-    button:hover {
-      background: #1d4ed8;
-    }
-
-    canvas {
-      display: block;
-      margin: 1rem auto;
-      max-width: 100%;
-      height: auto;
-      border: 1px solid #ccc;
-      background: #dbeafe;
-    }
+    label { display: block; margin-top: 10px; }
+    input { margin-bottom: 10px; width: 100%; }
+    button { margin-top: 10px; width: 100%; }
+    #langToggle { margin-top: 20px; background: #ddd; cursor: pointer; }
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
 </head>
 <body>
-
-  <a href="index.html" class="back-btn">← Back</a>
-
-  <h1>↔ Linear Motion</h1>
-
-  <div id="definition">
-    <div>
-      <p><strong>Definition:</strong> Linear motion is the movement of an object in a straight line at a constant speed or velocity. It is the simplest form of motion, where direction and magnitude remain unchanged unless acted on by a force.</p>
-    </div>
-    <div>
-      <p><strong>সংজ্ঞা:</strong> সরলরৈখিক গতি হলো কোনো বস্তুর সরলরেখা বরাবর ধ্রুব গতি বা বেগে চলমান অবস্থা। এটি গতির সরলতম রূপ, যেখানে কোনো বল প্রয়োগ না করা পর্যন্ত দিক ও মান অপরিবর্তিত থাকে।</p>
-    </div>
+  <div id="sidebar">
+    <h2 id="title">Linear Motion</h2>
+    <label for="speed" id="speedLabel">Speed (m/s, max 120):</label>
+    <input type="number" id="speed" min="0" max="120" value="3">
+    <button onclick="simulateLinear()" id="simulateBtn">Start Simulation</button>
+    <button onclick="toggleLanguage()" id="langToggle">বাংলা</button>
+  </div>
+  <div id="content">
+    <div id="sketch-holder"></div>
   </div>
 
-  <div id="controls">
-    <label>Speed (m/s):
-      <input type="number" id="speed" value="3" min="0" step="0.1">
-    </label>
-    <button onclick="simulateLinear()">Simulate</button>
-  </div>
+  <script>
+    // --- Language text dictionaries ---
+    const texts = {
+      en: {
+        title: "Linear Motion",
+        speedLabel: "Speed (m/s, max 120):",
+        simulateBtn: "Start Simulation",
+        langToggle: "বাংলা",
+        alertMax: "⚠️ Maximum speed is 120 m/s.",
+        alertMin: "⚠️ Minimum speed is 0 m/s.",
+        alertInvalid: "Please enter a speed between 0 and 120 m/s."
+      },
+      bn: {
+        title: "রৈখিক গতি",
+        speedLabel: "বেগ (মি/সেক, সর্বোচ্চ 120):",
+        simulateBtn: "সিমুলেশন শুরু করুন",
+        langToggle: "English",
+        alertMax: "⚠️ সর্বোচ্চ বেগ 120 মি/সেক।",
+        alertMin: "⚠️ সর্বনিম্ন বেগ 0 মি/সেক।",
+        alertInvalid: "অনুগ্রহ করে 0 থেকে 120 মি/সেক এর মধ্যে বেগ লিখুন।"
+      }
+    };
 
-  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
-  <script src="js/linear.js"></script>
+    let currentLang = "en";
 
+    function toggleLanguage() {
+      currentLang = currentLang === "en" ? "bn" : "en";
+      const t = texts[currentLang];
+      document.getElementById("title").innerText = t.title;
+      document.getElementById("speedLabel").innerText = t.speedLabel;
+      document.getElementById("simulateBtn").innerText = t.simulateBtn;
+      document.getElementById("langToggle").innerText = t.langToggle;
+    }
+
+    // --- p5.js Simulation ---
+    let speedInput;
+    let posX = 0;
+    let speed = 3;
+
+    function setup() {
+      let cnv = createCanvas(windowWidth - 240, windowHeight * 0.6);
+      cnv.parent("sketch-holder");
+      speedInput = document.getElementById('speed');
+      noLoop();
+
+      // Instant validation on input
+      speedInput.addEventListener('input', function () {
+        const val = parseFloat(this.value);
+        if (!isNaN(val)) {
+          if (val > 120) {
+            this.value = 120;
+            alert(texts[currentLang].alertMax);
+          } else if (val < 0) {
+            this.value = 0;
+            alert(texts[currentLang].alertMin);
+          }
+        }
+      });
+    }
+
+    function simulateLinear() {
+      const val = parseFloat(speedInput.value);
+      if (!isNaN(val) && val >= 0 && val <= 120) {
+        speed = val;
+        posX = 0;
+        loop();
+      } else {
+        alert(texts[currentLang].alertInvalid);
+      }
+    }
+
+    function draw() {
+      background('#dbeafe');
+
+      // Ground line
+      stroke(180);
+      strokeWeight(2);
+      line(0, height / 2 + 25, width, height / 2 + 25);
+
+      // Ball
+      noStroke();
+      fill(0, 200, 150);
+      ellipse(posX, height / 2, 40);
+
+      // Update position
+      posX += speed;
+      if (posX > width + 20) {
+        posX = -20;
+      }
+
+      // FPS display
+      fill(0);
+      textSize(16);
+      text(`FPS: ${frameRate().toFixed(1)}`, 10, 30);
+    }
+
+    function windowResized() {
+      resizeCanvas(windowWidth - 240, windowHeight * 0.6);
+    }
+  </script>
 </body>
 </html>
+
 
 
 
