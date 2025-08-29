@@ -14,6 +14,7 @@
       position: relative;
       min-height: 100vh;
     }
+    body.bangla { font-family: 'Noto Serif Bengali', sans-serif; }
 
     .back-btn {
       position: absolute;
@@ -27,16 +28,9 @@
       font-size: 14px;
       z-index: 10;
     }
+    .back-btn:hover { color: white; background: #00000088; }
 
-    .back-btn:hover {
-      color: white;
-      background: #00000088;
-    }
-
-    h1 {
-      margin-top: 3rem;
-      font-size: 2rem;
-    }
+    h1 { margin-top: 3rem; font-size: 2rem; }
 
     #definition {
       max-width: 1000px;
@@ -52,10 +46,7 @@
       font-size: 1rem;
       line-height: 1.4;
     }
-
-    #definition div {
-      flex: 1;
-    }
+    #definition div { flex: 1; }
 
     #controls {
       max-width: 600px;
@@ -71,7 +62,6 @@
       align-items: center;
       font-size: 1rem;
     }
-
     label {
       display: flex;
       flex-direction: column;
@@ -80,7 +70,6 @@
       gap: 0.3rem;
       min-width: 160px;
     }
-
     input {
       padding: 6px;
       border-radius: 4px;
@@ -89,7 +78,6 @@
       text-align: center;
       font-size: 1rem;
     }
-
     button {
       padding: 0.5rem 1.2rem;
       border: none;
@@ -99,10 +87,7 @@
       cursor: pointer;
       font-size: 1rem;
     }
-
-    button:hover {
-      background: #1d4ed8;
-    }
+    button:hover { background: #1d4ed8; }
 
     canvas {
       display: block;
@@ -112,54 +97,110 @@
       border: 1px solid #ccc;
       background: #dbeafe;
     }
+
+    #languageToggle {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: #00000055;
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      z-index: 10;
+    }
+    #languageToggle:hover { background: #00000088; }
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
-  <a href="index.html" class="back-btn">← Back</a>
+  <!-- language toggle -->
+  <button id="languageToggle" aria-label="Switch to Bangla">বাংলা / English</button>
 
-  <h1>🔀 Random Motion</h1>
+  <a href="index.html" class="back-btn">← 
+    <span class="lang-en">Back</span>
+    <span class="lang-bn hidden">পিছনে</span>
+  </a>
+
+  <h1>
+    <span class="lang-en">🔀 Random Motion</span>
+    <span class="lang-bn hidden">🔀 এলোমেলো গতি</span>
+  </h1>
 
   <div id="definition">
-    <div>
+    <div class="lang-en">
       <p><strong>Definition:</strong> Random motion is the unpredictable movement of particles in different directions and speeds. This motion does not follow a specific path and is often observed in phenomena like Brownian motion of particles in a fluid.</p>
     </div>
-    <div>
+    <div class="lang-bn hidden">
       <p><strong>সংজ্ঞা:</strong> এলোমেলো গতি হলো এমন এক ধরনের গতি যেখানে কণাগুলো বিভিন্ন দিক ও বেগে এলোমেলোভাবে চলে। এটি পূর্বানুমানযোগ্য নয় এবং তরলের মধ্যে কণার ব্রাউনীয় গতির মতো ঘটনায় দেখা যায়।</p>
     </div>
   </div>
 
   <div id="controls">
-    <label>Number of Particles:
+    <label>
+      <span class="lang-en">Number of Particles:</span>
+      <span class="lang-bn hidden">কণার সংখ্যা:</span>
       <input type="number" id="count" value="20" min="1" max="10000" />
     </label>
-<script>
-const input = document.getElementById("count");
 
-input.addEventListener("input", function() {
-  let val = parseInt(this.value);
+    <button onclick="startRandomMotion()">
+      <span class="lang-en">Start</span>
+      <span class="lang-bn hidden">শুরু</span>
+    </button>
 
-  // If user types above max, prevent it
-  if (val > this.max) {
-    this.value = this.max; // force max
-    alert("⚠️ Maximum threshold reached (10,000).");
-  }
-
-  // If user types below min, force min
-  if (val < this.min && this.value !== "") {
-    this.value = this.min;
-  }
-});
-</script>
-
-    <button onclick="startRandomMotion()">Start</button>
-    <button onclick="stopRandomMotion()">Stop</button>
+    <button onclick="stopRandomMotion()">
+      <span class="lang-en">Stop</span>
+      <span class="lang-bn hidden">বন্ধ</span>
+    </button>
   </div>
 
+  <!-- validation script -->
+  <script>
+  const input = document.getElementById("count");
+  input.addEventListener("input", function() {
+    let val = parseInt(this.value);
+    if (val > this.max) {
+      this.value = this.max;
+      alert("⚠️ Maximum threshold reached (10,000).");
+    }
+    if (val < this.min && this.value !== "") {
+      this.value = this.min;
+    }
+  });
+  </script>
+
+  <!-- toggle script -->
+  <script>
+  const toggleBtn = document.getElementById('languageToggle');
+  let currentLang = 'en';
+  toggleBtn.addEventListener('click', () => {
+    if (currentLang === 'en') {
+      document.querySelectorAll('.lang-en').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.lang-bn').forEach(el => el.classList.remove('hidden'));
+      document.body.classList.add('bangla');
+      currentLang = 'bn';
+      toggleBtn.textContent = 'English';
+      toggleBtn.setAttribute('aria-label', 'Switch to English');
+    } else {
+      document.querySelectorAll('.lang-en').forEach(el => el.classList.remove('hidden'));
+      document.querySelectorAll('.lang-bn').forEach(el => el.classList.add('hidden'));
+      document.body.classList.remove('bangla');
+      currentLang = 'en';
+      toggleBtn.textContent = 'বাংলা';
+      toggleBtn.setAttribute('aria-label', 'Switch to Bangla');
+    }
+  });
+  </script>
+
+  <!-- p5 -->
   <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
   <script src="js/random.js"></script>
 
 </body>
 </html>
+
 
 
