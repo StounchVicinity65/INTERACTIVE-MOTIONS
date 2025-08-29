@@ -1,6 +1,3 @@
-// sharmonic.js
-
-let angleInput;
 let theta = 0;      // current angle (radians)
 let omega = 0;      // angular velocity
 let alpha = 0;      // angular acceleration
@@ -10,38 +7,19 @@ const damping = 0.995;
 
 function setup() {
   createCanvas(windowWidth - 240, windowHeight * 0.6);
-
-  // get the input element
-  angleInput = document.getElementById('angle');
-
-  // add instant popup warning when typing
-  angleInput.addEventListener('input', () => {
-    let val = parseFloat(angleInput.value);
-    const max = parseFloat(angleInput.max);
-    const min = parseFloat(angleInput.min);
-
-    if (!isNaN(val)) {
-      if (val > max) {
-        angleInput.value = max;
-        alert(`⚠️ Maximum angle is ${max}°`);
-      } else if (val < min) {
-        angleInput.value = min;
-        alert(`⚠️ Minimum angle is ${min}°`);
-      }
-    }
-  });
-
   noLoop();
   textSize(16);
   textAlign(LEFT, TOP);
 }
 
 function simulateSHM() {
+  const angleInput = document.getElementById('angle');
   let angleDeg = parseFloat(angleInput.value);
 
-  // clamp with warning when clicking "Simulate"
   const max = parseFloat(angleInput.max);
   const min = parseFloat(angleInput.min);
+
+  if (isNaN(angleDeg)) angleDeg = 0;
 
   if (angleDeg > max) { angleDeg = max; alert(`⚠️ Maximum angle is ${max}°`); }
   if (angleDeg < min) { angleDeg = min; alert(`⚠️ Minimum angle is ${min}°`); }
@@ -56,7 +34,6 @@ function simulateSHM() {
 function draw() {
   background('#dbeafe');
 
-  // SHM physics
   alpha = -(g / L) * theta;
   omega += alpha;
   omega *= damping;
@@ -76,7 +53,6 @@ function draw() {
   fill(255, 100, 100);
   ellipse(bobX, bobY, 40);
 
-  // FPS display
   push();
   fill(0);
   textSize(16);
@@ -88,6 +64,7 @@ function draw() {
 function windowResized() {
   resizeCanvas(windowWidth - 240, windowHeight * 0.6);
 }
+
 
 
 
