@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>🚗 Accelerated Motion</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
@@ -14,7 +15,9 @@
       position: relative;
       min-height: 100vh;
     }
-
+    body.bangla {
+      font-family: 'Noto Serif Bengali', sans-serif;
+    }
     .back-btn {
       position: absolute;
       top: 16px;
@@ -27,17 +30,14 @@
       font-size: 14px;
       z-index: 10;
     }
-
     .back-btn:hover {
       color: white;
       background: #00000088;
     }
-
     h1 {
       margin-top: 3rem;
       font-size: 2rem;
     }
-
     #definition {
       max-width: 1000px;
       margin: 1rem auto;
@@ -52,11 +52,9 @@
       font-size: 1rem;
       line-height: 1.4;
     }
-
     #definition div {
       flex: 1;
     }
-
     #controls {
       max-width: 600px;
       margin: 1rem auto;
@@ -70,7 +68,6 @@
       flex-wrap: wrap;
       font-size: 1rem;
     }
-
     label {
       display: flex;
       flex-direction: column;
@@ -79,7 +76,6 @@
       gap: 0.3rem;
       min-width: 160px;
     }
-
     input {
       padding: 6px;
       border-radius: 4px;
@@ -88,7 +84,11 @@
       text-align: center;
       font-size: 1rem;
     }
-
+    input:focus {
+      outline: 2px solid #4a90e2;
+      outline-offset: 2px;
+      box-shadow: 0 0 8px rgba(74, 144, 226, 0.7);
+    }
     button {
       padding: 0.5rem 1.2rem;
       background: #2563eb;
@@ -98,11 +98,14 @@
       cursor: pointer;
       font-size: 1rem;
     }
-
     button:hover {
       background: #1d4ed8;
+      transform: scale(1.05);
     }
-
+    button:focus {
+      outline: 2px solid #4a90e2;
+      outline-offset: 2px;
+    }
     canvas {
       display: block;
       margin: 1rem auto;
@@ -111,51 +114,110 @@
       border: 1px solid #ccc;
       background: #dbeafe;
     }
+    #languageToggle {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: #00000055;
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      z-index: 10;
+    }
+    #languageToggle:hover {
+      background: #00000088;
+    }
+    .lang-en, .lang-bn {
+      transition: opacity 0.3s ease;
+    }
+    .hidden {
+      display: none !important;
+    }
+    @media (max-width: 600px) {
+      canvas {
+        width: 90vw;
+        height: auto;
+      }
+      #controls {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      h1 {
+        font-size: 1.5rem;
+      }
+      #languageToggle {
+        top: 60px;
+      }
+    }
   </style>
 </head>
 <body>
-
-  <a href="index.html" class="back-btn">← Back</a>
-
-  <h1>🚗 Accelerated Motion</h1>
-
+  <button id="languageToggle" aria-label="Switch to Bangla">বাংলা / English</button>
+  <a href="index.html" class="back-btn">← <span class="lang-en">Back</span><span class="lang-bn hidden">পিছনে</span></a>
+  <h1>
+    <span class="lang-en">🚗 Accelerated Motion</span>
+    <span class="lang-bn hidden">🚗 ত্বরিত গতি</span>
+  </h1>
   <div id="definition">
-    <div>
+    <div class="lang-en">
       <p><strong>Definition:</strong> Accelerated motion refers to the movement of an object where its velocity changes over time.</p>
     </div>
-    <div>
+    <div class="lang-bn hidden">
       <p><strong>সংজ্ঞা:</strong> ত্বরিত গতি বলতে কোনো বস্তুর এমন গতিকে বোঝায় যেখানে সময়ের সাথে সাথে তার বেগ (velocity) পরিবর্তিত হয়।</p>
     </div>
   </div>
-
   <div id="controls">
-    <label>Acceleration (m/s²):
-      <input type="number" id="acceleration" value="2" step="0.1" id="count" min="1" max="999">
+    <label>
+      <span class="lang-en">Acceleration (m/s²):</span>
+      <span class="lang-bn hidden">ত্বরণ (m/s²):</span>
+      <input type="number" id="acceleration" value="2" step="0.1" min="1" max="999" aria-label="Acceleration in meters per second squared">
     </label>
-    <script>
-const input = document.getElementById("acceleration");
-
-input.addEventListener("input", function() {
-  let val = parseInt(this.value);
-
-  // If user types above max, prevent it
-  if (val > this.max) {
-    this.value = this.max; // force max
-    alert("⚠️ Maximum threshold reached (999).");
-  }
-
-  // If user types below min, force min
-  if (val < this.min && this.value !== "") {
-    this.value = this.min;
-  }
-});
-</script>
-    <button onclick="simulateAcceleration()">Simulate</button>
+    <button onclick="simulateAcceleration()" aria-label="Start acceleration simulation">
+      <span class="lang-en">Simulate</span>
+      <span class="lang-bn hidden">সিমুলেট</span>
+    </button>
+    <button onclick="resetSimulation()" aria-label="Reset acceleration simulation">
+      <span class="lang-en">Reset</span>
+      <span class="lang-bn hidden">রিসেট</span>
+    </button>
   </div>
-
   <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
-  <script src="js/accelerated.js"></script>
+  <script>
+    const input = document.getElementById("acceleration");
+    input.addEventListener("input", function() {
+      let val = parseFloat(this.value);
+      if (val > this.max) {
+        this.value = this.max;
+        alert("⚠️ Maximum threshold reached (999).");
+      }
+      if (val < this.min && this.value !== "") {
+        this.value = this.min;
+      }
+    });
 
+    const toggleBtn = document.getElementById("languageToggle");
+    let currentLang = "en";
+    toggleBtn.addEventListener("click", () => {
+      if (currentLang === "en") {
+        document.querySelectorAll(".lang-en").forEach(el => el.classList.add("hidden"));
+        document.querySelectorAll(".lang-bn").forEach(el => el.classList.remove("hidden"));
+        document.body.classList.add("bangla");
+        currentLang = "bn";
+        toggleBtn.textContent = "English";
+        toggleBtn.setAttribute("aria-label", "Switch to English");
+      } else {
+        document.querySelectorAll(".lang-en").forEach(el => el.classList.remove("hidden"));
+        document.querySelectorAll(".lang-bn").forEach(el => el.classList.add("hidden"));
+        document.body.classList.remove("bangla");
+        currentLang = "en";
+        toggleBtn.textContent = "বাংলা";
+        toggleBtn.setAttribute("aria-label", "Switch to Bangla");
+      }
+    });
+  </script>
+  <script src="js/accelerated.js"></script>
 </body>
 </html>
-
