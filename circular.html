@@ -169,24 +169,33 @@
     </button>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+  <!-- p5 canvas will be placed here (keeps layout predictable) -->
+  <div id="p5-container"></div>
+
+  <!-- keep your DOM-level listeners and language toggle (preserved, improved a bit) -->
   <script>
+    // Input element references (used by validation & by the p5 sketch)
     const speedInput = document.getElementById('speed');
     const radiusInput = document.getElementById('radius');
 
+    // Validation & clamping for inputs
     [speedInput, radiusInput].forEach(input => {
       input.addEventListener('input', function() {
+        const min = parseFloat(this.min);
+        const max = parseFloat(this.max);
         let val = parseFloat(this.value);
-        if (val > this.max) {
-          this.value = this.max;
+        if (isNaN(val)) return;
+        if (!isNaN(max) && val > max) {
+          this.value = max;
           alert(`⚠️ Maximum ${this.id === 'speed' ? 'angular speed' : 'radius'} is ${this.max}.`);
         }
-        if (val < this.min && this.value !== '') {
-          this.value = this.min;
+        if (!isNaN(min) && val < min) {
+          this.value = min;
         }
       });
     });
 
+    // Language toggle (preserved behavior)
     const toggleBtn = document.getElementById('languageToggle');
     let currentLang = 'en';
     toggleBtn.addEventListener('click', () => {
@@ -205,8 +214,137 @@
       }
     });
   </script>
-  <script src="js/circular.js"></script>
+
+  <!-- p5 library -->
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+
+  <!-- Inline fixed p5 sketch (replaces the broken external js) -->
+  <script>
+    // --- sketch variables (kept consistent with your original code) ---
+    let radius = 100; // in pixels (default)
+    let angle = 0;
+    let angularSpeed = 0.05; // rad/sec (default)
+    let centerX = 0, centerY = 0;
+    let simulationRunning = false;
+
+    function setup() {
+      // Create canvas sized to match your layout (similar to original)
+      const w = Math.max(200, windowWidth - 240);
+      const h = Math.max(200, Math.floor(windowHeight * 0.6));
+      const cnv = createCanvas(w, h);
+      // attach canvas to the placeholder so layout stays where you expect
+      cnv.parent('p5-container');
+      angleMode(RADIANS);
+
+      // compute centers
+      centerX = width / 2;
+      centerY = height / 2;
+
+      // start paused (same as your original intention)
+      noLoop();
+
+      // styling/text
+      textSize(16);
+      textAlign(LEFT, TOP);
+      console.log('Setup complete: canvas initialized');
+
+      // draw the initial static scene
+      drawStaticScene();
+
+      // keep static preview responsive when radius input changes (only if not running)
+      radiusInput.addEventListener('input', () => {
+        const rMeters = parseFloat(radiusInput.value);
+        const px = (isNaN(rMeters) || rMeters <= 0) ? radius : Math.min(rMeters * 100, 2.8 * 100);
+        radius = px;
+        if (!simulationRunning) drawStaticScene();
+      });
+    }
+
+    function drawStaticScene() {
+      // draw background + circle only (used when paused)
+      clear();
+      background('#dbeafe');
+      noFill();
+      stroke(120);
+      strokeWeight(2);
+      ellipse(centerX, centerY, radius * 2);
+    }
+
+    // Start the simulation (preserves your validation and defaults)
+    function simulateCircular() {
+      const speedVal = parseFloat(speedInput.value);
+      const rMeters = parseFloat(radiusInput.value);
+
+      // Validate inputs with defaults & caps (kept as in your original code)
+      angularSpeed = (isNaN(speedVal) || speedVal <= 0) ? 0.05 : Math.min(speedVal, 45);
+      radius = (isNaN(rMeters) || rMeters <= 0) ? 100 : Math.min(rMeters * 100, 2.8 * 100);
+
+      angle = 0;
+      simulationRunning = true;
+      loop(); // start p5's draw loop
+      console.log(`Simulation started: angularSpeed=${angularSpeed}, radius=${radius}`);
+    }
+
+    // Reset and stop the simulation
+    function resetSimulation() {
+      angle = 0;
+      simulationRunning = false;
+      noLoop(); // stop the draw loop
+      drawStaticScene(); // show the static preview
+      console.log('Simulation reset');
+    }
+
+    function draw() {
+      // if paused, exit quickly (we use noLoop/loop to control updates)
+      if (!simulationRunning) return;
+
+      // background + static path
+      background('#dbeafe');
+      noFill();
+      stroke(120);
+      strokeWeight(2);
+      ellipse(centerX, centerY, radius * 2);
+
+      // compute moving object's position
+      const x = centerX + radius * cos(angle);
+      const y = centerY + radius * sin(angle);
+
+      // draw object
+      fill(255, 100, 100);
+      noStroke();
+      ellipse(x, y, 30);
+
+      // update angle using deltaTime so angularSpeed represents rad/sec (accurate on variable FPS)
+      const dt = deltaTime / 1000; // seconds since last frame
+      angle += angularSpeed * dt;
+
+      // keep angle bounded
+      if (angle > TWO_PI) angle -= TWO_PI;
+
+      // display FPS for debugging (like your original)
+      push();
+      fill(0);
+      textSize(16);
+      textAlign(LEFT, TOP);
+      // frameRate() may return NaN briefly; guard against that
+      const fps = Number.isFinite(frameRate()) ? frameRate().toFixed(1) : '0.0';
+      text(`FPS: ${fps}`, 10, 30);
+      pop();
+    }
+
+    // Keep canvas sized nicely when the window changes
+    function windowResized() {
+      const w = Math.max(200, windowWidth - 240);
+      const h = Math.max(200, Math.floor(windowHeight * 0.6));
+      resizeCanvas(w, h);
+      centerX = width / 2;
+      centerY = height / 2;
+      if (!simulationRunning) drawStaticScene();
+    }
+  </script>
+
 </body>
 </html>
+
 
 
