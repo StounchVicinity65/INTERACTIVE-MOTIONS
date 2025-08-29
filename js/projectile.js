@@ -9,10 +9,9 @@ function setup() {
   noLoop();
   angleMode(RADIANS);
 
-  // --- Setup for FPS Display ---
-  textSize(16); // Set text size for FPS display
-  textAlign(LEFT, TOP); // Align text to top-left for FPS display
-  // --- End Setup for FPS Display ---
+  // FPS setup
+  textSize(16);
+  textAlign(LEFT, TOP);
 }
 
 function launchProjectile() {
@@ -25,7 +24,7 @@ function launchProjectile() {
     vy: -speed * sin(angle),
     t: 0
   };
-  trail = []; // Clear old trail
+  trail = [];
   loop();
 }
 
@@ -41,13 +40,11 @@ function draw() {
   background('#dbeafe');
 
   // Draw trail
-  stroke(100, 100, 255); // Blue stroke for the trail
+  stroke(100, 100, 255);
   strokeWeight(3);
   noFill();
   beginShape();
-  for (let pos of trail) {
-    vertex(pos.x, pos.y);
-  }
+  for (let pos of trail) vertex(pos.x, pos.y);
   endShape();
 
   if (projectile) {
@@ -58,7 +55,7 @@ function draw() {
     let vx = projectile.vx;
     let vy = projectile.vy + 9.8 * projectile.t;
 
-    trail.push({ x, y }); // Save current position
+    trail.push({ x, y });
 
     // Draw arrowhead
     let angle = atan2(vy, vx);
@@ -66,25 +63,20 @@ function draw() {
     translate(x, y);
     rotate(angle);
     fill(0);
-    noStroke(); // Ensure no stroke for arrowhead
+    noStroke();
     drawArrowhead();
     pop();
 
-    if (y > height) {
-      noLoop();
-    }
+    if (y > height) noLoop();
   }
 
-  // --- ADDED CODE TO DISPLAY FPS ---
-  push(); // Save current drawing style before changing for FPS
-  fill(0); // Set text color to black
-  textSize(16); // Set text size for FPS
-  textAlign(LEFT, TOP); // Align text to top-left for FPS
-  noStroke(); // <--- THIS IS THE KEY CHANGE: Remove stroke for the text
-  // Display the current frame rate, rounded to 1 decimal place
-  text(`FPS: ${frameRate().toFixed(1)}`, 10, 30); // Position text at (10, 30)
-  pop(); // Restore previous drawing style
-  // --- END ADDED CODE ---
+  // FPS
+  push();
+  fill(0);
+  textSize(16);
+  noStroke();
+  text(`FPS: ${frameRate().toFixed(1)}`, 10, 30);
+  pop();
 }
 
 function drawArrowhead() {
