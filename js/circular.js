@@ -21,11 +21,11 @@ function setup() {
 function simulateCircular() {
   const speedVal = parseFloat(speedInput.value);
   const rMeters = parseFloat(radiusInput.value);
-  
+
   // Validate inputs with defaults
   angularSpeed = isNaN(speedVal) || speedVal <= 0 ? 0.05 : Math.min(speedVal, 45);
   radius = isNaN(rMeters) || rMeters <= 0 ? 100 : Math.min(rMeters * 100, 2.8 * 100);
-  
+
   angle = 0;
   loop();
   console.log(`Simulation started: angularSpeed=${angularSpeed}, radius=${radius}`);
@@ -34,11 +34,11 @@ function simulateCircular() {
 function resetSimulation() {
   const speedVal = parseFloat(speedInput.value);
   const rMeters = parseFloat(radiusInput.value);
-  
+
   // Validate inputs with defaults
   angularSpeed = isNaN(speedVal) || speedVal <= 0 ? 0.05 : Math.min(speedVal, 45);
   radius = isNaN(rMeters) || rMeters <= 0 ? 100 : Math.min(rMeters * 100, 2.8 * 100);
-  
+
   angle = 0;
   noLoop();
   console.log('Simulation reset');
@@ -46,21 +46,26 @@ function resetSimulation() {
 
 function draw() {
   background('#dbeafe');
+
   // Draw circular path
   noFill();
   stroke(120);
   strokeWeight(2);
   ellipse(centerX, centerY, radius * 2);
+
   // Calculate position
   let x = centerX + radius * cos(angle);
   let y = centerY + radius * sin(angle);
+
   // Draw moving object
   fill(255, 100, 100);
   noStroke();
   ellipse(x, y, 30);
+
   // Update angle
   angle += angularSpeed;
   if (angle > TWO_PI) angle -= TWO_PI;
+
   // Display FPS
   push();
   fill(0);
@@ -69,4 +74,5 @@ function draw() {
   text(`FPS: ${frameRate().toFixed(1)}`, 10, 30);
   pop();
 }
+
 
