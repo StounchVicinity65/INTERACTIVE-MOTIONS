@@ -14,8 +14,9 @@ body {
   position: relative;
   min-height: 100vh;
 }
-body.bangla { font-family: 'Noto Serif Bengali', sans-serif; }
-
+body.bangla {
+  font-family: 'Noto Serif Bengali', sans-serif;
+}
 .back-btn {
   position: absolute;
   top: 16px;
@@ -29,9 +30,7 @@ body.bangla { font-family: 'Noto Serif Bengali', sans-serif; }
   z-index: 10;
 }
 .back-btn:hover { color: white; background: #00000088; }
-
 h1 { margin-top: 3rem; font-size: 2rem; }
-
 #definition {
   max-width: 1000px;
   margin: 1rem auto;
@@ -48,9 +47,8 @@ h1 { margin-top: 3rem; font-size: 2rem; }
   line-height: 1.4;
 }
 #definition div { flex: 1; }
-
 #controls {
-  max-width: 600px;
+  max-width: 700px;
   margin: 1rem auto 2rem;
   padding: 1rem;
   background: #00000055;
@@ -59,7 +57,6 @@ h1 { margin-top: 3rem; font-size: 2rem; }
   display: flex;
   justify-content: center;
   gap: 2rem;
-  align-items: center;
   flex-wrap: wrap;
   font-size: 1rem;
 }
@@ -69,15 +66,20 @@ label {
   align-items: center;
   font-weight: 500;
   gap: 0.3rem;
-  min-width: 160px;
+  min-width: 130px;
 }
 input {
   padding: 6px 8px;
   border-radius: 4px;
   border: 1px solid #ccc;
-  width: 120px;
+  width: 110px;
   text-align: center;
   font-size: 1rem;
+}
+input:focus {
+  outline: 2px solid #4a90e2;
+  outline-offset: 2px;
+  box-shadow: 0 0 8px rgba(74, 144, 226, 0.7);
 }
 button {
   padding: 0.5rem 1.5rem;
@@ -91,7 +93,6 @@ button {
   align-self: center;
 }
 button:hover { background: #1d4ed8; }
-
 canvas {
   display: block;
   margin: 1rem auto;
@@ -100,7 +101,6 @@ canvas {
   border: 1px solid #ccc;
   background: #dbeafe;
 }
-
 #languageToggle {
   position: fixed;
   top: 16px;
@@ -122,10 +122,7 @@ canvas {
 
 <button id="languageToggle">বাংলা / English</button>
 
-<a href="index.html" class="back-btn">
-  <span class="lang-en">← Back</span>
-  <span class="lang-bn hidden">← পিছনে</span>
-</a>
+<a href="index.html" class="back-btn">← <span class="lang-en">Back</span><span class="lang-bn hidden">পিছনে</span></a>
 
 <h1>
   <span class="lang-en">Simple Harmonic Motion</span>
@@ -134,10 +131,10 @@ canvas {
 
 <div id="definition">
   <div class="lang-en">
-    <p><strong>Definition:</strong> Simple Harmonic Motion (SHM) is a special type of oscillatory motion where the restoring force acting on an object is directly proportional to its displacement from the equilibrium position and always acts towards that equilibrium position.</p>
+    <p><strong>Definition:</strong> Simple Harmonic Motion (SHM) is a type of oscillatory motion where the restoring force on an object is proportional to its displacement and always acts towards the equilibrium position.</p>
   </div>
   <div class="lang-bn hidden">
-    <p><strong>সংজ্ঞা:</strong> সরল স্পন্দন গতি হলো দোলন গতির একটি বিশেষ রূপ, যেখানে একটি বস্তুর উপর ক্রিয়াশীল পুনরুদ্ধারকারী বল তার সাম্যাবস্থান থেকে সরণের সরাসরি সমানুপাতিক এবং সর্বদা সাম্যাবস্থানের দিকে ক্রিয়াশীল থাকে।</p>
+    <p><strong>সংজ্ঞা:</strong> সরল স্পন্দন গতি হলো এক প্রকার দোলন গতি, যেখানে একটি বস্তুর উপর ক্রিয়াশীল পুনরুদ্ধারকারী বল তার সাম্যাবস্থান থেকে সরণের সমানুপাতিক এবং সর্বদা সাম্যাবস্থানের দিকে ক্রিয়াশীল থাকে।</p>
   </div>
 </div>
 
@@ -157,7 +154,18 @@ canvas {
 <script src="js/sharmonic.js"></script>
 
 <script>
-// Language toggle
+// Instant angle validation
+const angleInput = document.getElementById('angle');
+angleInput.addEventListener('input', function() {
+  const max = 90, min = -90;
+  let val = parseFloat(this.value);
+  if (!isNaN(val)) {
+    if (val > max) { this.value = max; alert(`⚠️ Maximum angle is ${max}°`); }
+    else if (val < min) { this.value = min; alert(`⚠️ Minimum angle is ${min}°`); }
+  }
+});
+
+// Language toggle like oscillatory example
 const toggleBtn = document.getElementById('languageToggle');
 let currentLang = 'en';
 toggleBtn.addEventListener('click', () => {
@@ -175,21 +183,11 @@ toggleBtn.addEventListener('click', () => {
     toggleBtn.textContent = 'বাংলা';
   }
 });
-
-// Instant angle validation (alert while typing)
-const angleInput = document.getElementById('angle');
-angleInput.addEventListener('input', function() {
-  const max = 90, min = -90;
-  let val = parseFloat(this.value);
-  if (!isNaN(val)) {
-    if (val > max) { this.value = max; alert(`⚠️ Maximum angle is ${max}°`); }
-    else if (val < min) { this.value = min; alert(`⚠️ Minimum angle is ${min}°`); }
-  }
-});
 </script>
 
 </body>
 </html>
+
 
 
 
