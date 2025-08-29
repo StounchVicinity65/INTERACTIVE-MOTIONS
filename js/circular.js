@@ -17,6 +17,7 @@ function setup() {
   textSize(16);
   textAlign(LEFT, TOP);
   console.log('Setup complete: canvas initialized');
+  drawStaticScene(); // Draw the initial circle
 }
 
 function simulateCircular() {
@@ -38,15 +39,13 @@ function resetSimulation() {
   simulationRunning = false;
   noLoop(); // Stop the animation loop
   background('#dbeafe'); // Clear the canvas
+  drawStaticScene(); // Redraw the static circle
   console.log('Simulation reset');
-  redraw(); // Draw the starting state once
 }
 
 function draw() {
   if (!simulationRunning) {
-    // This allows the reset function to clear the canvas and show the circle path
-    // without starting a full animation loop.
-    drawStaticScene();
+    // Return early if simulation isn't running
     return;
   }
 
