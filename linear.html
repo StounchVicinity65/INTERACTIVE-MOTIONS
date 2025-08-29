@@ -29,6 +29,21 @@
     }
     .back-btn:hover { color: white; background: #00000088; }
 
+    #languageToggle {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: #00000055;
+      color: white;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      z-index: 10;
+    }
+    #languageToggle:hover { background: #00000088; }
+
     h1 { margin-top: 3rem; font-size: 2rem; }
 
     #definition {
@@ -92,20 +107,7 @@
 
     button:hover { background: #1d4ed8; }
 
-    #languageToggle {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      background: #00000055;
-      color: white;
-      padding: 0.5rem 1rem;
-      border: none;
-      border-radius: 6px;
-      font-size: 14px;
-      cursor: pointer;
-      z-index: 10;
-    }
-    #languageToggle:hover { background: #00000088; }
+    .hidden { display: none !important; }
 
     canvas {
       display: block;
@@ -120,7 +122,6 @@
 <body>
 
   <a href="index.html" class="back-btn"><span class="lang-en">← Back</span><span class="lang-bn hidden">← পিছনে</span></a>
-
   <button id="languageToggle">বাংলা</button>
 
   <h1><span class="lang-en">↔ Linear Motion</span><span class="lang-bn hidden">↔ রৈখিক গতি</span></h1>
@@ -144,6 +145,7 @@
   <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
 
   <script>
+    // LANGUAGE TOGGLE
     const toggleBtn = document.getElementById("languageToggle");
     let currentLang = 'en';
     toggleBtn.addEventListener('click', () => {
@@ -154,21 +156,21 @@
       toggleBtn.textContent = showEn ? 'বাংলা' : 'English';
     });
 
+    // LINEAR MOTION
     let speedInput = document.getElementById('speed');
     let posX = 0;
     let speed = 3;
 
     function setup() {
-      let cnv = createCanvas(windowWidth - 240, windowHeight * 0.6);
-      cnv.parent(document.body);
+      createCanvas(windowWidth - 240, windowHeight * 0.6);
       noLoop();
 
       speedInput.addEventListener('input', () => {
         const val = parseFloat(speedInput.value);
-        if (val > 120) {
+        if(val > 120){
           speedInput.value = 120;
           alert(currentLang==='en' ? "⚠️ Maximum speed is 120 m/s." : "⚠️ সর্বোচ্চ বেগ 120 মি/সেক।");
-        } else if (val < 0) {
+        } else if(val < 0){
           speedInput.value = 0;
           alert(currentLang==='en' ? "⚠️ Minimum speed is 0 m/s." : "⚠️ সর্বনিম্ন বেগ 0 মি/সেক।");
         }
@@ -177,7 +179,7 @@
 
     function simulateLinear() {
       const val = parseFloat(speedInput.value);
-      if (!isNaN(val) && val >=0 && val <= 120) {
+      if(!isNaN(val) && val >=0 && val <=120){
         speed = val;
         posX = 0;
         loop();
@@ -205,8 +207,10 @@
       resizeCanvas(windowWidth - 240, windowHeight * 0.6);
     }
   </script>
+
 </body>
 </html>
+
 
 
 
