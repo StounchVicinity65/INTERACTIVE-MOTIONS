@@ -120,7 +120,8 @@ canvas {
 </head>
 <body>
 
-<button id="languageToggle">বাংলা / English</button>
+<button id="languageToggle" aria-label="Switch to Bangla">বাংলা / English</button>
+
 <a href="index.html" class="back-btn">← <span class="lang-en">Back</span><span class="lang-bn hidden">পিছনে</span></a>
 
 <h1>
@@ -153,17 +154,24 @@ canvas {
 <script src="js/sharmonic.js"></script>
 
 <script>
+// Instant popup warning for angle input
 const angleInput = document.getElementById('angle');
 angleInput.addEventListener('input', function() {
-  let val = parseFloat(this.value);
   const max = parseFloat(this.max);
-  if (!isNaN(val) && val > max) {
-    this.value = max;
-    alert(`⚠️ Maximum angle is ${this.max}.`);
+  const min = parseFloat(this.min);
+  let val = parseFloat(this.value);
+  if (!isNaN(val)) {
+    if (val > max) {
+      this.value = max;
+      alert(`⚠️ Maximum angle is ${max}°`);
+    } else if (val < min) {
+      this.value = min;
+      alert(`⚠️ Minimum angle is ${min}°`);
+    }
   }
 });
 
-// Language toggle like Oscillatory Motion
+// Language toggle exactly like Oscillatory Motion
 const toggleBtn = document.getElementById('languageToggle');
 let currentLang = 'en';
 toggleBtn.addEventListener('click', () => {
@@ -173,12 +181,14 @@ toggleBtn.addEventListener('click', () => {
     document.body.classList.add('bangla');
     currentLang = 'bn';
     toggleBtn.textContent = 'English';
+    toggleBtn.setAttribute('aria-label', 'Switch to English');
   } else {
     document.querySelectorAll('.lang-en').forEach(el => el.classList.remove('hidden'));
     document.querySelectorAll('.lang-bn').forEach(el => el.classList.add('hidden'));
     document.body.classList.remove('bangla');
     currentLang = 'en';
     toggleBtn.textContent = 'বাংলা';
+    toggleBtn.setAttribute('aria-label', 'Switch to Bangla');
   }
 });
 </script>
