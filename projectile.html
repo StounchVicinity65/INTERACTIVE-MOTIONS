@@ -14,7 +14,9 @@
       position: relative;
       min-height: 100vh;
     }
-
+    body.bangla {
+      font-family: 'Noto Serif Bengali', sans-serif;
+    }
     .back-btn {
       position: absolute;
       top: 16px;
@@ -27,21 +29,13 @@
       font-size: 14px;
       z-index: 10;
     }
-
-    .back-btn:hover {
-      color: white;
-      background: #00000088;
-    }
-
-    h1 {
-      margin-top: 3rem;
-    }
-
+    .back-btn:hover { color: white; background: #00000088; }
+    h1 { margin-top: 3rem; font-size: 2rem; }
     #definition {
       max-width: 1000px;
       margin: 1rem auto;
       background: #00000055;
-      padding: 1.2rem;
+      padding: 1.2rem 1.5rem;
       border-radius: 8px;
       box-shadow: 0 0 10px rgba(255,255,255,0.1);
       display: flex;
@@ -49,17 +43,13 @@
       gap: 2rem;
       text-align: left;
       min-height: 110px;
-    }
-
-    #definition div {
-      flex: 1;
-      font-size: 16px;
+      font-size: 1rem;
       line-height: 1.4;
     }
-
+    #definition div { flex: 1; }
     #controls {
       max-width: 700px;
-      margin: 1rem auto;
+      margin: 1rem auto 2rem;
       padding: 1rem;
       background: #00000055;
       border-radius: 8px;
@@ -68,41 +58,41 @@
       justify-content: center;
       gap: 2rem;
       flex-wrap: wrap;
+      font-size: 1rem;
     }
-
     label {
       display: flex;
       flex-direction: column;
       align-items: center;
-      font-size: 14px;
+      font-weight: 500;
+      gap: 0.3rem;
       min-width: 130px;
     }
-
     input {
-      padding: 4px;
+      padding: 6px 8px;
       border-radius: 4px;
       border: 1px solid #ccc;
-      width: 100px;
+      width: 110px;
       text-align: center;
-      font-size: 14px;
+      font-size: 1rem;
     }
-
+    input:focus {
+      outline: 2px solid #4a90e2;
+      outline-offset: 2px;
+      box-shadow: 0 0 8px rgba(74, 144, 226, 0.7);
+    }
     button {
-      padding: 0.5rem 1rem;
-      margin-top: 1rem;
+      padding: 0.5rem 1.5rem;
       border: none;
       background: #2563eb;
       color: white;
       border-radius: 5px;
       cursor: pointer;
+      white-space: nowrap;
+      font-size: 1rem;
       align-self: center;
-      font-size: 16px;
     }
-
-    button:hover {
-      background: #1d4ed8;
-    }
-
+    button:hover { background: #1d4ed8; }
     canvas {
       display: block;
       margin: 1rem auto;
@@ -111,39 +101,110 @@
       border: 1px solid #ccc;
       background: #dbeafe;
     }
+    #languageToggle {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: #00000055;
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      z-index: 10;
+    }
+    #languageToggle:hover { background: #00000088; }
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
-  <a href="index.html" class="back-btn">← Back</a>
+<button id="languageToggle" aria-label="Switch to Bangla">বাংলা / English</button>
 
-  <h1>🎯 Projectile Motion</h1>
+<a href="index.html" class="back-btn">← <span class="lang-en">Back</span><span class="lang-bn hidden">পিছনে</span></a>
 
-  <div id="definition">
-    <div>
-      <p><strong>Definition:</strong> Projectile motion is the motion of an object projected into the air, subject only to the acceleration of gravity. The object, called a projectile, follows a characteristic curved path called a trajectory,</p>
-    </div>
-    <div>
-      <p><strong>সংজ্ঞা:</strong> প্রাসের গতি বলতে এমন একটি বস্তুর গতিকে বোঝায় যাকে শূন্যে নিক্ষেপ করা হয় এবং যা প্রাথমিকভাবে শুধুমাত্র অভিকর্ষজ ত্বরণের প্রভাবে গতিশীল থাকে। বস্তুটি, যাকে প্রাস বলা হয়, একটি নির্দিষ্ট বক্রপথ অনুসরণ করে যা সঞ্চারপথ নামে পরিচিত</p>
-    </div>
+<h1>
+  <span class="lang-en">🎯 Projectile Motion</span>
+  <span class="lang-bn hidden">🎯 প্রক্ষেপণ গতি</span>
+</h1>
+
+<div id="definition">
+  <div class="lang-en">
+    <p><strong>Definition:</strong> Projectile motion is the motion of an object projected into the air, subject only to the acceleration of gravity. The object, called a projectile, follows a curved path called a trajectory.</p>
   </div>
-
-  <div id="controls">
-    <label title="Initial angle of projection in degrees">Angle (°)
-      <input type="number" id="angle" value="45" step="1" style="width: 100px;" />
-    </label>
-    <label title="Initial speed of the object">Speed (m/s)
-      <input type="number" id="speed" value="40" min="0" max="500" step="1" />
-    </label>
-    <button onclick="launchProjectile()">Launch</button>
-    <button onclick="resetSimulation()">Reset</button>
+  <div class="lang-bn hidden">
+    <p><strong>সংজ্ঞা:</strong> প্রক্ষেপণ গতি হলো এমন একটি বস্তুর গতি, যাকে শূন্যে নিক্ষেপ করা হয় এবং যা কেবলমাত্র অভিকর্ষজ ত্বরণের প্রভাবে গতিশীল থাকে। বস্তুটি একটি নির্দিষ্ট বক্রপথ অনুসরণ করে, যাকে সঞ্চারপথ বলা হয়।</p>
   </div>
+</div>
 
-  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
-  <script src="js/projectile.js"></script>
+<div id="controls">
+  <label>
+    <span class="lang-en">Angle (°)</span>
+    <span class="lang-bn hidden">কোণ (°)</span>
+    <input type="number" id="angle" value="45" min="0" max="90" step="1" />
+  </label>
+  <label>
+    <span class="lang-en">Speed (m/s)</span>
+    <span class="lang-bn hidden">বেগ (m/s)</span>
+    <input type="number" id="speed" value="40" min="0" max="300" step="1" />
+  </label>
+  <button onclick="launchProjectile()">
+    <span class="lang-en">Launch</span>
+    <span class="lang-bn hidden">নিক্ষেপ</span>
+  </button>
+  <button onclick="resetSimulation()">
+    <span class="lang-en">Reset</span>
+    <span class="lang-bn hidden">রিসেট</span>
+  </button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+<script src="js/projectile.js"></script>
+
+<script>
+// Input validation with popup for speed
+const speedInput = document.getElementById('speed');
+speedInput.addEventListener('input', function() {
+  const max = parseFloat(this.max);
+  const min = parseFloat(this.min);
+  let val = parseFloat(this.value);
+  if (!isNaN(val)) {
+    if (val > max) {
+      this.value = max;
+      alert(`⚠️ Maximum speed is ${max} m/s.`);
+    } else if (val < min) {
+      this.value = min;
+      alert(`⚠️ Minimum speed is ${min} m/s.`);
+    }
+  }
+});
+
+// Language toggle
+const toggleBtn = document.getElementById('languageToggle');
+let currentLang = 'en';
+toggleBtn.addEventListener('click', () => {
+  if (currentLang === 'en') {
+    document.querySelectorAll('.lang-en').forEach(el => el.classList.add('hidden'));
+    document.querySelectorAll('.lang-bn').forEach(el => el.classList.remove('hidden'));
+    document.body.classList.add('bangla');
+    currentLang = 'bn';
+    toggleBtn.textContent = 'English';
+    toggleBtn.setAttribute('aria-label', 'Switch to English');
+  } else {
+    document.querySelectorAll('.lang-en').forEach(el => el.classList.remove('hidden'));
+    document.querySelectorAll('.lang-bn').forEach(el => el.classList.add('hidden'));
+    document.body.classList.remove('bangla');
+    currentLang = 'en';
+    toggleBtn.textContent = 'বাংলা';
+    toggleBtn.setAttribute('aria-label', 'Switch to Bangla');
+  }
+});
+</script>
 
 </body>
 </html>
+
 
 
 
