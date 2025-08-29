@@ -7,24 +7,28 @@ const L = 200;      // pendulum length (pixels)
 const damping = 0.995;
 
 function setup() {
-  createCanvas(windowWidth - 240, windowHeight * 0.6); // consistent height
+  createCanvas(windowWidth - 240, windowHeight * 0.6);
   angleInput = document.getElementById('angle');
   noLoop();
-
-  // --- Setup for FPS Display ---
-  textSize(16);     // Set text size for FPS display
-  textAlign(LEFT, TOP); // Align text to top-left for FPS display
-  // --- End Setup for FPS Display ---
 }
 
 function simulateSHM() {
-  theta = radians(parseFloat(angleInput.value));
+  let angleDeg = parseFloat(angleInput.value);
+
+  // Check input range
+  if (angleDeg > 90 || angleDeg < -90) {
+    alert("⚠️ Maximum allowed angle is ±90°.");
+    angleDeg = Math.max(-90, Math.min(90, angleDeg));
+    angleInput.value = angleDeg;
+  }
+
+  theta = radians(angleDeg);
   omega = 0;
   loop();
 }
 
 function draw() {
-  background('#dbeafe');  // Soft blue background
+  background('#dbeafe');
 
   // SHM physics
   alpha = -(g / L) * theta;
@@ -32,33 +36,34 @@ function draw() {
   omega *= damping;
   theta += omega;
 
-  // Origin
+  // Origin (lowered a bit so bob doesn’t clip)
   let originX = width / 2;
-  let originY = 3;
+  let originY = 40;
 
   // Pendulum bob position
   let bobX = originX + L * sin(theta);
   let bobY = originY + L * cos(theta);
 
-  // Draw pendulum string
+  // Draw pendulum
   stroke(0);
   strokeWeight(2);
   line(originX, originY, bobX, bobY);
 
-  // Draw pendulum bob
   noStroke();
   fill(255, 100, 100);
   ellipse(bobX, bobY, 40);
 
-  // --- ADDED CODE TO DISPLAY FPS ---
-  push(); // Save current drawing style before changing for FPS
-  fill(0); // Set text color to black
-  textSize(16); // Set text size for FPS
-  textAlign(LEFT, TOP); // Align text to top-left for FPS
-  noStroke(); // Ensure no stroke for the text
-  // Display the current frame rate, rounded to 1 decimal place
-  text(`FPS: ${frameRate().toFixed(1)}`, 10, 30); // Position text at (10, 30)
-  pop(); // Restore previous drawing style
-  // --- END ADDED CODE ---
+  // FPS Display
+  push();
+  fill(0);
+  textSize(16);
+  textAlign(LEFT, TOP);
+  text(`FPS: ${frameRate().toFixed(1)}`, 10, 30);
+  pop();
 }
+
+function windowResized() {
+  resizeCanvas(windowWidth - 240, windowHeight * 0.6);
+}
+
 
