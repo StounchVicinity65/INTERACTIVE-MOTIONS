@@ -8,26 +8,28 @@ function setup() {
   speedInput = document.getElementById('speed');
   decelInput = document.getElementById('deceleration');
   noLoop();
-  
-  // Original text settings for the car emoji
   textSize(48);
   textAlign(CENTER, CENTER);
-
-  // --- Setup for FPS Display ---
-  // We'll set text size and alignment for FPS here, but use push/pop in draw to isolate.
-  // This setup mainly ensures fonts are loaded for these sizes.
-  // --- End Setup for FPS Display ---
 }
 
 function simulateDeceleration() {
-  x = width - 100; // Start near the right edge
-  v = parseFloat(speedInput.value);
-  a = -abs(parseFloat(decelInput.value)); // Ensure deceleration is negative
+  let speed = parseFloat(speedInput.value);
+  let decel = parseFloat(decelInput.value);
+
+  // enforce validation
+  if (speed < decel) {
+    alert("⚠️ Initial speed must be equal to or greater than deceleration.");
+    return;
+  }
+
+  x = width - 100; 
+  v = speed;
+  a = -abs(decel);
   loop();
 }
 
 function draw() {
-  background(135, 206, 235); // Sky blue
+  background(135, 206, 235);
 
   // Grass
   fill(60, 179, 113);
@@ -51,39 +53,36 @@ function draw() {
   // Trees
   let spacing = 120;
   for (let i = 0; i < width; i += spacing) {
-    fill(139, 69, 19); // trunk
+    fill(139, 69, 19);
     rect(i + 20, roadY - 60, 10, 40);
-    fill(34, 139, 34); // leaves
+    fill(34, 139, 34);
     ellipse(i + 25, roadY - 70, 40);
 
     rect(i + 60, roadY + roadHeight + 20, 10, 40);
     ellipse(i + 65, roadY + roadHeight + 20, 40);
   }
 
-  // Car emoji (or you can use a better image if preferred)
-  fill(0);
-  // Use push/pop to ensure car's text size/alignment isn't affected by FPS display settings
+  // Car
   push();
-  textSize(48); // Set size specifically for the car
-  textAlign(CENTER, CENTER); // Center align for the car
+  textSize(48);
+  textAlign(CENTER, CENTER);
   text("🚗", x, roadY + roadHeight / 2);
   pop();
 
-  // Physics update
+  // Physics
   v += a * 0.1;
   if (v < 0) v = 0;
-  x -= v; // Car moves to the left as x decreases
+  x -= v;
 
   if (v === 0 || x < -50) noLoop();
 
-  // --- ADDED CODE TO DISPLAY FPS ---
-  fill(0); // Set text color to black
-  textSize(16); // Set text size for FPS
-  textAlign(LEFT, TOP); // Align text to top-left for FPS
-  // Display the current frame rate, rounded to 1 decimal place
-  text(`FPS: ${frameRate().toFixed(1)}`, 10, 30); // Position text at (10, 30)
-  // --- END ADDED CODE ---
+  // FPS
+  fill(0);
+  textSize(16);
+  textAlign(LEFT, TOP);
+  text(`FPS: ${frameRate().toFixed(1)}`, 10, 30);
 }
+
 
 
 
