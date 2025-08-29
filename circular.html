@@ -276,8 +276,8 @@
       const rMeters = parseFloat(radiusInput.value);
 
       // Validate inputs with defaults & caps (kept as in your original code)
-      angularSpeed = (isNaN(speedVal) || speedVal <= 0) ? 0.05 : Math.min(speedVal, 45);
-      radius = (isNaN(rMeters) || rMeters <= 0) ? 100 : Math.min(rMeters * 100, 2.8 * 100);
+      angularSpeed = (isNaN(speedVal) || speedVal <= 0) ? 10 : Math.min(speedVal, 45);
+      radius = (isNaN(rMeters) || rMeters <= 0) ? 150 : Math.min(rMeters * 100, 2.8 * 100);
 
       angle = 0;
       simulationRunning = true;
