@@ -140,6 +140,15 @@
     #converterBox summary::-webkit-details-marker {
       display: none; /* Remove default arrow in WebKit browsers */
     }
+    #converterBox div {
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    #converterBox[open] div {
+      opacity: 1;
+      transform: translateY(0);
+    }
     #converterBox label {
       display: block;
       margin-top: 0.6rem;
@@ -226,7 +235,7 @@
       top: 20px;
     }
     #aboutButton {
-      top: 60px;
+      top: 70px;
     }
     #reviewButton:hover,
     #aboutButton:hover {
@@ -234,7 +243,7 @@
     }
     #languageToggle {
       position: fixed;
-      top: 105px;
+      top: 120px;
       right: 20px;
       background: rgba(0, 0, 0, 0.75);
       color: white;
@@ -275,7 +284,7 @@
         display: none;
       }
       #languageToggle {
-        top: 140px;
+        top: 150px;
         right: 10px;
         padding: 0.6rem 1.2rem;
         font-size: 0.9rem;
@@ -687,3 +696,5 @@
   </script>
 </body>
 </html>
+
+
