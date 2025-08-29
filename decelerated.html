@@ -114,7 +114,7 @@
 <body>
 
   <!-- language toggle -->
-  <button id="languageToggle">বাংলা / English</button>
+  <button id="languageToggle" aria-label="Switch to Bangla">বাংলা / English</button>
 
   <a href="index.html" class="back-btn">← 
     <span class="lang-en">Back</span>
@@ -138,14 +138,16 @@
   <div id="controls">
     <label>
       <span class="lang-en">Initial Speed (m/s):</span>
-      <span class="lang-bn hidden">আদি বেগ (m/s):</span>
-      <input type="number" id="speed" value="8" min="0" max="80" step="0.1">
+      <span class="lang-bn hidden">প্রারম্ভিক বেগ (m/s):</span>
+      <!-- max 80 -->
+      <input type="number" id="speed" value="8" min="0" max="80" step="0.1" />
     </label>
 
     <label>
       <span class="lang-en">Deceleration (m/s²):</span>
       <span class="lang-bn hidden">মন্দন (m/s²):</span>
-      <input type="number" id="deceleration" value="1" min="0.1" max="30" step="0.1">
+      <!-- max 30 -->
+      <input type="number" id="deceleration" value="1" min="0.1" max="30" step="0.1" />
     </label>
 
     <button onclick="simulateDeceleration()">
@@ -154,59 +156,187 @@
     </button>
   </div>
 
-  <!-- toggle script -->
+  <!-- validation + language toggle (runs immediately, DOM elements already present) -->
   <script>
-  const toggleBtn = document.getElementById('languageToggle');
-  let currentLang = 'en';
-  toggleBtn.addEventListener('click', () => {
-    if (currentLang === 'en') {
-      document.querySelectorAll('.lang-en').forEach(el => el.classList.add('hidden'));
-      document.querySelectorAll('.lang-bn').forEach(el => el.classList.remove('hidden'));
-      document.body.classList.add('bangla');
-      currentLang = 'bn';
-      toggleBtn.textContent = 'English';
-    } else {
-      document.querySelectorAll('.lang-en').forEach(el => el.classList.remove('hidden'));
-      document.querySelectorAll('.lang-bn').forEach(el => el.classList.add('hidden'));
-      document.body.classList.remove('bangla');
-      currentLang = 'en';
-      toggleBtn.textContent = 'বাংলা';
+    // LANGUAGE TOGGLE (same behavior as your other pages)
+    const toggleBtn = document.getElementById('languageToggle');
+    let currentLang = 'en';
+    toggleBtn.addEventListener('click', () => {
+      if (currentLang === 'en') {
+        document.querySelectorAll('.lang-en').forEach(el => el.classList.add('hidden'));
+        document.querySelectorAll('.lang-bn').forEach(el => el.classList.remove('hidden'));
+        document.body.classList.add('bangla');
+        currentLang = 'bn';
+        toggleBtn.textContent = 'English';
+        toggleBtn.setAttribute('aria-label', 'Switch to English');
+      } else {
+        document.querySelectorAll('.lang-en').forEach(el => el.classList.remove('hidden'));
+        document.querySelectorAll('.lang-bn').forEach(el => el.classList.add('hidden'));
+        document.body.classList.remove('bangla');
+        currentLang = 'en';
+        toggleBtn.textContent = 'বাংলা';
+        toggleBtn.setAttribute('aria-label', 'Switch to Bangla');
+      }
+    });
+
+    // INPUT VALIDATION (instant popup alerts in English only)
+    const speedInput = document.getElementById('speed');
+    const decelInput = document.getElementById('deceleration');
+
+    function validateInputs() {
+      let speed = parseFloat(speedInput.value);
+      let decel = parseFloat(decelInput.value);
+      const speedMax = parseFloat(speedInput.max);
+      const decelMax = parseFloat(decelInput.max);
+
+      if (!isNaN(speed) && speed > speedMax) {
+        speedInput.value = speedMax;
+        alert("⚠️ Maximum initial speed is 80 m/s.");
+        speed = speedMax;
+      }
+      if (!isNaN(decel) && decel > decelMax) {
+        decelInput.value = decelMax;
+        alert("⚠️ Maximum deceleration is 30 m/s².");
+        decel = decelMax;
+      }
+
+      // enforce speed >= deceleration by setting speed to decel (same behavior as earlier)
+      if (!isNaN(speed) && !isNaN(decel) && speed < decel) {
+        alert("⚠️ Initial speed must be equal to or greater than deceleration.");
+        speedInput.value = decel; // bring speed up to decel
+      }
+
+      // keep within mins
+      if (!isNaN(speed) && speed < parseFloat(speedInput.min)) speedInput.value = speedInput.min;
+      if (!isNaN(decel) && decel < parseFloat(decelInput.min)) decelInput.value = decelInput.min;
     }
-  });
+
+    speedInput.addEventListener('input', validateInputs);
+    decelInput.addEventListener('input', validateInputs);
   </script>
 
-  <!-- validation -->
-  <script>
-  const speedInput = document.getElementById('speed');
-  const decelInput = document.getElementById('deceleration');
-
-  function validateInputs() {
-    let speed = parseFloat(speedInput.value);
-    let decel = parseFloat(decelInput.value);
-
-    if (speed > parseFloat(speedInput.max)) {
-      speedInput.value = speedInput.max;
-      alert("⚠️ Maximum initial speed is 80 m/s.");
-    }
-    if (decel > parseFloat(decelInput.max)) {
-      decelInput.value = decelInput.max;
-      alert("⚠️ Maximum deceleration is 30 m/s².");
-    }
-    if (speed < decel) {
-      alert("⚠️ Initial speed must be equal to or greater than deceleration.");
-      speedInput.value = decel;
-    }
-  }
-
-  speedInput.addEventListener("input", validateInputs);
-  decelInput.addEventListener("input", validateInputs);
-  </script>
-
+  <!-- p5 library -->
   <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
-  <script src="js/decelerated.js"></script>
+
+  <!-- Inline p5 sketch (integrated) -->
+  <script>
+    // physics vars (globals used by p5)
+    let x = 0;
+    let v = 0;
+    let a = 0;
+
+    function setup() {
+      createCanvas(windowWidth - 240, windowHeight * 0.6);
+      noLoop(); // start paused until simulate is pressed
+
+      // styling for FPS and car text handled in draw
+      textSize(48);
+      textAlign(CENTER, CENTER);
+    }
+
+    function simulateDeceleration() {
+      // read inputs (they are validated by the input listeners)
+      let speed = parseFloat(speedInput.value);
+      let decel = parseFloat(decelInput.value);
+
+      if (isNaN(speed) || isNaN(decel)) {
+        alert("⚠️ Please provide valid numeric inputs.");
+        return;
+      }
+
+      // final safety checks (duplicate-safe)
+      const speedMax = parseFloat(speedInput.max);
+      const decelMax = parseFloat(decelInput.max);
+      if (speed > speedMax) {
+        speed = speedMax;
+        speedInput.value = speedMax;
+        alert("⚠️ Maximum initial speed is 80 m/s.");
+      }
+      if (decel > decelMax) {
+        decel = decelMax;
+        decelInput.value = decelMax;
+        alert("⚠️ Maximum deceleration is 30 m/s².");
+      }
+      if (speed < decel) {
+        alert("⚠️ Initial speed must be equal to or greater than deceleration.");
+        speed = decel;
+        speedInput.value = decel;
+      }
+
+      // initialize simulation
+      x = width - 100; // start near right edge
+      v = speed;
+      a = -Math.abs(decel);
+      loop();
+    }
+
+    function draw() {
+      // sky
+      background(135, 206, 235);
+
+      // grass (top & bottom as in original design)
+      fill(60, 179, 113);
+      rect(0, 0, width, height * 0.2);
+      rect(0, height * 0.8, width, height * 0.2);
+
+      // road
+      let roadY = height * 0.5;
+      let roadHeight = 100;
+      fill(50);
+      rect(0, roadY, width, roadHeight);
+
+      // lane markings
+      stroke(255);
+      strokeWeight(4);
+      for (let i = 0; i < width; i += 40) {
+        line(i, roadY + roadHeight / 2, i + 20, roadY + roadHeight / 2);
+      }
+      noStroke();
+
+      // trees (simple)
+      let spacing = 120;
+      for (let i = 0; i < width; i += spacing) {
+        fill(139, 69, 19); // trunk
+        rect(i + 20, roadY - 60, 10, 40);
+        fill(34, 139, 34); // leaves
+        ellipse(i + 25, roadY - 70, 40);
+
+        rect(i + 60, roadY + roadHeight + 20, 10, 40);
+        ellipse(i + 65, roadY + roadHeight + 20, 40);
+      }
+
+      // car (emoji)
+      push();
+      textSize(48);
+      textAlign(CENTER, CENTER);
+      text("🚗", x, roadY + roadHeight / 2);
+      pop();
+
+      // physics update (scaled to make motion visible)
+      v += a * 0.1;
+      if (v < 0) v = 0;
+      x -= v;
+
+      if (v === 0 || x < -50) noLoop();
+
+      // FPS (isolated styling)
+      push();
+      fill(0);
+      textSize(16);
+      textAlign(LEFT, TOP);
+      noStroke();
+      text(`FPS: ${frameRate().toFixed(1)}`, 10, 30);
+      pop();
+    }
+
+    function windowResized() {
+      resizeCanvas(windowWidth - 240, windowHeight * 0.6);
+    }
+  </script>
 
 </body>
 </html>
+
 
 
 
