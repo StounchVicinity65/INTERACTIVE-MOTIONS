@@ -147,20 +147,14 @@ canvas {
 <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
 <script src="js/sharmonic.js"></script>
 <script>
-// Validation for angle (min -90, max 90)
+// Validation for angle (max 90)
 const angleInput = document.getElementById('angle');
 angleInput.addEventListener('input', function() {
   let val = parseFloat(this.value);
   const max = parseFloat(this.max);
-  const min = parseFloat(this.min);
-  if (!isNaN(val)) {
-    if (val > max) {
-      this.value = max;
-      alert(`⚠️ Maximum angle is ${max}.`);
-    } else if (val < min && this.value !== '') {
-      this.value = min;
-      alert(`⚠️ Minimum angle is ${min}.`);
-    }
+  if (!isNaN(val) && val > max) {
+    this.value = max;
+    alert(`⚠️ Maximum angle is ${this.max}`);
   }
 });
 // Language toggle like oscillatory example
@@ -186,5 +180,4 @@ toggleBtn.addEventListener('click', () => {
 </script>
 </body>
 </html>
-
 
