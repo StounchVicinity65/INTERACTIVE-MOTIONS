@@ -17,7 +17,8 @@ function setup() {
   textSize(16);
   textAlign(LEFT, TOP);
   console.log('Setup complete: canvas initialized');
-  drawStaticScene(); // Draw the initial circle
+  // Initial draw of the scene, just in case
+  redraw(); 
 }
 
 function simulateCircular() {
@@ -38,40 +39,38 @@ function resetSimulation() {
   angle = 0;
   simulationRunning = false;
   noLoop(); // Stop the animation loop
-  background('#dbeafe'); // Clear the canvas
-  drawStaticScene(); // Redraw the static circle
+  // The next draw() call will handle clearing the background and redrawing the static circle
+  redraw(); 
   console.log('Simulation reset');
 }
 
 function draw() {
-  if (!simulationRunning) {
-    // Return early if simulation isn't running
-    return;
+  background('#dbeafe'); // Always clear the background
+  drawStaticScene(); // Always draw the static circle
+
+  if (simulationRunning) {
+    // Only draw the moving object and update the angle if the simulation is running
+    // Calculate position
+    let x = centerX + radius * cos(angle);
+    let y = centerY + radius * sin(angle);
+
+    // Draw moving object
+    fill(255, 100, 100);
+    noStroke();
+    ellipse(x, y, 30);
+
+    // Update angle
+    angle += angularSpeed;
+    if (angle > TWO_PI) angle -= TWO_PI;
+
+    // Display FPS
+    push();
+    fill(0);
+    textSize(16);
+    textAlign(LEFT, TOP);
+    text(`FPS: ${frameRate().toFixed(1)}`, 10, 30);
+    pop();
   }
-
-  background('#dbeafe');
-  drawStaticScene();
-
-  // Calculate position
-  let x = centerX + radius * cos(angle);
-  let y = centerY + radius * sin(angle);
-
-  // Draw moving object
-  fill(255, 100, 100);
-  noStroke();
-  ellipse(x, y, 30);
-
-  // Update angle
-  angle += angularSpeed;
-  if (angle > TWO_PI) angle -= TWO_PI;
-
-  // Display FPS
-  push();
-  fill(0);
-  textSize(16);
-  textAlign(LEFT, TOP);
-  text(`FPS: ${frameRate().toFixed(1)}`, 10, 30);
-  pop();
 }
 
 // Helper function to draw the static elements
