@@ -14,9 +14,8 @@
       position: relative;
       min-height: 100vh;
     }
-    body.bangla {
-      font-family: 'Noto Serif Bengali', sans-serif;
-    }
+    body.bangla { font-family: 'Noto Serif Bengali', sans-serif; }
+
     .back-btn {
       position: absolute;
       top: 16px;
@@ -30,7 +29,9 @@
       z-index: 10;
     }
     .back-btn:hover { color: white; background: #00000088; }
+
     h1 { margin-top: 3rem; font-size: 2rem; }
+
     #definition {
       max-width: 1000px;
       margin: 1rem auto;
@@ -47,6 +48,7 @@
       line-height: 1.4;
     }
     #definition div { flex: 1; }
+
     #controls {
       max-width: 700px;
       margin: 1rem auto 2rem;
@@ -93,6 +95,7 @@
       align-self: center;
     }
     button:hover { background: #1d4ed8; }
+
     canvas {
       display: block;
       margin: 1rem auto;
@@ -101,6 +104,7 @@
       border: 1px solid #ccc;
       background: #dbeafe;
     }
+
     #languageToggle {
       position: fixed;
       top: 16px;
@@ -120,90 +124,213 @@
 </head>
 <body>
 
-<button id="languageToggle" aria-label="Switch to Bangla">বাংলা / English</button>
+  <!-- language toggle -->
+  <button id="languageToggle" aria-label="Switch to Bangla">বাংলা / English</button>
 
-<a href="index.html" class="back-btn">← <span class="lang-en">Back</span><span class="lang-bn hidden">পিছনে</span></a>
+  <a href="index.html" class="back-btn">← <span class="lang-en">Back</span><span class="lang-bn hidden">পিছনে</span></a>
 
-<h1>
-  <span class="lang-en">🎯 Projectile Motion</span>
-  <span class="lang-bn hidden">🎯 প্রক্ষেপণ গতি</span>
-</h1>
+  <h1>
+    <span class="lang-en">🎯 Projectile Motion</span>
+    <span class="lang-bn hidden">🎯 প্রক্ষেপণ গতি</span>
+  </h1>
 
-<div id="definition">
-  <div class="lang-en">
-    <p><strong>Definition:</strong> Projectile motion is the motion of an object projected into the air, subject only to the acceleration of gravity. The object, called a projectile, follows a curved path called a trajectory.</p>
+  <div id="definition">
+    <div class="lang-en">
+      <p><strong>Definition:</strong> Projectile motion is the motion of an object projected into the air, subject only to the acceleration of gravity. The object, called a projectile, follows a curved path called a trajectory.</p>
+    </div>
+    <div class="lang-bn hidden">
+      <p><strong>সংজ্ঞা:</strong> প্রক্ষেপণ গতি হলো এমন একটি বস্তুর গতি, যাকে শূন্যে নিক্ষেপ করা হয় এবং যা কেবলমাত্র অভিকর্ষজ ত্বরণের প্রভাবে গতিশীল থাকে। বস্তুটি একটি নির্দিষ্ট বক্রপথ অনুসরণ করে, যাকে সঞ্চারপথ বলা হয়।</p>
+    </div>
   </div>
-  <div class="lang-bn hidden">
-    <p><strong>সংজ্ঞা:</strong> প্রক্ষেপণ গতি হলো এমন একটি বস্তুর গতি, যাকে শূন্যে নিক্ষেপ করা হয় এবং যা কেবলমাত্র অভিকর্ষজ ত্বরণের প্রভাবে গতিশীল থাকে। বস্তুটি একটি নির্দিষ্ট বক্রপথ অনুসরণ করে, যাকে সঞ্চারপথ বলা হয়।</p>
+
+  <div id="controls">
+    <label>
+      <span class="lang-en">Angle (°)</span>
+      <span class="lang-bn hidden">কোণ (°)</span>
+      <input type="number" id="angle" value="45" min="0" max="90" step="1" />
+    </label>
+
+    <label>
+      <span class="lang-en">Speed (m/s)</span>
+      <span class="lang-bn hidden">বেগ (m/s)</span>
+      <input type="number" id="speed" value="40" min="0" max="300" step="1" />
+    </label>
+
+    <button id="launchBtn">
+      <span class="lang-en">Launch</span>
+      <span class="lang-bn hidden">নিক্ষেপ</span>
+    </button>
+
+    <button id="resetBtn">
+      <span class="lang-en">Reset</span>
+      <span class="lang-bn hidden">রিসেট</span>
+    </button>
   </div>
-</div>
 
-<div id="controls">
-  <label>
-    <span class="lang-en">Angle (°)</span>
-    <span class="lang-bn hidden">কোণ (°)</span>
-    <input type="number" id="angle" value="45" min="0" max="90" step="1" />
-  </label>
-  <label>
-    <span class="lang-en">Speed (m/s)</span>
-    <span class="lang-bn hidden">বেগ (m/s)</span>
-    <input type="number" id="speed" value="40" min="0" max="300" step="1" />
-  </label>
-  <button onclick="launchProjectile()">
-    <span class="lang-en">Launch</span>
-    <span class="lang-bn hidden">নিক্ষেপ</span>
-  </button>
-  <button onclick="resetSimulation()">
-    <span class="lang-en">Reset</span>
-    <span class="lang-bn hidden">রিসেট</span>
-  </button>
-</div>
+  <!-- p5 -->
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
-<script src="js/projectile.js"></script>
+  <!-- single script: attaches listeners and defines p5 sketch -->
+  <script>
+  (function () {
+    // DOM refs (use local names to avoid accidental global collisions)
+    const angleEl = document.getElementById('angle');
+    const speedEl = document.getElementById('speed');
+    const launchBtn = document.getElementById('launchBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const toggleBtn = document.getElementById('languageToggle');
 
-<script>
-// Input validation with popup for speed
-const speedInput = document.getElementById('speed');
-speedInput.addEventListener('input', function() {
-  const max = parseFloat(this.max);
-  const min = parseFloat(this.min);
-  let val = parseFloat(this.value);
-  if (!isNaN(val)) {
-    if (val > max) {
-      this.value = max;
-      alert(`⚠️ Maximum speed is ${max} m/s.`);
-    } else if (val < min) {
-      this.value = min;
-      alert(`⚠️ Minimum speed is ${min} m/s.`);
-    }
-  }
-});
+    // Instant popup validation for SPEED input (max 300)
+    speedEl.addEventListener('input', function () {
+      const max = parseFloat(this.max);
+      const min = parseFloat(this.min) || 0;
+      const val = parseFloat(this.value);
+      if (!isNaN(val)) {
+        if (val > max) {
+          this.value = max;
+          // popup in English only
+          alert(`⚠️ Maximum speed is ${max} m/s.`);
+        } else if (val < min) {
+          this.value = min;
+          alert(`⚠️ Minimum speed is ${min} m/s.`);
+        }
+      }
+    });
 
-// Language toggle
-const toggleBtn = document.getElementById('languageToggle');
-let currentLang = 'en';
-toggleBtn.addEventListener('click', () => {
-  if (currentLang === 'en') {
-    document.querySelectorAll('.lang-en').forEach(el => el.classList.add('hidden'));
-    document.querySelectorAll('.lang-bn').forEach(el => el.classList.remove('hidden'));
-    document.body.classList.add('bangla');
-    currentLang = 'bn';
-    toggleBtn.textContent = 'English';
-    toggleBtn.setAttribute('aria-label', 'Switch to English');
-  } else {
-    document.querySelectorAll('.lang-en').forEach(el => el.classList.remove('hidden'));
-    document.querySelectorAll('.lang-bn').forEach(el => el.classList.add('hidden'));
-    document.body.classList.remove('bangla');
-    currentLang = 'en';
-    toggleBtn.textContent = 'বাংলা';
-    toggleBtn.setAttribute('aria-label', 'Switch to Bangla');
-  }
-});
-</script>
+    // Attach click handlers (callable from UI)
+    launchBtn.addEventListener('click', () => {
+      // call the p5-exposed function
+      if (typeof window.launchProjectile === 'function') window.launchProjectile();
+    });
+    resetBtn.addEventListener('click', () => {
+      if (typeof window.resetSimulation === 'function') window.resetSimulation();
+    });
 
+    // Language toggle: exactly like your working pages
+    let currentLang = 'en';
+    toggleBtn.addEventListener('click', () => {
+      if (currentLang === 'en') {
+        document.querySelectorAll('.lang-en').forEach(el => el.classList.add('hidden'));
+        document.querySelectorAll('.lang-bn').forEach(el => el.classList.remove('hidden'));
+        document.body.classList.add('bangla');
+        currentLang = 'bn';
+        toggleBtn.textContent = 'English';
+        toggleBtn.setAttribute('aria-label', 'Switch to English');
+      } else {
+        document.querySelectorAll('.lang-en').forEach(el => el.classList.remove('hidden'));
+        document.querySelectorAll('.lang-bn').forEach(el => el.classList.add('hidden'));
+        document.body.classList.remove('bangla');
+        currentLang = 'en';
+        toggleBtn.textContent = 'বাংলা';
+        toggleBtn.setAttribute('aria-label', 'Switch to Bangla');
+      }
+    });
+
+    // ---------- p5 sketch ----------
+    // Make functions global for p5 to find them (using window.*)
+    let projectile = null;
+    let trail = [];
+
+    window.setup = function () {
+      createCanvas(windowWidth - 240, windowHeight * 0.6);
+      angleMode(RADIANS);
+      noLoop();
+      textSize(16);
+      textAlign(LEFT, TOP);
+      background('#dbeafe');
+    };
+
+    window.launchProjectile = function () {
+      const angleVal = parseFloat(angleEl.value) || 45;
+      const speedVal = parseFloat(speedEl.value) || 0;
+
+      // clamp again defensively
+      const angleDeg = Math.max(0, Math.min(90, angleVal));
+      const speedNum = Math.max(0, Math.min(300, speedVal));
+      angleEl.value = angleDeg;
+      speedEl.value = speedNum;
+
+      const a = radians(angleDeg);
+      projectile = {
+        x0: 50,
+        y0: height - 50,
+        vx: speedNum * Math.cos(a),
+        vy: -speedNum * Math.sin(a),
+        t: 0
+      };
+      trail = [];
+      loop();
+    };
+
+    window.resetSimulation = function () {
+      projectile = null;
+      trail = [];
+      clear();
+      background('#dbeafe');
+      noLoop();
+    };
+
+    window.draw = function () {
+      background('#dbeafe');
+
+      // Trail
+      stroke(100, 100, 255);
+      strokeWeight(3);
+      noFill();
+      beginShape();
+      for (let p of trail) vertex(p.x, p.y);
+      endShape();
+
+      if (projectile) {
+        projectile.t += 0.1;
+        const x = projectile.x0 + projectile.vx * projectile.t;
+        const y = projectile.y0 + projectile.vy * projectile.t + 0.5 * 9.8 * sq(projectile.t);
+        const vx = projectile.vx;
+        const vy = projectile.vy + 9.8 * projectile.t;
+
+        trail.push({ x, y });
+
+        // Draw arrowhead oriented with velocity
+        const ang = atan2(vy, vx);
+        push();
+        translate(x, y);
+        rotate(ang);
+        fill(0);
+        noStroke();
+        beginShape();
+        vertex(-10, -5);
+        vertex(10, 0);
+        vertex(-10, 5);
+        endShape(CLOSE);
+        pop();
+
+        if (y > height) {
+          // projectile hit ground
+          noLoop();
+        }
+      }
+
+      // FPS display
+      push();
+      fill(0);
+      textSize(16);
+      noStroke();
+      text(`FPS: ${frameRate().toFixed(1)}`, 10, 30);
+      pop();
+    };
+
+    // Keep canvas responsive
+    window.windowResized = function () {
+      resizeCanvas(windowWidth - 240, windowHeight * 0.6);
+      background('#dbeafe');
+      // redraw static trail if needed; clearing is fine
+    };
+
+  })();
+  </script>
 </body>
 </html>
+
 
 
 
