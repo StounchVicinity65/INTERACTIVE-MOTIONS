@@ -14,6 +14,9 @@
       position: relative;
       min-height: 100vh;
     }
+    body.bangla {
+      font-family: 'Noto Serif Bengali', sans-serif;
+    }
     .back-btn {
       position: absolute;
       top: 16px;
@@ -49,9 +52,7 @@
       font-size: 1rem;
       line-height: 1.4;
     }
-    #definition div {
-      flex: 1;
-    }
+    #definition div { flex: 1; }
     #controls {
       max-width: 700px;
       margin: 1rem auto 2rem;
@@ -81,6 +82,11 @@
       text-align: center;
       font-size: 1rem;
     }
+    input:focus {
+      outline: 2px solid #4a90e2;
+      outline-offset: 2px;
+      box-shadow: 0 0 8px rgba(74, 144, 226, 0.7);
+    }
     button {
       padding: 0.5rem 1.5rem;
       border: none;
@@ -103,35 +109,93 @@
       border: 1px solid #ccc;
       background: #dbeafe;
     }
+    #languageToggle {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: #00000055;
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      z-index: 10;
+    }
+    #languageToggle:hover { background: #00000088; }
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
 
-  <a href="index.html" class="back-btn">← Back</a>
+  <button id="languageToggle">বাংলা / English</button>
+  <a href="index.html" class="back-btn">← <span class="lang-en">Back</span><span class="lang-bn hidden">পিছনে</span></a>
 
-  <h1>Oscillatory Motion</h1>
+  <h1>
+    <span class="lang-en">Oscillatory Motion</span>
+    <span class="lang-bn hidden">দোলন গতি</span>
+  </h1>
 
   <div id="definition">
-    <div>
+    <div class="lang-en">
       <p><strong>Definition:</strong> Oscillatory motion is a type of periodic motion in which an object repeatedly moves back and forth or up and down about a fixed central point, known as the equilibrium position.</p>
     </div>
-    <div>
+    <div class="lang-bn hidden">
       <p><strong>সংজ্ঞা:</strong> দোলন গতি হলো এক প্রকার পর্যায়বৃত্ত গতি, যেখানে একটি বস্তু একটি নির্দিষ্ট স্থির বিন্দুর (যাকে সাম্যাবস্থান বলা হয়) উভয় পাশে বারবার সামনে-পেছনে বা উপরে-নিচে চলাচল করে।</p>
     </div>
   </div>
 
   <div id="controls">
-    <label for="amplitude">Amplitude (m)
+    <label>
+      <span class="lang-en">Amplitude (m):</span>
+      <span class="lang-bn hidden">বিস্তার (m):</span>
       <input type="number" id="amplitude" value="50" min="0" max="250" step="1" />
     </label>
-    <label for="frequency">Frequency (Hz)
+    <label>
+      <span class="lang-en">Frequency (Hz):</span>
+      <span class="lang-bn hidden">কম্পাঙ্ক (Hz):</span>
       <input type="number" id="frequency" value="0.5" min="0" step="0.1" />
     </label>
-    <button onclick="simulateOscillation()">Simulate</button>
+    <button onclick="simulateOscillation()">
+      <span class="lang-en">Simulate</span>
+      <span class="lang-bn hidden">সিমুলেট</span>
+    </button>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
   <script src="js/oscillatory.js"></script>
 
+  <script>
+    // Validation for amplitude (max 250)
+    const ampInput = document.getElementById('amplitude');
+    ampInput.addEventListener('input', function() {
+      let val = parseFloat(this.value);
+      const max = parseFloat(this.max);
+      if (!isNaN(val) && val > max) {
+        this.value = max;
+        alert(`⚠️ Maximum amplitude is ${this.max}.`);
+      }
+    });
+
+    // Language toggle
+    const toggleBtn = document.getElementById('languageToggle');
+    let currentLang = 'en';
+    toggleBtn.addEventListener('click', () => {
+      if (currentLang === 'en') {
+        document.querySelectorAll('.lang-en').forEach(el => el.classList.add('hidden'));
+        document.querySelectorAll('.lang-bn').forEach(el => el.classList.remove('hidden'));
+        document.body.classList.add('bangla');
+        currentLang = 'bn';
+        toggleBtn.textContent = 'English';
+      } else {
+        document.querySelectorAll('.lang-en').forEach(el => el.classList.remove('hidden'));
+        document.querySelectorAll('.lang-bn').forEach(el => el.classList.add('hidden'));
+        document.body.classList.remove('bangla');
+        currentLang = 'en';
+        toggleBtn.textContent = 'বাংলা';
+      }
+    });
+  </script>
 </body>
 </html>
+
