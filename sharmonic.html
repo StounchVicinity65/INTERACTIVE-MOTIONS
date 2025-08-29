@@ -171,27 +171,31 @@ angleInput.addEventListener('input', function() {
   }
 });
 
-// Language toggle exactly like Oscillatory Motion
-const toggleBtn = document.getElementById('languageToggle');
-let currentLang = 'en';
-toggleBtn.addEventListener('click', () => {
-  if (currentLang === 'en') {
-    document.querySelectorAll('.lang-en').forEach(el => el.classList.add('hidden'));
-    document.querySelectorAll('.lang-bn').forEach(el => el.classList.remove('hidden'));
-    document.body.classList.add('bangla');
-    currentLang = 'bn';
-    toggleBtn.textContent = 'English';
-    toggleBtn.setAttribute('aria-label', 'Switch to English');
-  } else {
-    document.querySelectorAll('.lang-en').forEach(el => el.classList.remove('hidden'));
-    document.querySelectorAll('.lang-bn').forEach(el => el.classList.add('hidden'));
-    document.body.classList.remove('bangla');
-    currentLang = 'en';
-    toggleBtn.textContent = 'বাংলা';
-    toggleBtn.setAttribute('aria-label', 'Switch to Bangla');
-  }
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+  const toggleBtn = document.getElementById('languageToggle');
+  let currentLang = 'en';
+
+  toggleBtn.addEventListener('click', () => {
+    if (currentLang === 'en') {
+      document.querySelectorAll('.lang-en').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.lang-bn').forEach(el => el.classList.remove('hidden'));
+      document.body.classList.add('bangla');
+      currentLang = 'bn';
+      toggleBtn.textContent = 'English';
+      toggleBtn.setAttribute('aria-label', 'Switch to English');
+    } else {
+      document.querySelectorAll('.lang-en').forEach(el => el.classList.remove('hidden'));
+      document.querySelectorAll('.lang-bn').forEach(el => el.classList.add('hidden'));
+      document.body.classList.remove('bangla');
+      currentLang = 'en';
+      toggleBtn.textContent = 'বাংলা';
+      toggleBtn.setAttribute('aria-label', 'Switch to Bangla');
+    }
+  });
 });
 </script>
+
 
 </body>
 </html>
