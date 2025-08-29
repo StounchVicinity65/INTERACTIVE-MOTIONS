@@ -11,16 +11,14 @@ function setup() {
   angleInput = document.getElementById('angle');
   noLoop();
 
-  // Initialize 5 particles spaced horizontally
+  // Initialize 5 particles spaced very close (as if touching)
   for (let i = 0; i < 5; i++) {
-    particles.push(createVector(100 + i * 60, height / 2));
+    particles.push(createVector(100 + i * 20, height / 2)); // 20px apart
   }
   startPositions = particles.map(p => p.copy());
 
-  // --- Setup for FPS Display ---
-  textSize(16); // Set text size for FPS display
-  textAlign(LEFT, TOP); // Align text to top-left for FPS display
-  // --- End Setup for FPS Display ---
+  textSize(16);
+  textAlign(LEFT, TOP);
 }
 
 function startTranslation() {
@@ -37,50 +35,38 @@ function stopTranslation() {
 function draw() {
   background('#dbeafe');
 
-  // Movement vector components
   let dx = speed * cos(angle);
   let dy = speed * sin(angle);
 
-  // For each particle, move along vector until displaced fully
   for (let i = 0; i < particles.length; i++) {
     let p = particles[i];
     let start = startPositions[i];
 
-    // Calculate distance travelled from start
     let distTravelled = p5.Vector.dist(p, start);
 
-    // Move if displacement not reached
     if (distTravelled < displacement) {
       p.x += dx;
       p.y += dy;
     }
 
-    // Draw arrowhead at particle position, always facing right (no rotation)
     push();
     translate(p.x, p.y);
     drawArrowhead();
     pop();
   }
 
-  // Stop animation when all particles reached displacement
   let allDone = particles.every((p, i) => p5.Vector.dist(p, startPositions[i]) >= displacement);
-  if (allDone) {
-    noLoop();
-  }
+  if (allDone) noLoop();
 
-  // --- ADDED CODE TO DISPLAY FPS ---
-  push(); // Save current drawing style before changing for FPS
-  fill(0); // Set text color to black
-  textSize(16); // Set text size for FPS
-  textAlign(LEFT, TOP); // Align text to top-left for FPS
-  noStroke(); // Ensure no stroke for the text
-  // Display the current frame rate, rounded to 1 decimal place
-  text(`FPS: ${frameRate().toFixed(1)}`, 10, 30); // Position text at (10, 30)
-  pop(); // Restore previous drawing style
-  // --- END ADDED CODE ---
+  push();
+  fill(0);
+  textSize(16);
+  textAlign(LEFT, TOP);
+  noStroke();
+  text(`FPS: ${frameRate().toFixed(1)}`, 10, 30);
+  pop();
 }
 
-// Draw black arrowhead pointing right along x-axis (before rotation)
 function drawArrowhead() {
   noStroke();
   fill(0);
@@ -90,5 +76,21 @@ function drawArrowhead() {
   vertex(-10, 7);
   endShape(CLOSE);
 }
+
+// --- LANGUAGE TOGGLE ---
+const toggleBtn = document.getElementById("languageToggle");
+let currentLang = 'en';
+toggleBtn.addEventListener('click', () => {
+  const showEn = currentLang === 'bn';
+  document.querySelectorAll('.lang-en').forEach(el => el.classList.toggle('hidden', !showEn));
+  document.querySelectorAll('.lang-bn').forEach(el => el.classList.toggle('hidden', showEn));
+  currentLang = showEn ? 'en' : 'bn';
+  toggleBtn.textContent = showEn ? 'বাংলা' : 'English';
+});
+
+function windowResized() {
+  resizeCanvas(windowWidth - 240, windowHeight * 0.6);
+}
+
 
 
