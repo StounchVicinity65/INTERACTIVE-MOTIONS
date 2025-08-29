@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Oscillatory Motion</title>
+  <title>Simple Harmonic Motion</title>
   <style>
     body {
       margin: 0;
@@ -127,56 +127,50 @@
   </style>
 </head>
 <body>
-
   <button id="languageToggle">বাংলা / English</button>
   <a href="index.html" class="back-btn">← <span class="lang-en">Back</span><span class="lang-bn hidden">পিছনে</span></a>
-
   <h1>
-    <span class="lang-en">Oscillatory Motion</span>
-    <span class="lang-bn hidden">দোলন গতি</span>
+    <span class="lang-en">Simple Harmonic Motion</span>
+    <span class="lang-bn hidden">সরল স্পন্দন গতি</span>
   </h1>
-
   <div id="definition">
     <div class="lang-en">
-      <p><strong>Definition:</strong> Oscillatory motion is a type of periodic motion in which an object repeatedly moves back and forth or up and down about a fixed central point, known as the equilibrium position.</p>
+      <p><strong>Definition:</strong> Simple Harmonic Motion (SHM) is a special type of oscillatory motion where the restoring force acting on an object is directly proportional to its displacement from the equilibrium position and always acts towards that equilibrium position.</p>
     </div>
     <div class="lang-bn hidden">
-      <p><strong>সংজ্ঞা:</strong> দোলন গতি হলো এক প্রকার পর্যায়বৃত্ত গতি, যেখানে একটি বস্তু একটি নির্দিষ্ট স্থির বিন্দুর (যাকে সাম্যাবস্থান বলা হয়) উভয় পাশে বারবার সামনে-পেছনে বা উপরে-নিচে চলাচল করে।</p>
+      <p><strong>সংজ্ঞা:</strong> সরল স্পন্দন গতি হলো দোলন গতির একটি বিশেষ রূপ, যেখানে একটি বস্তুর উপর ক্রিয়াশীল পুনরুদ্ধারকারী বল তার সাম্যাবস্থান থেকে সরণের সরাসরি সমানুপাতিক এবং সর্বদা সাম্যাবস্থানের দিকে ক্রিয়াশীল থাকে।</p>
     </div>
   </div>
-
   <div id="controls">
     <label>
-      <span class="lang-en">Amplitude (m):</span>
-      <span class="lang-bn hidden">বিস্তার (m):</span>
-      <input type="number" id="amplitude" value="50" min="0" max="250" step="1" />
+      <span class="lang-en">Initial Angle (°):</span>
+      <span class="lang-bn hidden">প্রারম্ভিক কোণ (°):</span>
+      <input type="number" id="angle" value="30" min="-90" max="90"/>
     </label>
-    <label>
-      <span class="lang-en">Frequency (Hz):</span>
-      <span class="lang-bn hidden">কম্পাঙ্ক (Hz):</span>
-      <input type="number" id="frequency" value="0.5" min="0" step="0.1" />
-    </label>
-    <button onclick="simulateOscillation()">
+    <button onclick="simulateSHM()">
       <span class="lang-en">Simulate</span>
       <span class="lang-bn hidden">সিমুলেট</span>
     </button>
   </div>
-
   <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
-  <script src="js/oscillatory.js"></script>
-
+  <script src="js/sharmonic.js"></script>
   <script>
-    // Validation for amplitude (max 250)
-    const ampInput = document.getElementById('amplitude');
-    ampInput.addEventListener('input', function() {
+    // Validation for angle
+    const angleInput = document.getElementById('angle');
+    angleInput.addEventListener('input', function() {
       let val = parseFloat(this.value);
       const max = parseFloat(this.max);
-      if (!isNaN(val) && val > max) {
-        this.value = max;
-        alert(`⚠️ Maximum amplitude is ${this.max}.`);
+      const min = parseFloat(this.min);
+      if (!isNaN(val)) {
+        if (val > max) {
+          this.value = max;
+          alert(`⚠️ Maximum angle is ${max}°.`);
+        } else if (val < min) {
+          this.value = min;
+          alert(`⚠️ Minimum angle is ${min}°.`);
+        }
       }
     });
-
     // Language toggle
     const toggleBtn = document.getElementById('languageToggle');
     let currentLang = 'en';
@@ -187,17 +181,14 @@
         document.body.classList.add('bangla');
         currentLang = 'bn';
         toggleBtn.textContent = 'English';
-        toggleBtn.setAttribute('aria-label', 'Switch to English');
       } else {
         document.querySelectorAll('.lang-en').forEach(el => el.classList.remove('hidden'));
         document.querySelectorAll('.lang-bn').forEach(el => el.classList.add('hidden'));
         document.body.classList.remove('bangla');
         currentLang = 'en';
-        toggleBtn.textContent = 'বাংলা / English';
-        toggleBtn.setAttribute('aria-label', 'Switch to Bangla');
+        toggleBtn.textContent = 'বাংলা';
       }
     });
   </script>
 </body>
 </html>
-
