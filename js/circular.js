@@ -11,44 +11,47 @@ function setup() {
   centerX = width / 2;
   centerY = height / 2;
   noLoop();
+
+  // FPS display setup
   textSize(16);
   textAlign(LEFT, TOP);
 }
 
 function simulateCircular() {
   angularSpeed = parseFloat(speedInput.value);
+
+  // Get radius from input (in meters), convert to pixels (1m = 100px)
   const rMeters = parseFloat(document.getElementById('radius').value);
-  radius = isNaN(rMeters) ? 100 : rMeters * 100;
+  radius = isNaN(rMeters) ? 1 * 100 : rMeters * 100;
+
   angle = 0;
   loop();
 }
 
-function resetSimulation() {
-  angularSpeed = parseFloat(speedInput.value);
-  const rMeters = parseFloat(document.getElementById('radius').value);
-  radius = isNaN(rMeters) ? 100 : rMeters * 100;
-  angle = 0;
-  noLoop();
-}
-
 function draw() {
   background('#dbeafe');
+
   // Draw circular path
   noFill();
   stroke(120);
   strokeWeight(2);
   ellipse(centerX, centerY, radius * 2);
+
   // Calculate position
   let x = centerX + radius * cos(angle);
   let y = centerY + radius * sin(angle);
+
   // Draw moving object
   fill(255, 100, 100);
   noStroke();
   ellipse(x, y, 30);
+
   // Update angle
   angle += angularSpeed;
   if (angle > TWO_PI) angle -= TWO_PI;
+
   // Display FPS
   fill(0);
   text(`FPS: ${frameRate().toFixed(1)}`, 10, 30);
 }
+
