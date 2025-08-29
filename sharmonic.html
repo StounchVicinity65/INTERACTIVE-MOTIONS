@@ -127,15 +127,12 @@
   </style>
 </head>
 <body>
-
   <button id="languageToggle">বাংলা / English</button>
   <a href="index.html" class="back-btn">← <span class="lang-en">Back</span><span class="lang-bn hidden">পিছনে</span></a>
-
   <h1>
     <span class="lang-en">Simple Harmonic Motion</span>
     <span class="lang-bn hidden">সরল স্পন্দন গতি</span>
   </h1>
-
   <div id="definition">
     <div class="lang-en">
       <p><strong>Definition:</strong> Simple Harmonic Motion (SHM) is a special type of oscillatory motion where the restoring force acting on an object is directly proportional to its displacement from the equilibrium position and always acts towards that equilibrium position.</p>
@@ -144,7 +141,6 @@
       <p><strong>সংজ্ঞা:</strong> সরল স্পন্দন গতি হলো দোলন গতির একটি বিশেষ রূপ, যেখানে একটি বস্তুর উপর ক্রিয়াশীল পুনরুদ্ধারকারী বল তার সাম্যাবস্থান থেকে সরণের সরাসরি সমানুপাতিক এবং সর্বদা সাম্যাবস্থানের দিকে ক্রিয়াশীল থাকে।</p>
     </div>
   </div>
-
   <div id="controls">
     <label>
       <span class="lang-en">Initial Angle (°):</span>
@@ -156,11 +152,25 @@
       <span class="lang-bn hidden">সিমুলেট</span>
     </button>
   </div>
-
   <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
   <script src="js/sharmonic.js"></script>
-
   <script>
+    // Validation for angle
+    const angleInput = document.getElementById('angle');
+    angleInput.addEventListener('input', function() {
+      let val = parseFloat(this.value);
+      const max = parseFloat(this.max);
+      const min = parseFloat(this.min);
+      if (!isNaN(val)) {
+        if (val > max) {
+          this.value = max;
+          alert(`⚠️ Maximum angle is ${max}°.`);
+        } else if (val < min) {
+          this.value = min;
+          alert(`⚠️ Minimum angle is ${min}°.`);
+        }
+      }
+    });
     // Language toggle
     const toggleBtn = document.getElementById('languageToggle');
     let currentLang = 'en';
@@ -179,19 +189,7 @@
         toggleBtn.textContent = 'বাংলা';
       }
     });
-
-    // Instant angle validation
-    const angleInput = document.getElementById('angle');
-    angleInput.addEventListener('input', function() {
-      const max = 90, min = -90;
-      let val = parseFloat(this.value);
-      if (!isNaN(val)) {
-        if (val > max) { this.value = max; alert(`⚠️ Maximum angle is ${max}°`); }
-        else if (val < min) { this.value = min; alert(`⚠️ Minimum angle is ${min}°`); }
-      }
-    });
   </script>
-
 </body>
 </html>
 
