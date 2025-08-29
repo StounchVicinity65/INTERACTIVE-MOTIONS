@@ -1,199 +1,196 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Simple Harmonic Motion</title>
-<style>
-  body {
-    margin: 0;
-    font-family: sans-serif;
-    text-align: center;
-    background: #09203f;
-    color: white;
-    position: relative;
-    min-height: 100vh;
-  }
-  body.bangla {
-    font-family: 'Noto Serif Bengali', sans-serif;
-  }
-  .back-btn {
-    position: absolute;
-    top: 16px;
-    left: 16px;
-    text-decoration: none;
-    color: #ccc;
-    background: #00000055;
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 14px;
-    z-index: 10;
-  }
-  .back-btn:hover {
-    color: white;
-    background: #00000088;
-  }
-  h1 {
-    margin-top: 3rem;
-    font-size: 2rem;
-  }
-  #definition {
-    max-width: 1000px;
-    margin: 1rem auto;
-    background: #00000055;
-    padding: 1.2rem 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(255,255,255,0.1);
-    display: flex;
-    justify-content: space-between;
-    gap: 2rem;
-    text-align: left;
-    min-height: 110px;
-    font-size: 1rem;
-    line-height: 1.4;
-  }
-  #definition div { flex: 1; }
-  #controls {
-    max-width: 700px;
-    margin: 1rem auto 2rem;
-    padding: 1rem;
-    background: #00000055;
-    border-radius: 8px;
-    box-shadow: 0 0 8px rgba(255,255,255,0.1);
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    flex-wrap: wrap;
-    font-size: 1rem;
-  }
-  label {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-weight: 500;
-    gap: 0.3rem;
-    min-width: 130px;
-  }
-  input {
-    padding: 6px 8px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    width: 110px;
-    text-align: center;
-    font-size: 1rem;
-  }
-  input:focus {
-    outline: 2px solid #4a90e2;
-    outline-offset: 2px;
-    box-shadow: 0 0 8px rgba(74, 144, 226, 0.7);
-  }
-  button {
-    padding: 0.5rem 1.5rem;
-    border: none;
-    background: #2563eb;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    white-space: nowrap;
-    font-size: 1rem;
-    align-self: center;
-  }
-  button:hover {
-    background: #1d4ed8;
-  }
-  canvas {
-    display: block;
-    margin: 1rem auto;
-    max-width: 100%;
-    height: auto;
-    border: 1px solid #ccc;
-    background: #dbeafe;
-  }
-  #languageToggle {
-    position: fixed;
-    top: 16px;
-    right: 16px;
-    background: #00000055;
-    color: white;
-    padding: 0.6rem 1.2rem;
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
-    cursor: pointer;
-    z-index: 10;
-  }
-  #languageToggle:hover { background: #00000088; }
-  .hidden { display: none !important; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Simple Harmonic Motion</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      text-align: center;
+      background: #09203f;
+      color: white;
+      position: relative;
+      min-height: 100vh;
+    }
+    body.bangla {
+      font-family: 'Noto Serif Bengali', sans-serif;
+    }
+    .back-btn {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      text-decoration: none;
+      color: #ccc;
+      background: #00000055;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+      z-index: 10;
+    }
+    .back-btn:hover {
+      color: white;
+      background: #00000088;
+    }
+    h1 {
+      margin-top: 3rem;
+      font-size: 2rem;
+    }
+    #definition {
+      max-width: 1000px;
+      margin: 1rem auto;
+      background: #00000055;
+      padding: 1.2rem 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(255,255,255,0.1);
+      display: flex;
+      justify-content: space-between;
+      gap: 2rem;
+      text-align: left;
+      min-height: 110px;
+      font-size: 1rem;
+      line-height: 1.4;
+    }
+    #definition div { flex: 1; }
+    #controls {
+      max-width: 700px;
+      margin: 1rem auto 2rem;
+      padding: 1rem;
+      background: #00000055;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(255,255,255,0.1);
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      font-size: 1rem;
+    }
+    label {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-weight: 500;
+      gap: 0.3rem;
+      min-width: 130px;
+    }
+    input {
+      padding: 6px 8px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      width: 110px;
+      text-align: center;
+      font-size: 1rem;
+    }
+    input:focus {
+      outline: 2px solid #4a90e2;
+      outline-offset: 2px;
+      box-shadow: 0 0 8px rgba(74, 144, 226, 0.7);
+    }
+    button {
+      padding: 0.5rem 1.5rem;
+      border: none;
+      background: #2563eb;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      white-space: nowrap;
+      font-size: 1rem;
+      align-self: center;
+    }
+    button:hover {
+      background: #1d4ed8;
+    }
+    canvas {
+      display: block;
+      margin: 1rem auto;
+      max-width: 100%;
+      height: auto;
+      border: 1px solid #ccc;
+      background: #dbeafe;
+    }
+    #languageToggle {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: #00000055;
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      cursor: pointer;
+      z-index: 10;
+    }
+    #languageToggle:hover { background: #00000088; }
+    .hidden { display: none !important; }
+  </style>
 </head>
 <body>
 
-<button id="languageToggle">বাংলা / English</button>
+  <button id="languageToggle">বাংলা / English</button>
+  <a href="index.html" class="back-btn">← <span class="lang-en">Back</span><span class="lang-bn hidden">পিছনে</span></a>
 
-<a href="index.html" class="back-btn">
-  ← <span class="lang-en">Back</span><span class="lang-bn hidden">পিছনে</span>
-</a>
+  <h1>
+    <span class="lang-en">Simple Harmonic Motion</span>
+    <span class="lang-bn hidden">সরল স্পন্দন গতি</span>
+  </h1>
 
-<h1>
-  <span class="lang-en">Simple Harmonic Motion</span>
-  <span class="lang-bn hidden">সরল স্পন্দন গতি</span>
-</h1>
+  <div id="definition">
+    <div class="lang-en">
+      <p><strong>Definition:</strong> Simple Harmonic Motion (SHM) is a special type of oscillatory motion where the restoring force acting on an object is directly proportional to its displacement from the equilibrium position and always acts towards that equilibrium position.</p>
+    </div>
+    <div class="lang-bn hidden">
+      <p><strong>সংজ্ঞা:</strong> সরল স্পন্দন গতি হলো দোলন গতির একটি বিশেষ রূপ, যেখানে একটি বস্তুর উপর ক্রিয়াশীল পুনরুদ্ধারকারী বল তার সাম্যাবস্থান থেকে সরণের সরাসরি সমানুপাতিক এবং সর্বদা সাম্যাবস্থানের দিকে ক্রিয়াশীল থাকে।</p>
+    </div>
+  </div>
 
-<div id="definition">
-  <div class="lang-en">
-    <p><strong>Definition:</strong> Simple Harmonic Motion (SHM) is a special type of oscillatory motion where the restoring force acting on an object is directly proportional to its displacement from the equilibrium position and always acts towards that equilibrium position.</p>
-  </div>
-  <div class="lang-bn hidden">
-    <p><strong>সংজ্ঞা:</strong> সরল স্পন্দন গতি হলো দোলন গতির একটি বিশেষ রূপ, যেখানে একটি বস্তুর উপর ক্রিয়াশীল পুনরুদ্ধারকারী বল তার সাম্যাবস্থান থেকে সরণের সরাসরি সমানুপাতিক এবং সর্বদা সাম্যাবস্থানের দিকে ক্রিয়াশীল থাকে।</p>
-  </div>
-</div>
+  <div id="controls">
+    <label>
+      <span class="lang-en">Initial Angle (°):</span>
+      <span class="lang-bn hidden">প্রারম্ভিক কোণ (°):</span>
+      <input type="number" id="angle" value="30" min="-90" max="90"/>
+    </label>
+    <button onclick="simulateSHM()">
+      <span class="lang-en">Simulate</span>
+      <span class="lang-bn hidden">সিমুলেট</span>
+    </button>
+  </div>
 
-<div id="controls">
-  <label>
-    <span class="lang-en">Initial Angle (°):</span>
-    <span class="lang-bn hidden">প্রারম্ভিক কোণ (°):</span>
-    <input type="number" id="angle" value="30" min="-90" max="90"/>
-  </label>
-  <button onclick="simulateSHM()">
-    <span class="lang-en">Simulate</span>
-    <span class="lang-bn hidden">সিমুলেট</span>
-  </button>
-</div>
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+  <script src="js/sharmonic.js"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
-<script src="js/sharmonic.js"></script>
+  <script>
+    // Language toggle
+    const toggleBtn = document.getElementById('languageToggle');
+    let currentLang = 'en';
+    toggleBtn.addEventListener('click', () => {
+      if (currentLang === 'en') {
+        document.querySelectorAll('.lang-en').forEach(el => el.classList.add('hidden'));
+        document.querySelectorAll('.lang-bn').forEach(el => el.classList.remove('hidden'));
+        document.body.classList.add('bangla');
+        currentLang = 'bn';
+        toggleBtn.textContent = 'English';
+      } else {
+        document.querySelectorAll('.lang-en').forEach(el => el.classList.remove('hidden'));
+        document.querySelectorAll('.lang-bn').forEach(el => el.classList.add('hidden'));
+        document.body.classList.remove('bangla');
+        currentLang = 'en';
+        toggleBtn.textContent = 'বাংলা';
+      }
+    });
 
-<script>
-// Language toggle
-const toggleBtn = document.getElementById('languageToggle');
-let currentLang = 'en';
-toggleBtn.addEventListener('click', () => {
-  if (currentLang === 'en') {
-    document.querySelectorAll('.lang-en').forEach(el => el.classList.add('hidden'));
-    document.querySelectorAll('.lang-bn').forEach(el => el.classList.remove('hidden'));
-    document.body.classList.add('bangla');
-    currentLang = 'bn';
-    toggleBtn.textContent = 'English';
-  } else {
-    document.querySelectorAll('.lang-en').forEach(el => el.classList.remove('hidden'));
-    document.querySelectorAll('.lang-bn').forEach(el => el.classList.add('hidden'));
-    document.body.classList.remove('bangla');
-    currentLang = 'en';
-    toggleBtn.textContent = 'বাংলা';
-  }
-});
-
-// Instant angle validation (alert while typing)
-const angleInput = document.getElementById('angle');
-angleInput.addEventListener('input', function() {
-  const max = 90, min = -90;
-  let val = parseFloat(this.value);
-  if (!isNaN(val)) {
-    if (val > max) { this.value = max; alert(`⚠️ Maximum angle is ${max}°`); }
-    else if (val < min) { this.value = min; alert(`⚠️ Minimum angle is ${min}°`); }
-  }
-});
-</script>
+    // Instant angle validation
+    const angleInput = document.getElementById('angle');
+    angleInput.addEventListener('input', function() {
+      const max = 90, min = -90;
+      let val = parseFloat(this.value);
+      if (!isNaN(val)) {
+        if (val > max) { this.value = max; alert(`⚠️ Maximum angle is ${max}°`); }
+        else if (val < min) { this.value = min; alert(`⚠️ Minimum angle is ${min}°`); }
+      }
+    });
+  </script>
 
 </body>
 </html>
