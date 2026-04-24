@@ -5,7 +5,7 @@ let countInput;
 
 function setup() {
   // Select the canvas container from the HTML
-  let canvas = createCanvas(windowWidth - 50, windowHeight * 0.5);
+  let canvas = createCanvas(windowWidth - 240, windowHeight * 0.6);
   canvas.parent(document.body);
   countInput = document.getElementById('count');
   noLoop(); 
