@@ -4,11 +4,11 @@ let running = false;
 let countInput;
 
 function setup() {
-  // Create a responsive canvas
+  // Select the canvas container from the HTML
   let canvas = createCanvas(windowWidth - 50, windowHeight * 0.5);
   canvas.parent(document.body);
   countInput = document.getElementById('count');
-  noLoop(); // Start in a paused state
+  noLoop(); 
 }
 
 function startRandomMotion() {
@@ -40,7 +40,6 @@ function draw() {
   fill(0);
   textSize(16);
   textAlign(LEFT, TOP);
-  // Use backticks (`) for template literals
   text(`FPS: ${frameRate().toFixed(1)}`, 10, 10);
 
   if (!running) return;
@@ -49,13 +48,30 @@ function draw() {
   noStroke();
 
   for (let p of particles) {
+    /** * THE TRICK FOR RANDOM MOTION:
+     * We add a small random "jitter" to the velocity every single frame.
+     * This simulates particles bumping into invisible molecules.
+     */
+    p.vx += random(-0.3, 0.3); 
+    p.vy += random(-0.3, 0.3);
+
+    // Limit the maximum speed so they don't fly off too fast
+    p.vx = constrain(p.vx, -4, 4);
+    p.vy = constrain(p.vy, -4, 4);
+
+    // Update position
     p.x += p.vx;
     p.y += p.vy;
 
-
-  
-    if (p.x < 0 || p.x > width) p.vx *= -1;
-    if (p.y < 0 || p.y > height) p.vy *= -1;
+    // Bounce off edges
+    if (p.x < 0 || p.x > width) {
+      p.vx *= -1;
+      p.x = constrain(p.x, 0, width);
+    }
+    if (p.y < 0 || p.y > height) {
+      p.vy *= -1;
+      p.y = constrain(p.y, 0, height);
+    }
 
     // Draw particle
     ellipse(p.x, p.y, p.size);
