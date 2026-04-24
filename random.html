@@ -15,7 +15,6 @@
       min-height: 100vh;
     }
     body.bangla { font-family: 'Noto Serif Bengali', sans-serif; }
-
     .back-btn {
       position: absolute;
       top: 16px;
@@ -29,9 +28,7 @@
       z-index: 10;
     }
     .back-btn:hover { color: white; background: #00000088; }
-
     h1 { margin-top: 3rem; font-size: 2rem; }
-
     #definition {
       max-width: 1000px;
       margin: 1rem auto;
@@ -47,7 +44,6 @@
       line-height: 1.4;
     }
     #definition div { flex: 1; }
-
     #controls {
       max-width: 600px;
       margin: 1rem auto 2rem;
@@ -88,7 +84,6 @@
       font-size: 1rem;
     }
     button:hover { background: #1d4ed8; }
-
     canvas {
       display: block;
       margin: 1rem auto;
@@ -97,7 +92,6 @@
       border: 1px solid #ccc;
       background: #dbeafe;
     }
-
     #languageToggle {
       position: fixed;
       top: 16px;
@@ -115,27 +109,18 @@
     .hidden { display: none !important; }
   </style>
 </head>
-<body>
-
-  <!-- language toggle -->
-  <button id="languageToggle" aria-label="Switch to Bangla">বাংলা / English</button>
-
-  <a href="index.html" class="back-btn">← 
-    <span class="lang-en">Back</span>
-    <span class="lang-bn hidden">পিছনে</span>
-  </a>
-
-  <h1>
-    <span class="lang-en">🔀 Random Motion</span>
-    <span class="lang-bn hidden">🔀 এলোমেলো গতি</span>
-  </h1>
+<body>  
+  <button id="languageToggle">বাংলা / English</button>
+  
+  <h1 class="lang-en">🔀 Random Motion</h1>
+  <h1 class="lang-bn hidden">🔀 এলোমেলো গতি</h1>
 
   <div id="definition">
     <div class="lang-en">
-      <p><strong>Definition:</strong> Random motion is the unpredictable movement of particles in different directions and speeds. This motion does not follow a specific path and is often observed in phenomena like Brownian motion of particles in a fluid.</p>
+      <strong>Definition:</strong> Random motion is the unpredictable movement of particles in different directions and speeds. This motion does not follow a specific path and is often observed in phenomena like Brownian motion of particles in a fluid.
     </div>
     <div class="lang-bn hidden">
-      <p><strong>সংজ্ঞা:</strong> এলোমেলো গতি হলো এমন এক ধরনের গতি যেখানে কণাগুলো বিভিন্ন দিক ও বেগে এলোমেলোভাবে চলে। এটি পূর্বানুমানযোগ্য নয় এবং তরলের মধ্যে কণার ব্রাউনীয় গতির মতো ঘটনায় দেখা যায়।</p>
+      <strong>সংজ্ঞা:</strong> এলোমেলো গতি হলো এমন এক ধরনের গতি যেখানে কণাগুলো বিভিন্ন দিক ও বেগে এলোমেলোভাবে চলে। এটি পূর্বানুমানযোগ্য নয় এবং তরলের মধ্যে কণার ব্রাউনীয় গতির মতো ঘটনায় দেখা যায়।
     </div>
   </div>
 
@@ -143,62 +128,51 @@
     <label>
       <span class="lang-en">Number of Particles:</span>
       <span class="lang-bn hidden">কণার সংখ্যা:</span>
-      <input type="number" id="count" value="20" min="1" max="10000" />
+      <input type="number" id="count" value="20" min="1" max="10000">
     </label>
-
     <button onclick="startRandomMotion()">
       <span class="lang-en">Start</span>
       <span class="lang-bn hidden">শুরু</span>
     </button>
-
     <button onclick="stopRandomMotion()">
       <span class="lang-en">Stop</span>
       <span class="lang-bn hidden">বন্ধ</span>
     </button>
   </div>
 
-  <!-- validation script -->
-  <script>
-  const input = document.getElementById("count");
-  input.addEventListener("input", function() {
-    let val = parseInt(this.value);
-    if (val > this.max) {
-      this.value = this.max;
-      alert("⚠️ Maximum threshold reached (10,000).");
-    }
-    if (val < this.min && this.value !== "") {
-      this.value = this.min;
-    }
-  });
-  </script>
-
-  <!-- toggle script -->
-  <script>
-  const toggleBtn = document.getElementById('languageToggle');
-  let currentLang = 'en';
-  toggleBtn.addEventListener('click', () => {
-    if (currentLang === 'en') {
-      document.querySelectorAll('.lang-en').forEach(el => el.classList.add('hidden'));
-      document.querySelectorAll('.lang-bn').forEach(el => el.classList.remove('hidden'));
-      document.body.classList.add('bangla');
-      currentLang = 'bn';
-      toggleBtn.textContent = 'English';
-      toggleBtn.setAttribute('aria-label', 'Switch to English');
-    } else {
-      document.querySelectorAll('.lang-en').forEach(el => el.classList.remove('hidden'));
-      document.querySelectorAll('.lang-bn').forEach(el => el.classList.add('hidden'));
-      document.body.classList.remove('bangla');
-      currentLang = 'en';
-      toggleBtn.textContent = 'বাংলা';
-      toggleBtn.setAttribute('aria-label', 'Switch to Bangla');
-    }
-  });
-  </script>
-
-  <!-- p5 -->
   <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
-  <script src="js/random.js"></script>
+  <script src="random.js"></script>
 
+  <script>
+    // Language Toggle Logic
+    const toggleBtn = document.getElementById('languageToggle');
+    let currentLang = 'en';
+    toggleBtn.addEventListener('click', () => {
+      if (currentLang === 'en') {
+        document.querySelectorAll('.lang-en').forEach(el => el.classList.add('hidden'));
+        document.querySelectorAll('.lang-bn').forEach(el => el.classList.remove('hidden'));
+        document.body.classList.add('bangla');
+        currentLang = 'bn';
+        toggleBtn.textContent = 'English';
+      } else {
+        document.querySelectorAll('.lang-en').forEach(el => el.classList.remove('hidden'));
+        document.querySelectorAll('.lang-bn').forEach(el => el.classList.add('hidden'));
+        document.body.classList.remove('bangla');
+        currentLang = 'en';
+        toggleBtn.textContent = 'বাংলা';
+      }
+    });
+
+    // Input Constraint Logic
+    const input = document.getElementById("count");
+    input.addEventListener("input", function() {
+      let val = parseInt(this.value);
+      if (val > 10000) {
+        this.value = 10000;
+        alert("⚠️ Maximum threshold reached (10,000).");
+      }
+    });
+  </script>
 </body>
 </html>
 
