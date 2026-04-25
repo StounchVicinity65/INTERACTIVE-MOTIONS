@@ -77,6 +77,21 @@
       color: var(--nav-active-color);
       font-weight: bold;
     }
+    nav .nav-divider {
+      border: none;
+      border-top: 1px solid rgba(255,255,255,0.15);
+      margin: 0.5rem 0;
+    }
+    nav a.portal-link {
+      color: #90cdf4;
+      border: 1px solid rgba(144, 205, 244, 0.3);
+      margin-top: 0.2rem;
+    }
+    nav a.portal-link:hover {
+      background: rgba(74, 144, 226, 0.4);
+      border-color: #90cdf4;
+      color: white;
+    }
     main {
       flex-grow: 1;
       display: flex;
@@ -116,22 +131,18 @@
       line-height: 1.6;
       font-size: 0.95rem;
     }
-    #descriptionBox li {
-      line-height: 1.6;
-      font-size: 0.95rem;
-    }
     #converterBox {
       background: rgba(0, 0, 0, 0.7);
       padding: 1.2rem;
       border-radius: 12px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
       color: #f0f0f0;
-      min-height: 60px; /* Collapsed height */
+      min-height: 60px;
       width: 100%;
       transition: min-height 0.3s ease;
     }
     #converterBox[open] {
-      min-height: 250px; /* Expanded height */
+      min-height: 250px;
     }
     #converterBox summary {
       font-weight: bold;
@@ -139,10 +150,10 @@
       margin-bottom: 1rem;
       font-size: 1.1rem;
       color: #90cdf4;
-      list-style: none; /* Remove default marker */
+      list-style: none;
     }
     #converterBox summary::-webkit-details-marker {
-      display: none; /* Remove default arrow in WebKit browsers */
+      display: none;
     }
     #converterBox div {
       opacity: 0;
@@ -349,6 +360,11 @@
         <span class="lang-en">More from us...</span>
         <span class="lang-bn hidden">আমাদের থেকে আরও...</span>
       </a>
+      <hr class="nav-divider">
+      <a href="https://stounchvicinity65.github.io/portal/" class="portal-link">
+        <span class="lang-en">🏠 Back to Portal</span>
+        <span class="lang-bn hidden">🏠 পোর্টালে ফিরুন</span>
+      </a>
     </nav>
     <main>
       <div id="descriptionSection">
@@ -362,42 +378,15 @@
             <span class="lang-bn hidden">বিভিন্ন ধরনের গতি ইন্টারেক্টিভভাবে অন্বেষণ করতে মেনু থেকে একটি সিমুলেশন নির্বাচন করুন।</span>
           </p>
           <ul>
-            <li>
-              <span class="lang-en">Projectile Motion</span>
-              <span class="lang-bn hidden">প্রাসের গতি</span>
-            </li>
-            <li>
-              <span class="lang-en">Oscillatory Motion</span>
-              <span class="lang-bn hidden">দোলন গতি</span>
-            </li>
-            <li>
-              <span class="lang-en">Simple Harmonic Motion</span>
-              <span class="lang-bn hidden">সরল স্পন্দন গতি</span>
-            </li>
-            <li>
-              <span class="lang-en">Circular Motion</span>
-              <span class="lang-bn hidden">বৃত্তাকার গতি</span>
-            </li>
-            <li>
-              <span class="lang-en">Random Motion</span>
-              <span class="lang-bn hidden">এলোমেলো গতি</span>
-            </li>
-            <li>
-              <span class="lang-en">Linear Motion</span>
-              <span class="lang-bn hidden">সরলরৈখিক গতি</span>
-            </li>
-            <li>
-              <span class="lang-en">Translational Motion</span>
-              <span class="lang-bn hidden">চলন গতি</span>
-            </li>
-            <li>
-              <span class="lang-en">Accelerated Motion</span>
-              <span class="lang-bn hidden">ত্বরিত গতি</span>
-            </li>
-            <li>
-              <span class="lang-en">Decelerated Motion</span>
-              <span class="lang-bn hidden">মন্দিত গতি</span>
-            </li>
+            <li><span class="lang-en">Projectile Motion</span><span class="lang-bn hidden">প্রাসের গতি</span></li>
+            <li><span class="lang-en">Oscillatory Motion</span><span class="lang-bn hidden">দোলন গতি</span></li>
+            <li><span class="lang-en">Simple Harmonic Motion</span><span class="lang-bn hidden">সরল স্পন্দন গতি</span></li>
+            <li><span class="lang-en">Circular Motion</span><span class="lang-bn hidden">বৃত্তাকার গতি</span></li>
+            <li><span class="lang-en">Random Motion</span><span class="lang-bn hidden">এলোমেলো গতি</span></li>
+            <li><span class="lang-en">Linear Motion</span><span class="lang-bn hidden">সরলরৈখিক গতি</span></li>
+            <li><span class="lang-en">Translational Motion</span><span class="lang-bn hidden">চলন গতি</span></li>
+            <li><span class="lang-en">Accelerated Motion</span><span class="lang-bn hidden">ত্বরিত গতি</span></li>
+            <li><span class="lang-en">Decelerated Motion</span><span class="lang-bn hidden">মন্দিত গতি</span></li>
           </ul>
         </div>
         <details id="converterBox">
@@ -465,144 +454,74 @@
         <p class="lang-bn hidden">এই সিমুলেশনগুলিতে, আমরা স্ক্রিন-ভিত্তিক অ্যানিমেশনগুলিকে বাস্তব-বিশ্বের পদার্থবিজ্ঞানের ধারণার সাথে সংযুক্ত করার জন্য একটি স্কেলড উপস্থাপনা ব্যবহার করি। এটি যেভাবে কাজ করে:</p>
         <ul>
           <li>
-            <strong>
-              <span class="lang-en">Distance:</span>
-              <span class="lang-bn hidden">দূরত্ব:</span>
-            </strong>
+            <strong><span class="lang-en">Distance:</span><span class="lang-bn hidden">দূরত্ব:</span></strong>
             <span class="lang-en">On screen, distance is measured in pixels (px). For real-world comparison, we've set a scale where <strong>1 meter (m) in the simulation represents 0.00026 meters in real-world scale</strong>. This specific scale is chosen because p5.js animations are fundamentally updated based on pixels, and the actual physical size of a pixel varies across displays. We based our conversion on CSS information, where 1 CSS pixel is defined as 1/96th of a CSS inch, and one ninety-sixth (1/96th) of a CSS inch is approximately 0.00026 meters.</span>
-            <span class="lang-bn hidden">স্ক্রিনে, দূরত্ব পিক্সেল (px) এ পরিমাপ করা হয়। বাস্তব-বিশ্বের তুলনার জন্য, আমরা এমন একটি স্কেল সেট করেছি যেখানে <strong>সিমুলেশনে ১ মিটার (m) বাস্তব-বিশ্বের স্কেলে ০.০০০২৬ মিটারকে প্রতিনিধিত্ব করে</strong>। এই নির্দিষ্ট স্কেলটি বেছে নেওয়া হয়েছে কারণ p5.js অ্যানিমেশনগুলি মূলত পিক্সেলের উপর ভিত্তি করে আপডেট হয় এবং একটি পিক্সেলের প্রকৃত ভৌত আকার বিভিন্ন ডিসপ্লেতে পরিবর্তিত হয়।</span>
+            <span class="lang-bn hidden">স্ক্রিনে, দূরত্ব পিক্সেল (px) এ পরিমাপ করা হয়। বাস্তব-বিশ্বের তুলনার জন্য, আমরা এমন একটি স্কেল সেট করেছি যেখানে <strong>সিমুলেশনে ১ মিটার (m) বাস্তব-বিশ্বের স্কেলে ০.০০০২৬ মিটারকে প্রতিনিধিত্ব করে</strong>।</span>
           </li>
           <li>
-            <strong>
-              <span class="lang-en">Time:</span>
-              <span class="lang-bn hidden">সময়:</span>
-            </strong>
+            <strong><span class="lang-en">Time:</span><span class="lang-bn hidden">সময়:</span></strong>
             <span class="lang-en">Instead of seconds (s), time is measured in <strong>frames (frame)</strong>. This is because p5.js and most animation libraries update simulations per frame, making time handling simpler for real-time animation logic.</span>
-            <span class="lang-bn hidden">সেকেন্ড (s) এর পরিবর্তে, সময় <strong>ফ্রেম (frame)</strong> এ পরিমাপ করা হয়। এর কারণ হল p5.js এবং বেশিরভাগ অ্যানিমেশন লাইব্রেরি প্রতি ফ্রেমে সিমুলেশন আপডেট করে।</span>
+            <span class="lang-bn hidden">সেকেন্ড (s) এর পরিবর্তে, সময় <strong>ফ্রেম (frame)</strong> এ পরিমাপ করা হয়।</span>
           </li>
           <li>
-            <strong>
-              <span class="lang-en">Velocity:</span>
-              <span class="lang-bn hidden">বেগ:</span>
-            </strong>
+            <strong><span class="lang-en">Velocity:</span><span class="lang-bn hidden">বেগ:</span></strong>
             <span class="lang-en">Represented as px/frame on screen.</span>
             <span class="lang-bn hidden">স্ক্রিনে px/frame হিসাবে উপস্থাপিত।</span>
           </li>
           <li>
-            <strong>
-              <span class="lang-en">Acceleration:</span>
-              <span class="lang-bn hidden">ত্বরণ:</span>
-            </strong>
+            <strong><span class="lang-en">Acceleration:</span><span class="lang-bn hidden">ত্বরণ:</span></strong>
             <span class="lang-en">Represented as px/frame² on screen.</span>
             <span class="lang-bn hidden">স্ক্রিনে px/frame² হিসাবে উপস্থাপিত।</span>
           </li>
           <li>
-            <strong>
-              <span class="lang-en">Angular Speed:</span>
-              <span class="lang-bn hidden">কৌণিক বেগ:</span>
-            </strong>
+            <strong><span class="lang-en">Angular Speed:</span><span class="lang-bn hidden">কৌণিক বেগ:</span></strong>
             <span class="lang-en">Represented as rad/frame on screen.</span>
             <span class="lang-bn hidden">স্ক্রিনে rad/frame হিসাবে উপস্থাপিত।</span>
           </li>
           <li>
-            <strong>
-              <span class="lang-en">Angle:</span>
-              <span class="lang-bn hidden">কোণ:</span>
-            </strong>
+            <strong><span class="lang-en">Angle:</span><span class="lang-bn hidden">কোণ:</span></strong>
             <span class="lang-en">Radians or Degrees — <strong>remains the same</strong>.</span>
             <span class="lang-bn hidden">রেডিয়ান বা ডিগ্রি — <strong>একই থাকে</strong>।</span>
           </li>
           <li>
-            <strong>
-              <span class="lang-en">Particle Count:</span>
-              <span class="lang-bn hidden">কণার সংখ্যা:</span>
-            </strong>
+            <strong><span class="lang-en">Particle Count:</span><span class="lang-bn hidden">কণার সংখ্যা:</span></strong>
             <span class="lang-en">Unchanged (just a number).</span>
             <span class="lang-bn hidden">অপরিবর্তিত (শুধুমাত্র একটি সংখ্যা)।</span>
           </li>
         </ul>
         <p class="lang-en">This scaled system allows us to maintain accurate visual logic while making the underlying animation math easier. It helps learners focus more on physical <em>concepts</em> rather than complex unit conversions in a visual environment.</p>
-        <p class="lang-bn hidden">এই স্কেলড সিস্টেমটি ভিজ্যুয়াল লজিককে সঠিক রেখে অ্যানিমেশনের গণিতকে সহজ করে তোলে। এটি শিক্ষার্থীদের জটিল একক রূপান্তরের পরিবর্তে পদার্থবিজ্ঞানের <em>ধারণাগুলির</em> উপর মনোযোগ দিতে সহায়তা করে।</p>
+        <p class="lang-bn hidden">এই স্কেলড সিস্টেমটি ভিজ্যুয়াল লজিককে সঠিক রেখে অ্যানিমেশনের গণিতকে সহজ করে তোলে।</p>
         <h3>
           <span class="lang-en">Why the Scale Factor?</span>
           <span class="lang-bn hidden">স্কেল ফ্যাক্টর কেন?</span>
         </h3>
         <p class="lang-en">Most screens use pixels to display content, and the physical size of a pixel can vary significantly between devices. Since we're working within a computer screen for visual representation, measuring positions and distances in <strong>pixels</strong> is logical. To connect these screen pixels to real-world SI units (like meters), a specific scale factor is applied.</p>
-        <p class="lang-bn hidden">বেশিরভাগ স্ক্রিন বিষয়বস্তু প্রদর্শনের জন্য পিক্সেল ব্যবহার করে, এবং একটি পিক্সেলের ভৌত আকার বিভিন্ন ডিভাইসে উল্লেখযোগ্যভাবে পরিবর্তিত হতে পারে। যেহেতু আমরা ভিজ্যুয়াল উপস্থাপনার জন্য কম্পিউটার স্ক্রিনের মধ্যে কাজ করছি, তাই অবস্থান এবং দূরত্ব <strong>পিক্সেল</strong>-এ পরিমাপ করা যৌক্তিক।</p>
+        <p class="lang-bn hidden">বেশিরভাগ স্ক্রিন বিষয়বস্তু প্রদর্শনের জন্য পিক্সেল ব্যবহার করে।</p>
         <h3>
           <span class="lang-en">Why Frames Instead of Seconds?</span>
           <span class="lang-bn hidden">সেকেন্ডের পরিবর্তে ফ্রেম কেন?</span>
         </h3>
         <p class="lang-en">In p5.js and most animation libraries, simulations are updated per frame. Using <strong>frames</strong> (frame) makes time handling simpler for animation logic. If your simulation runs at 60 frames per second (FPS), then each frame represents 1/60th of a second.</p>
-        <p class="lang-bn hidden">p5.js এবং বেশিরভাগ অ্যানিমেশন লাইব্রেরিতে, সিমুলেশনগুলি প্রতি ফ্রেমে আপডেট হয়। <strong>ফ্রেম</strong> ব্যবহার করে অ্যানিমেশন লজিকের জন্য সময় পরিচালনা সহজ হয়।</p>
+        <p class="lang-bn hidden">p5.js এবং বেশিরভাগ অ্যানিমেশন লাইব্রেরিতে, সিমুলেশনগুলি প্রতি ফ্রেমে আপডেট হয়।</p>
         <h3>
           <span class="lang-en">Final Note</span>
           <span class="lang-bn hidden">শেষ কথা</span>
         </h3>
         <p class="lang-en">While the unit converter displays results in meters per second (m/s), meters per second squared (m/s²), and radians per second (rad/s) for your convenience and understanding of SI units, it's important to remember that these values in the simulation actually represent <strong>pixels per frame (px/frame)</strong>, <strong>pixels per frame squared (px/frame²)</strong>, and <strong>radians per frame (rad/frame)</strong> respectively.</p>
-        <p class="lang-bn hidden">যদিও ইউনিট কনভার্টারটি আপনার সুবিধার জন্য এবং SI এককগুলি বোঝার জন্য ফলাফল মিটার প্রতি সেকেন্ড (m/s), মিটার প্রতি সেকেন্ড স্কোয়ার্ড (m/s²) এবং রেডিয়ান প্রতি সেকেন্ড (rad/s) এ প্রদর্শন করে, তবে মনে রাখা গুরুত্বপূর্ণ যে সিমুলেশনের এই মানগুলি আসলে <strong>পিক্সেল প্রতি ফ্রেম (px/frame)</strong>, <strong>পিক্সেল প্রতি ফ্রেম স্কোয়ার্ড (px/frame²)</strong> এবং <strong>রেডিয়ান প্রতি ফ্রেম (rad/frame)</strong> কে প্রতিনিধিত্ব করে।</p>
+        <p class="lang-bn hidden">যদিও ইউনিট কনভার্টারটি আপনার সুবিধার জন্য ফলাফল m/s, m/s² এবং rad/s এ প্রদর্শন করে, তবে মনে রাখা গুরুত্বপূর্ণ যে সিমুলেশনের এই মানগুলি আসলে px/frame, px/frame² এবং rad/frame কে প্রতিনিধিত্ব করে।</p>
         <hr>
         <h4>
           <span class="lang-en">Here's a quick summary of the unit conversions used:</span>
           <span class="lang-bn hidden">ব্যবহৃত একক রূপান্তরের একটি দ্রুত সংক্ষিপ্তসার:</span>
         </h4>
         <ul>
-          <li>
-            <strong>
-              <span class="lang-en">Distance:</span>
-              <span class="lang-bn hidden">দূরত্ব:</span>
-            </strong>
-            <span class="lang-en">Meters (m) → Pixels (px)</span>
-            <span class="lang-bn hidden">মিটার (m) → পিক্সেল (px)</span>
-          </li>
-          <li>
-            <strong>
-              <span class="lang-en">Time:</span>
-              <span class="lang-bn hidden">সময়:</span>
-            </strong>
-            <span class="lang-en">Seconds (s) → Frames (frame)</span>
-            <span class="lang-bn hidden">সেকেন্ড (s) → ফ্রেম (frame)</span>
-          </li>
-          <li>
-            <strong>
-              <span class="lang-en">Velocity:</span>
-              <span class="lang-bn hidden">বেগ:</span>
-            </strong>
-            <span class="lang-en">m/s → px/frame</span>
-            <span class="lang-bn hidden">মিটার/সেকেন্ড (m/s) → পিক্সেল/ফ্রেম (px/frame)</span>
-          </li>
-          <li>
-            <strong>
-              <span class="lang-en">Acceleration:</span>
-              <span class="lang-bn hidden">ত্বরণ:</span>
-            </strong>
-            <span class="lang-en">m/s² → px/frame²</span>
-            <span class="lang-bn hidden">মিটার/সেকেন্ড² (m/s²) → পিক্সেল/ফ্রেম² (px/frame²)</span>
-          </li>
-          <li>
-            <strong>
-              <span class="lang-en">Angular Speed:</span>
-              <span class="lang-bn hidden">কৌণিক বেগ:</span>
-            </strong>
-            <span class="lang-en">rad/s → rad/frame</span>
-            <span class="lang-bn hidden">রেডিয়ান/সেকেন্ড (rad/s) → রেডিয়ান/ফ্রেম (rad/frame)</span>
-          </li>
-          <li>
-            <strong>
-              <span class="lang-en">Angle:</span>
-              <span class="lang-bn hidden">কোণ:</span>
-            </strong>
-            <span class="lang-en">Radians or Degrees — remains the same</span>
-            <span class="lang-bn hidden">রেডিয়ান বা ডিগ্রি — অপরিবর্তিত থাকে</span>
-          </li>
-          <li>
-            <strong>
-              <span class="lang-en">Particle Count:</span>
-              <span class="lang-bn hidden">কণার সংখ্যা:</span>
-            </strong>
-            <span class="lang-en">Unchanged (just a number)</span>
-            <span class="lang-bn hidden">অপরিবর্তিত (শুধু একটি সংখ্যা)</span>
-          </li>
+          <li><strong><span class="lang-en">Distance:</span><span class="lang-bn hidden">দূরত্ব:</span></strong> <span class="lang-en">Meters (m) → Pixels (px)</span><span class="lang-bn hidden">মিটার (m) → পিক্সেল (px)</span></li>
+          <li><strong><span class="lang-en">Time:</span><span class="lang-bn hidden">সময়:</span></strong> <span class="lang-en">Seconds (s) → Frames (frame)</span><span class="lang-bn hidden">সেকেন্ড (s) → ফ্রেম (frame)</span></li>
+          <li><strong><span class="lang-en">Velocity:</span><span class="lang-bn hidden">বেগ:</span></strong> <span class="lang-en">m/s → px/frame</span><span class="lang-bn hidden">m/s → px/frame</span></li>
+          <li><strong><span class="lang-en">Acceleration:</span><span class="lang-bn hidden">ত্বরণ:</span></strong> <span class="lang-en">m/s² → px/frame²</span><span class="lang-bn hidden">m/s² → px/frame²</span></li>
+          <li><strong><span class="lang-en">Angular Speed:</span><span class="lang-bn hidden">কৌণিক বেগ:</span></strong> <span class="lang-en">rad/s → rad/frame</span><span class="lang-bn hidden">rad/s → rad/frame</span></li>
+          <li><strong><span class="lang-en">Angle:</span><span class="lang-bn hidden">কোণ:</span></strong> <span class="lang-en">Radians or Degrees — remains the same</span><span class="lang-bn hidden">রেডিয়ান বা ডিগ্রি — অপরিবর্তিত থাকে</span></li>
+          <li><strong><span class="lang-en">Particle Count:</span><span class="lang-bn hidden">কণার সংখ্যা:</span></strong> <span class="lang-en">Unchanged (just a number)</span><span class="lang-bn hidden">অপরিবর্তিত (শুধু একটি সংখ্যা)</span></li>
         </ul>
       </div>
     </main>
@@ -615,7 +534,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
     const toggleBtn = document.getElementById("languageToggle");
-    let currentLang = "en"; // default language
+    let currentLang = "en";
     toggleBtn.addEventListener("click", () => {
       if (currentLang === "en") {
         document.querySelectorAll(".lang-en").forEach(el => el.classList.add("hidden"));
@@ -630,7 +549,7 @@
         currentLang = "en";
         toggleBtn.textContent = "বাংলা";
       }
-      updateConversion(); // Ensure converter updates after language switch
+      updateConversion();
     });
     const fpsInput = document.getElementById('fpsInput');
     const autoFPS = document.getElementById('autoFPS');
@@ -643,7 +562,7 @@
     const accelResult2 = document.getElementById('accelResult2');
     const radResult = document.getElementById('radResult');
     const radResult2 = document.getElementById('radResult2');
-    let measuredFPS = 60; // Default or initial value
+    let measuredFPS = 60;
     function measureFPS() {
       let lastTime = performance.now();
       let framesCount = 0;
@@ -677,7 +596,7 @@
         radResult2.textContent = 'N/A';
         return;
       }
-      const scale = 0.00026; // CSS: 1 px ≈ 0.026 cm or 0.00026 m
+      const scale = 0.00026;
       const mps = (pxpf * scale * fps).toFixed(3);
       const mps2 = (pxa * scale * fps * fps).toFixed(3);
       const rads = (radpf * fps).toFixed(3);
