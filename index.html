@@ -4,322 +4,474 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Interactive Motion Simulations - Main Menu</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;700&family=Share+Tech+Mono&family=Exo+2:ital,wght@0,300;0,400;0,700;0,900;1,700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --nav-bg: rgba(0, 0, 0, 0.6);
-      --nav-hover-bg: #4a90e2;
-      --nav-text-color: #ccc;
-      --nav-active-color: white;
+      --nav-bg: rgba(0,0,0,0.65);
+      --nav-hover: #4a90e2;
+      --blue: #90cdf4;
+      --blue-d: #4a90e2;
+      --text: #ccc;
+      --active: white;
     }
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: 'Exo 2', Arial, sans-serif;
       height: 100vh;
       overflow: hidden;
       position: relative;
-      background: url('https://i.pinimg.com/originals/54/f8/e3/54f8e332b488dfdb2d3cc2efce8a536a.gif') no-repeat center center fixed;
-      background-size: cover;
+      background: #04080f;
       font-size: 16px;
       line-height: 1.5;
+      color: #f0f0f0;
     }
-    body::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: linear-gradient(to right, rgba(9,32,63,0.7), rgba(83,120,149,0.7));
-      z-index: 0;
+    body.bangla { font-family: 'Noto Serif Bengali', Arial, sans-serif; }
+
+    /* ── BACKGROUND LAYERS ── */
+    #bgGif {
+      position: fixed; inset: 0; z-index: 0;
+      background: url('https://i.pinimg.com/originals/54/f8/e3/54f8e332b488dfdb2d3cc2efce8a536a.gif') no-repeat center center fixed;
+      background-size: cover;
+      opacity: 0.15;
     }
-    body.bangla {
-      font-family: 'Noto Serif Bengali', Arial, sans-serif;
+    #bgOver {
+      position: fixed; inset: 0; z-index: 0;
+      background: linear-gradient(to right, rgba(9,32,63,0.88), rgba(5,20,45,0.85));
     }
+    #pCanvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+    /* Speed lines */
+    .slines { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+    .sline {
+      position: absolute; height: 1px;
+      background: linear-gradient(to right, transparent, rgba(144,205,244,0.3), transparent);
+      animation: sRush linear infinite; opacity: 0;
+    }
+    @keyframes sRush {
+      0%  { left:-60%; width:35%; opacity:0; }
+      8%  { opacity:.9; }
+      85% { opacity:.4; }
+      100%{ left:120%; width:60%; opacity:0; }
+    }
+
+    /* ── WRAPPER ── */
     .wrapper {
       display: flex;
       height: 100%;
       position: relative;
       z-index: 1;
     }
+
+    /* ── NAV ── */
     nav {
-      width: 220px;
+      width: 228px;
+      min-width: 228px;
       background: var(--nav-bg);
-      color: var(--nav-text-color);
+      backdrop-filter: blur(14px);
+      border-right: 1px solid rgba(144,205,244,0.12);
+      color: var(--text);
       display: flex;
       flex-direction: column;
-      padding: 1rem;
-      z-index: 1;
+      padding: 1.2rem 1rem;
+      z-index: 2;
+      overflow-y: auto;
     }
+    nav::-webkit-scrollbar { width: 3px; }
+    nav::-webkit-scrollbar-thumb { background: rgba(144,205,244,0.2); border-radius: 2px; }
+
     nav .logo {
       font-size: 2rem;
       text-align: center;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.3rem;
+      filter: drop-shadow(0 0 10px var(--blue-d));
+      animation: logoPulse 2.5s ease-in-out infinite;
     }
+    @keyframes logoPulse { 0%,100%{transform:scale(1);}50%{transform:scale(1.1);} }
+
     nav h2 {
       text-align: center;
       margin: 0 0 1rem;
-      font-weight: normal;
-      font-size: 1.2rem;
+      font-weight: 400;
+      font-size: 0.9rem;
+      color: var(--blue);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-family: 'Share Tech Mono', monospace;
     }
+
     nav a {
-      color: var(--nav-text-color);
+      color: var(--text);
       text-decoration: none;
-      padding: 0.5rem 0.75rem;
-      border-radius: 4px;
-      margin-bottom: 0.3rem;
-      transition: background-color 0.3s, color 0.3s;
-      font-size: 0.95rem;
+      padding: 0.45rem 0.75rem;
+      border-radius: 5px;
+      margin-bottom: 0.25rem;
+      transition: all 0.25s;
+      font-size: 0.88rem;
+      border: 1px solid transparent;
     }
     nav a.active,
     nav a:hover {
-      background: var(--nav-hover-bg);
-      color: var(--nav-active-color);
-      font-weight: bold;
+      background: var(--nav-hover);
+      color: var(--active);
+      font-weight: 700;
+      border-color: transparent;
+      transform: translateX(3px);
     }
-    nav .nav-divider {
+    nav a.active { transform: none; }
+
+    .nav-divider {
       border: none;
-      border-top: 1px solid rgba(255,255,255,0.15);
-      margin: 0.5rem 0;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      margin: 0.6rem 0;
     }
+
     nav a.portal-link {
-      color: #90cdf4;
-      border: 1px solid rgba(144, 205, 244, 0.3);
-      margin-top: 0.2rem;
+      color: var(--blue);
+      border: 1px solid rgba(144,205,244,0.28);
+      background: rgba(144,205,244,0.05);
+      margin-top: 0.1rem;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.82rem;
     }
     nav a.portal-link:hover {
-      background: rgba(74, 144, 226, 0.4);
-      border-color: #90cdf4;
+      background: rgba(74,144,226,0.35);
+      border-color: var(--blue);
       color: white;
+      transform: translateX(3px);
     }
+
+    /* nav section labels */
+    .nav-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(144,205,244,0.4);
+      padding: 0.3rem 0.75rem 0.1rem;
+      margin-top: 0.3rem;
+    }
+
+    /* ── MAIN ── */
     main {
       flex-grow: 1;
       display: flex;
       justify-content: flex-start;
       align-items: flex-start;
-      gap: 2rem;
-      padding: 2rem;
+      gap: 1.75rem;
+      padding: 1.75rem;
       position: relative;
       z-index: 1;
+      overflow: hidden;
     }
+
+    /* ── LEFT COLUMN ── */
     #descriptionSection {
       display: flex;
       flex-direction: column;
       gap: 1rem;
-      max-width: 360px;
-      min-width: 360px;
+      width: 340px;
+      min-width: 340px;
+      animation: fadeUp 0.6s ease both;
     }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);} }
+
     #descriptionBox {
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(5,14,32,0.82);
       padding: 1.5rem;
-      border-radius: 12px;
+      border-radius: 14px;
       color: #f0f0f0;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-      transform: translateY(-10px);
-      min-height: 300px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.5), 0 0 0 1px rgba(144,205,244,0.14);
+      backdrop-filter: blur(10px);
     }
     #descriptionBox h1 {
       margin-top: 0;
-      font-size: 1.4rem;
-      color: #90cdf4;
+      font-size: 1.15rem;
+      color: var(--blue);
+      font-weight: 700;
+      text-shadow: 0 0 18px rgba(144,205,244,0.4);
+      line-height: 1.4;
+      margin-bottom: 0.6rem;
     }
+    #descriptionBox p { font-size: 0.88rem; opacity: 0.78; margin-bottom: 0.75rem; }
+
     #descriptionBox ul {
-      padding-left: 1.2rem;
-      margin-top: 0.5rem;
-    }
-    #descriptionBox li {
-      line-height: 1.6;
-      font-size: 0.95rem;
-    }
-    #converterBox {
-      background: rgba(0, 0, 0, 0.7);
-      padding: 1.2rem;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-      color: #f0f0f0;
-      min-height: 60px;
-      width: 100%;
-      transition: min-height 0.3s ease;
-    }
-    #converterBox[open] {
-      min-height: 250px;
-    }
-    #converterBox summary {
-      font-weight: bold;
-      cursor: pointer;
-      margin-bottom: 1rem;
-      font-size: 1.1rem;
-      color: #90cdf4;
+      padding-left: 0;
+      margin-top: 0.4rem;
       list-style: none;
     }
-    #converterBox summary::-webkit-details-marker {
-      display: none;
-    }
-    #converterBox div {
-      opacity: 0;
-      transform: translateY(-10px);
-      transition: opacity 0.3s ease, transform 0.3s ease;
-    }
-    #converterBox[open] div {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    #converterBox label {
-      display: block;
-      margin-top: 0.6rem;
-      margin-bottom: 0.2rem;
-      font-size: 0.95rem;
-    }
-    #converterBox .inline-group {
+    #descriptionBox li {
       display: flex;
       align-items: center;
-      gap: 1rem;
-      min-height: 2rem;
+      gap: 0.5rem;
+      line-height: 1.55;
+      font-size: 0.86rem;
+      padding: 0.22rem 0;
+      border-bottom: 1px solid rgba(144,205,244,0.07);
     }
-    #converterBox input[type="number"] {
+    #descriptionBox li::before {
+      content: '›';
+      color: var(--blue);
+      font-weight: 700;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    /* ── CONVERTER BOX ── */
+    #converterBox {
+      background: rgba(5,14,32,0.82);
+      padding: 1.1rem 1.2rem;
+      border-radius: 14px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.4), 0 0 0 1px rgba(144,205,244,0.14);
+      backdrop-filter: blur(10px);
+      color: #f0f0f0;
       width: 100%;
-      max-width: 150px;
-      padding: 0.4rem;
+    }
+    #converterBox summary {
+      font-weight: 700;
+      cursor: pointer;
       font-size: 0.9rem;
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: var(--blue);
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Share Tech Mono', monospace;
+      letter-spacing: 0.04em;
+      user-select: none;
+    }
+    #converterBox summary::-webkit-details-marker { display: none; }
+    #converterBox summary::after {
+      content: '▾';
+      margin-left: auto;
+      transition: transform 0.25s;
+    }
+    #converterBox[open] summary::after { transform: rotate(180deg); }
+
+    #converterBox > div {
+      opacity: 0;
+      transform: translateY(-8px);
+      transition: opacity 0.28s ease, transform 0.28s ease;
+      padding-top: 0.75rem;
+    }
+    #converterBox[open] > div { opacity: 1; transform: translateY(0); }
+
+    #converterBox label {
+      display: block;
+      margin-top: 0.55rem;
+      margin-bottom: 0.2rem;
+      font-size: 0.82rem;
+      color: rgba(240,240,240,0.75);
+    }
+
+    .inline-group {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      min-height: 2rem;
+      font-size: 0.85rem;
+    }
+    .result-val {
+      font-family: 'Share Tech Mono', monospace;
+      color: var(--blue);
+      font-size: 0.88rem;
+    }
+
+    #converterBox input[type="number"] {
+      width: 110px;
+      padding: 0.35rem 0.5rem;
+      font-size: 0.88rem;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.2);
       color: white;
-      border-radius: 4px;
+      border-radius: 5px;
+      font-family: 'Share Tech Mono', monospace;
     }
     #converterBox input[type="number"]:focus {
       outline: none;
-      border-color: #4a90e2;
-      box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.5);
+      border-color: var(--blue-d);
+      box-shadow: 0 0 0 2px rgba(74,144,226,0.35);
     }
-    #converterBox p {
-      margin-top: 0.8rem;
-      font-size: 0.95rem;
-    }
+    #converterBox input[type="checkbox"] { accent-color: var(--blue-d); }
+
+    /* ── RIGHT INFO BOX ── */
     #unitInfoBox {
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(5,14,32,0.82);
       color: #f0f0f0;
       padding: 2rem;
       border-radius: 14px;
-      max-width: 1000px;
-      font-size: 0.95rem;
-      line-height: 1.7;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.35);
+      flex: 1;
+      font-size: 0.9rem;
+      line-height: 1.75;
+      box-shadow: 0 0 30px rgba(0,0,0,0.4), 0 0 0 1px rgba(144,205,244,0.14);
       overflow-y: auto;
-      max-height: 90vh;
-      min-width: 600px;
+      max-height: calc(100vh - 3.5rem);
+      backdrop-filter: blur(10px);
+      animation: fadeUp 0.65s ease 0.1s both;
     }
+    #unitInfoBox::-webkit-scrollbar { width: 4px; }
+    #unitInfoBox::-webkit-scrollbar-thumb { background: rgba(144,205,244,0.25); border-radius: 2px; }
+
     #unitInfoBox h2 {
       margin-top: 0;
-      color: #90cdf4;
-      font-size: 1.5rem;
+      color: var(--blue);
+      font-size: 1.3rem;
+      font-weight: 700;
+      text-shadow: 0 0 18px rgba(144,205,244,0.35);
+      margin-bottom: 0.5rem;
     }
     #unitInfoBox h3 {
-      margin-top: 1.5rem;
+      margin-top: 1.6rem;
       color: #aad5ff;
-      font-size: 1.2rem;
+      font-size: 1rem;
+      font-weight: 700;
+      font-style: italic;
+      border-left: 3px solid rgba(144,205,244,0.4);
+      padding-left: 0.65rem;
     }
+    #unitInfoBox h4 {
+      color: rgba(144,205,244,0.8);
+      font-size: 0.88rem;
+      margin: 1.2rem 0 0.5rem;
+      font-family: 'Share Tech Mono', monospace;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    #unitInfoBox p { margin-bottom: 0.6rem; opacity: 0.85; }
+    #unitInfoBox em { color: #aad5ff; font-style: normal; font-weight: 600; }
+
+    #unitInfoBox ul { padding-left: 0; list-style: none; margin: 0.5rem 0; }
+    #unitInfoBox li {
+      padding: 0.35rem 0.65rem;
+      border-radius: 5px;
+      border-left: 2px solid rgba(144,205,244,0.3);
+      margin-bottom: 0.35rem;
+      background: rgba(144,205,244,0.04);
+      font-size: 0.88rem;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    #unitInfoBox li:hover {
+      border-left-color: var(--blue);
+      background: rgba(144,205,244,0.09);
+    }
+    #unitInfoBox hr {
+      border: none;
+      border-top: 1px solid rgba(144,205,244,0.15);
+      margin: 1.2rem 0;
+    }
+    #unitInfoBox strong { color: var(--blue); }
+
+    /* ── QR SIDEBAR ── */
     #sidebarRight {
       position: absolute;
-      bottom: 20px;
-      right: 20px;
+      bottom: 18px;
+      right: 18px;
       z-index: 5;
     }
     #qrPlaceholder {
-      width: 110px;
-      height: 110px;
+      width: 106px;
+      height: 106px;
       background: white;
-      padding: 6px;
-      border-radius: 6px;
-      box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+      padding: 5px;
+      border-radius: 8px;
+      box-shadow: 0 0 16px rgba(74,144,226,0.3), 0 0 0 1px rgba(144,205,244,0.2);
     }
-    #reviewButton,
-    #aboutButton {
+
+    /* ── FIXED BUTTONS ── */
+    #reviewButton, #aboutButton {
       position: fixed;
-      right: 20px;
-      background: rgba(0, 0, 0, 0.75);
+      right: 18px;
+      background: rgba(5,14,32,0.85);
       color: white;
-      padding: 0.6rem 1.2rem;
-      border-radius: 12px;
-      font-size: 1rem;
-      font-weight: bold;
+      padding: 0.5rem 1.1rem;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 700;
       text-decoration: none;
       z-index: 1000;
-      transition: background 0.3s ease;
+      transition: all 0.25s;
+      border: 1px solid rgba(144,205,244,0.22);
+      backdrop-filter: blur(8px);
+      font-family: 'Share Tech Mono', monospace;
+      letter-spacing: 0.05em;
     }
-    #reviewButton {
-      top: 20px;
+    #reviewButton { top: 18px; }
+    #aboutButton  { top: 62px; }
+    #reviewButton:hover, #aboutButton:hover {
+      background: rgba(74,144,226,0.35);
+      border-color: var(--blue);
+      color: var(--blue);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 18px rgba(74,144,226,0.3);
     }
-    #aboutButton {
-      top: 70px;
-    }
-    #reviewButton:hover,
-    #aboutButton:hover {
-      background: rgba(0, 0, 0, 0.9);
-    }
+
+    /* ── LANGUAGE TOGGLE ── */
     #languageToggle {
       position: fixed;
-      top: 120px;
-      right: 20px;
-      background: rgba(0, 0, 0, 0.75);
+      top: 108px;
+      right: 18px;
+      background: rgba(5,14,32,0.85);
       color: white;
-      padding: 0.8rem 1.5rem;
-      border: none;
-      border-radius: 25px;
-      font-size: 1rem;
-      font-weight: bold;
+      padding: 0.55rem 1.1rem;
+      border: 1px solid rgba(144,205,244,0.28);
+      border-radius: 22px;
+      font-size: 0.82rem;
+      font-weight: 700;
       cursor: pointer;
       z-index: 1000;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      transition: all 0.25s;
+      font-family: 'Share Tech Mono', monospace;
+      backdrop-filter: blur(8px);
+      letter-spacing: 0.04em;
     }
-    #languageToggle:active {
-      transform: translateY(0);
+    #languageToggle:hover {
+      background: rgba(74,144,226,0.35);
+      border-color: var(--blue);
+      transform: scale(1.04);
     }
-    .lang-en, .lang-bn {
-      transition: opacity 0.3s ease;
-    }
-    .hidden {
-      display: none !important;
-    }
+
+    .hidden { display: none !important; }
+
+    /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
-      main {
-        flex-direction: column;
-        align-items: center;
-        gap: 1rem;
-      }
-      #descriptionSection {
-        max-width: 90vw;
-        min-width: auto;
-      }
-      #unitInfoBox {
-        max-width: 90vw;
-        min-width: auto;
-      }
-      #sidebarRight {
-        display: none;
-      }
-      #languageToggle {
-        top: 150px;
-        right: 10px;
-        padding: 0.6rem 1.2rem;
-        font-size: 0.9rem;
-      }
+      main { flex-direction: column; align-items: center; gap: 1rem; overflow-y: auto; }
+      #descriptionSection { width: 90vw; min-width: auto; }
+      #unitInfoBox { max-height: none; min-width: auto; }
+      #sidebarRight { display: none; }
+      #languageToggle { top: 140px; right: 10px; font-size: 0.76rem; }
+      #reviewButton, #aboutButton { font-size: 0.78rem; padding: 0.4rem 0.8rem; }
     }
   </style>
 </head>
 <body>
+  <!-- BG LAYERS -->
+  <div id="bgGif"></div>
+  <div id="bgOver"></div>
+  <canvas id="pCanvas"></canvas>
+  <div class="slines" id="slines"></div>
+
   <button id="languageToggle">বাংলা / English</button>
+
   <div class="wrapper">
+    <!-- NAV -->
     <nav role="navigation">
       <div class="logo">⚛</div>
       <h2>
         <span class="lang-en">• Simulations •</span>
         <span class="lang-bn hidden">• সিমুলেশন •</span>
       </h2>
+
+      <div class="nav-label lang-en">Navigation</div>
+      <div class="nav-label lang-bn hidden">নেভিগেশন</div>
+
       <a href="index.html" class="active">
-        <span class="lang-en">Main Menu</span>
-        <span class="lang-bn hidden">প্রধান মেনু</span>
+        <span class="lang-en">🏠 Main Menu</span>
+        <span class="lang-bn hidden">🏠 প্রধান মেনু</span>
       </a>
+
+      <div class="nav-label lang-en" style="margin-top:.5rem;">Simulations</div>
+      <div class="nav-label lang-bn hidden" style="margin-top:.5rem;">সিমুলেশনসমূহ</div>
+
       <a href="projectile.html">
         <span class="lang-en">Projectile Motion</span>
         <span class="lang-bn hidden">প্রাসের গতি</span>
@@ -355,15 +507,26 @@
       <a href="decelerated.html">
         <span class="lang-en">Decelerated Motion</span>
         <span class="lang-bn hidden">মন্দিত গতি</span>
-      
       </a>
+
+      <div class="nav-label lang-en" style="margin-top:.5rem;">More</div>
+      <div class="nav-label lang-bn hidden" style="margin-top:.5rem;">আরও</div>
+
+      <a href="https://antidominator.github.io/fair-project/">
+        <span class="lang-en">More from us…</span>
+        <span class="lang-bn hidden">আমাদের থেকে আরও…</span>
+      </a>
+
       <hr class="nav-divider">
       <a href="https://stounchvicinity65.github.io/portal/" class="portal-link">
         <span class="lang-en">🏠 Back to Portal</span>
         <span class="lang-bn hidden">🏠 পোর্টালে ফিরুন</span>
       </a>
     </nav>
+
+    <!-- MAIN CONTENT -->
     <main>
+      <!-- LEFT -->
       <div id="descriptionSection">
         <div id="descriptionBox">
           <h1>
@@ -386,10 +549,12 @@
             <li><span class="lang-en">Decelerated Motion</span><span class="lang-bn hidden">মন্দিত গতি</span></li>
           </ul>
         </div>
+
+        <!-- CONVERTER -->
         <details id="converterBox">
           <summary>
-            <span class="lang-en">🧮 Unit Converter (Screen → Real Units)</span>
-            <span class="lang-bn hidden">🧮 একক রূপান্তরকারী (স্ক্রিন → বাস্তব একক)</span>
+            <span class="lang-en">🧮 Unit Converter (Screen → Real)</span>
+            <span class="lang-bn hidden">🧮 একক রূপান্তরকারী (স্ক্রিন → বাস্তব)</span>
           </summary>
           <div>
             <label for="fpsInput">
@@ -397,47 +562,52 @@
               <span class="lang-bn hidden">মনিটর রিফ্রেশ রেট (Hz):</span>
             </label>
             <input type="number" id="fpsInput" value="60" min="1" />
-            <label>
+            <label style="margin-top:.4rem;">
               <input type="checkbox" id="autoFPS">
-              <span class="lang-en">Auto-detect FPS</span>
-              <span class="lang-bn hidden">স্বয়ংক্রিয় FPS সনাক্তকরণ</span>
+              <span class="lang-en"> Auto-detect FPS</span>
+              <span class="lang-bn hidden"> স্বয়ংক্রিয় FPS সনাক্তকরণ</span>
             </label>
+
             <label for="pxPerFrameInput">
               <span class="lang-en">Speed (px/frame):</span>
               <span class="lang-bn hidden">গতি (px/frame):</span>
             </label>
-            <p class="inline-group">
+            <div class="inline-group">
               <input type="number" id="pxPerFrameInput" value="10" />
               <span>
-                <span class="lang-en">Speed ≈ <span id="speedResult">0</span> m/s</span>
-                <span class="lang-bn hidden">গতি ≈ <span id="speedResult2">0</span> m/s</span>
+                <span class="lang-en">≈ <span class="result-val" id="speedResult">0</span> m/s</span>
+                <span class="lang-bn hidden">≈ <span class="result-val" id="speedResult2">0</span> m/s</span>
               </span>
-            </p>
+            </div>
+
             <label for="accelInput">
               <span class="lang-en">Acceleration (px/frame²):</span>
               <span class="lang-bn hidden">ত্বরণ (px/frame²):</span>
             </label>
-            <p class="inline-group">
+            <div class="inline-group">
               <input type="number" id="accelInput" value="1" />
               <span>
-                <span class="lang-en">Acceleration ≈ <span id="accelResult">0</span> m/s²</span>
-                <span class="lang-bn hidden">ত্বরণ ≈ <span id="accelResult2">0</span> m/s²</span>
+                <span class="lang-en">≈ <span class="result-val" id="accelResult">0</span> m/s²</span>
+                <span class="lang-bn hidden">≈ <span class="result-val" id="accelResult2">0</span> m/s²</span>
               </span>
-            </p>
+            </div>
+
             <label for="radInput">
               <span class="lang-en">Angular Speed (rad/frame):</span>
               <span class="lang-bn hidden">কৌণিক গতি (rad/frame):</span>
             </label>
-            <p class="inline-group">
+            <div class="inline-group">
               <input type="number" id="radInput" value="0.1" />
               <span>
-                <span class="lang-en">Angular Speed ≈ <span id="radResult">0</span> rad/s</span>
-                <span class="lang-bn hidden">কৌণিক গতি ≈ <span id="radResult2">0</span> rad/s</span>
+                <span class="lang-en">≈ <span class="result-val" id="radResult">0</span> rad/s</span>
+                <span class="lang-bn hidden">≈ <span class="result-val" id="radResult2">0</span> rad/s</span>
               </span>
-            </p>
+            </div>
           </div>
         </details>
       </div>
+
+      <!-- RIGHT INFO BOX -->
       <div id="unitInfoBox">
         <h2>
           <span class="lang-en">📏 Understanding Units in Simulations</span>
@@ -448,177 +618,214 @@
           <span class="lang-bn hidden">🔧 এই সিমুলেশনে ব্যবহৃত এককসমূহ</span>
         </h3>
         <p class="lang-en">In these simulations, we use a scaled representation to bridge screen-based animations with real-world physics concepts. Here's how it works:</p>
-        <p class="lang-bn hidden">এই সিমুলেশনগুলিতে, আমরা স্ক্রিন-ভিত্তিক অ্যানিমেশনগুলিকে বাস্তব-বিশ্বের পদার্থবিজ্ঞানের ধারণার সাথে সংযুক্ত করার জন্য একটি স্কেলড উপস্থাপনা ব্যবহার করি। এটি যেভাবে কাজ করে:</p>
+        <p class="lang-bn hidden">এই সিমুলেশনগুলিতে, আমরা স্ক্রিন-ভিত্তিক অ্যানিমেশনগুলিকে বাস্তব-বিশ্বের পদার্থবিজ্ঞানের ধারণার সাথে সংযুক্ত করার জন্য একটি স্কেলড উপস্থাপনা ব্যবহার করি।</p>
         <ul>
           <li>
             <strong><span class="lang-en">Distance:</span><span class="lang-bn hidden">দূরত্ব:</span></strong>
-            <span class="lang-en">On screen, distance is measured in pixels (px). For real-world comparison, we've set a scale where <strong>1 meter (m) in the simulation represents 0.00026 meters in real-world scale</strong>. This specific scale is chosen because p5.js animations are fundamentally updated based on pixels, and the actual physical size of a pixel varies across displays. We based our conversion on CSS information, where 1 CSS pixel is defined as 1/96th of a CSS inch, and one ninety-sixth (1/96th) of a CSS inch is approximately 0.00026 meters.</span>
-            <span class="lang-bn hidden">স্ক্রিনে, দূরত্ব পিক্সেল (px) এ পরিমাপ করা হয়। বাস্তব-বিশ্বের তুলনার জন্য, আমরা এমন একটি স্কেল সেট করেছি যেখানে <strong>সিমুলেশনে ১ মিটার (m) বাস্তব-বিশ্বের স্কেলে ০.০০০২৬ মিটারকে প্রতিনিধিত্ব করে</strong>।</span>
+            <span class="lang-en"> Pixels (px) on screen. Scale: <strong>1 px ≈ 0.00026 m</strong> (based on CSS definition — 1 CSS px = 1/96 inch).</span>
+            <span class="lang-bn hidden"> স্ক্রিনে পিক্সেল (px)। স্কেল: <strong>১ px ≈ ০.০০০২৬ m</strong>।</span>
           </li>
           <li>
             <strong><span class="lang-en">Time:</span><span class="lang-bn hidden">সময়:</span></strong>
-            <span class="lang-en">Instead of seconds (s), time is measured in <strong>frames (frame)</strong>. This is because p5.js and most animation libraries update simulations per frame, making time handling simpler for real-time animation logic.</span>
-            <span class="lang-bn hidden">সেকেন্ড (s) এর পরিবর্তে, সময় <strong>ফ্রেম (frame)</strong> এ পরিমাপ করা হয়।</span>
+            <span class="lang-en"> <strong>Frames</strong> instead of seconds — p5.js updates per frame, simplifying animation logic. At 60 FPS, 1 frame = 1/60 s.</span>
+            <span class="lang-bn hidden"> সেকেন্ডের পরিবর্তে <strong>ফ্রেম</strong> — p5.js প্রতি ফ্রেমে আপডেট করে। ৬০ FPS-এ ১ ফ্রেম = ১/৬০ সেকেন্ড।</span>
           </li>
           <li>
             <strong><span class="lang-en">Velocity:</span><span class="lang-bn hidden">বেগ:</span></strong>
-            <span class="lang-en">Represented as px/frame on screen.</span>
-            <span class="lang-bn hidden">স্ক্রিনে px/frame হিসাবে উপস্থাপিত।</span>
+            <span class="lang-en"> px/frame on screen → m/s in real world.</span>
+            <span class="lang-bn hidden"> স্ক্রিনে px/frame → বাস্তবে m/s।</span>
           </li>
           <li>
             <strong><span class="lang-en">Acceleration:</span><span class="lang-bn hidden">ত্বরণ:</span></strong>
-            <span class="lang-en">Represented as px/frame² on screen.</span>
-            <span class="lang-bn hidden">স্ক্রিনে px/frame² হিসাবে উপস্থাপিত।</span>
+            <span class="lang-en"> px/frame² on screen → m/s² in real world.</span>
+            <span class="lang-bn hidden"> স্ক্রিনে px/frame² → বাস্তবে m/s²।</span>
           </li>
           <li>
             <strong><span class="lang-en">Angular Speed:</span><span class="lang-bn hidden">কৌণিক বেগ:</span></strong>
-            <span class="lang-en">Represented as rad/frame on screen.</span>
-            <span class="lang-bn hidden">স্ক্রিনে rad/frame হিসাবে উপস্থাপিত।</span>
+            <span class="lang-en"> rad/frame on screen → rad/s in real world.</span>
+            <span class="lang-bn hidden"> স্ক্রিনে rad/frame → বাস্তবে rad/s।</span>
           </li>
           <li>
             <strong><span class="lang-en">Angle:</span><span class="lang-bn hidden">কোণ:</span></strong>
-            <span class="lang-en">Radians or Degrees — <strong>remains the same</strong>.</span>
-            <span class="lang-bn hidden">রেডিয়ান বা ডিগ্রি — <strong>একই থাকে</strong>।</span>
+            <span class="lang-en"> Radians or Degrees — <strong>remains the same</strong>.</span>
+            <span class="lang-bn hidden"> রেডিয়ান বা ডিগ্রি — <strong>একই থাকে</strong>।</span>
           </li>
           <li>
             <strong><span class="lang-en">Particle Count:</span><span class="lang-bn hidden">কণার সংখ্যা:</span></strong>
-            <span class="lang-en">Unchanged (just a number).</span>
-            <span class="lang-bn hidden">অপরিবর্তিত (শুধুমাত্র একটি সংখ্যা)।</span>
+            <span class="lang-en"> Unchanged (dimensionless number).</span>
+            <span class="lang-bn hidden"> অপরিবর্তিত (মাত্রাহীন সংখ্যা)।</span>
           </li>
         </ul>
-        <p class="lang-en">This scaled system allows us to maintain accurate visual logic while making the underlying animation math easier. It helps learners focus more on physical <em>concepts</em> rather than complex unit conversions in a visual environment.</p>
-        <p class="lang-bn hidden">এই স্কেলড সিস্টেমটি ভিজ্যুয়াল লজিককে সঠিক রেখে অ্যানিমেশনের গণিতকে সহজ করে তোলে।</p>
+
+        <p class="lang-en">This scaled system maintains accurate visual logic while keeping the animation math simple — learners focus on physical <em>concepts</em>, not unit gymnastics.</p>
+        <p class="lang-bn hidden">এই স্কেলড সিস্টেমটি ভিজ্যুয়াল যুক্তি নির্ভুল রাখে এবং শিক্ষার্থীরা পদার্থবিজ্ঞানের <em>ধারণাগুলিতে</em> মনোযোগ দিতে পারে।</p>
+
         <h3>
           <span class="lang-en">Why the Scale Factor?</span>
           <span class="lang-bn hidden">স্কেল ফ্যাক্টর কেন?</span>
         </h3>
-        <p class="lang-en">Most screens use pixels to display content, and the physical size of a pixel can vary significantly between devices. Since we're working within a computer screen for visual representation, measuring positions and distances in <strong>pixels</strong> is logical. To connect these screen pixels to real-world SI units (like meters), a specific scale factor is applied.</p>
-        <p class="lang-bn hidden">বেশিরভাগ স্ক্রিন বিষয়বস্তু প্রদর্শনের জন্য পিক্সেল ব্যবহার করে।</p>
+        <p class="lang-en">Pixel physical size varies across devices. We anchor to the CSS standard: 1 CSS inch = 96 px, 1 inch ≈ 0.0254 m → 1 px ≈ 0.0254/96 ≈ <strong>0.00026 m</strong>. This gives a consistent, device-independent scale.</p>
+        <p class="lang-bn hidden">পিক্সেলের ভৌত আকার ডিভাইসভেদে পরিবর্তিত হয়। আমরা CSS মান ব্যবহার করি: ১ CSS ইঞ্চি = ৯৬ px → ১ px ≈ <strong>০.০০০২৬ m</strong>।</p>
+
         <h3>
           <span class="lang-en">Why Frames Instead of Seconds?</span>
           <span class="lang-bn hidden">সেকেন্ডের পরিবর্তে ফ্রেম কেন?</span>
         </h3>
-        <p class="lang-en">In p5.js and most animation libraries, simulations are updated per frame. Using <strong>frames</strong> (frame) makes time handling simpler for animation logic. If your simulation runs at 60 frames per second (FPS), then each frame represents 1/60th of a second.</p>
-        <p class="lang-bn hidden">p5.js এবং বেশিরভাগ অ্যানিমেশন লাইব্রেরিতে, সিমুলেশনগুলি প্রতি ফ্রেমে আপডেট হয়।</p>
+        <p class="lang-en">p5.js and most animation engines update once per frame. Using frames as the time unit avoids division at every step. At 60 FPS: 1 frame = 0.0167 s. The unit converter above handles the translation to SI units for you.</p>
+        <p class="lang-bn hidden">p5.js প্রতি ফ্রেমে একবার আপডেট করে। ফ্রেমকে সময়ের একক হিসেবে ব্যবহার করলে প্রতিটি ধাপে ভাগ এড়ানো যায়। ৬০ FPS-এ: ১ ফ্রেম = ০.০১৬৭ সেকেন্ড।</p>
+
         <h3>
           <span class="lang-en">Final Note</span>
           <span class="lang-bn hidden">শেষ কথা</span>
         </h3>
-        <p class="lang-en">While the unit converter displays results in meters per second (m/s), meters per second squared (m/s²), and radians per second (rad/s) for your convenience and understanding of SI units, it's important to remember that these values in the simulation actually represent <strong>pixels per frame (px/frame)</strong>, <strong>pixels per frame squared (px/frame²)</strong>, and <strong>radians per frame (rad/frame)</strong> respectively.</p>
-        <p class="lang-bn hidden">যদিও ইউনিট কনভার্টারটি আপনার সুবিধার জন্য ফলাফল m/s, m/s² এবং rad/s এ প্রদর্শন করে, তবে মনে রাখা গুরুত্বপূর্ণ যে সিমুলেশনের এই মানগুলি আসলে px/frame, px/frame² এবং rad/frame কে প্রতিনিধিত্ব করে।</p>
+        <p class="lang-en">The unit converter shows results in m/s, m/s², and rad/s for SI reference — but inside the simulation these are actually <strong>px/frame</strong>, <strong>px/frame²</strong>, and <strong>rad/frame</strong>. The physics relationships are identical; only the units differ.</p>
+        <p class="lang-bn hidden">ইউনিট কনভার্টার SI রেফারেন্সের জন্য m/s, m/s² এবং rad/s দেখায় — কিন্তু সিমুলেশনের ভেতরে এগুলো আসলে <strong>px/frame</strong>, <strong>px/frame²</strong> এবং <strong>rad/frame</strong>।</p>
+
         <hr>
         <h4>
-          <span class="lang-en">Here's a quick summary of the unit conversions used:</span>
-          <span class="lang-bn hidden">ব্যবহৃত একক রূপান্তরের একটি দ্রুত সংক্ষিপ্তসার:</span>
+          <span class="lang-en">Quick Conversion Summary</span>
+          <span class="lang-bn hidden">দ্রুত রূপান্তর সারসংক্ষেপ</span>
         </h4>
         <ul>
-          <li><strong><span class="lang-en">Distance:</span><span class="lang-bn hidden">দূরত্ব:</span></strong> <span class="lang-en">Meters (m) → Pixels (px)</span><span class="lang-bn hidden">মিটার (m) → পিক্সেল (px)</span></li>
-          <li><strong><span class="lang-en">Time:</span><span class="lang-bn hidden">সময়:</span></strong> <span class="lang-en">Seconds (s) → Frames (frame)</span><span class="lang-bn hidden">সেকেন্ড (s) → ফ্রেম (frame)</span></li>
-          <li><strong><span class="lang-en">Velocity:</span><span class="lang-bn hidden">বেগ:</span></strong> <span class="lang-en">m/s → px/frame</span><span class="lang-bn hidden">m/s → px/frame</span></li>
-          <li><strong><span class="lang-en">Acceleration:</span><span class="lang-bn hidden">ত্বরণ:</span></strong> <span class="lang-en">m/s² → px/frame²</span><span class="lang-bn hidden">m/s² → px/frame²</span></li>
-          <li><strong><span class="lang-en">Angular Speed:</span><span class="lang-bn hidden">কৌণিক বেগ:</span></strong> <span class="lang-en">rad/s → rad/frame</span><span class="lang-bn hidden">rad/s → rad/frame</span></li>
-          <li><strong><span class="lang-en">Angle:</span><span class="lang-bn hidden">কোণ:</span></strong> <span class="lang-en">Radians or Degrees — remains the same</span><span class="lang-bn hidden">রেডিয়ান বা ডিগ্রি — অপরিবর্তিত থাকে</span></li>
-          <li><strong><span class="lang-en">Particle Count:</span><span class="lang-bn hidden">কণার সংখ্যা:</span></strong> <span class="lang-en">Unchanged (just a number)</span><span class="lang-bn hidden">অপরিবর্তিত (শুধু একটি সংখ্যা)</span></li>
+          <li><strong><span class="lang-en">Distance:</span><span class="lang-bn hidden">দূরত্ব:</span></strong><span class="lang-en"> m → px</span><span class="lang-bn hidden"> m → px</span></li>
+          <li><strong><span class="lang-en">Time:</span><span class="lang-bn hidden">সময়:</span></strong><span class="lang-en"> s → frame</span><span class="lang-bn hidden"> s → frame</span></li>
+          <li><strong><span class="lang-en">Velocity:</span><span class="lang-bn hidden">বেগ:</span></strong><span class="lang-en"> m/s → px/frame</span><span class="lang-bn hidden"> m/s → px/frame</span></li>
+          <li><strong><span class="lang-en">Acceleration:</span><span class="lang-bn hidden">ত্বরণ:</span></strong><span class="lang-en"> m/s² → px/frame²</span><span class="lang-bn hidden"> m/s² → px/frame²</span></li>
+          <li><strong><span class="lang-en">Angular Speed:</span><span class="lang-bn hidden">কৌণিক বেগ:</span></strong><span class="lang-en"> rad/s → rad/frame</span><span class="lang-bn hidden"> rad/s → rad/frame</span></li>
+          <li><strong><span class="lang-en">Angle:</span><span class="lang-bn hidden">কোণ:</span></strong><span class="lang-en"> rad or ° — unchanged</span><span class="lang-bn hidden"> rad বা ° — অপরিবর্তিত</span></li>
+          <li><strong><span class="lang-en">Particle Count:</span><span class="lang-bn hidden">কণার সংখ্যা:</span></strong><span class="lang-en"> unchanged</span><span class="lang-bn hidden"> অপরিবর্তিত</span></li>
         </ul>
       </div>
     </main>
+
+    <!-- QR -->
     <div id="sidebarRight">
       <div id="qrPlaceholder"></div>
     </div>
+
     <a href="review.html" id="reviewButton">Review</a>
     <a href="aboutus.html" id="aboutButton">About Us</a>
   </div>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   <script>
+    // ── PARTICLES ──
+    const canvas = document.getElementById('pCanvas');
+    const ctx = canvas.getContext('2d');
+    let pts = [];
+    function resize(){ canvas.width=innerWidth; canvas.height=innerHeight; }
+    resize(); window.addEventListener('resize', resize);
+    for(let i=0;i<55;i++) pts.push({
+      x:Math.random()*innerWidth, y:Math.random()*innerHeight,
+      r:Math.random()*1.3+0.3,
+      dx:(Math.random()-.5)*.26, dy:(Math.random()-.5)*.26,
+      a:Math.random()*.38+.07
+    });
+    (function loop(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      pts.forEach(p=>{
+        ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fillStyle=`rgba(144,205,244,${p.a})`; ctx.fill();
+        p.x+=p.dx; p.y+=p.dy;
+        if(p.x<0||p.x>canvas.width) p.dx*=-1;
+        if(p.y<0||p.y>canvas.height) p.dy*=-1;
+      });
+      pts.forEach((a,i)=>pts.slice(i+1).forEach(b=>{
+        const d=Math.hypot(a.x-b.x,a.y-b.y);
+        if(d<85){
+          ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
+          ctx.strokeStyle=`rgba(144,205,244,${.07*(1-d/85)})`;
+          ctx.lineWidth=.5; ctx.stroke();
+        }
+      }));
+      requestAnimationFrame(loop);
+    })();
+
+    // ── SPEED LINES ──
+    const sl = document.getElementById('slines');
+    for(let i=0;i<8;i++){
+      const l=document.createElement('div'); l.className='sline';
+      l.style.top=(8+i*10.5)+'%';
+      l.style.animationDuration=(1.8+Math.random()*2.2)+'s';
+      l.style.animationDelay=(Math.random()*4)+'s';
+      sl.appendChild(l);
+    }
+
+    // ── LANGUAGE ──
     const toggleBtn = document.getElementById("languageToggle");
     let currentLang = "en";
     toggleBtn.addEventListener("click", () => {
-      if (currentLang === "en") {
-        document.querySelectorAll(".lang-en").forEach(el => el.classList.add("hidden"));
-        document.querySelectorAll(".lang-bn").forEach(el => el.classList.remove("hidden"));
+      if(currentLang==="en"){
+        document.querySelectorAll(".lang-en").forEach(el=>el.classList.add("hidden"));
+        document.querySelectorAll(".lang-bn").forEach(el=>el.classList.remove("hidden"));
         document.body.classList.add("bangla");
-        currentLang = "bn";
-        toggleBtn.textContent = "English";
+        currentLang="bn"; toggleBtn.textContent="English";
       } else {
-        document.querySelectorAll(".lang-en").forEach(el => el.classList.remove("hidden"));
-        document.querySelectorAll(".lang-bn").forEach(el => el.classList.add("hidden"));
+        document.querySelectorAll(".lang-en").forEach(el=>el.classList.remove("hidden"));
+        document.querySelectorAll(".lang-bn").forEach(el=>el.classList.add("hidden"));
         document.body.classList.remove("bangla");
-        currentLang = "en";
-        toggleBtn.textContent = "বাংলা";
+        currentLang="en"; toggleBtn.textContent="বাংলা";
       }
       updateConversion();
     });
-    const fpsInput = document.getElementById('fpsInput');
-    const autoFPS = document.getElementById('autoFPS');
-    const pxPerFrameInput = document.getElementById('pxPerFrameInput');
-    const accelInput = document.getElementById('accelInput');
-    const radInput = document.getElementById('radInput');
-    const speedResult = document.getElementById('speedResult');
-    const speedResult2 = document.getElementById('speedResult2');
-    const accelResult = document.getElementById('accelResult');
-    const accelResult2 = document.getElementById('accelResult2');
-    const radResult = document.getElementById('radResult');
-    const radResult2 = document.getElementById('radResult2');
-    let measuredFPS = 60;
-    function measureFPS() {
-      let lastTime = performance.now();
-      let framesCount = 0;
-      function loop() {
-        const currentTime = performance.now();
-        framesCount++;
-        if (currentTime - lastTime >= 1000) {
-          measuredFPS = framesCount;
-          if (autoFPS.checked) {
-            fpsInput.value = measuredFPS;
-            updateConversion();
-          }
-          framesCount = 0;
-          lastTime = currentTime;
+
+    // ── CONVERTER ──
+    const fpsInput=document.getElementById('fpsInput'),
+          autoFPS=document.getElementById('autoFPS'),
+          pxpfInput=document.getElementById('pxPerFrameInput'),
+          accelInput=document.getElementById('accelInput'),
+          radInput=document.getElementById('radInput');
+
+    let measuredFPS=60;
+    function measureFPS(){
+      let last=performance.now(), frames=0;
+      (function loop(){
+        frames++;
+        const now=performance.now();
+        if(now-last>=1000){
+          measuredFPS=frames;
+          if(autoFPS.checked){ fpsInput.value=measuredFPS; updateConversion(); }
+          frames=0; last=now;
         }
         requestAnimationFrame(loop);
-      }
-      requestAnimationFrame(loop);
+      })();
     }
-    function updateConversion() {
-      const fps = parseFloat(fpsInput.value);
-      const pxpf = parseFloat(pxPerFrameInput.value);
-      const pxa = parseFloat(accelInput.value);
-      const radpf = parseFloat(radInput.value);
-      if (isNaN(fps) || isNaN(pxpf) || isNaN(pxa) || isNaN(radpf) || fps <= 0) {
-        speedResult.textContent = 'N/A';
-        speedResult2.textContent = 'N/A';
-        accelResult.textContent = 'N/A';
-        accelResult2.textContent = 'N/A';
-        radResult.textContent = 'N/A';
-        radResult2.textContent = 'N/A';
+
+    function updateConversion(){
+      const fps=parseFloat(fpsInput.value),
+            pxpf=parseFloat(pxpfInput.value),
+            pxa=parseFloat(accelInput.value),
+            radpf=parseFloat(radInput.value);
+      if(isNaN(fps)||isNaN(pxpf)||isNaN(pxa)||isNaN(radpf)||fps<=0){
+        ['speedResult','speedResult2','accelResult','accelResult2','radResult','radResult2']
+          .forEach(id=>document.getElementById(id).textContent='N/A');
         return;
       }
-      const scale = 0.00026;
-      const mps = (pxpf * scale * fps).toFixed(3);
-      const mps2 = (pxa * scale * fps * fps).toFixed(3);
-      const rads = (radpf * fps).toFixed(3);
-      speedResult.textContent = mps;
-      speedResult2.textContent = mps;
-      accelResult.textContent = mps2;
-      accelResult2.textContent = mps2;
-      radResult.textContent = rads;
-      radResult2.textContent = rads;
+      const scale=0.00026;
+      const mps=(pxpf*scale*fps).toFixed(3);
+      const mps2=(pxa*scale*fps*fps).toFixed(3);
+      const rads=(radpf*fps).toFixed(3);
+      document.getElementById('speedResult').textContent=mps;
+      document.getElementById('speedResult2').textContent=mps;
+      document.getElementById('accelResult').textContent=mps2;
+      document.getElementById('accelResult2').textContent=mps2;
+      document.getElementById('radResult').textContent=rads;
+      document.getElementById('radResult2').textContent=rads;
     }
-    [fpsInput, pxPerFrameInput, accelInput, radInput, autoFPS].forEach(el =>
-      el.addEventListener('input', updateConversion)
-    );
+
+    [fpsInput,pxpfInput,accelInput,radInput,autoFPS].forEach(el=>
+      el.addEventListener('input',updateConversion));
     measureFPS();
     updateConversion();
-    new QRCode(document.getElementById("qrPlaceholder"), {
-      text: "https://stounchvicinity65.github.io/INTERACTIVE-MOTIONS/",
-      width: 100,
-      height: 100,
-      colorDark: "#000000",
-      colorLight: "#ffffff",
-      correctLevel: QRCode.CorrectLevel.H
+
+    // ── QR ──
+    new QRCode(document.getElementById("qrPlaceholder"),{
+      text:"https://stounchvicinity65.github.io/INTERACTIVE-MOTIONS/",
+      width:96, height:96,
+      colorDark:"#000000", colorLight:"#ffffff",
+      correctLevel:QRCode.CorrectLevel.H
     });
   </script>
 </body>
 </html>
-
 
