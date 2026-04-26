@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Oscillatory Motion</title>
   <style>
-    /* ... (Keeping your original CSS) ... */
+    /* ... (Keeping your original CSS exactly as it was) ... */
     body { margin: 0; font-family: sans-serif; text-align: center; background: #09203f; color: white; position: relative; min-height: 100vh; }
     body.bangla { font-family: 'Noto Serif Bengali', sans-serif; }
     .back-btn { position: absolute; top: 16px; left: 16px; text-decoration: none; color: #ccc; background: #00000055; padding: 6px 12px; border-radius: 6px; font-size: 14px; z-index: 10; }
@@ -19,6 +19,7 @@
     input:focus { outline: 2px solid #4a90e2; outline-offset: 2px; box-shadow: 0 0 8px rgba(74, 144, 226, 0.7); }
     button { padding: 0.5rem 1.5rem; border: none; background: #2563eb; color: white; border-radius: 5px; cursor: pointer; white-space: nowrap; font-size: 1rem; align-self: center; }
     button:hover { background: #1d4ed8; }
+    canvas { display: block; margin: 1rem auto; max-width: 100%; height: auto; border: 1px solid #ccc; background: #dbeafe; }
     #languageToggle { position: fixed; top: 16px; right: 16px; background: #00000055; color: white; padding: 0.6rem 1.2rem; border: none; border-radius: 6px; font-size: 14px; cursor: pointer; z-index: 10; }
     .hidden { display: none !important; }
   </style>
@@ -35,10 +36,10 @@
 
   <div id="definition">
     <div class="lang-en">
-      <p><strong>Definition:</strong> Oscillatory motion is a type of periodic motion in which an object repeatedly moves back and forth or up and down about a fixed central point, known as the equilibrium position.</p>
+      <p><strong>Definition:</strong> Oscillatory motion is a type of periodic motion in which an object repeatedly moves back and forth or up and down about a fixed central point.</p>
     </div>
     <div class="lang-bn hidden">
-      <p><strong>সংজ্ঞা:</strong> দোলন গতি হলো এক প্রকার পর্যায়বৃত্ত গতি, যেখানে একটি বস্তু একটি নির্দিষ্ট স্থির বিন্দুর (যাকে সাম্যাবস্থান বলা হয়) উভয় পাশে বারবার সামনে-পেছনে বা উপরে-নিচে চলাচল করে।</p>
+      <p><strong>সংজ্ঞা:</strong> দোলন গতি হলো এক প্রকার পর্যায়বৃত্ত গতি, যেখানে একটি বস্তু একটি নির্দিষ্ট স্থির বিন্দুর উভয় পাশে বারবার সামনে-পেছনে বা উপরে-নিচে চলাচল করে।</p>
     </div>
   </div>
 
@@ -60,24 +61,22 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+  <script src="js/oscillatory.js"></script>
+
   <script>
-    // Validation for Amplitude
-    const ampInput = document.getElementById('amplitude');
-    ampInput.addEventListener('input', function() {
-      let val = parseFloat(this.value);
-      if (val > 250) {
+    // Validation for amplitude
+    document.getElementById('amplitude').addEventListener('input', function() {
+      if (parseFloat(this.value) > 250) {
         this.value = 250;
-        alert(currentLang === 'en' ? "⚠️ Maximum amplitude is 250." : "⚠️ সর্বোচ্চ বিস্তার ২৫০।");
+        alert(currentLang === 'en' ? "⚠️ Max amplitude is 250." : "⚠️ সর্বোচ্চ বিস্তার ২৫০।");
       }
     });
 
-    // Validation for Frequency
-    const freInput = document.getElementById('frequency');
-    freInput.addEventListener('input', function() {
-      let val = parseFloat(this.value);
-      if (val > 9.99) {
+    // Validation for frequency
+    document.getElementById('frequency').addEventListener('input', function() {
+      if (parseFloat(this.value) > 9.99) {
         this.value = 9.99;
-        alert(currentLang === 'en' ? "⚠️ Maximum frequency is 9.99." : "⚠️ সর্বোচ্চ কম্পাঙ্ক ৯.৯৯।");
+        alert(currentLang === 'en' ? "⚠️ Max frequency is 9.99." : "⚠️ সর্বোচ্চ কম্পাঙ্ক ৯.৯৯।");
       }
     });
 
