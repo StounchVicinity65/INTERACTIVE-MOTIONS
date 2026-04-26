@@ -4,99 +4,328 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>About Us - Motion Simulation Project</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Exo+2:wght@300;400;700;900&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: 'Exo 2', Arial, sans-serif;
       height: 100vh;
-      background: url('https://scontent.fdac183-1.fna.fbcdn.net/v/t39.30808-6/506464250_1184081803519181_2821931254461692640_n.jpg?stp=dst-jpg_p526x296_tt6&_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_ohc=QuJmgH_L-TwQ7kNvwG9ONkh&_nc_oc=Adk9zyOycyAcLdNYM8YtacG0y8sAeRYksr8oIHYLCVIubJLczuFHdB0kd2tcnY-SleU&_nc_zt=23&_nc_ht=scontent.fdac183-1.fna&_nc_gid=XbyfwxZWJd9TvdAVrCOjRA&oh=00_AfTbTrbix-WQB0VRUmtKSNfc1FHgXpVUFWZsndaXw2AMiA&oe=687EFA0F') no-repeat center center fixed;
-      background-size: cover;
-      position: relative;
+      overflow: hidden;
       color: #f0f0f0;
+      background: #04080f;
     }
 
-    body::before {
-      content: "";
+    /* === LAYERED BACKGROUND === */
+    #bgGif {
+      position: fixed; inset: 0; z-index: 0;
+      background: url('https://i.pinimg.com/originals/54/f8/e3/54f8e332b488dfdb2d3cc2efce8a536a.gif') no-repeat center center;
+      background-size: cover;
+      opacity: 0.15;
+    }
+    #bgOver {
+      position: fixed; inset: 0; z-index: 0;
+      background: linear-gradient(135deg, rgba(9,32,63,0.93) 0%, rgba(4,12,26,0.92) 50%, rgba(9,32,63,0.93) 100%);
+    }
+    #pCanvas {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    }
+
+    /* Speed lines */
+    .speed-lines {
+      position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none;
+    }
+    .sline {
       position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.6);
-      z-index: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(144,205,244,0.35), transparent);
+      animation: sRush linear infinite;
+      opacity: 0;
+    }
+    @keyframes sRush {
+      0%   { left: -60%; width: 35%; opacity: 0; }
+      8%   { opacity: 1; }
+      85%  { opacity: 0.4; }
+      100% { left: 120%; width: 60%; opacity: 0; }
     }
 
+    /* Parabola arc bottom */
+    .arc-wrap {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 0;
+      pointer-events: none; height: 180px;
+    }
+    .arc-wrap svg { width: 100%; height: 180px; overflow: visible; }
+    .arc-path { fill: none; stroke: rgba(144,205,244,0.12); stroke-width: 1.5; stroke-dasharray: 6 9; }
+    .arc-dot  { fill: #90cdf4; filter: drop-shadow(0 0 5px #90cdf4); }
+
+    /* NFS burst rays top-right */
+    .burst-wrap {
+      position: fixed; top: -40px; right: -40px; z-index: 0;
+      width: 320px; height: 320px; pointer-events: none;
+    }
+    .bray {
+      position: absolute; top: 50%; left: 50%;
+      width: 2px; transform-origin: top left;
+      background: linear-gradient(to bottom, rgba(144,205,244,0.6), transparent);
+      animation: bRay ease-in-out infinite;
+    }
+    @keyframes bRay {
+      0%,100% { opacity: 0.08; }
+      50%      { opacity: 0.55; }
+    }
+
+    /* === WRAPPER === */
     .wrapper {
-      position: relative;
-      z-index: 1;
-      padding: 2rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100%;
+      position: relative; z-index: 1;
+      display: flex; justify-content: center; align-items: center;
+      height: 100vh; padding: 2rem;
     }
 
+    /* === CARD === */
     .container {
-      max-width: 800px;
-      background: rgba(0, 0, 0, 0.7);
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      max-width: 780px; width: 100%;
+      background: rgba(5, 14, 32, 0.88);
+      border: 1px solid rgba(144,205,244,0.25);
+      padding: 2.5rem;
+      border-radius: 16px;
+      box-shadow: 0 0 40px rgba(74,144,226,0.2), 0 20px 60px rgba(0,0,0,0.7);
+      backdrop-filter: blur(12px);
+      animation: cardIn 0.7s cubic-bezier(0.175,0.885,0.32,1.275) both;
+    }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
 
-    h1, h2 {
+    /* Top badge */
+    .top-badge {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(144,205,244,0.5);
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
       color: #90cdf4;
-      margin-top: 0;
+      text-shadow: 0 0 20px rgba(144,205,244,0.4);
+      line-height: 1.4;
+      margin-bottom: 0.4rem;
     }
 
-    ul {
-      padding-left: 1.5rem;
+    .divider {
+      height: 1px;
+      background: linear-gradient(to right, rgba(144,205,244,0.4), transparent);
+      margin: 1rem 0;
     }
+
+    h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #90cdf4;
+      margin-bottom: 0.25rem;
+      font-style: italic;
+    }
+
+    h3 {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(144,205,244,0.6);
+      margin: 1.4rem 0 0.8rem;
+    }
+
+    ul { list-style: none; padding: 0; }
 
     li {
-      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 0.65rem 0.85rem;
+      border-radius: 8px;
+      border: 1px solid rgba(144,205,244,0.08);
+      background: rgba(144,205,244,0.04);
+      margin-bottom: 0.5rem;
       line-height: 1.6;
+      font-size: 0.92rem;
+      transition: border-color 0.25s, background 0.25s;
     }
+    li:hover {
+      border-color: rgba(144,205,244,0.25);
+      background: rgba(144,205,244,0.08);
+    }
+
+    .li-num {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.7rem;
+      color: #90cdf4;
+      background: rgba(144,205,244,0.12);
+      border: 1px solid rgba(144,205,244,0.3);
+      padding: 2px 7px;
+      border-radius: 4px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .li-name  { font-weight: 700; color: #e2e8f0; }
+    .li-meta  { font-size: 0.78rem; color: rgba(144,205,244,0.6); font-family: 'Share Tech Mono', monospace; }
 
     a.back {
-      display: inline-block;
-      margin-top: 1.5rem;
-      background: #4a90e2;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1.6rem;
+      background: linear-gradient(135deg, #4a90e2, #2563eb);
       color: white;
-      padding: 0.6rem 1.2rem;
+      padding: 0.6rem 1.4rem;
       border-radius: 8px;
       text-decoration: none;
-      transition: background 0.3s ease;
+      font-size: 0.88rem;
+      font-weight: 700;
+      font-family: 'Share Tech Mono', monospace;
+      letter-spacing: 0.06em;
+      transition: all 0.25s;
+      box-shadow: 0 4px 15px rgba(74,144,226,0.3);
     }
-
     a.back:hover {
-      background: #357ab8;
+      filter: brightness(1.15);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(74,144,226,0.45);
     }
 
     @media (max-width: 600px) {
-      .container {
-        padding: 1rem;
-      }
+      .container { padding: 1.5rem; }
+      h1 { font-size: 1rem; }
     }
   </style>
 </head>
 <body>
-  <div class="wrapper">
-    <div class="container">
-      <h1>47th National Science & Technology Week & Science Fair</h1>
-      <h2>Project Name: Interactive Simulation (Group Project) - Now part of Science Portal</h2>
 
-      <h3>Group Members:</h3>
-      <ul>
-        <li>1) Khandoker Shafowan Wafa, ID: 20180447, Class-10 (Blue)</li>
-        <li>2) Nafis Islam, ID: 20190321, Class-10 (Blue)</li>
-        <li>3) Omar Wahid, ID: 20240250, Class-10 (Blue)</li>
-        <li>4) Taief Bin Akbar, ID:20240340, Class-10 (Blue)</li>
-      </ul>
+<div id="bgGif"></div>
+<div id="bgOver"></div>
+<canvas id="pCanvas"></canvas>
+<div class="speed-lines" id="speedLines"></div>
 
-      <a class="back" href="index.html">← Back to Main Menu</a>
-    </div>
+<!-- Parabola arc -->
+<div class="arc-wrap">
+  <svg viewBox="0 0 1440 180" preserveAspectRatio="none">
+    <path class="arc-path" d="M0,160 Q360,20 720,90 Q1080,160 1440,40"/>
+    <path class="arc-path" d="M0,180 Q480,60 960,120 Q1200,150 1440,80" style="opacity:.5"/>
+    <circle class="arc-dot" r="5" cx="0" cy="0">
+      <animateMotion dur="6s" repeatCount="indefinite" path="M0,160 Q360,20 720,90 Q1080,160 1440,40"/>
+    </circle>
+    <circle class="arc-dot" r="4" cx="0" cy="0" style="opacity:.6">
+      <animateMotion dur="9s" repeatCount="indefinite" begin="3s" path="M0,180 Q480,60 960,120 Q1200,150 1440,80"/>
+    </circle>
+  </svg>
+</div>
+
+<!-- Burst rays -->
+<div class="burst-wrap" id="burstWrap"></div>
+
+<div class="wrapper">
+  <div class="container">
+    <div class="top-badge">47th National Science & Technology Week & Science Fair</div>
+    <h1>Interactive Motion Simulations->Now part of "Science Portal"</h1>
+    <h2>Group Project</h2>
+    <div class="divider"></div>
+
+    <h3>👥 Group Members</h3>
+    <ul>
+      <li>
+        <span class="li-num">01</span>
+        <div>
+          <div class="li-name">Khandoker Shafowan Wafa</div>
+          <div class="li-meta">ID: 20180447 · Class-10 (Blue)</div>
+        </div>
+      </li>
+      <li>
+        <span class="li-num">02</span>
+        <div>
+          <div class="li-name">Nafis Islam</div>
+          <div class="li-meta">ID: 20190321 · Class-10 (Blue)</div>
+        </div>
+      </li>
+      <li>
+        <span class="li-num">03</span>
+        <div>
+          <div class="li-name">Omar Wahid</div>
+          <div class="li-meta">ID: 20240250 · Class-10 (Blue)</div>
+        </div>
+      </li>
+      <li>
+        <span class="li-num">04</span>
+        <div>
+          <div class="li-name">Taief Bin Akbar</div>
+          <div class="li-meta">ID: 20240340 · Class-10 (Blue)</div>
+        </div>
+      </li>
+    </ul>
+
+    <a class="back" href="index.html">← Back to Main Menu</a>
   </div>
+</div>
+
+<script>
+  // === PARTICLES ===
+  const canvas = document.getElementById('pCanvas');
+  const ctx = canvas.getContext('2d');
+  let pts = [];
+  function resize(){ canvas.width=innerWidth; canvas.height=innerHeight; }
+  resize(); window.addEventListener('resize', resize);
+  for(let i=0;i<55;i++) pts.push({
+    x:Math.random()*innerWidth, y:Math.random()*innerHeight,
+    r:Math.random()*1.3+0.3,
+    dx:(Math.random()-.5)*.26, dy:(Math.random()-.5)*.26,
+    a:Math.random()*.4+.08
+  });
+  (function loop(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pts.forEach(p=>{
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(144,205,244,${p.a})`; ctx.fill();
+      p.x+=p.dx; p.y+=p.dy;
+      if(p.x<0||p.x>canvas.width) p.dx*=-1;
+      if(p.y<0||p.y>canvas.height) p.dy*=-1;
+    });
+    // connect nearby
+    pts.forEach((a,i)=>pts.slice(i+1).forEach(b=>{
+      const d=Math.hypot(a.x-b.x,a.y-b.y);
+      if(d<85){
+        ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
+        ctx.strokeStyle=`rgba(144,205,244,${.07*(1-d/85)})`;
+        ctx.lineWidth=.5; ctx.stroke();
+      }
+    }));
+    requestAnimationFrame(loop);
+  })();
+
+  // === SPEED LINES ===
+  const sl = document.getElementById('speedLines');
+  for(let i=0;i<10;i++){
+    const l=document.createElement('div'); l.className='sline';
+    l.style.top=(8+i*9)+'%';
+    l.style.animationDuration=(1.8+Math.random()*2.2)+'s';
+    l.style.animationDelay=(Math.random()*4)+'s';
+    sl.appendChild(l);
+  }
+
+  // === BURST RAYS ===
+  const bw = document.getElementById('burstWrap');
+  for(let i=0;i<16;i++){
+    const r=document.createElement('div'); r.className='bray';
+    const angle=180+i*12;
+    const len=40+Math.random()*140;
+    r.style.height=len+'px';
+    r.style.transform=`rotate(${angle}deg)`;
+    r.style.animationDelay=(i*0.2)+'s';
+    r.style.animationDuration=(1.8+Math.random()*1.5)+'s';
+    bw.appendChild(r);
+  }
+</script>
 </body>
 </html>
