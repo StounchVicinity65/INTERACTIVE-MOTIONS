@@ -537,7 +537,7 @@ function drawDispGraph(disp, vel) {
 
   if (dispHistory.length < 2) {
     ctx.fillStyle = 'rgba(139,163,187,0.5)'; ctx.font = '9px Consolas,monospace'; ctx.textAlign = 'left';
-    ctx.fillText('x (px)', 2, padT + 8);
+    ctx.fillText('x (m)', 2, padT + 8);
     ctx.fillText('t (s)', padL + W - 14, padT + H + 18);
     return;
   }
@@ -771,7 +771,7 @@ new p5(function(p) {
     p.text(`θ     = ${p.degrees(physTheta).toFixed(2)}°`,    16, 16);
     p.text(`ω     = ${physOmega.toFixed(4)} rad/s`,          16, 31);
     p.text(`T     = ${T.toFixed(3)} s`,                       16, 46);
-    p.text(`L     = ${L} px`,                                 16, 61);
+    p.text(`L     = ${L} m`,                                 16, 61);
     p.text(`FPS   = ${p.frameRate().toFixed(1)}`,             16, 76);
 
     // Record
