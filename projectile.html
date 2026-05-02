@@ -1,333 +1,827 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🎯 Projectile Motion</title>
+  <title>Projectile Motion</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;700&family=Share+Tech+Mono&family=Exo+2:wght@300;400;700;900&display=swap" rel="stylesheet"/>
   <style>
+    :root {
+      --blue:    #90cdf4;
+      --blue-d:  #4a90e2;
+      --gold:    #f6e05e;
+      --orange:  #f6ad55;
+      --green:   #68d391;
+      --red:     #fc8181;
+      --bg:      #04080f;
+      --card:    rgba(5,14,32,0.88);
+      --dim:     #8ba3bb;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
-      margin: 0;
-      font-family: sans-serif;
-      text-align: center;
-      background: #09203f;
-      color: white;
-      position: relative;
+      font-family: 'Exo 2', sans-serif;
+      background: var(--bg);
+      color: #f0f0f0;
       min-height: 100vh;
+      overflow-x: hidden;
     }
     body.bangla { font-family: 'Noto Serif Bengali', sans-serif; }
 
+    #bgLayer {
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse at 15% 60%, rgba(74,144,226,0.07) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 25%, rgba(246,224,94,0.04) 0%, transparent 50%),
+        linear-gradient(155deg, rgba(9,32,63,0.96), rgba(4,12,26,0.98));
+    }
+    #bgGrid {
+      position: fixed; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(rgba(144,205,244,0.022) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(144,205,244,0.022) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    .wrapper { position: relative; z-index: 1; display: flex; flex-direction: column; min-height: 100vh; padding-bottom: 2rem; }
+
+    /* TOP BAR */
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.75rem 1.5rem;
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(144,205,244,0.12);
+      position: sticky; top: 0; z-index: 100;
+    }
     .back-btn {
-      position: absolute;
-      top: 16px;
-      left: 16px;
-      text-decoration: none;
-      color: #ccc;
-      background: #00000055;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 14px;
-      z-index: 10;
+      text-decoration: none; color: var(--dim);
+      background: rgba(0,0,0,0.4);
+      padding: 0.4rem 0.9rem; border-radius: 6px;
+      font-size: 0.85rem; border: 1px solid rgba(144,205,244,0.18);
+      transition: all 0.2s; font-family: 'Share Tech Mono', monospace;
     }
-    .back-btn:hover { color: white; background: #00000088; }
-
-    h1 { margin-top: 3rem; font-size: 2rem; }
-
-    #definition {
-      max-width: 1000px;
-      margin: 1rem auto;
-      background: #00000055;
-      padding: 1.2rem 1.5rem;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(255,255,255,0.1);
-      display: flex;
-      justify-content: space-between;
-      gap: 2rem;
-      text-align: left;
-      min-height: 110px;
-      font-size: 1rem;
-      line-height: 1.4;
+    .back-btn:hover { color: var(--blue); border-color: var(--blue); background: rgba(74,144,226,0.12); }
+    .page-title {
+      font-family: 'Exo 2', sans-serif;
+      font-size: 1.35rem; font-weight: 900; font-style: italic;
+      color: var(--gold);
+      text-shadow: 0 0 22px rgba(246,224,94,0.32);
     }
-    #definition div { flex: 1; }
-
-    #controls {
-      max-width: 700px;
-      margin: 1rem auto 2rem;
-      padding: 1rem;
-      background: #00000055;
-      border-radius: 8px;
-      box-shadow: 0 0 8px rgba(255,255,255,0.1);
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      flex-wrap: wrap;
-      font-size: 1rem;
-    }
-    label {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      font-weight: 500;
-      gap: 0.3rem;
-      min-width: 130px;
-    }
-    input {
-      padding: 6px 8px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      width: 110px;
-      text-align: center;
-      font-size: 1rem;
-    }
-    input:focus {
-      outline: 2px solid #4a90e2;
-      outline-offset: 2px;
-      box-shadow: 0 0 8px rgba(74, 144, 226, 0.7);
-    }
-    button {
-      padding: 0.5rem 1.5rem;
-      border: none;
-      background: #2563eb;
-      color: white;
-      border-radius: 5px;
-      cursor: pointer;
-      white-space: nowrap;
-      font-size: 1rem;
-      align-self: center;
-    }
-    button:hover { background: #1d4ed8; }
-
-    canvas {
-      display: block;
-      margin: 1rem auto;
-      max-width: 100%;
-      height: auto;
-      border: 1px solid #ccc;
-      background: #dbeafe;
-    }
-
     #languageToggle {
-      position: fixed;
-      top: 16px;
-      right: 16px;
-      background: #00000055;
-      color: white;
-      padding: 0.6rem 1.2rem;
-      border: none;
-      border-radius: 6px;
-      font-size: 14px;
-      cursor: pointer;
-      z-index: 10;
+      background: rgba(0,0,0,0.5); color: white;
+      padding: 0.4rem 0.9rem; border: 1px solid rgba(144,205,244,0.28);
+      border-radius: 20px; font-size: 0.78rem; font-weight: 700;
+      cursor: pointer; font-family: 'Share Tech Mono', monospace;
+      transition: all 0.2s; letter-spacing: 0.04em;
     }
-    #languageToggle:hover { background: #00000088; }
+    #languageToggle:hover { background: var(--blue-d); border-color: transparent; }
+
+    /* MAIN */
+    .main { display: flex; gap: 1.2rem; padding: 1.1rem 1.5rem; flex: 1; }
+
+    /* LEFT PANEL */
+    .left-panel { display: flex; flex-direction: column; gap: 0.9rem; width: 282px; min-width: 282px; }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid rgba(144,205,244,0.13);
+      border-radius: 12px;
+      padding: 1.15rem 1.25rem;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 22px rgba(0,0,0,0.45);
+    }
+    .panel-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase;
+      color: rgba(144,205,244,0.42); margin-bottom: 0.62rem;
+    }
+
+    .def-text { font-size: 0.86rem; line-height: 1.72; color: var(--dim); }
+    .def-text strong { color: var(--blue); }
+    .def-text em { color: var(--gold); font-style: normal; font-family: 'Share Tech Mono', monospace; font-size: 0.81rem; }
+
+    .formula-block {
+      margin-top: 0.75rem;
+      background: rgba(0,0,0,0.38);
+      border-radius: 8px;
+      padding: 0.7rem 0.9rem;
+      border-left: 2px solid var(--gold);
+    }
+    .formula-row { display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 0.28rem; }
+    .formula-row:last-child { margin-bottom: 0; }
+    .formula-lbl { font-size: 0.65rem; color: var(--dim); font-family: 'Share Tech Mono', monospace; min-width: 36px; }
+    .formula-eq  { font-family: 'Share Tech Mono', monospace; font-size: 0.86rem; color: var(--gold); }
+    .formula-sub { font-size: 0.65rem; color: rgba(139,163,187,0.55); font-family: 'Share Tech Mono', monospace; }
+
+    /* Controls */
+    .control-row { display: flex; flex-direction: column; gap: 0.18rem; margin-bottom: 0.8rem; }
+    .control-row label { font-size: 0.79rem; color: var(--dim); font-weight: 500; }
+    .control-row input[type="range"] { width: 100%; accent-color: var(--gold); cursor: pointer; height: 4px; }
+    .range-val { font-family: 'Share Tech Mono', monospace; font-size: 0.88rem; color: var(--gold); margin-left: 0.5rem; min-width: 44px; }
+    .range-row { display: flex; align-items: center; }
+
+    .btn-row { display: flex; gap: 0.55rem; margin-top: 0.25rem; }
+    .btn {
+      flex: 1; padding: 0.58rem 0; border: none; border-radius: 7px;
+      font-size: 0.88rem; font-weight: 700; cursor: pointer;
+      font-family: 'Exo 2', sans-serif; transition: all 0.22s; letter-spacing: 0.03em;
+    }
+    .btn-launch { background: linear-gradient(135deg, #d97706, #b45309); color: white; }
+    .btn-launch:hover { filter: brightness(1.2); transform: translateY(-2px); box-shadow: 0 6px 22px rgba(217,119,6,0.42); }
+    .btn-reset  { background: rgba(255,255,255,0.07); color: var(--dim); border: 1px solid rgba(255,255,255,0.13); }
+    .btn-reset:hover  { background: rgba(255,255,255,0.13); color: white; }
+
+    /* Stats */
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.58rem; }
+    .stat-card {
+      background: rgba(0,0,0,0.38);
+      border: 1px solid rgba(144,205,244,0.11);
+      border-radius: 8px; padding: 0.55rem 0.7rem;
+    }
+    .stat-label { font-size: 0.63rem; color: var(--dim); font-family: 'Share Tech Mono', monospace; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.18rem; }
+    .stat-val   { font-size: 1.15rem; font-weight: 700; color: var(--blue); font-family: 'Share Tech Mono', monospace; }
+    .stat-unit  { font-size: 0.62rem; color: var(--dim); margin-left: 0.12rem; }
+    .stat-card.g1 { border-color: rgba(246,224,94,0.28); }
+    .stat-card.g1 .stat-val { color: var(--gold); }
+    .stat-card.g2 { border-color: rgba(104,211,145,0.25); }
+    .stat-card.g2 .stat-val { color: var(--green); }
+    .stat-card.g3 { border-color: rgba(252,129,129,0.25); }
+    .stat-card.g3 .stat-val { color: var(--red); }
+
+    /* CANVAS AREA */
+    .canvas-area { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; min-width: 0; }
+    .canvas-wrap {
+      background: var(--card);
+      border: 1px solid rgba(144,205,244,0.13);
+      border-radius: 12px; overflow: hidden;
+      box-shadow: 0 0 30px rgba(0,0,0,0.55);
+      flex: 1; min-height: 300px;
+    }
+
+    /* Graphs */
+    .graph-row { display: flex; gap: 0.75rem; }
+    .graph-wrap {
+      background: var(--card);
+      border: 1px solid rgba(144,205,244,0.12);
+      border-radius: 12px; overflow: hidden;
+      box-shadow: 0 0 16px rgba(0,0,0,0.35);
+      height: 155px; flex: 1; min-width: 0;
+    }
+    .graph-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(144,205,244,0.42); padding: 0.4rem 0.8rem 0;
+    }
+    canvas.graph { display: block; width: 100%; height: 122px; }
+
     .hidden { display: none !important; }
+
+    @media (max-width: 920px) {
+      .main { flex-direction: column; }
+      .left-panel { width: 100%; min-width: auto; flex-direction: row; flex-wrap: wrap; }
+      .panel { flex: 1; min-width: 240px; }
+      .graph-row { flex-direction: column; }
+    }
   </style>
 </head>
 <body>
+<div id="bgLayer"></div>
+<div id="bgGrid"></div>
 
-  <!-- language toggle -->
-  <button id="languageToggle" aria-label="Switch to Bangla">বাংলা / English</button>
-
-  <a href="index.html" class="back-btn">← <span class="lang-en">Back</span><span class="lang-bn hidden">পিছনে</span></a>
-
-  <h1>
-    <span class="lang-en">🎯 Projectile Motion</span>
-    <span class="lang-bn hidden">🎯 প্রক্ষেপণ গতি</span>
-  </h1>
-
-  <div id="definition">
-    <div class="lang-en">
-      <p><strong>Definition:</strong> Projectile motion is the motion of an object projected into the air, subject only to the acceleration of gravity. The object, called a projectile, follows a curved path called a trajectory.</p>
+<div class="wrapper">
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <a href="index.html" class="back-btn">← <span class="lang-en">Back</span><span class="lang-bn hidden">পিছনে</span></a>
+    <div class="page-title">
+      <span class="lang-en">🎯 Projectile Motion</span>
+      <span class="lang-bn hidden">🎯 প্রক্ষেপণ গতি</span>
     </div>
-    <div class="lang-bn hidden">
-      <p><strong>সংজ্ঞা:</strong> প্রক্ষেপণ গতি হলো এমন একটি বস্তুর গতি, যাকে শূন্যে নিক্ষেপ করা হয় এবং যা কেবলমাত্র অভিকর্ষজ ত্বরণের প্রভাবে গতিশীল থাকে। বস্তুটি একটি নির্দিষ্ট বক্রপথ অনুসরণ করে, যাকে সঞ্চারপথ বলা হয়।</p>
-    </div>
+    <button id="languageToggle">বাংলা / EN</button>
   </div>
 
-  <div id="controls">
-    <label>
-      <span class="lang-en">Angle (°)</span>
-      <span class="lang-bn hidden">কোণ (°)</span>
-      <input type="number" id="angle" value="45" min="0" max="999" step="1" />
-    </label>
+  <div class="main">
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
 
-    <label>
-      <span class="lang-en">Speed (m/s)</span>
-      <span class="lang-bn hidden">বেগ (m/s)</span>
-      <input type="number" id="speed" value="40" min="1" max="300" step="1" />
-    </label>
+      <!-- Definition -->
+      <div class="panel">
+        <div class="panel-label"><span class="lang-en">Definition</span><span class="lang-bn hidden">সংজ্ঞা</span></div>
+        <p class="def-text lang-en">
+          <strong>Projectile motion</strong> is the curved path an object follows when launched into the air under <em>gravity alone</em>. Horizontal velocity stays constant while vertical velocity changes at <em>g = 9.8 m/s²</em> — the two axes are completely independent.
+        </p>
+        <p class="def-text lang-bn hidden">
+          <strong>প্রক্ষেপণ গতি</strong> হলো সেই বাঁকা পথ যা একটি বস্তু শুধুমাত্র <em>মাধ্যাকর্ষণের</em> প্রভাবে অনুসরণ করে। অনুভূমিক বেগ স্থির থাকে, উল্লম্ব বেগ <em>g = 9.8 m/s²</em> হারে পরিবর্তিত হয়।
+        </p>
+        <div class="formula-block">
+          <div class="formula-row">
+            <span class="formula-lbl">x(t)</span>
+            <span class="formula-eq">= v₀ cos(θ) · t</span>
+          </div>
+          <div class="formula-row">
+            <span class="formula-lbl">y(t)</span>
+            <span class="formula-eq">= v₀ sin(θ)·t − ½gt²</span>
+          </div>
+          <div class="formula-row">
+            <span class="formula-lbl">Range</span>
+            <span class="formula-eq">= v₀² sin(2θ) / g</span>
+          </div>
+          <div class="formula-row">
+            <span class="formula-lbl">H<sub>max</sub></span>
+            <span class="formula-eq">= v₀² sin²(θ) / 2g</span>
+          </div>
+          <div class="formula-row" style="margin-top:0.4rem">
+            <span class="formula-sub">v₀ = initial speed · θ = angle · g = 9.8 m/s²</span>
+          </div>
+        </div>
+      </div>
 
-    <button id="launchBtn">
-      <span class="lang-en">Launch</span>
-      <span class="lang-bn hidden">নিক্ষেপ</span>
-    </button>
+      <!-- Controls -->
+      <div class="panel">
+        <div class="panel-label"><span class="lang-en">Parameters</span><span class="lang-bn hidden">প্যারামিটার</span></div>
 
-    <button id="resetBtn">
-      <span class="lang-en">Reset</span>
-      <span class="lang-bn hidden">রিসেট</span>
-    </button>
+        <div class="control-row">
+          <label>
+            <span class="lang-en">Launch Angle (°)</span>
+            <span class="lang-bn hidden">নিক্ষেপ কোণ (°)</span>
+          </label>
+          <div class="range-row">
+            <input type="range" id="angleSlider" min="1" max="89" value="45" step="1" oninput="syncControls()">
+            <span class="range-val" id="angleDisplay">45°</span>
+          </div>
+        </div>
+
+        <div class="control-row">
+          <label>
+            <span class="lang-en">Initial Speed (m/s)</span>
+            <span class="lang-bn hidden">প্রারম্ভিক বেগ (m/s)</span>
+          </label>
+          <div class="range-row">
+            <input type="range" id="speedSlider" min="5" max="100" value="40" step="1" oninput="syncControls()">
+            <span class="range-val" id="speedDisplay">40</span>
+          </div>
+        </div>
+
+        <div class="control-row">
+          <label>
+            <span class="lang-en">Gravity (m/s²)</span>
+            <span class="lang-bn hidden">অভিকর্ষ (m/s²)</span>
+          </label>
+          <div class="range-row">
+            <input type="range" id="gravSlider" min="1.6" max="24.8" value="9.8" step="0.2" oninput="syncControls()">
+            <span class="range-val" id="gravDisplay">9.8</span>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-launch" onclick="launchProjectile()">
+            <span class="lang-en">🚀 Launch</span>
+            <span class="lang-bn hidden">🚀 নিক্ষেপ</span>
+          </button>
+          <button class="btn btn-reset" onclick="resetSim()">
+            <span class="lang-en">↺ Reset</span>
+            <span class="lang-bn hidden">↺ রিসেট</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Stats -->
+      <div class="panel">
+        <div class="panel-label">
+          <span class="lang-en">Live Readout</span>
+          <span class="lang-bn hidden">লাইভ তথ্য</span>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card g1">
+            <div class="stat-label"><span class="lang-en">Range</span><span class="lang-bn hidden">পাল্লা</span></div>
+            <div><span class="stat-val" id="statRange">—</span><span class="stat-unit">m</span></div>
+          </div>
+          <div class="stat-card g2">
+            <div class="stat-label"><span class="lang-en">Max Height</span><span class="lang-bn hidden">সর্বোচ্চ উচ্চতা</span></div>
+            <div><span class="stat-val" id="statH">—</span><span class="stat-unit">m</span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label"><span class="lang-en">Speed</span><span class="lang-bn hidden">দ্রুতি</span></div>
+            <div><span class="stat-val" id="statSpeed">0.0</span><span class="stat-unit">m/s</span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label"><span class="lang-en">Altitude</span><span class="lang-bn hidden">উচ্চতা</span></div>
+            <div><span class="stat-val" id="statAlt">0.0</span><span class="stat-unit">m</span></div>
+          </div>
+          <div class="stat-card g3">
+            <div class="stat-label"><span class="lang-en">Time</span><span class="lang-bn hidden">সময়</span></div>
+            <div><span class="stat-val" id="statTime">0.0</span><span class="stat-unit">s</span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label"><span class="lang-en">Horiz. Dist</span><span class="lang-bn hidden">অনুভূমিক</span></div>
+            <div><span class="stat-val" id="statX">0.0</span><span class="stat-unit">m</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /left-panel -->
+
+    <!-- CANVAS AREA -->
+    <div class="canvas-area">
+      <div class="canvas-wrap" id="canvasWrap"></div>
+      <div class="graph-row">
+        <div class="graph-wrap">
+          <div class="graph-label">
+            <span class="lang-en">Height – Time</span>
+            <span class="lang-bn hidden">উচ্চতা – সময়</span>
+          </div>
+          <canvas id="gHeight" class="graph"></canvas>
+        </div>
+        <div class="graph-wrap">
+          <div class="graph-label">
+            <span class="lang-en">Speed – Time</span>
+            <span class="lang-bn hidden">দ্রুতি – সময়</span>
+          </div>
+          <canvas id="gSpeed" class="graph"></canvas>
+        </div>
+      </div>
+    </div>
+
   </div>
+</div>
 
-  <!-- p5 -->
-  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+<script>
+// ── LANGUAGE ──────────────────────────────────────────────────────────────
+let currentLang = 'en';
+document.getElementById('languageToggle').addEventListener('click', () => {
+  currentLang = currentLang === 'en' ? 'bn' : 'en';
+  document.querySelectorAll('.lang-en').forEach(el => el.classList.toggle('hidden', currentLang !== 'en'));
+  document.querySelectorAll('.lang-bn').forEach(el => el.classList.toggle('hidden', currentLang !== 'bn'));
+  document.body.classList.toggle('bangla', currentLang === 'bn');
+});
 
-  <!-- single script: attaches listeners and defines p5 sketch -->
-  <script>
-  (function () {
-    // DOM refs (use local names to avoid accidental global collisions)
-    const angleEl = document.getElementById('angle');
-    const speedEl = document.getElementById('speed');
-    const launchBtn = document.getElementById('launchBtn');
-    const resetBtn = document.getElementById('resetBtn');
-    const toggleBtn = document.getElementById('languageToggle');
+// ── CONTROLS ──────────────────────────────────────────────────────────────
+const G_REAL   = 9.8; // m/s²
 
-    // Instant popup validation for SPEED input (max 300)
-    speedEl.addEventListener('input', function () {
-      const max = parseFloat(this.max);
-      const min = parseFloat(this.min) || 0;
-      const val = parseFloat(this.value);
-      if (!isNaN(val)) {
-        if (val > max) {
-          this.value = max;
-          // popup in English only
-          alert(`⚠️ Maximum speed is ${max} m/s.`);
-        } else if (val < min) {
-          this.value = min;
-          alert(`⚠️ Minimum speed is ${min} m/s.`);
-        }
+function syncControls() {
+  const a = document.getElementById('angleSlider').value;
+  const s = document.getElementById('speedSlider').value;
+  const g = parseFloat(document.getElementById('gravSlider').value);
+  document.getElementById('angleDisplay').textContent = a + '°';
+  document.getElementById('speedDisplay').textContent = s;
+  document.getElementById('gravDisplay').textContent  = g.toFixed(1);
+  // Update predicted range/height in stats
+  const theta = parseFloat(a) * Math.PI / 180;
+  const v0    = parseFloat(s);
+  const R = v0 * v0 * Math.sin(2 * theta) / g;
+  const H = v0 * v0 * Math.sin(theta) * Math.sin(theta) / (2 * g);
+  document.getElementById('statRange').textContent = R.toFixed(1);
+  document.getElementById('statH').textContent     = H.toFixed(1);
+}
+syncControls();
+
+// ── HISTORY FOR GRAPHS ────────────────────────────────────────────────────
+let hHistory = []; // { t, y }
+let sHistory = []; // { t, spd }
+const MAX_H  = 600;
+
+function recordHistory(t, y, spd) {
+  hHistory.push({ t, y });
+  sHistory.push({ t, spd });
+  if (hHistory.length > MAX_H) hHistory.shift();
+  if (sHistory.length > MAX_H) sHistory.shift();
+}
+
+function drawLineGraph(canvasId, history, yKey, yLabel, unitLabel, lineColor, fillColor, zeroed) {
+  const gc = document.getElementById(canvasId);
+  const gw = gc.parentElement.clientWidth;
+  gc.width = gw; gc.height = 122;
+  const ctx = gc.getContext('2d');
+  ctx.clearRect(0, 0, gw, 122);
+
+  const padL = 44, padR = 12, padT = 10, padB = 24;
+  const W = gw - padL - padR, H = 122 - padT - padB;
+
+  // Axes
+  ctx.strokeStyle = 'rgba(144,205,244,0.35)'; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(padL, padT); ctx.lineTo(padL, padT + H); ctx.lineTo(padL + W, padT + H);
+  ctx.stroke();
+
+  ctx.font = '9px Consolas, monospace';
+  ctx.fillStyle = lineColor; ctx.textAlign = 'left';
+  ctx.fillText(yLabel, 2, padT + 8);
+  ctx.fillStyle = 'rgba(139,163,187,0.6)';
+  ctx.fillText('t (s)', padL + W - 14, padT + H + 18);
+
+  if (history.length < 2) return;
+
+  const maxY = Math.max(...history.map(p => p[yKey]), 0.1);
+  const maxT = Math.max(history[history.length - 1].t, 0.1);
+
+  // Grid + tick labels
+  [0, 0.25, 0.5, 0.75, 1].forEach(frac => {
+    const yv = frac * maxY;
+    const y  = padT + H - frac * H;
+    ctx.strokeStyle = 'rgba(144,205,244,0.06)'; ctx.lineWidth = 0.5;
+    if (frac > 0 && frac < 1) { ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL + W, y); ctx.stroke(); }
+    ctx.fillStyle = 'rgba(139,163,187,0.7)'; ctx.textAlign = 'right'; ctx.font = '9px Consolas, monospace';
+    const label = yv >= 1000 ? (yv / 1000).toFixed(1) + 'k' : yv.toFixed(yv < 10 ? 1 : 0);
+    ctx.fillText(label, padL - 3, y + 3);
+  });
+  [0, 0.5, 1].forEach(frac => {
+    const tv = frac * maxT;
+    const x  = padL + frac * W;
+    ctx.fillStyle = 'rgba(139,163,187,0.7)'; ctx.textAlign = 'center'; ctx.font = '9px Consolas, monospace';
+    ctx.fillText(tv.toFixed(1), x, padT + H + 16);
+  });
+
+  // Unit label top-right
+  ctx.fillStyle = lineColor; ctx.textAlign = 'right';
+  ctx.fillText(unitLabel, padL + W, padT + 8);
+
+  // Area fill
+  ctx.beginPath();
+  history.forEach((p, i) => {
+    const px = padL + (p.t / maxT) * W;
+    const py = padT + H - (p[yKey] / maxY) * H;
+    i === 0 ? ctx.moveTo(px, padT + H) : ctx.lineTo(px, py);
+  });
+  ctx.lineTo(padL + (history[history.length-1].t / maxT) * W, padT + H);
+  ctx.closePath(); ctx.fillStyle = fillColor; ctx.fill();
+
+  // Line
+  ctx.beginPath(); ctx.strokeStyle = lineColor; ctx.lineWidth = 2;
+  history.forEach((p, i) => {
+    const px = padL + (p.t / maxT) * W;
+    const py = padT + H - (p[yKey] / maxY) * H;
+    i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+  });
+  ctx.stroke();
+
+  // Current dot + label
+  const last = history[history.length - 1];
+  const dotX = padL + (last.t / maxT) * W;
+  const dotY = padT + H - (last[yKey] / maxY) * H;
+  ctx.beginPath(); ctx.arc(dotX, dotY, 3.5, 0, Math.PI * 2);
+  ctx.fillStyle = lineColor; ctx.fill();
+  ctx.font = 'bold 9px Consolas, monospace';
+  ctx.textAlign = dotX > padL + W * 0.72 ? 'right' : 'left';
+  ctx.fillText(last[yKey].toFixed(1), dotX + (ctx.textAlign === 'left' ? 5 : -5), dotY - 6);
+}
+
+function drawBothGraphs() {
+  drawLineGraph('gHeight', hHistory, 'y',   'y (m)',     'm',    '#f6e05e', 'rgba(246,224,94,0.10)');
+  drawLineGraph('gSpeed',  sHistory, 'spd', 'v (m/s)',   'm/s',  '#90cdf4', 'rgba(144,205,244,0.10)');
+}
+
+// ── P5 SKETCH ─────────────────────────────────────────────────────────────
+new p5(function(p) {
+
+  // Physics state (all real SI units, m and s)
+  let launched   = false;
+  let landed     = false;
+  let physT      = 0;   // time in seconds
+  let vx0        = 0;   // m/s horizontal
+  let vy0        = 0;   // m/s vertical (positive = up in physics)
+  let grav       = 9.8; // m/s²
+
+  // Scale: how many pixels per metre
+  let SCALE      = 5;
+  let groundY    = 0;   // canvas y of ground
+  let originX    = 0;   // canvas x of launch point
+
+  let trail      = []; // {cx, cy, t} canvas coords + time
+  let peakCanvas = null; // {cx, cy} canvas coords of apex
+
+  // Predicted path points (canvas coords)
+  let predictedPath = [];
+
+  // For angle arc animation
+  let showPrompt = true;
+
+  p.setup = function() {
+    const wrap = document.getElementById('canvasWrap');
+    const cnv  = p.createCanvas(wrap.clientWidth, Math.max(300, window.innerHeight * 0.46));
+    cnv.parent('canvasWrap');
+    groundY = p.height - 55;
+    originX = 65;
+    SCALE   = computeScale();
+    computePredictedPath();
+    p.noLoop();
+  };
+
+  function computeScale() {
+    const a  = parseFloat(document.getElementById('angleSlider').value) * Math.PI / 180;
+    const v0 = parseFloat(document.getElementById('speedSlider').value);
+    const g  = parseFloat(document.getElementById('gravSlider').value);
+    const R  = v0 * v0 * Math.sin(2 * a) / g;
+    // Fit range into 85% of available canvas width
+    const availW = p.width - originX - 30;
+    return Math.max(1, Math.min(20, (availW * 0.85) / R));
+  }
+
+  function computePredictedPath() {
+    const a  = parseFloat(document.getElementById('angleSlider').value) * Math.PI / 180;
+    const v0 = parseFloat(document.getElementById('speedSlider').value);
+    const g  = parseFloat(document.getElementById('gravSlider').value);
+    const R  = v0 * v0 * Math.sin(2 * a) / g;
+    const tFlight = 2 * v0 * Math.sin(a) / g;
+    SCALE = computeScale();
+    predictedPath = [];
+    const steps = 80;
+    for (let i = 0; i <= steps; i++) {
+      const t = (i / steps) * tFlight;
+      const px = v0 * Math.cos(a) * t;
+      const py = v0 * Math.sin(a) * t - 0.5 * g * t * t;
+      predictedPath.push({
+        cx: originX + px * SCALE,
+        cy: groundY - py * SCALE
+      });
+    }
+  }
+
+  // Convert physics coords to canvas
+  function toCanvas(xm, ym) {
+    return { cx: originX + xm * SCALE, cy: groundY - ym * SCALE };
+  }
+
+  p.draw = function() {
+    // ── BACKGROUND ──
+    p.background(6, 14, 34);
+
+    // Subtle grid
+    p.stroke(144, 205, 244, 14); p.strokeWeight(0.5);
+    for (let gx = originX; gx < p.width; gx += 50 * SCALE) {
+      p.line(gx, 0, gx, groundY);
+    }
+    for (let gy = groundY; gy > 0; gy -= 50 * SCALE) {
+      p.line(0, gy, p.width, gy);
+    }
+
+    // ── GROUND ──
+    p.noStroke();
+    // Grass
+    p.fill(28, 90, 42);
+    p.rect(0, groundY, p.width, p.height - groundY);
+    p.fill(36, 112, 52);
+    p.rect(0, groundY, p.width, 6);
+    // Ground grid marks (distance rulers)
+    for (let m = 0; m * SCALE + originX < p.width - 10; m += 50) {
+      const gx = originX + m * SCALE;
+      p.stroke(144, 205, 244, 45); p.strokeWeight(1);
+      p.line(gx, groundY, gx, groundY + 10);
+      p.noStroke(); p.fill(144, 205, 244, 80);
+      p.textFont('Consolas'); p.textSize(8); p.textAlign(p.CENTER);
+      p.text(m + 'm', gx, groundY + 20);
+    }
+    // Vertical altitude ruler (left edge)
+    for (let m = 0; m * SCALE < groundY - 10; m += 50) {
+      const gy = groundY - m * SCALE;
+      p.stroke(144, 205, 244, 35); p.strokeWeight(1);
+      p.line(originX - 8, gy, originX, gy);
+      p.noStroke(); p.fill(144, 205, 244, 70);
+      p.textFont('Consolas'); p.textSize(8); p.textAlign(p.RIGHT);
+      p.text(m + 'm', originX - 10, gy + 3);
+    }
+    p.noStroke();
+
+    // ── PREDICTED PATH (dashed, shown before launch) ──
+    if (!launched && predictedPath.length > 1) {
+      for (let i = 1; i < predictedPath.length; i++) {
+        const t = i / predictedPath.length;
+        p.stroke(246, 224, 94, 40 + t * 60); p.strokeWeight(1.5);
+        const prev = predictedPath[i - 1], cur = predictedPath[i];
+        if (i % 3 !== 0) p.line(prev.cx, prev.cy, cur.cx, cur.cy); // dashed
       }
-    });
+      p.noStroke();
+      // Angle arc
+      const ang = parseFloat(document.getElementById('angleSlider').value);
+      const arcR = 40;
+      p.noFill(); p.stroke(246, 224, 94, 120); p.strokeWeight(1.2);
+      p.arc(originX, groundY, arcR * 2, arcR * 2, -p.radians(ang), 0);
+      p.noStroke(); p.fill(246, 224, 94, 160);
+      p.textFont('Consolas'); p.textSize(10); p.textAlign(p.CENTER);
+      p.text(ang + '°', originX + arcR * 0.7, groundY - arcR * 0.4);
 
-    // Attach click handlers (callable from UI)
-    launchBtn.addEventListener('click', () => {
-      // call the p5-exposed function
-      if (typeof window.launchProjectile === 'function') window.launchProjectile();
-    });
-    resetBtn.addEventListener('click', () => {
-      if (typeof window.resetSimulation === 'function') window.resetSimulation();
-    });
+      // Landing point marker
+      const last = predictedPath[predictedPath.length - 1];
+      p.stroke(246, 173, 85, 130); p.strokeWeight(2); p.noFill();
+      p.line(last.cx - 8, groundY, last.cx + 8, groundY);
+      p.line(last.cx, groundY - 8, last.cx, groundY + 8);
+      // Max height marker
+      const apex = predictedPath.reduce((a, b) => a.cy < b.cy ? a : b);
+      p.stroke(104, 211, 145, 100); p.strokeWeight(1); p.noFill();
+      p.line(originX, apex.cy, apex.cx, apex.cy); // horizontal dotted line at apex
+    }
 
-    // Language toggle: exactly like your working pages
-    let currentLang = 'en';
-    toggleBtn.addEventListener('click', () => {
-      if (currentLang === 'en') {
-        document.querySelectorAll('.lang-en').forEach(el => el.classList.add('hidden'));
-        document.querySelectorAll('.lang-bn').forEach(el => el.classList.remove('hidden'));
-        document.body.classList.add('bangla');
-        currentLang = 'bn';
-        toggleBtn.textContent = 'English';
-        toggleBtn.setAttribute('aria-label', 'Switch to English');
-      } else {
-        document.querySelectorAll('.lang-en').forEach(el => el.classList.remove('hidden'));
-        document.querySelectorAll('.lang-bn').forEach(el => el.classList.add('hidden'));
-        document.body.classList.remove('bangla');
-        currentLang = 'en';
-        toggleBtn.textContent = 'বাংলা';
-        toggleBtn.setAttribute('aria-label', 'Switch to Bangla');
+    // ── PHYSICS UPDATE ──
+    if (launched && !landed) {
+      physT += p.deltaTime / 1000 * 1.2; // slight speed-up for UX
+      const xm  = vx0 * physT;
+      const ym  = vy0 * physT - 0.5 * grav * physT * physT;
+      const vxN = vx0;
+      const vyN = vy0 - grav * physT;
+      const spd = Math.sqrt(vxN * vxN + vyN * vyN);
+      const ang = Math.atan2(vyN, vxN); // radians, measured from +x
+
+      const pos = toCanvas(xm, ym);
+      trail.push({ cx: pos.cx, cy: pos.cy, t: physT });
+
+      // Track apex
+      if (!peakCanvas || pos.cy < peakCanvas.cy) peakCanvas = { cx: pos.cx, cy: pos.cy, h: ym };
+
+      // Update stats
+      document.getElementById('statSpeed').textContent = spd.toFixed(1);
+      document.getElementById('statAlt').textContent   = Math.max(0, ym).toFixed(1);
+      document.getElementById('statTime').textContent  = physT.toFixed(2);
+      document.getElementById('statX').textContent     = xm.toFixed(1);
+
+      // Record graph data
+      recordHistory(physT, Math.max(0, ym), spd);
+      drawBothGraphs();
+
+      // Landed?
+      if (ym < 0 && physT > 0.05) {
+        landed = true;
+        const tLand = (2 * vy0) / grav;
+        const R = vx0 * tLand;
+        document.getElementById('statRange').textContent = R.toFixed(1);
+        document.getElementById('statH').textContent     = peakCanvas ? peakCanvas.h.toFixed(1) : '—';
+        p.noLoop();
       }
-    });
+    }
 
-    // ---------- p5 sketch ----------
-    // Make functions global for p5 to find them (using window.*)
-    let projectile = null;
-    let trail = [];
-
-    window.setup = function () {
-      createCanvas(windowWidth - 240, windowHeight * 0.6);
-      angleMode(RADIANS);
-      noLoop();
-      textSize(16);
-      textAlign(LEFT, TOP);
-      background('#dbeafe');
-    };
-
-    window.launchProjectile = function () {
-      const angleVal = parseFloat(angleEl.value) || 45;
-      const speedVal = parseFloat(speedEl.value) || 0;
-
-      // clamp again defensively
-      const angleDeg = Math.max(0, Math.min(999, angleVal));
-      const speedNum = Math.max(0, Math.min(300, speedVal));
-      angleEl.value = angleDeg;
-      speedEl.value = speedNum;
-
-      const a = radians(angleDeg);
-      projectile = {
-        x0: 50,
-        y0: height - 50,
-        vx: speedNum * Math.cos(a),
-        vy: -speedNum * Math.sin(a),
-        t: 0
-      };
-      trail = [];
-      loop();
-    };
-
-    window.resetSimulation = function () {
-      projectile = null;
-      trail = [];
-      clear();
-      background('#dbeafe');
-      noLoop();
-    };
-
-    window.draw = function () {
-      background('#dbeafe');
-
-      // Trail
-      stroke(100, 100, 255);
-      strokeWeight(3);
-      noFill();
-      beginShape();
-      for (let p of trail) vertex(p.x, p.y);
-      endShape();
-
-      if (projectile) {
-        projectile.t += 0.1;
-        const x = projectile.x0 + projectile.vx * projectile.t;
-        const y = projectile.y0 + projectile.vy * projectile.t + 0.5 * 9.8 * sq(projectile.t);
-        const vx = projectile.vx;
-        const vy = projectile.vy + 9.8 * projectile.t;
-
-        trail.push({ x, y });
-
-        // Draw arrowhead oriented with velocity
-        const ang = atan2(vy, vx);
-        push();
-        translate(x, y);
-        rotate(ang);
-        fill(0);
-        noStroke();
-        beginShape();
-        vertex(-10, -5);
-        vertex(10, 0);
-        vertex(-10, 5);
-        endShape(CLOSE);
-        pop();
-
-        if (y > height) {
-          // projectile hit ground
-          noLoop();
-        }
+    // ── TRAIL ──
+    if (trail.length > 1) {
+      for (let i = 1; i < trail.length; i++) {
+        const t     = i / trail.length;
+        const alpha = t * 220;
+        const r = p.lerp(246, 144, t);
+        const g = p.lerp(224, 205, t);
+        const b = p.lerp(94,  244, t);
+        p.stroke(r, g, b, alpha);
+        p.strokeWeight(1.5 + t * 1.5);
+        p.line(trail[i-1].cx, trail[i-1].cy, trail[i].cx, trail[i].cy);
       }
+      p.noStroke();
+    }
 
-      // FPS display
-      push();
-      fill(0);
-      textSize(16);
-      noStroke();
-      text(`FPS: ${frameRate().toFixed(1)}`, 10, 30);
-      pop();
-    };
+    // ── APEX MARKER ──
+    if (peakCanvas && (launched || landed)) {
+      p.stroke(104, 211, 145, 120); p.strokeWeight(1);
+      p.line(originX, peakCanvas.cy, peakCanvas.cx, peakCanvas.cy);
+      p.noStroke(); p.fill(104, 211, 145, 160);
+      p.textFont('Consolas'); p.textSize(9); p.textAlign(p.LEFT);
+      p.text(`h=${peakCanvas.h.toFixed(1)}m`, peakCanvas.cx + 4, peakCanvas.cy - 10);
+      p.fill(104, 211, 145, 200);
+      p.ellipse(peakCanvas.cx, peakCanvas.cy, 7, 7);
+    }
 
-    // Keep canvas responsive
-    window.windowResized = function () {
-      resizeCanvas(windowWidth - 240, windowHeight * 0.6);
-      background('#dbeafe');
-      // redraw static trail if needed; clearing is fine
-    };
+    // ── PROJECTILE BOB ──
+    if (launched && !landed && trail.length > 0) {
+      const last = trail[trail.length - 1];
+      const xm   = vx0 * physT;
+      const ym   = vy0 * physT - 0.5 * grav * physT * physT;
+      const vyN  = vy0 - grav * physT;
+      const ang  = Math.atan2(-vyN, vx0); // canvas y is flipped
 
-  })();
-  </script>
+      // Glow
+      p.noStroke();
+      p.fill(246, 224, 94, 35); p.ellipse(last.cx, last.cy, 38, 38);
+      p.fill(246, 224, 94, 55); p.ellipse(last.cx, last.cy, 24, 24);
+
+      // Arrow showing velocity direction
+      p.push();
+      p.translate(last.cx, last.cy);
+      p.rotate(ang);
+      p.fill(246, 224, 94, 200); p.noStroke();
+      p.triangle(16, 0, 5, -5, 5, 5);
+      p.stroke(246, 224, 94, 160); p.strokeWeight(2);
+      p.line(0, 0, 12, 0);
+      p.pop();
+
+      // Ball
+      p.noStroke();
+      p.fill(220, 180, 40);
+      p.ellipse(last.cx, last.cy, 18, 18);
+      p.fill(255, 220, 80);
+      p.ellipse(last.cx - 3, last.cy - 3, 6, 6);
+
+      // Velocity component lines
+      const compLen = 35;
+      const vxNorm  = vx0 / (parseFloat(document.getElementById('speedSlider').value));
+      const vyNorm  = Math.abs(vy0 - grav * physT) / (parseFloat(document.getElementById('speedSlider').value));
+      p.stroke(252, 129, 129, 140); p.strokeWeight(1.5);
+      p.line(last.cx, last.cy, last.cx + compLen, last.cy); // Vx arrow
+      p.stroke(104, 211, 145, 140);
+      p.line(last.cx, last.cy, last.cx, last.cy - (vy0 - grav * physT > 0 ? 1 : -1) * compLen * vyNorm); // Vy arrow
+      p.noStroke();
+      p.fill(252, 129, 129, 140); p.textFont('Consolas'); p.textSize(8); p.textAlign(p.CENTER);
+      p.text('vₓ', last.cx + compLen + 8, last.cy);
+      p.fill(104, 211, 145, 140);
+      p.text('vy', last.cx, last.cy - (vy0 - grav * physT > 0 ? 1 : -1) * compLen * vyNorm - 6);
+    }
+
+    // ── LANDING SPLASH ──
+    if (landed && trail.length > 0) {
+      const last = trail[trail.length - 1];
+      // Impact marker
+      p.noStroke(); p.fill(246, 173, 85, 180);
+      p.ellipse(last.cx, groundY, 22, 10);
+      p.fill(246, 224, 94, 220);
+      p.textFont('Share Tech Mono'); p.textSize(11); p.textAlign(p.CENTER);
+      p.text('LANDED', last.cx, groundY - 18);
+
+      // Summary overlay
+      const R = (vx0 * 2 * vy0 / grav).toFixed(1);
+      const H = peakCanvas ? peakCanvas.h.toFixed(1) : '—';
+      p.fill(0, 0, 0, 140); p.noStroke();
+      p.rect(p.width / 2 - 130, p.height / 2 - 50, 260, 90, 10);
+      p.fill(246, 224, 94); p.textFont('Exo 2'); p.textSize(14); p.textAlign(p.CENTER, p.CENTER);
+      p.text('Trajectory Complete', p.width / 2, p.height / 2 - 28);
+      p.fill(200, 230, 255); p.textFont('Consolas'); p.textSize(11);
+      p.text(`Range: ${R} m   |   Max Height: ${H} m`, p.width / 2, p.height / 2 - 6);
+      p.text(`Time of flight: ${physT.toFixed(2)} s`, p.width / 2, p.height / 2 + 14);
+    }
+
+    // ── LAUNCH POINT ──
+    p.noStroke();
+    p.fill(144, 205, 244, 120);
+    p.ellipse(originX, groundY, 12, 12);
+    p.fill(144, 205, 244);
+    p.ellipse(originX, groundY, 6, 6);
+
+    // ── HUD ──
+    p.fill(0, 0, 0, 125); p.noStroke(); p.rect(8, 8, 215, 88, 8);
+    p.textFont('Consolas'); p.textAlign(p.LEFT, p.TOP); p.fill(144, 205, 244); p.textSize(10.5);
+    const ang0 = parseFloat(document.getElementById('angleSlider').value);
+    const v0   = parseFloat(document.getElementById('speedSlider').value);
+    const gv   = parseFloat(document.getElementById('gravSlider').value);
+    p.text(`θ     = ${ang0}°`,          16, 16);
+    p.text(`v₀    = ${v0} m/s`,         16, 31);
+    p.text(`g     = ${gv} m/s²`,        16, 46);
+    p.text(`t     = ${physT.toFixed(2)} s`, 16, 61);
+    p.text(`FPS   = ${p.frameRate().toFixed(1)}`, 16, 76);
+
+    // Idle prompt
+    if (!launched) {
+      p.fill(255, 255, 255, 50);
+      p.textFont('Exo 2'); p.textSize(14); p.textAlign(p.CENTER, p.CENTER);
+      p.text('Adjust parameters and press 🚀 Launch', p.width / 2, p.height * 0.38);
+    }
+  };
+
+  p.windowResized = function() {
+    const wrap = document.getElementById('canvasWrap');
+    p.resizeCanvas(wrap.clientWidth, Math.max(300, window.innerHeight * 0.46));
+    groundY = p.height - 55;
+    SCALE   = computeScale();
+    computePredictedPath();
+    p.redraw();
+  };
+
+  // ── GLOBAL CONTROLS ──────────────────────────────────────────────────────
+  window.launchProjectile = function() {
+    const theta = parseFloat(document.getElementById('angleSlider').value) * Math.PI / 180;
+    const v0    = parseFloat(document.getElementById('speedSlider').value);
+    grav        = parseFloat(document.getElementById('gravSlider').value);
+    SCALE       = computeScale();
+
+    vx0     = v0 * Math.cos(theta);
+    vy0     = v0 * Math.sin(theta);
+    physT   = 0;
+    launched = true;
+    landed   = false;
+    trail    = [];
+    peakCanvas = null;
+    hHistory = []; sHistory = [];
+    drawBothGraphs();
+    p.loop();
+  };
+
+  window.resetSim = function() {
+    launched   = false;
+    landed     = false;
+    physT      = 0;
+    trail      = [];
+    peakCanvas = null;
+    hHistory   = []; sHistory  = [];
+    document.getElementById('statSpeed').textContent = '0.0';
+    document.getElementById('statAlt').textContent   = '0.0';
+    document.getElementById('statTime').textContent  = '0.0';
+    document.getElementById('statX').textContent     = '0.0';
+    syncControls();
+    computePredictedPath();
+    drawBothGraphs();
+    p.noLoop(); p.redraw();
+  };
+
+  // Re-compute predicted path on any slider change
+  ['angleSlider', 'speedSlider', 'gravSlider'].forEach(id => {
+    document.getElementById(id).addEventListener('input', () => {
+      if (!launched) { computePredictedPath(); p.redraw(); }
+    });
+  });
+
+}, 'canvasWrap');
+</script>
 </body>
 </html>
 
