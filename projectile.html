@@ -477,6 +477,7 @@ new p5(function(p) {
   // Physics state (all real SI units, m and s)
   let launched   = false;
   let landed     = false;
+  let firstFrame = false;  // skip physics on the very first frame after launch
   let physT      = 0;   // time in seconds
   let vx0        = 0;   // m/s horizontal
   let vy0        = 0;   // m/s vertical (positive = up in physics)
@@ -521,7 +522,6 @@ new p5(function(p) {
     const a  = parseFloat(document.getElementById('angleSlider').value) * Math.PI / 180;
     const v0 = parseFloat(document.getElementById('speedSlider').value);
     const g  = parseFloat(document.getElementById('gravSlider').value);
-    const R  = v0 * v0 * Math.sin(2 * a) / g;
     const tFlight = 2 * v0 * Math.sin(a) / g;
     SCALE = computeScale();
     predictedPath = [];
@@ -532,14 +532,15 @@ new p5(function(p) {
       const py = v0 * Math.sin(a) * t - 0.5 * g * t * t;
       predictedPath.push({
         cx: originX + px * SCALE,
-        cy: groundY - py * SCALE
+        cy: groundY - BALL_R - py * SCALE   // ball sits on ground
       });
     }
   }
 
-  // Convert physics coords to canvas
+  // Convert physics coords to canvas — ball sits ON ground (y=0 → top of grass)
+  const BALL_R = 9; // ball radius in pixels
   function toCanvas(xm, ym) {
-    return { cx: originX + xm * SCALE, cy: groundY - ym * SCALE };
+    return { cx: originX + xm * SCALE, cy: groundY - BALL_R - ym * SCALE };
   }
 
   p.draw = function() {
@@ -571,9 +572,9 @@ new p5(function(p) {
       p.textFont('Consolas'); p.textSize(8); p.textAlign(p.CENTER);
       p.text(m + 'm', gx, groundY + 20);
     }
-    // Vertical altitude ruler (left edge)
-    for (let m = 0; m * SCALE < groundY - 10; m += 50) {
-      const gy = groundY - m * SCALE;
+    // Vertical altitude ruler (left edge) — starts from ground surface
+    for (let m = 0; (groundY - BALL_R) - m * SCALE > 10; m += 50) {
+      const gy = groundY - BALL_R - m * SCALE;
       p.stroke(144, 205, 244, 35); p.strokeWeight(1);
       p.line(originX - 8, gy, originX, gy);
       p.noStroke(); p.fill(144, 205, 244, 70);
@@ -591,20 +592,20 @@ new p5(function(p) {
         if (i % 3 !== 0) p.line(prev.cx, prev.cy, cur.cx, cur.cy); // dashed
       }
       p.noStroke();
-      // Angle arc
+      // Angle arc — drawn at ground surface level
       const ang = parseFloat(document.getElementById('angleSlider').value);
       const arcR = 40;
       p.noFill(); p.stroke(246, 224, 94, 120); p.strokeWeight(1.2);
-      p.arc(originX, groundY, arcR * 2, arcR * 2, -p.radians(ang), 0);
+      p.arc(originX, groundY - BALL_R, arcR * 2, arcR * 2, -p.radians(ang), 0);
       p.noStroke(); p.fill(246, 224, 94, 160);
       p.textFont('Consolas'); p.textSize(10); p.textAlign(p.CENTER);
-      p.text(ang + '°', originX + arcR * 0.7, groundY - arcR * 0.4);
+      p.text(ang + '°', originX + arcR * 0.7, groundY - BALL_R - arcR * 0.4);
 
       // Landing point marker
       const last = predictedPath[predictedPath.length - 1];
       p.stroke(246, 173, 85, 130); p.strokeWeight(2); p.noFill();
-      p.line(last.cx - 8, groundY, last.cx + 8, groundY);
-      p.line(last.cx, groundY - 8, last.cx, groundY + 8);
+      p.line(last.cx - 8, groundY - BALL_R, last.cx + 8, groundY - BALL_R);
+      p.line(last.cx, groundY - BALL_R - 8, last.cx, groundY - BALL_R + 4);
       // Max height marker
       const apex = predictedPath.reduce((a, b) => a.cy < b.cy ? a : b);
       p.stroke(104, 211, 145, 100); p.strokeWeight(1); p.noFill();
@@ -613,7 +614,11 @@ new p5(function(p) {
 
     // ── PHYSICS UPDATE ──
     if (launched && !landed) {
-      physT += p.deltaTime / 1000 * 1.2; // slight speed-up for UX
+      // Skip the very first frame — p5 deltaTime is huge on frame 1 after loop() restarts
+      if (firstFrame) { firstFrame = false; }
+      else {
+        const dt = Math.min(p.deltaTime, 33) / 1000; // clamp to 33ms max
+        physT += dt;
       const xm  = vx0 * physT;
       const ym  = vy0 * physT - 0.5 * grav * physT * physT;
       const vxN = vx0;
@@ -646,6 +651,7 @@ new p5(function(p) {
         document.getElementById('statH').textContent     = peakCanvas ? peakCanvas.h.toFixed(1) : '—';
         p.noLoop();
       }
+      } // end else (firstFrame)
     }
 
     // ── TRAIL ──
@@ -722,12 +728,12 @@ new p5(function(p) {
     // ── LANDING SPLASH ──
     if (landed && trail.length > 0) {
       const last = trail[trail.length - 1];
-      // Impact marker
+      // Impact marker at ground surface
       p.noStroke(); p.fill(246, 173, 85, 180);
-      p.ellipse(last.cx, groundY, 22, 10);
+      p.ellipse(last.cx, groundY - BALL_R, 22, 10);
       p.fill(246, 224, 94, 220);
       p.textFont('Share Tech Mono'); p.textSize(11); p.textAlign(p.CENTER);
-      p.text('LANDED', last.cx, groundY - 18);
+      p.text('LANDED', last.cx, groundY - BALL_R - 18);
 
       // Summary overlay
       const R = (vx0 * 2 * vy0 / grav).toFixed(1);
@@ -741,12 +747,12 @@ new p5(function(p) {
       p.text(`Time of flight: ${physT.toFixed(2)} s`, p.width / 2, p.height / 2 + 14);
     }
 
-    // ── LAUNCH POINT ──
+    // ── LAUNCH POINT — sits on ground surface ──
     p.noStroke();
     p.fill(144, 205, 244, 120);
-    p.ellipse(originX, groundY, 12, 12);
+    p.ellipse(originX, groundY - BALL_R, 12, 12);
     p.fill(144, 205, 244);
-    p.ellipse(originX, groundY, 6, 6);
+    p.ellipse(originX, groundY - BALL_R, 6, 6);
 
     // ── HUD ──
     p.fill(0, 0, 0, 125); p.noStroke(); p.rect(8, 8, 215, 88, 8);
@@ -784,11 +790,12 @@ new p5(function(p) {
     grav        = parseFloat(document.getElementById('gravSlider').value);
     SCALE       = computeScale();
 
-    vx0     = v0 * Math.cos(theta);
-    vy0     = v0 * Math.sin(theta);
-    physT   = 0;
-    launched = true;
-    landed   = false;
+    vx0      = v0 * Math.cos(theta);
+    vy0      = v0 * Math.sin(theta);
+    physT    = 0;
+    launched  = true;
+    landed    = false;
+    firstFrame = true;
     trail    = [];
     peakCanvas = null;
     hHistory = []; sHistory = [];
@@ -799,6 +806,7 @@ new p5(function(p) {
   window.resetSim = function() {
     launched   = false;
     landed     = false;
+    firstFrame = false;
     physT      = 0;
     trail      = [];
     peakCanvas = null;
@@ -824,8 +832,6 @@ new p5(function(p) {
 </script>
 </body>
 </html>
-
-
 
 
 
