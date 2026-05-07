@@ -464,15 +464,78 @@
   // UNIT CONVERTER
   // ══════════════════════════════════════════════════════════════════════════
   const UC_CATS = {
-    'Length':    { units: ['m','km','cm','mm','ft','in','mile'], factors: [1,1e3,0.01,0.001,0.3048,0.0254,1609.34] },
-    'Time':      { units: ['s','min','hr','ms','frame@60fps'], factors: [1,60,3600,0.001,1/60] },
-    'Speed':     { units: ['m/s','km/h','mph','cm/s','ft/s'], factors: [1,1/3.6,0.44704,0.01,0.3048] },
-    'Accel':     { units: ['m/s²','cm/s²','ft/s²','g (9.8)'], factors: [1,0.01,0.3048,9.8] },
-    'Force':     { units: ['N','kN','dyne','lbf','kgf'], factors: [1,1000,1e-5,4.44822,9.80665] },
-    'Energy':    { units: ['J','kJ','cal','kcal','eV'], factors: [1,1000,4.184,4184,1.602e-19] },
-    'Mass':      { units: ['kg','g','mg','lb','ton'], factors: [1,0.001,1e-6,0.453592,1000] },
-    'Angle':     { units: ['rad','deg','rev'], factors: [1, Math.PI/180, 2*Math.PI] },
-    'Ang. Spd':  { units: ['rad/s','deg/s','rpm','rev/s'], factors: [1, Math.PI/180, Math.PI/30, 2*Math.PI] },
+    'Length': {
+      units:   ['m','km','cm','mm','µm','nm','ft','in','yd','mile','nmi','ly','AU','Å'],
+      factors: [1, 1e3, 1e-2, 1e-3, 1e-6, 1e-9, 0.3048, 0.0254, 0.9144, 1609.344, 1852, 9.461e15, 1.496e11, 1e-10]
+    },
+    'Time': {
+      units:   ['s','ms','µs','ns','min','hr','day','week','month','year','frame@24','frame@30','frame@60'],
+      factors: [1, 1e-3, 1e-6, 1e-9, 60, 3600, 86400, 604800, 2.628e6, 3.156e7, 1/24, 1/30, 1/60]
+    },
+    'Speed': {
+      units:   ['m/s','km/h','mph','cm/s','mm/s','ft/s','ft/min','knot','mach','c (light)'],
+      factors: [1, 1/3.6, 0.44704, 0.01, 0.001, 0.3048, 0.00508, 0.514444, 340.3, 2.998e8]
+    },
+    'Accel': {
+      units:   ['m/s²','cm/s²','mm/s²','ft/s²','in/s²','g (9.81)','Gal','mGal'],
+      factors: [1, 0.01, 0.001, 0.3048, 0.0254, 9.80665, 0.01, 1e-5]
+    },
+    'Force': {
+      units:   ['N','kN','MN','mN','µN','dyne','lbf','ozf','kgf','tonf'],
+      factors: [1, 1e3, 1e6, 1e-3, 1e-6, 1e-5, 4.44822, 0.278014, 9.80665, 9806.65]
+    },
+    'Energy': {
+      units:   ['J','kJ','MJ','mJ','µJ','cal','kcal','Wh','kWh','eV','MeV','BTU','ft·lbf','erg'],
+      factors: [1, 1e3, 1e6, 1e-3, 1e-6, 4.184, 4184, 3600, 3.6e6, 1.602e-19, 1.602e-13, 1055.06, 1.35582, 1e-7]
+    },
+    'Power': {
+      units:   ['W','kW','MW','mW','µW','hp (mech)','hp (elec)','BTU/hr','cal/s','kcal/hr'],
+      factors: [1, 1e3, 1e6, 1e-3, 1e-6, 745.7, 746, 0.29307, 4.184, 1.163]
+    },
+    'Mass': {
+      units:   ['kg','g','mg','µg','t (metric)','lb','oz','slug','u (amu)','stone'],
+      factors: [1, 1e-3, 1e-6, 1e-9, 1e3, 0.453592, 0.028350, 14.5939, 1.66054e-27, 6.35029]
+    },
+    'Pressure': {
+      units:   ['Pa','kPa','MPa','hPa','bar','mbar','atm','mmHg','cmH₂O','psi','torr'],
+      factors: [1, 1e3, 1e6, 100, 1e5, 100, 101325, 133.322, 98.0665, 6894.76, 133.322]
+    },
+    'Temp': {
+      units:   ['°C','°F','K','°R'],
+      factors: null  // special — handled separately
+    },
+    'Angle': {
+      units:   ['rad','deg','grad','arcmin','arcsec','rev','mrad'],
+      factors: [1, Math.PI/180, Math.PI/200, Math.PI/10800, Math.PI/648000, 2*Math.PI, 0.001]
+    },
+    'Ang. Speed': {
+      units:   ['rad/s','deg/s','rev/s','rpm','rad/min','deg/min'],
+      factors: [1, Math.PI/180, 2*Math.PI, Math.PI/30, Math.PI/30/1, Math.PI/10800*60]
+    },
+    'Frequency': {
+      units:   ['Hz','kHz','MHz','GHz','THz','rpm (as Hz)','rad/s'],
+      factors: [1, 1e3, 1e6, 1e9, 1e12, 1/60, 1/(2*Math.PI)]
+    },
+    'Area': {
+      units:   ['m²','km²','cm²','mm²','ft²','in²','yd²','acre','ha','mi²'],
+      factors: [1, 1e6, 1e-4, 1e-6, 0.092903, 6.4516e-4, 0.836127, 4046.86, 1e4, 2.59e6]
+    },
+    'Volume': {
+      units:   ['m³','L','mL','cm³','mm³','ft³','in³','gal (US)','fl oz (US)','pint (US)'],
+      factors: [1, 0.001, 1e-6, 1e-6, 1e-9, 0.0283168, 1.63871e-5, 0.003785, 2.9574e-5, 4.7318e-4]
+    },
+    'Density': {
+      units:   ['kg/m³','g/cm³','g/L','kg/L','lb/ft³','lb/in³','oz/ft³'],
+      factors: [1, 1000, 1, 1000, 16.0185, 27679.9, 1.00115]
+    },
+    'Torque': {
+      units:   ['N·m','kN·m','mN·m','N·cm','lbf·ft','lbf·in','kgf·m','dyne·cm'],
+      factors: [1, 1000, 1e-3, 0.01, 1.35582, 0.112985, 9.80665, 1e-7]
+    },
+    'Data': {
+      units:   ['bit','byte','KB','MB','GB','TB','PB','Kbit','Mbit','Gbit'],
+      factors: [1, 8, 8192, 8388608, 8589934592, 8796093022208, 9007199254740992, 1000, 1e6, 1e9]
+    },
   };
 
   let ucCat = 'Speed';
