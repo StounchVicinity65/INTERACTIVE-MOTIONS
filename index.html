@@ -230,13 +230,28 @@
     }
     .clear-btn:hover { background: rgba(255,255,255,0.13); color: white; }
 
-    /* Result box — always visible */
+    /* Result box — always visible, fixed height with scroll */
     .result-box {
       background: rgba(0,0,0,0.45); border: 1px solid rgba(144,205,244,0.18);
-      border-radius: 10px; padding: 1rem 1.1rem;
-      display: flex; flex-direction: column; gap: 0.5rem;
-      min-height: 130px;
+      border-radius: 10px; padding: 0.85rem 1rem;
+      display: flex; flex-direction: column; gap: 0.4rem;
+      height: 180px; overflow: hidden; position: relative;
     }
+    .result-box-inner {
+      flex: 1; overflow-y: auto; overflow-x: hidden;
+      display: flex; flex-direction: column; gap: 0.4rem;
+      scrollbar-width: thin; scrollbar-color: rgba(144,205,244,0.25) transparent;
+    }
+    .result-box-inner::-webkit-scrollbar { width: 3px; }
+    .result-box-inner::-webkit-scrollbar-thumb { background: rgba(144,205,244,0.25); border-radius: 2px; }
+    /* Speed slider row */
+    .tw-speed-row {
+      display: flex; align-items: center; gap: 6px;
+      border-top: 1px solid rgba(144,205,244,0.1); padding-top: 6px; flex-shrink: 0;
+    }
+    .tw-speed-lbl { font-family: 'Share Tech Mono', monospace; font-size: 0.58rem; color: rgba(144,205,244,0.4); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
+    .tw-speed-slider { flex: 1; accent-color: var(--blue-d); height: 3px; cursor: pointer; }
+    .tw-speed-val { font-family: 'Share Tech Mono', monospace; font-size: 0.6rem; color: var(--blue); min-width: 24px; text-align: right; }
     .result-answer {
       font-family: 'Share Tech Mono', monospace; font-size: 1.15rem;
       color: #68d391; font-weight: 700;
@@ -441,18 +456,27 @@
           </button>
         </div>
 
-        <!-- Result — always visible, pre-filled with placeholder -->
-        <div class="result-box show" id="resultBox">
-          <div class="result-lbl lang-en">Formula used</div>
-          <div class="result-lbl lang-bn hidden">ব্যবহৃত সূত্র</div>
-          <div class="result-formula-used" id="resFormula" style="opacity:0.3;font-style:italic">select a formula above and press ⚡ Solve</div>
-          <div class="result-lbl lang-en" style="margin-top:4px">Answer</div>
-          <div class="result-lbl lang-bn hidden" style="margin-top:4px">উত্তর</div>
-          <div class="result-answer" id="resAnswer" style="opacity:0.22">—</div>
-          <div class="result-lbl lang-en" style="margin-top:4px">Working</div>
-          <div class="result-lbl lang-bn hidden" style="margin-top:4px">কার্যপ্রক্রিয়া</div>
-          <div class="result-steps" id="resSteps" style="opacity:0.18">steps will appear here...</div>
-          <div class="result-error hidden" id="resError"></div>
+        <!-- Result — always visible, fixed height scrollable -->
+        <div class="result-box" id="resultBox">
+          <div class="result-box-inner" id="resultInner">
+            <div class="result-lbl lang-en">Formula used</div>
+            <div class="result-lbl lang-bn hidden">ব্যবহৃত সূত্র</div>
+            <div class="result-formula-used" id="resFormula" style="opacity:0.3;font-style:italic">select a formula above and press ⚡ Solve</div>
+            <div class="result-lbl lang-en" style="margin-top:2px">Answer</div>
+            <div class="result-lbl lang-bn hidden" style="margin-top:2px">উত্তর</div>
+            <div class="result-answer" id="resAnswer" style="opacity:0.22">—</div>
+            <div class="result-lbl lang-en" style="margin-top:2px">Working</div>
+            <div class="result-lbl lang-bn hidden" style="margin-top:2px">কার্যপ্রক্রিয়া</div>
+            <div class="result-steps" id="resSteps" style="opacity:0.18">steps will appear here...</div>
+            <div class="result-error hidden" id="resError"></div>
+          </div>
+          <!-- Typewriter speed slider -->
+          <div class="tw-speed-row">
+            <span class="tw-speed-lbl lang-en">type speed</span>
+            <span class="tw-speed-lbl lang-bn hidden">টাইপ গতি</span>
+            <input type="range" class="tw-speed-slider" id="twSpeed" min="1" max="5" value="3" step="1" oninput="updateTwSpeed()"/>
+            <span class="tw-speed-val" id="twSpeedVal">3</span>
+          </div>
         </div>
 
         <hr class="s-divider"/>
@@ -1063,18 +1087,32 @@
     });
   }
 
+  // ── TYPEWRITER SPEED ───────────────────────────────────────────────────────
+  // Speed levels: 1=very slow(40ms), 2=slow(25ms), 3=normal(14ms), 4=fast(6ms), 5=instant(0ms)
+  const TW_SPEEDS = [40, 25, 14, 6, 0];
+  let twCharDelay = 14; // default level 3
+
+  function updateTwSpeed() {
+    const v = parseInt(document.getElementById('twSpeed').value);
+    document.getElementById('twSpeedVal').textContent = v;
+    twCharDelay = TW_SPEEDS[v - 1];
+  }
+
+  function scrollResultToBottom() {
+    const inner = document.getElementById('resultInner');
+    if (inner) inner.scrollTop = inner.scrollHeight;
+  }
+
   // ── TYPEWRITER ENGINE ──────────────────────────────────────────────────────
   let twTimer = null;
 
   function typewriterSequence(sequence) {
-    // sequence: array of { el, text, delay_before (ms) }
-    // Each element types its text char by char, then moves to next after a pause
     if (twTimer) clearTimeout(twTimer);
 
-    // Clear all targets immediately
     sequence.forEach(s => {
       s.el.textContent = '';
       s.el.style.opacity = '1';
+      s.el.style.fontStyle = 'normal';
       s.el.classList.remove('tw-cursor');
     });
 
@@ -1082,8 +1120,18 @@
 
     function runNext() {
       if (seqIdx >= sequence.length) return;
-      const { el, text, delay_before = 0, charDelay = 18 } = sequence[seqIdx];
+      const { el, text, delay_before = 0 } = sequence[seqIdx];
       seqIdx++;
+
+      // Instant mode (speed 5)
+      if (twCharDelay === 0) {
+        twTimer = setTimeout(() => {
+          el.textContent = text;
+          scrollResultToBottom();
+          runNext();
+        }, delay_before);
+        return;
+      }
 
       twTimer = setTimeout(() => {
         el.classList.add('tw-cursor');
@@ -1093,9 +1141,9 @@
           if (charIdx < text.length) {
             el.textContent += text[charIdx];
             charIdx++;
-            // Pause slightly longer at newlines (gives line-by-line feel)
+            scrollResultToBottom();
             const ch = text[charIdx - 1];
-            const delay = ch === '\n' ? charDelay * 8 : charDelay;
+            const delay = ch === '\n' ? twCharDelay * 7 : twCharDelay;
             twTimer = setTimeout(typeChar, delay);
           } else {
             el.classList.remove('tw-cursor');
@@ -1143,9 +1191,9 @@
     document.getElementById('resError').classList.add('hidden');
 
     typewriterSequence([
-      { el: document.getElementById('resFormula'), text: solver.formula,          charDelay: 22 },
-      { el: document.getElementById('resAnswer'),  text: `${findSym} = ${disp} ${unit}`, delay_before: 120, charDelay: 20 },
-      { el: document.getElementById('resSteps'),   text: stepsText,               delay_before: 180, charDelay: 14 },
+      { el: document.getElementById('resFormula'), text: solver.formula                          },
+      { el: document.getElementById('resAnswer'),  text: `${findSym} = ${disp} ${unit}`, delay_before: 120 },
+      { el: document.getElementById('resSteps'),   text: stepsText,                      delay_before: 180 },
     ]);
   }
 
@@ -1162,7 +1210,7 @@
     stepsEl.textContent   = ''; stepsEl.style.opacity = '1';
 
     errEl.classList.remove('hidden');
-    typewriterSequence([{ el: errEl, text: '⚠ ' + msg, charDelay: 16 }]);
+    typewriterSequence([{ el: errEl, text: '⚠ ' + msg }]);
   }
 
   function hideResult() {
