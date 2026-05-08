@@ -230,12 +230,13 @@
     }
     .clear-btn:hover { background: rgba(255,255,255,0.13); color: white; }
 
-    /* Result box */
+    /* Result box — always visible */
     .result-box {
       background: rgba(0,0,0,0.45); border: 1px solid rgba(144,205,244,0.18);
-      border-radius: 10px; padding: 1rem 1.1rem; display: none; flex-direction: column; gap: 0.5rem;
+      border-radius: 10px; padding: 1rem 1.1rem;
+      display: flex; flex-direction: column; gap: 0.5rem;
+      min-height: 130px;
     }
-    .result-box.show { display: flex; }
     .result-answer {
       font-family: 'Share Tech Mono', monospace; font-size: 1.15rem;
       color: #68d391; font-weight: 700;
@@ -248,12 +249,40 @@
       font-family: 'Share Tech Mono', monospace; font-size: 0.78rem;
       color: rgba(144,205,244,0.75); line-height: 1.8;
       border-top: 1px solid rgba(144,205,244,0.12); padding-top: 0.5rem;
-      white-space: pre-line;
+      white-space: pre-line; min-height: 20px;
     }
-    .result-error {
-      font-family: 'Share Tech Mono', monospace; font-size: 0.82rem;
-      color: #fc8181;
+    /* blinking cursor for typewriter */
+    .tw-cursor::after {
+      content: '▌';
+      color: var(--blue);
+      animation: twBlink 0.7s step-end infinite;
     }
+    @keyframes twBlink { 0%,100%{opacity:1;} 50%{opacity:0;} }
+
+    .result-error { font-family: 'Share Tech Mono', monospace; font-size: 0.82rem; color: #fc8181; }
+
+    /* SCALE EXPLANATION */
+    #scaleNote { display: flex; flex-direction: column; gap: 0.6rem; }
+    .scale-title {
+      font-family: 'Share Tech Mono', monospace; font-size: 0.62rem;
+      letter-spacing: 0.13em; text-transform: uppercase;
+      color: rgba(144,205,244,0.45); padding-bottom: 0.2rem;
+    }
+    .scale-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+    .scale-card {
+      background: rgba(0,0,0,0.35);
+      border: 1px solid rgba(144,205,244,0.1);
+      border-radius: 9px; padding: 0.7rem 0.8rem;
+      display: flex; gap: 0.6rem; align-items: flex-start;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .scale-card:hover { border-color: rgba(144,205,244,0.25); background: rgba(144,205,244,0.04); }
+    .sc-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
+    .sc-body { display: flex; flex-direction: column; gap: 0.25rem; }
+    .sc-head { font-size: 0.78rem; font-weight: 700; color: var(--blue); line-height: 1.35; }
+    .sc-text { font-size: 0.75rem; color: rgba(200,220,240,0.65); line-height: 1.55; }
+    .sc-text code { font-family: 'Share Tech Mono', monospace; color: #f6e05e; font-size: 0.72rem; }
+    .sc-text em { font-style: normal; color: #68d391; }
     .result-lbl { font-size: 0.65rem; color: rgba(144,205,244,0.4); font-family: 'Share Tech Mono', monospace; text-transform: uppercase; letter-spacing: 0.1em; }
 
     /* Divider */
@@ -278,6 +307,7 @@
       #sidebarRight { display: none; }
       #languageToggle { top: 140px; right: 10px; font-size: 0.76rem; }
       #reviewButton, #aboutButton { font-size: 0.78rem; padding: 0.4rem 0.8rem; }
+      .scale-cards { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -411,19 +441,71 @@
           </button>
         </div>
 
-        <!-- Result -->
-        <div class="result-box" id="resultBox">
+        <!-- Result — always visible, pre-filled with placeholder -->
+        <div class="result-box show" id="resultBox">
           <div class="result-lbl lang-en">Formula used</div>
           <div class="result-lbl lang-bn hidden">ব্যবহৃত সূত্র</div>
-          <div class="result-formula-used" id="resFormula"></div>
+          <div class="result-formula-used" id="resFormula" style="opacity:0.3;font-style:italic">select a formula above and press ⚡ Solve</div>
           <div class="result-lbl lang-en" style="margin-top:4px">Answer</div>
           <div class="result-lbl lang-bn hidden" style="margin-top:4px">উত্তর</div>
-          <div class="result-answer" id="resAnswer"></div>
+          <div class="result-answer" id="resAnswer" style="opacity:0.22">—</div>
           <div class="result-lbl lang-en" style="margin-top:4px">Working</div>
           <div class="result-lbl lang-bn hidden" style="margin-top:4px">কার্যপ্রক্রিয়া</div>
-          <div class="result-steps" id="resSteps"></div>
+          <div class="result-steps" id="resSteps" style="opacity:0.18">steps will appear here...</div>
           <div class="result-error hidden" id="resError"></div>
         </div>
+
+        <hr class="s-divider"/>
+
+        <!-- SCALE EXPLANATION -->
+        <div id="scaleNote">
+          <div class="scale-title lang-en">📐 Why the same unit can look different across simulations</div>
+          <div class="scale-title lang-bn hidden">📐 একই একক বিভিন্ন সিমুলেশনে ভিন্ন দেখায় কেন</div>
+          <div class="scale-cards" id="scaleCards">
+
+            <div class="scale-card">
+              <div class="sc-icon">🔭</div>
+              <div class="sc-body">
+                <div class="sc-head lang-en">Scale is chosen for visibility, not realism</div>
+                <div class="sc-head lang-bn hidden">স্কেল বাস্তবতার জন্য নয়, দৃশ্যমানতার জন্য</div>
+                <div class="sc-text lang-en">Each simulation picks a pixel-per-unit ratio that makes the motion fill the canvas nicely. A 1 m pendulum and a 200 m projectile range both need to fit the same screen — so their scales are completely different numbers.</div>
+                <div class="sc-text lang-bn hidden">প্রতিটি সিমুলেশন এমন একটি পিক্সেল-প্রতি-একক অনুপাত বেছে নেয় যা গতিকে ক্যানভাসে সুন্দরভাবে পূরণ করে। ১ m দোলক ও ২০০ m পাল্লার প্রক্ষেপণ উভয়ই একই স্ক্রিনে ফিট করতে হয় — তাই তাদের স্কেল সম্পূর্ণ ভিন্ন।</div>
+              </div>
+            </div>
+
+            <div class="scale-card">
+              <div class="sc-icon">⚖️</div>
+              <div class="sc-body">
+                <div class="sc-head lang-en">Physics stays correct regardless of scale</div>
+                <div class="sc-head lang-bn hidden">স্কেল নির্বিশেষে পদার্থবিজ্ঞান সঠিক থাকে</div>
+                <div class="sc-text lang-en">Ratios and relationships — like how doubling the length of a pendulum changes its period — are exactly preserved. The formulas are applied correctly; only the visual magnification differs.</div>
+                <div class="sc-text lang-bn hidden">অনুপাত ও সম্পর্কগুলো — যেমন দোলকের দৈর্ঘ্য দ্বিগুণ করলে পর্যায়কাল কীভাবে পরিবর্তিত হয় — সঠিকভাবে সংরক্ষিত থাকে। শুধু দৃশ্যমান বিবর্ধন আলাদা।</div>
+              </div>
+            </div>
+
+            <div class="scale-card">
+              <div class="sc-icon">🕐</div>
+              <div class="sc-body">
+                <div class="sc-head lang-en">Time is real seconds — not frames</div>
+                <div class="sc-head lang-bn hidden">সময় প্রকৃত সেকেন্ড — ফ্রেম নয়</div>
+                <div class="sc-text lang-en">All simulations use <code>deltaTime</code> (actual elapsed milliseconds per frame) so the animation runs at the same physical speed on any monitor — 60 Hz or 144 Hz. A 2-second pendulum swing takes 2 real seconds.</div>
+                <div class="sc-text lang-bn hidden">সকল সিমুলেশন <code>deltaTime</code> ব্যবহার করে তাই যেকোনো মনিটরে — ৬০ Hz বা ১৪৪ Hz — একই ভৌত গতিতে চলে। একটি ২-সেকেন্ডের দোলন ২টি প্রকৃত সেকেন্ড নেয়।</div>
+              </div>
+            </div>
+
+            <div class="scale-card">
+              <div class="sc-icon">📊</div>
+              <div class="sc-body">
+                <div class="sc-head lang-en">Read the HUD, not the canvas size</div>
+                <div class="sc-head lang-bn hidden">ক্যানভাস আকার নয়, HUD পড়ুন</div>
+                <div class="sc-text lang-en">The on-screen numbers — velocity, displacement, period, force — are always in SI units. The canvas is just a visual aid. If the HUD says <em>v = 12.5 m/s</em>, that is the real physical value regardless of how large or small the ball appears.</div>
+                <div class="sc-text lang-bn hidden">অন-স্ক্রিন সংখ্যাগুলো — বেগ, সরণ, পর্যায়কাল, বল — সর্বদা SI এককে। ক্যানভাস শুধু একটি দৃশ্যমান সহায়তা। যদি HUD বলে <em>v = 12.5 m/s</em>, এটি প্রকৃত ভৌত মান।</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
       </div>
     </main>
 
@@ -561,12 +643,34 @@
     const val = parseFloat(document.getElementById('ucVal').value);
     const fi  = parseInt(document.getElementById('ucFrom').value);
     const ti  = parseInt(document.getElementById('ucTo').value);
-    if(isNaN(val)){ document.getElementById('ucOut').textContent = '—'; return; }
+    const out = document.getElementById('ucOut');
+    if (isNaN(val)) { out.textContent = '—'; return; }
+
     const { units, factors } = UC_CATS[ucCat];
-    const base  = val * factors[fi];
+
+    // Special: temperature
+    if (ucCat === 'Temp') {
+      const fromU = units[fi], toU = units[ti];
+      let celsius;
+      if (fromU === '°C') celsius = val;
+      else if (fromU === '°F') celsius = (val - 32) * 5/9;
+      else if (fromU === 'K')  celsius = val - 273.15;
+      else if (fromU === '°R') celsius = (val - 491.67) * 5/9;
+      let result;
+      if (toU === '°C') result = celsius;
+      else if (toU === '°F') result = celsius * 9/5 + 32;
+      else if (toU === 'K')  result = celsius + 273.15;
+      else if (toU === '°R') result = (celsius + 273.15) * 9/5;
+      out.textContent = `${val} ${fromU} = ${parseFloat(result.toPrecision(6))} ${toU}`;
+      return;
+    }
+
+    const base   = val * factors[fi];
     const result = base / factors[ti];
-    const disp = Math.abs(result) < 0.001 || Math.abs(result) > 1e6 ? result.toExponential(4) : parseFloat(result.toPrecision(6)).toString();
-    document.getElementById('ucOut').textContent = `${val} ${units[fi]} = ${disp} ${units[ti]}`;
+    const disp = Math.abs(result) < 0.001 || Math.abs(result) > 1e6
+      ? result.toExponential(4)
+      : parseFloat(result.toPrecision(6)).toString();
+    out.textContent = `${val} ${units[fi]} = ${disp} ${units[ti]}`;
   }
 
   buildUCSels(); doUC();
@@ -959,12 +1063,57 @@
     });
   }
 
+  // ── TYPEWRITER ENGINE ──────────────────────────────────────────────────────
+  let twTimer = null;
+
+  function typewriterSequence(sequence) {
+    // sequence: array of { el, text, delay_before (ms) }
+    // Each element types its text char by char, then moves to next after a pause
+    if (twTimer) clearTimeout(twTimer);
+
+    // Clear all targets immediately
+    sequence.forEach(s => {
+      s.el.textContent = '';
+      s.el.style.opacity = '1';
+      s.el.classList.remove('tw-cursor');
+    });
+
+    let seqIdx = 0;
+
+    function runNext() {
+      if (seqIdx >= sequence.length) return;
+      const { el, text, delay_before = 0, charDelay = 18 } = sequence[seqIdx];
+      seqIdx++;
+
+      twTimer = setTimeout(() => {
+        el.classList.add('tw-cursor');
+        let charIdx = 0;
+
+        function typeChar() {
+          if (charIdx < text.length) {
+            el.textContent += text[charIdx];
+            charIdx++;
+            // Pause slightly longer at newlines (gives line-by-line feel)
+            const ch = text[charIdx - 1];
+            const delay = ch === '\n' ? charDelay * 8 : charDelay;
+            twTimer = setTimeout(typeChar, delay);
+          } else {
+            el.classList.remove('tw-cursor');
+            runNext();
+          }
+        }
+        typeChar();
+      }, delay_before);
+    }
+
+    runNext();
+  }
+
   function solve() {
     const form = catFormulas()[activeFormIdx];
     const solver = form.solvers[findSym];
     if (!solver) return showError('No solver for this target.');
 
-    // Collect known values
     const known = {};
     let missing = [];
     form.vars.forEach(v => {
@@ -975,12 +1124,13 @@
       else known[v.s] = val;
     });
 
-    if (missing.length > 0) return showError(`Missing value(s): ${missing.join(', ')}`);
+    if (missing.length > 0) return showError(`Missing value(s):\n${missing.join('\n')}`);
 
     let result;
     try { result = solver.fn(known); } catch(e) { return showError('Calculation error: ' + e.message); }
 
-    if (isNaN(result) || !isFinite(result)) return showError('Result is undefined (check inputs — e.g. negative under square root, division by zero).');
+    if (isNaN(result) || !isFinite(result))
+      return showError('Result is undefined.\nCheck inputs — e.g. negative\nunder a square root, or\ndivision by zero.');
 
     const disp = Math.abs(result) < 0.0001 || Math.abs(result) > 1e7
       ? result.toExponential(4)
@@ -988,25 +1138,47 @@
 
     const targetVar = form.vars.find(v => v.s === findSym);
     const unit = targetVar?.unit || '';
+    const stepsText = solver.steps(known, disp);
 
-    document.getElementById('resFormula').textContent = solver.formula;
-    document.getElementById('resAnswer').textContent  = `${findSym} = ${disp} ${unit}`;
-    document.getElementById('resSteps').textContent   = solver.steps(known, disp);
     document.getElementById('resError').classList.add('hidden');
-    document.getElementById('resultBox').classList.add('show');
+
+    typewriterSequence([
+      { el: document.getElementById('resFormula'), text: solver.formula,          charDelay: 22 },
+      { el: document.getElementById('resAnswer'),  text: `${findSym} = ${disp} ${unit}`, delay_before: 120, charDelay: 20 },
+      { el: document.getElementById('resSteps'),   text: stepsText,               delay_before: 180, charDelay: 14 },
+    ]);
   }
 
   function showError(msg) {
-    document.getElementById('resFormula').textContent = '';
-    document.getElementById('resAnswer').textContent  = '';
-    document.getElementById('resSteps').textContent   = '';
-    const errEl = document.getElementById('resError');
-    errEl.textContent = '⚠ ' + msg;
+    if (twTimer) clearTimeout(twTimer);
+    const formulaEl = document.getElementById('resFormula');
+    const answerEl  = document.getElementById('resAnswer');
+    const stepsEl   = document.getElementById('resSteps');
+    const errEl     = document.getElementById('resError');
+
+    formulaEl.textContent = ''; formulaEl.style.opacity = '0.3'; formulaEl.style.fontStyle = 'italic';
+    formulaEl.textContent = 'error';
+    answerEl.textContent  = '—'; answerEl.style.opacity = '0.22';
+    stepsEl.textContent   = ''; stepsEl.style.opacity = '1';
+
     errEl.classList.remove('hidden');
-    document.getElementById('resultBox').classList.add('show');
+    typewriterSequence([{ el: errEl, text: '⚠ ' + msg, charDelay: 16 }]);
   }
 
-  function hideResult() { document.getElementById('resultBox').classList.remove('show'); }
+  function hideResult() {
+    if (twTimer) clearTimeout(twTimer);
+    const formulaEl = document.getElementById('resFormula');
+    const answerEl  = document.getElementById('resAnswer');
+    const stepsEl   = document.getElementById('resSteps');
+    const errEl     = document.getElementById('resError');
+    [formulaEl, answerEl, stepsEl, errEl].forEach(el => el.classList.remove('tw-cursor'));
+
+    formulaEl.textContent = 'select a formula above and press ⚡ Solve';
+    formulaEl.style.opacity = '0.3'; formulaEl.style.fontStyle = 'italic';
+    answerEl.textContent = '—'; answerEl.style.opacity = '0.22';
+    stepsEl.textContent = 'steps will appear here...'; stepsEl.style.opacity = '0.18';
+    errEl.classList.add('hidden'); errEl.textContent = '';
+  }
 
   function clearSolver() {
     knownsGrid.querySelectorAll('input:not(:disabled)').forEach(el => el.value = '');
