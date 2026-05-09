@@ -1,168 +1,688 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>➡ Translational Motion</title>
+  <title>Translational Motion</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;700&family=Share+Tech+Mono&family=Exo+2:wght@300;400;700;900&display=swap" rel="stylesheet"/>
   <style>
+    :root {
+      --blue:   #90cdf4;
+      --blue-d: #4a90e2;
+      --green:  #68d391;
+      --yellow: #f6e05e;
+      --orange: #f6ad55;
+      --teal:   #4fd1c5;
+      --purple: #b794f4;
+      --bg:     #04080f;
+      --card:   rgba(5,14,32,0.88);
+      --dim:    #8ba3bb;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      margin: 0;
-      font-family: sans-serif;
-      text-align: center;
-      background: #09203f;
-      color: white;
+      font-family: 'Exo 2', sans-serif;
+      background: var(--bg);
+      color: #f0f0f0;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    body.bangla { font-family: 'Noto Serif Bengali', sans-serif; }
+
+    #bgLayer {
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse at 20% 40%, rgba(183,148,244,0.06) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 60%, rgba(104,211,145,0.04) 0%, transparent 50%),
+        linear-gradient(155deg, rgba(9,32,63,0.96), rgba(4,12,26,0.98));
+    }
+    #bgGrid {
+      position: fixed; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(rgba(144,205,244,0.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(144,205,244,0.018) 1px, transparent 1px);
+      background-size: 44px 44px;
     }
 
+    .wrapper { position: relative; z-index: 1; display: flex; flex-direction: column; min-height: 100vh; padding-bottom: 2rem; }
+
+    /* TOP BAR */
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.75rem 1.5rem;
+      background: rgba(0,0,0,0.65); backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(144,205,244,0.12);
+      position: sticky; top: 0; z-index: 100;
+    }
     .back-btn {
-      position: absolute;
-      top: 16px;
-      left: 16px;
-      text-decoration: none;
-      color: #ccc;
-      background: #00000055;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 14px;
+      text-decoration: none; color: var(--dim); background: rgba(0,0,0,0.4);
+      padding: 0.4rem 0.9rem; border-radius: 6px; font-size: 0.85rem;
+      border: 1px solid rgba(144,205,244,0.18); transition: all 0.2s;
+      font-family: 'Share Tech Mono', monospace;
     }
-    .back-btn:hover { color: white; background: #00000088; }
-
+    .back-btn:hover { color: var(--blue); border-color: var(--blue); background: rgba(74,144,226,0.1); }
+    .page-title {
+      font-family: 'Exo 2', sans-serif; font-size: 1.35rem; font-weight: 900; font-style: italic;
+      color: var(--teal); text-shadow: 0 0 22px rgba(79,209,197,0.35);
+    }
     #languageToggle {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      background: #00000055;
-      color: white;
-      padding: 0.5rem 1rem;
-      border: none;
-      border-radius: 6px;
-      font-size: 14px;
-      cursor: pointer;
-      z-index: 10;
+      background: rgba(0,0,0,0.5); color: white; padding: 0.4rem 0.9rem;
+      border: 1px solid rgba(144,205,244,0.28); border-radius: 20px;
+      font-size: 0.78rem; font-weight: 700; cursor: pointer;
+      font-family: 'Share Tech Mono', monospace; transition: all 0.2s;
     }
-    #languageToggle:hover { background: #00000088; }
+    #languageToggle:hover { background: var(--blue-d); border-color: transparent; }
 
-    h1 { margin-top: 3rem; }
+    /* MAIN */
+    .main { display: flex; gap: 1.2rem; padding: 1.1rem 1.5rem; flex: 1; }
 
-    #definition {
-      max-width: 1000px;
-      margin: 1rem auto;
-      background: #00000055;
-      padding: 1.2rem;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(255,255,255,0.1);
-      display: flex;
-      justify-content: space-between;
-      gap: 2rem;
-      text-align: left;
+    /* LEFT */
+    .left-panel { display: flex; flex-direction: column; gap: 0.9rem; width: 282px; min-width: 282px; }
+    .panel {
+      background: var(--card); border: 1px solid rgba(144,205,244,0.13);
+      border-radius: 12px; padding: 1.15rem 1.25rem;
+      backdrop-filter: blur(10px); box-shadow: 0 0 22px rgba(0,0,0,0.45);
     }
-    #definition div { flex: 1; }
+    .panel-label {
+      font-family: 'Share Tech Mono', monospace; font-size: 0.6rem;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: rgba(79,209,197,0.42); margin-bottom: 0.62rem;
+    }
+    .def-text { font-size: 0.86rem; line-height: 1.72; color: var(--dim); }
+    .def-text strong { color: var(--teal); }
+    .def-text em { color: var(--yellow); font-style: normal; font-family: 'Share Tech Mono', monospace; font-size: 0.81rem; }
 
-    #controls {
-      max-width: 700px;
-      margin: 1rem auto;
-      padding: 1rem;
-      background: #00000055;
-      border-radius: 8px;
-      box-shadow: 0 0 8px rgba(255,255,255,0.1);
+    .formula-block {
+      margin-top: 0.72rem; background: rgba(0,0,0,0.38); border-radius: 8px;
+      padding: 0.65rem 0.85rem; border-left: 2px solid var(--teal);
+    }
+    .formula-row { display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 0.25rem; }
+    .formula-row:last-child { margin-bottom: 0; }
+    .f-lbl { font-size: 0.64rem; color: var(--dim); font-family: 'Share Tech Mono', monospace; min-width: 44px; }
+    .f-eq  { font-family: 'Share Tech Mono', monospace; font-size: 0.84rem; color: var(--yellow); }
+    .f-sub { font-size: 0.63rem; color: rgba(139,163,187,0.5); font-family: 'Share Tech Mono', monospace; }
+
+    /* Controls */
+    .control-row { display: flex; flex-direction: column; gap: 0.18rem; margin-bottom: 0.78rem; }
+    .control-row label { font-size: 0.79rem; color: var(--dim); font-weight: 500; }
+    .control-row input[type="range"] { width: 100%; accent-color: var(--teal); cursor: pointer; height: 4px; }
+    .range-val { font-family: 'Share Tech Mono', monospace; font-size: 0.88rem; color: var(--teal); margin-left: 0.5rem; min-width: 44px; }
+    .range-row { display: flex; align-items: center; }
+
+    .btn-row { display: flex; gap: 0.55rem; margin-top: 0.3rem; }
+    .btn { flex: 1; padding: 0.58rem 0; border: none; border-radius: 7px; font-size: 0.88rem; font-weight: 700; cursor: pointer; font-family: 'Exo 2', sans-serif; transition: all 0.22s; letter-spacing: 0.03em; }
+    .btn-sim  { background: linear-gradient(135deg, #0e7490, #0c4a6e); color: white; }
+    .btn-sim:hover  { filter: brightness(1.2); transform: translateY(-2px); box-shadow: 0 6px 22px rgba(14,116,144,0.4); }
+    .btn-stop { background: rgba(246,173,85,0.18); color: var(--orange); border: 1px solid rgba(246,173,85,0.3); }
+    .btn-stop:hover { background: rgba(246,173,85,0.28); }
+    .btn-reset{ background: rgba(255,255,255,0.07); color: var(--dim); border: 1px solid rgba(255,255,255,0.13); }
+    .btn-reset:hover { background: rgba(255,255,255,0.13); color: white; }
+
+    /* Stats */
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; }
+    .stat-card { background: rgba(0,0,0,0.38); border: 1px solid rgba(144,205,244,0.11); border-radius: 8px; padding: 0.52rem 0.68rem; }
+    .stat-label { font-size: 0.63rem; color: var(--dim); font-family: 'Share Tech Mono', monospace; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.15rem; }
+    .stat-val  { font-size: 1.12rem; font-weight: 700; color: var(--blue); font-family: 'Share Tech Mono', monospace; }
+    .stat-unit { font-size: 0.62rem; color: var(--dim); margin-left: 0.1rem; }
+    .sc1 { border-color: rgba(79,209,197,0.3); } .sc1 .stat-val { color: var(--teal); }
+    .sc2 { border-color: rgba(246,224,94,0.25); } .sc2 .stat-val { color: var(--yellow); }
+    .sc3 { border-color: rgba(183,148,244,0.25); } .sc3 .stat-val { color: var(--purple); }
+    .sc4 { border-color: rgba(104,211,145,0.25); } .sc4 .stat-val { color: var(--green); }
+
+    /* Canvas */
+    .canvas-area { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; min-width: 0; }
+    .canvas-wrap {
+      background: var(--card); border: 1px solid rgba(144,205,244,0.13);
+      border-radius: 12px; overflow: hidden;
+      box-shadow: 0 0 30px rgba(0,0,0,0.55); flex: 1; min-height: 280px;
     }
 
-    .input-group {
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      flex-wrap: wrap;
+    .graph-row { display: flex; gap: 0.75rem; }
+    .graph-wrap {
+      background: var(--card); border: 1px solid rgba(144,205,244,0.11);
+      border-radius: 12px; overflow: hidden; height: 148px; flex: 1; min-width: 0;
     }
-
-    label {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      font-size: 14px;
+    .graph-label {
+      font-family: 'Share Tech Mono', monospace; font-size: 0.6rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(79,209,197,0.42); padding: 0.4rem 0.8rem 0;
     }
-
-    input {
-      padding: 4px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      width: 100px;
-      text-align: center;
-    }
-
-    button {
-      padding: 0.5rem 1rem;
-      margin-top: 1rem;
-      border: none;
-      background: #2563eb;
-      color: white;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    button:hover { background: #1d4ed8; }
+    canvas.graph { display: block; width: 100%; height: 116px; }
 
     .hidden { display: none !important; }
 
-    canvas {
-      display: block;
-      margin: 1rem auto;
-      max-width: 100%;
-      height: auto;
-      border: 1px solid #ccc;
-      background: #dbeafe;
+    @media (max-width: 920px) {
+      .main { flex-direction: column; }
+      .left-panel { width: 100%; min-width: auto; flex-direction: row; flex-wrap: wrap; }
+      .panel { flex: 1; min-width: 240px; }
+      .graph-row { flex-direction: column; }
     }
   </style>
 </head>
 <body>
+<div id="bgLayer"></div>
+<div id="bgGrid"></div>
+<div class="wrapper">
 
-  <a href="index.html" class="back-btn">
-    <span class="lang-en">← Back</span>
-    <span class="lang-bn hidden">← পিছনে</span>
-  </a>
-
-  <button id="languageToggle">বাংলা</button>
-
-  <h1>
-    <span class="lang-en">➡️ Translational Motion</span>
-    <span class="lang-bn hidden">➡️ চলন গতি</span>
-  </h1>
-
-  <div id="definition">
-    <div class="lang-en">
-      <p><strong>Definition:</strong> Translational motion is the motion in which every particle of an object moves along parallel paths, with identical displacement and velocity over time.</p>
+  <div class="topbar">
+    <a href="index.html" class="back-btn">← <span class="lang-en">Back</span><span class="lang-bn hidden">পিছনে</span></a>
+    <div class="page-title">
+      <span class="lang-en">➡ Translational Motion</span>
+      <span class="lang-bn hidden">➡ চলন গতি</span>
     </div>
-    <div class="lang-bn hidden">
-      <p><strong>সংজ্ঞা:</strong> চলন গতি হলো এমন একটি গতি, যেখানে বস্তুর প্রতিটি কণিকা একই দূরত্বে, একই দিকে ও একই বেগে একসাথে চলতে থাকে।</p>
-    </div>
+    <button id="languageToggle" onclick="toggleLang()">বাংলা / EN</button>
   </div>
 
-  <div id="controls">
-    <div class="input-group">
-      <label>
-        <span class="lang-en">Displacement (m)</span>
-        <span class="lang-bn hidden">দূরত্ব (মি)</span>
-        <input type="number" id="displacement" value="300" min="0">
-      </label>
-      <label>
-        <span class="lang-en">Angle (°)</span>
-        <span class="lang-bn hidden">কোণ (°)</span>
-        <input type="number" id="angle" value="0" min="0" max="360">
-      </label>
-    </div>
-    <button onclick="startTranslation()">
-      <span class="lang-en">Start</span>
-      <span class="lang-bn hidden">শুরু করুন</span>
-    </button>
-    <button onclick="stopTranslation()">
-      <span class="lang-en">Stop</span>
-      <span class="lang-bn hidden">বন্ধ করুন</span>
-    </button>
-  </div>
+  <div class="main">
+    <div class="left-panel">
 
-  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
-  <script src="js/translational.js"></script>
+      <!-- Definition -->
+      <div class="panel">
+        <div class="panel-label"><span class="lang-en">Definition</span><span class="lang-bn hidden">সংজ্ঞা</span></div>
+        <p class="def-text lang-en">
+          <strong>Translational motion</strong> occurs when every point of a rigid body moves in <em>identical parallel paths</em> — same direction, same speed, same displacement at every instant. No rotation occurs; the object simply slides from one position to another.
+        </p>
+        <p class="def-text lang-bn hidden">
+          <strong>চলন গতি</strong> তখন ঘটে যখন একটি দৃঢ় বস্তুর প্রতিটি বিন্দু <em>অভিন্ন সমান্তরাল পথে</em> চলে — একই দিক, একই গতি, প্রতিটি মুহূর্তে একই সরণ। কোনো ঘূর্ণন নেই।
+        </p>
+        <div class="formula-block">
+          <div class="formula-row"><span class="f-lbl">s</span><span class="f-eq">= v · t</span></div>
+          <div class="formula-row"><span class="f-lbl">vₓ</span><span class="f-eq">= v · cos θ</span></div>
+          <div class="formula-row"><span class="f-lbl">vᵧ</span><span class="f-eq">= v · sin θ</span></div>
+          <div class="formula-row" style="margin-top:0.3rem">
+            <span class="f-sub">All particles: same v, same θ, same s(t)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="panel">
+        <div class="panel-label"><span class="lang-en">Parameters</span><span class="lang-bn hidden">প্যারামিটার</span></div>
+
+        <div class="control-row">
+          <label><span class="lang-en">Displacement (m)</span><span class="lang-bn hidden">সরণ (m)</span></label>
+          <div class="range-row">
+            <input type="range" id="dispSlider" min="50" max="600" value="280" step="10" oninput="syncCtrl()">
+            <span class="range-val" id="dispDisplay">280</span>
+          </div>
+        </div>
+
+        <div class="control-row">
+          <label><span class="lang-en">Angle θ (°)</span><span class="lang-bn hidden">কোণ θ (°)</span></label>
+          <div class="range-row">
+            <input type="range" id="angleSlider" min="0" max="360" value="0" step="1" oninput="syncCtrl()">
+            <span class="range-val" id="angleDisplay">0°</span>
+          </div>
+        </div>
+
+        <div class="control-row">
+          <label><span class="lang-en">Speed (m/s)</span><span class="lang-bn hidden">গতি (m/s)</span></label>
+          <div class="range-row">
+            <input type="range" id="speedSlider" min="0.5" max="8.0" value="2.0" step="0.5" oninput="syncCtrl()">
+            <span class="range-val" id="speedDisplay">2.0</span>
+          </div>
+        </div>
+
+        <div class="control-row">
+          <label><span class="lang-en">Particles</span><span class="lang-bn hidden">কণার সংখ্যা</span></label>
+          <div class="range-row">
+            <input type="range" id="countSlider" min="1" max="12" value="5" step="1" oninput="syncCtrl()">
+            <span class="range-val" id="countDisplay">5</span>
+          </div>
+        </div>
+
+        <div class="control-row">
+          <label><span class="lang-en">Trail length</span><span class="lang-bn hidden">পথ দৈর্ঘ্য</span></label>
+          <div class="range-row">
+            <input type="range" id="trailSlider" min="0" max="300" value="120" step="10" oninput="syncCtrl()">
+            <span class="range-val" id="trailDisplay">120</span>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-sim" onclick="startSim()">
+            <span class="lang-en">▶ Start</span><span class="lang-bn hidden">▶ শুরু</span>
+          </button>
+          <button class="btn btn-stop" onclick="pauseSim()">
+            <span class="lang-en">⏸</span><span class="lang-bn hidden">⏸</span>
+          </button>
+          <button class="btn btn-reset" onclick="resetSim()">
+            <span class="lang-en">↺</span><span class="lang-bn hidden">↺</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="panel">
+        <div class="panel-label"><span class="lang-en">Live Readout</span><span class="lang-bn hidden">লাইভ তথ্য</span></div>
+        <div class="stats-grid">
+          <div class="stat-card sc1">
+            <div class="stat-label"><span class="lang-en">Displacement</span><span class="lang-bn hidden">সরণ</span></div>
+            <div><span class="stat-val" id="statS">0.0</span><span class="stat-unit">m</span></div>
+          </div>
+          <div class="stat-card sc2">
+            <div class="stat-label"><span class="lang-en">Speed</span><span class="lang-bn hidden">গতি</span></div>
+            <div><span class="stat-val" id="statV">0.0</span><span class="stat-unit">m/s</span></div>
+          </div>
+          <div class="stat-card sc3">
+            <div class="stat-label"><span class="lang-en">Time</span><span class="lang-bn hidden">সময়</span></div>
+            <div><span class="stat-val" id="statT">0.0</span><span class="stat-unit">s</span></div>
+          </div>
+          <div class="stat-card sc4">
+            <div class="stat-label"><span class="lang-en">Angle</span><span class="lang-bn hidden">কোণ</span></div>
+            <div><span class="stat-val" id="statA">0</span><span class="stat-unit">°</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CANVAS AREA -->
+    <div class="canvas-area">
+      <div class="canvas-wrap" id="canvasWrap"></div>
+      <div class="graph-row">
+        <div class="graph-wrap">
+          <div class="graph-label"><span class="lang-en">Displacement – Time</span><span class="lang-bn hidden">সরণ – সময়</span></div>
+          <canvas id="gDisp" class="graph"></canvas>
+        </div>
+        <div class="graph-wrap">
+          <div class="graph-label"><span class="lang-en">Speed – Time</span><span class="lang-bn hidden">গতি – সময়</span></div>
+          <canvas id="gSpeed" class="graph"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+<script>
+// ── LANGUAGE ──────────────────────────────────────────────────────────────
+let lang = 'en';
+function toggleLang() {
+  lang = lang === 'en' ? 'bn' : 'en';
+  document.querySelectorAll('.lang-en').forEach(el => el.classList.toggle('hidden', lang !== 'en'));
+  document.querySelectorAll('.lang-bn').forEach(el => el.classList.toggle('hidden', lang !== 'bn'));
+  document.body.classList.toggle('bangla', lang === 'bn');
+}
+
+// ── CONTROLS ──────────────────────────────────────────────────────────────
+function syncCtrl() {
+  document.getElementById('dispDisplay').textContent  = document.getElementById('dispSlider').value;
+  document.getElementById('angleDisplay').textContent = document.getElementById('angleSlider').value + '°';
+  document.getElementById('speedDisplay').textContent = parseFloat(document.getElementById('speedSlider').value).toFixed(1);
+  document.getElementById('countDisplay').textContent = document.getElementById('countSlider').value;
+  document.getElementById('trailDisplay').textContent = document.getElementById('trailSlider').value;
+}
+
+function getParams() {
+  return {
+    disp:  parseFloat(document.getElementById('dispSlider').value),
+    angle: parseFloat(document.getElementById('angleSlider').value) * Math.PI / 180,
+    speed: parseFloat(document.getElementById('speedSlider').value),
+    count: parseInt(document.getElementById('countSlider').value),
+    trail: parseInt(document.getElementById('trailSlider').value),
+  };
+}
+
+// ── STATE ──────────────────────────────────────────────────────────────────
+// Scale: 1 m = 1 px (visual representation — displacement input IS in px so
+// we keep 1:1 but label it metres, consistent with the suite's scaled approach)
+const PX_PER_M = 1; // display scale: slider value already feels like px, we label it m
+let simRunning = false;
+let done = false;
+let particles = [];
+let startPos  = [];
+let elapsed   = 0; // seconds
+let dispHist  = [], speedHist = [];
+const MAX_HIST = 500;
+
+function updateStats(s, v, t, angleDeg) {
+  document.getElementById('statS').textContent = s.toFixed(2);
+  document.getElementById('statV').textContent = v.toFixed(2);
+  document.getElementById('statT').textContent = t.toFixed(2);
+  document.getElementById('statA').textContent = angleDeg.toFixed(0);
+}
+
+// ── GRAPHS ─────────────────────────────────────────────────────────────────
+function drawGraph(id, hist, yKey, yLabel, lineColor, fillColor) {
+  const gc = document.getElementById(id);
+  const gw = gc.parentElement.clientWidth;
+  gc.width = gw; gc.height = 116;
+  const ctx = gc.getContext('2d');
+  ctx.clearRect(0, 0, gw, 116);
+  const padL=40, padR=10, padT=8, padB=22;
+  const W = gw-padL-padR, H = 116-padT-padB;
+
+  ctx.strokeStyle='rgba(79,209,197,0.3)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(padL,padT); ctx.lineTo(padL,padT+H); ctx.lineTo(padL+W,padT+H); ctx.stroke();
+
+  ctx.font='9px Consolas,monospace'; ctx.fillStyle=lineColor; ctx.textAlign='left';
+  ctx.fillText(yLabel, 2, padT+8);
+  ctx.fillStyle='rgba(139,163,187,0.6)';
+  ctx.fillText('t (s)', padL+W-22, padT+H+16);
+
+  if (hist.length < 2) return;
+  const maxY = Math.max(...hist.map(p=>p[yKey]), 0.001);
+  const n = hist.length;
+
+  // y-ticks
+  [0.25,0.5,0.75,1].forEach(frac => {
+    const y = padT+H - frac*H;
+    ctx.strokeStyle='rgba(79,209,197,0.05)'; ctx.lineWidth=0.5;
+    ctx.beginPath(); ctx.moveTo(padL,y); ctx.lineTo(padL+W,y); ctx.stroke();
+    ctx.fillStyle='rgba(139,163,187,0.65)'; ctx.textAlign='right'; ctx.font='8px Consolas,monospace';
+    const v = frac*maxY;
+    ctx.fillText(v >= 100 ? v.toFixed(0) : v.toFixed(1), padL-3, y+3);
+  });
+
+  // x-ticks (time)
+  const maxT = hist[hist.length-1].t;
+  [0, 0.5, 1].forEach(frac => {
+    const x = padL + frac*W;
+    ctx.fillStyle='rgba(139,163,187,0.6)'; ctx.textAlign='center'; ctx.font='8px Consolas,monospace';
+    ctx.fillText((frac*maxT).toFixed(1), x, padT+H+16);
+  });
+
+  // area
+  ctx.beginPath();
+  hist.forEach((p,i) => {
+    const px = padL + (p.t/maxT)*W;
+    const py = padT+H - (p[yKey]/maxY)*H;
+    i===0 ? ctx.moveTo(px,padT+H) : null;
+    ctx.lineTo(px,py);
+  });
+  ctx.lineTo(padL+(hist[hist.length-1].t/maxT)*W, padT+H);
+  ctx.closePath(); ctx.fillStyle=fillColor; ctx.fill();
+
+  // line — uses actual time as x so we get t=0 on left always (history is bounded by max disp anyway)
+  ctx.beginPath(); ctx.strokeStyle=lineColor; ctx.lineWidth=2;
+  hist.forEach((p,i) => {
+    const px = padL + (p.t/maxT)*W;
+    const py = padT+H - (p[yKey]/maxY)*H;
+    i===0 ? ctx.moveTo(px,py) : ctx.lineTo(px,py);
+  });
+  ctx.stroke();
+
+  // dot
+  const last = hist[hist.length-1];
+  const dotX = padL + (last.t/maxT)*W;
+  const dotY = padT+H - (last[yKey]/maxY)*H;
+  ctx.beginPath(); ctx.arc(dotX,dotY,3.5,0,Math.PI*2); ctx.fillStyle=lineColor; ctx.fill();
+  ctx.fillStyle=lineColor; ctx.font='bold 8px Consolas,monospace'; ctx.textAlign='right';
+  ctx.fillText(last[yKey].toFixed(2), dotX-5, dotY-6);
+}
+
+function drawBothGraphs() {
+  drawGraph('gDisp',  dispHist,  'd', 's (m)',   '#4fd1c5', 'rgba(79,209,197,0.1)');
+  drawGraph('gSpeed', speedHist, 'v', 'v (m/s)', '#b794f4', 'rgba(183,148,244,0.1)');
+}
+
+// ── P5 SKETCH ─────────────────────────────────────────────────────────────
+// Particle shape colours — one per slot so particles are visually distinct
+const PART_COLORS = [
+  [79,209,197],   // teal
+  [183,148,244],  // purple
+  [104,211,145],  // green
+  [246,224,94],   // yellow
+  [246,173,85],   // orange
+  [144,205,244],  // blue
+  [246,135,179],  // pink
+  [252,129,129],  // red
+  [159,220,254],  // sky
+  [253,224,71],   // amber
+  [52,211,153],   // emerald
+  [167,139,250],  // violet
+];
+
+new p5(function(p) {
+
+  p.setup = function() {
+    const wrap = document.getElementById('canvasWrap');
+    const cnv  = p.createCanvas(wrap.clientWidth, Math.max(280, window.innerHeight*0.44));
+    cnv.parent('canvasWrap');
+    p.noLoop();
+  };
+
+  function initParticles() {
+    const params = getParams();
+    particles = [];
+    startPos  = [];
+    elapsed   = 0;
+    done      = false;
+    dispHist  = [];
+    speedHist = [{ t: 0, v: params.speed }, { t: 0.001, v: params.speed }]; // flat line starts visible
+
+    // Arrange particles in a compact formation perpendicular to motion direction
+    // so they all move in parallel — a grid of rows/cols
+    const cols = Math.ceil(Math.sqrt(params.count));
+    const rows = Math.ceil(params.count / cols);
+    const spacing = 28;
+    // Perpendicular angle to motion
+    const perpAngle = params.angle + Math.PI / 2;
+    const cosPa = Math.cos(perpAngle), sinPa = Math.sin(perpAngle);
+    const cosA  = Math.cos(params.angle), sinA = Math.sin(params.angle);
+
+    // Centre the formation on a point that won't go out of canvas for most angles
+    // Place start so motion fits: centre at (width*0.2, height*0.5) adjusted for angle
+    const startX = p.width  * 0.15 + Math.max(0, -cosA) * params.disp;
+    const startY = p.height * 0.5  + Math.max(0, -sinA) * params.disp;
+
+    let idx = 0;
+    for (let r = 0; r < rows && idx < params.count; r++) {
+      for (let c = 0; c < cols && idx < params.count; c++) {
+        const offRow = (r - (rows-1)/2) * spacing;
+        const offCol = (c - (cols-1)/2) * spacing;
+        // Formation: perpendicular spread + small offset along motion axis for stagger
+        const x = startX + offRow * cosPa + offCol * cosA * 0.4;
+        const y = startY + offRow * sinPa + offCol * sinA * 0.4;
+        particles.push({ x, y, trail: [] });
+        startPos.push({ x, y });
+        idx++;
+      }
+    }
+  }
+
+  p.draw = function() {
+    const params = getParams();
+    const dt     = Math.min(p.deltaTime, 33) / 1000; // seconds, capped
+
+    // Physics
+    let currentDisp = 0;
+    if (simRunning && !done) {
+      elapsed += dt;
+      const dx = params.speed * Math.cos(params.angle) * dt;
+      const dy = params.speed * Math.sin(params.angle) * dt;
+
+      for (let i = 0; i < particles.length; i++) {
+        const pt = particles[i];
+        const s  = Math.hypot(pt.x - startPos[i].x, pt.y - startPos[i].y);
+        if (s < params.disp) {
+          pt.x += dx;
+          pt.y += dy;
+        }
+        pt.trail.push({ x: pt.x, y: pt.y });
+        if (pt.trail.length > params.trail + 1) pt.trail.shift();
+      }
+
+      // Displacement of particle 0 as reference (all identical)
+      currentDisp = Math.min(
+        Math.hypot(particles[0].x - startPos[0].x, particles[0].y - startPos[0].y),
+        params.disp
+      );
+
+      dispHist.push({ t: elapsed, d: currentDisp });
+      speedHist.push({ t: elapsed, v: currentDisp < params.disp ? params.speed : 0 });
+      if (dispHist.length  > MAX_HIST) dispHist.shift();
+      if (speedHist.length > MAX_HIST) speedHist.shift();
+
+      updateStats(currentDisp, currentDisp < params.disp ? params.speed : 0,
+                  elapsed, params.angle * 180 / Math.PI);
+      drawBothGraphs();
+
+      // Check done
+      const allDone = particles.every((pt, i) =>
+        Math.hypot(pt.x - startPos[i].x, pt.y - startPos[i].y) >= params.disp - 0.5
+      );
+      if (allDone) {
+        done       = true;
+        simRunning = false;
+        p.noLoop();
+        // Push final zero-speed point
+        speedHist.push({ t: elapsed, v: 0 });
+        drawBothGraphs();
+      }
+    }
+
+    // ── DRAW ──────────────────────────────────────────────────────────────
+    p.background(5, 10, 25);
+
+    // Grid
+    p.stroke(79,209,197,10); p.strokeWeight(0.5);
+    for (let gx=0; gx<p.width; gx+=44) p.line(gx,0,gx,p.height);
+    for (let gy=0; gy<p.height; gy+=44) p.line(0,gy,p.width,gy);
+    p.noStroke();
+
+    // Draw displacement target paths (dashed lines from start to end for each particle)
+    const cosA = Math.cos(params.angle), sinA = Math.sin(params.angle);
+    for (let i = 0; i < startPos.length; i++) {
+      const sx = startPos[i].x, sy = startPos[i].y;
+      const ex = sx + params.disp * cosA, ey = sy + params.disp * sinA;
+      // Dashed path
+      const steps = 20;
+      for (let s = 0; s < steps; s++) {
+        if (s % 2 === 0) {
+          const x1 = p.lerp(sx, ex, s/steps);
+          const y1 = p.lerp(sy, ey, s/steps);
+          const x2 = p.lerp(sx, ex, (s+0.7)/steps);
+          const y2 = p.lerp(sy, ey, (s+0.7)/steps);
+          p.stroke(79,209,197,40); p.strokeWeight(1);
+          p.line(x1,y1,x2,y2);
+        }
+      }
+      // End marker
+      p.noStroke(); p.fill(79,209,197,60);
+      p.ellipse(ex, ey, 8, 8);
+    }
+    p.noStroke();
+
+    // Direction arrow (global, large) — shows angle
+    if (particles.length > 0) {
+      const midX = p.width * 0.85, midY = p.height * 0.12;
+      const arrowLen = 42;
+      const ax = midX + cosA * arrowLen, ay = midY + sinA * arrowLen;
+      p.stroke(79,209,197,160); p.strokeWeight(2);
+      p.line(midX, midY, ax, ay);
+      p.noStroke(); p.fill(79,209,197,200);
+      p.push();
+      p.translate(ax, ay);
+      p.rotate(params.angle);
+      p.triangle(10,0,-6,-5,-6,5);
+      p.pop();
+      p.fill(79,209,197,120); p.textFont('Consolas'); p.textSize(9); p.textAlign(p.CENTER);
+      p.text(`θ=${(params.angle*180/Math.PI).toFixed(0)}°`, midX, midY - 12);
+      p.noStroke();
+    }
+
+    // Trails
+    for (let i = 0; i < particles.length; i++) {
+      const pt = particles[i];
+      const [r,g,b] = PART_COLORS[i % PART_COLORS.length];
+      if (pt.trail.length > 1) {
+        for (let j = 1; j < pt.trail.length; j++) {
+          const t2 = j / pt.trail.length;
+          p.stroke(r, g, b, t2 * 160);
+          p.strokeWeight(0.8 + t2 * 1.5);
+          p.line(pt.trail[j-1].x, pt.trail[j-1].y, pt.trail[j].x, pt.trail[j].y);
+        }
+      }
+    }
+    p.noStroke();
+
+    // Particles
+    for (let i = 0; i < particles.length; i++) {
+      const pt = particles[i];
+      const [r,g,b] = PART_COLORS[i % PART_COLORS.length];
+
+      // Glow
+      p.fill(r,g,b,35); p.ellipse(pt.x, pt.y, 32, 32);
+      p.fill(r,g,b,60); p.ellipse(pt.x, pt.y, 20, 20);
+      // Body
+      p.fill(r,g,b);    p.ellipse(pt.x, pt.y, 14, 14);
+      // Highlight
+      p.fill(255,255,255,110); p.ellipse(pt.x-3, pt.y-3, 4.5, 4.5);
+
+      // Velocity arrow on each particle
+      if (simRunning && !done) {
+        const arrowLen = 20;
+        const tx = pt.x + cosA * arrowLen, ty = pt.y + sinA * arrowLen;
+        p.stroke(r,g,b,180); p.strokeWeight(1.5);
+        p.line(pt.x, pt.y, tx, ty);
+        p.noStroke(); p.fill(r,g,b,200);
+        p.push(); p.translate(tx,ty); p.rotate(params.angle);
+        p.triangle(7,0,-4,-3.5,-4,3.5);
+        p.pop(); p.noStroke();
+      }
+
+      // Particle index label
+      p.fill(255,255,255,120); p.textFont('Consolas'); p.textSize(8); p.textAlign(p.CENTER,p.CENTER);
+      p.text(i+1, pt.x, pt.y);
+    }
+
+    // Parallelism indicator — draw lines connecting same-column particles to show equal displacement
+    if (particles.length > 1 && simRunning && !done) {
+      for (let i = 0; i < particles.length - 1; i++) {
+        p.stroke(144,205,244,20); p.strokeWeight(1);
+        p.line(particles[i].x, particles[i].y, particles[i+1].x, particles[i+1].y);
+      }
+      p.noStroke();
+    }
+
+    // HUD
+    p.fill(0,0,0,120); p.noStroke(); p.rect(8,8,210,90,8);
+    p.textFont('Consolas'); p.textAlign(p.LEFT,p.TOP); p.fill(79,209,197); p.textSize(10.5);
+    p.text(`s     = ${currentDisp.toFixed(2)} m`,                          16, 16);
+    p.text(`v     = ${params.speed.toFixed(1)} m/s`,                       16, 31);
+    p.text(`θ     = ${(params.angle*180/Math.PI).toFixed(1)}°`,            16, 46);
+    p.text(`t     = ${elapsed.toFixed(2)} s`,                              16, 61);
+    p.text(`FPS   = ${p.frameRate().toFixed(1)}`,                          16, 76);
+
+    // Idle / done prompt
+    if (!simRunning && !done && particles.length === 0) {
+      p.fill(255,255,255,45); p.textFont('Exo 2'); p.textSize(14); p.textAlign(p.CENTER,p.CENTER);
+      p.text('Set parameters and press ▶ Start', p.width/2, p.height*0.5);
+    }
+    if (done) {
+      p.fill(0,0,0,150); p.noStroke(); p.rect(p.width/2-130, p.height/2-36, 260, 72, 10);
+      p.fill(79,209,197,240); p.textFont('Exo 2'); p.textSize(15); p.textAlign(p.CENTER,p.CENTER);
+      p.text('✓ Translation Complete', p.width/2, p.height/2 - 14);
+      p.fill(200,230,255,180); p.textFont('Consolas'); p.textSize(11);
+      p.text(`s = ${params.disp.toFixed(0)} m  ·  t = ${elapsed.toFixed(2)} s  ·  v = ${params.speed.toFixed(1)} m/s`,
+             p.width/2, p.height/2 + 14);
+    }
+  };
+
+  p.windowResized = function() {
+    const wrap = document.getElementById('canvasWrap');
+    p.resizeCanvas(wrap.clientWidth, Math.max(280, window.innerHeight*0.44));
+  };
+
+  window.startSim = function() {
+    initParticles();
+    simRunning = true;
+    done = false;
+    p.loop();
+  };
+  window.pauseSim = function() { simRunning = false; };
+  window.resetSim = function() {
+    simRunning = false; done = false; elapsed = 0;
+    particles = []; startPos = [];
+    dispHist = []; speedHist = [];
+    updateStats(0,0,0,0); drawBothGraphs();
+    p.noLoop(); p.redraw();
+  };
+
+}, 'canvasWrap');
+</script>
 </body>
 </html>
-
-
 
 
