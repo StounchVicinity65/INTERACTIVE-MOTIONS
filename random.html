@@ -32,17 +32,18 @@
     #bgLayer {
       position: fixed; inset: 0; z-index: 0;
       background:
-        radial-gradient(ellipse at 20% 40%, rgba(252,129,129,0.05) 0%, transparent 55%),
-        radial-gradient(ellipse at 80% 60%, rgba(79,209,197,0.04) 0%, transparent 50%),
-        linear-gradient(155deg, rgba(18,8,8,0.97), rgba(4,12,26,0.98));
+        radial-gradient(ellipse at 20% 40%, rgba(183,148,244,0.06) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 60%, rgba(104,211,145,0.04) 0%, transparent 50%),
+        linear-gradient(155deg, rgba(9,32,63,0.96), rgba(4,12,26,0.98));
     }
     #bgGrid {
       position: fixed; inset: 0; z-index: 0;
       background-image:
-        linear-gradient(rgba(252,129,129,0.018) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(252,129,129,0.018) 1px, transparent 1px);
+        linear-gradient(rgba(144,205,244,0.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(144,205,244,0.018) 1px, transparent 1px);
       background-size: 44px 44px;
     }
+
 
     .wrapper { position: relative; z-index: 1; display: flex; flex-direction: column; min-height: 100vh; padding-bottom: 2rem; }
 
@@ -208,7 +209,7 @@
           <strong>ব্রাউনীয় গতি</strong> হলো তরলে ভাসমান অণুবীক্ষণীয় কণার অনিয়মিত, এলোমেলো চলাচল, যা আশেপাশের অণুর <em>ক্রমাগত সংঘর্ষের</em> কারণে ঘটে। রবার্ট ব্রাউন (১৮২৭) পর্যবেক্ষণ করেন, আইনস্টাইন (১৯০৫) ব্যাখ্যা করেন।
         </p>
         <div class="formula-block" id="formulaBlock">
-          <div class="formula-row"><span class="f-lbl">MSD</span><span class="f-eq">= 2D·t (2D)</span></div>
+          <div class="formula-row"><span class="f-lbl">MSD</span><span class="f-eq">= 2D·t  (m²)</span></div>
           <div class="formula-row"><span class="f-lbl">D</span><span class="f-eq">= k_B·T / (6πηr)</span></div>
           <div class="formula-row" style="margin-top:0.3rem"><span class="f-sub">D=diffusivity · T=temp · η=viscosity · r=radius</span></div>
         </div>
@@ -282,11 +283,11 @@
           </div>
           <div class="stat-card g2">
             <div class="stat-label"><span class="lang-en">Avg Speed</span><span class="lang-bn hidden">গড় গতি</span></div>
-            <div><span class="stat-val" id="statSpeed">0.0</span><span class="stat-unit">px/f</span></div>
+            <div><span class="stat-val" id="statSpeed">0.0</span><span class="stat-unit">m/s</span></div>
           </div>
           <div class="stat-card g3">
             <div class="stat-label"><span class="lang-en">MSD</span><span class="lang-bn hidden">MSD</span></div>
-            <div><span class="stat-val" id="statMSD">0.0</span><span class="stat-unit">px²</span></div>
+            <div><span class="stat-val" id="statMSD">0.0</span><span class="stat-unit">m²</span></div>
           </div>
           <div class="stat-card g4">
             <div class="stat-label"><span class="lang-en">Collisions</span><span class="lang-bn hidden">সংঘর্ষ</span></div>
@@ -302,11 +303,11 @@
       <div class="canvas-wrap" id="canvasWrap"></div>
       <div class="graph-row">
         <div class="graph-wrap">
-          <div class="graph-label"><span class="lang-en">Mean Speed – Time</span><span class="lang-bn hidden">গড় গতি – সময়</span></div>
+          <div class="graph-label"><span class="lang-en">Mean Speed (m/s) – Time</span><span class="lang-bn hidden">গড় গতি (m/s) – সময়</span></div>
           <canvas id="gSpeed" class="graph"></canvas>
         </div>
         <div class="graph-wrap">
-          <div class="graph-label"><span class="lang-en">MSD – Time (Brownian signature)</span><span class="lang-bn hidden">MSD – সময়</span></div>
+          <div class="graph-label"><span class="lang-en">MSD (m²) – Time</span><span class="lang-bn hidden">MSD (m²) – সময়</span></div>
           <canvas id="gMSD" class="graph"></canvas>
         </div>
       </div>
@@ -401,8 +402,8 @@ let startPositions = []; // for MSD
 
 function updateStats(avgSpd, msd, count, cols) {
   document.getElementById('statCount').textContent = count;
-  document.getElementById('statSpeed').textContent = avgSpd.toFixed(1);
-  document.getElementById('statMSD').textContent   = msd.toFixed(0);
+  document.getElementById('statSpeed').textContent = avgSpd.toFixed(3);
+  document.getElementById('statMSD').textContent   = msd < 0.001 ? msd.toExponential(2) : msd.toFixed(4);
   document.getElementById('statCol').textContent   = cols;
 }
 
@@ -413,7 +414,7 @@ function drawGraph(id, hist, yKey, yLabel, lineColor, fillColor) {
   gc.width = gw; gc.height = 116;
   const ctx = gc.getContext('2d');
   ctx.clearRect(0, 0, gw, 116);
-  const padL=36, padR=10, padT=8, padB=22;
+  const padL=38, padR=10, padT=8, padB=22;
   const W = gw-padL-padR, H = 116-padT-padB;
 
   ctx.strokeStyle='rgba(252,129,129,0.3)'; ctx.lineWidth=1;
@@ -421,51 +422,55 @@ function drawGraph(id, hist, yKey, yLabel, lineColor, fillColor) {
 
   ctx.font='9px Consolas,monospace'; ctx.fillStyle=lineColor; ctx.textAlign='left';
   ctx.fillText(yLabel, 2, padT+8);
-  ctx.fillStyle='rgba(139,163,187,0.6)'; ctx.fillText('t', padL+W-5, padT+H+16);
+  ctx.fillStyle='rgba(139,163,187,0.6)'; ctx.fillText('time →', padL+W-30, padT+H+16);
 
   if (hist.length < 2) return;
-  const maxY = Math.max(...hist.map(p=>p[yKey]), 1);
-  const maxT = Math.max(hist[hist.length-1].t, 0.1);
+  const maxY = Math.max(...hist.map(p=>p[yKey]), 0.001);
+  const n    = hist.length; // use index as x — always fills full width
 
-  // grid
+  // grid + y-tick labels
   [0.25,0.5,0.75,1].forEach(frac => {
     const y = padT + H - frac*H;
     ctx.strokeStyle='rgba(252,129,129,0.05)'; ctx.lineWidth=0.5;
     ctx.beginPath(); ctx.moveTo(padL,y); ctx.lineTo(padL+W,y); ctx.stroke();
     ctx.fillStyle='rgba(139,163,187,0.65)'; ctx.textAlign='right'; ctx.font='8px Consolas,monospace';
-    ctx.fillText((frac*maxY).toFixed(0), padL-3, y+3);
+    const v = frac*maxY;
+    const label = v >= 1000 ? v.toFixed(0) : v >= 10 ? v.toFixed(1) : v.toFixed(2);
+    ctx.fillText(label, padL-3, y+3);
   });
 
-  // area
+  // area fill
   ctx.beginPath();
-  hist.forEach((p,i) => {
-    const px=padL+(p.t/maxT)*W, py=padT+H-(p[yKey]/maxY)*H;
-    i===0 ? ctx.moveTo(px,padT+H) : null;
-    ctx.lineTo(px,py);
+  hist.forEach((p, i) => {
+    const px = padL + (i/(n-1))*W;
+    const py = padT + H - (p[yKey]/maxY)*H;
+    i===0 ? ctx.moveTo(px, padT+H) : null;
+    ctx.lineTo(px, py);
   });
-  ctx.lineTo(padL+(hist[hist.length-1].t/maxT)*W, padT+H);
+  ctx.lineTo(padL+W, padT+H);
   ctx.closePath(); ctx.fillStyle=fillColor; ctx.fill();
 
-  // line
+  // line — draws left to right through all history points, always spanning full width
   ctx.beginPath(); ctx.strokeStyle=lineColor; ctx.lineWidth=1.8;
-  hist.forEach((p,i) => {
-    const px=padL+(p.t/maxT)*W, py=padT+H-(p[yKey]/maxY)*H;
+  hist.forEach((p, i) => {
+    const px = padL + (i/(n-1))*W;
+    const py = padT + H - (p[yKey]/maxY)*H;
     i===0 ? ctx.moveTo(px,py) : ctx.lineTo(px,py);
   });
   ctx.stroke();
 
-  // dot
-  const last=hist[hist.length-1];
-  const dx=padL+(last.t/maxT)*W, dy=padT+H-(last[yKey]/maxY)*H;
-  ctx.beginPath(); ctx.arc(dx,dy,3,0,Math.PI*2); ctx.fillStyle=lineColor; ctx.fill();
-  ctx.fillStyle=lineColor; ctx.font='bold 8px Consolas,monospace';
-  ctx.textAlign=dx>padL+W*0.7?'right':'left';
-  ctx.fillText(last[yKey].toFixed(1), dx+(ctx.textAlign==='left'?4:-4), dy-5);
+  // current value dot + label
+  const last = hist[hist.length-1];
+  const dotX = padL+W, dotY = padT+H-(last[yKey]/maxY)*H;
+  ctx.beginPath(); ctx.arc(dotX, dotY, 3, 0, Math.PI*2); ctx.fillStyle=lineColor; ctx.fill();
+  ctx.fillStyle=lineColor; ctx.font='bold 8px Consolas,monospace'; ctx.textAlign='right';
+  const dispV = last[yKey] >= 10 ? last[yKey].toFixed(1) : last[yKey].toFixed(3);
+  ctx.fillText(dispV, dotX-5, dotY-5);
 }
 
 function drawBothGraphs() {
-  drawGraph('gSpeed', speedHist, 'v', 'v̄',   '#fc8181', 'rgba(252,129,129,0.1)');
-  drawGraph('gMSD',   msdHist,   'm', 'MSD',  '#4fd1c5', 'rgba(79,209,197,0.1)');
+  drawGraph('gSpeed', speedHist, 'v', 'v (m/s)',  '#fc8181', 'rgba(252,129,129,0.1)');
+  drawGraph('gMSD',   msdHist,   'm', 'MSD (m²)', '#4fd1c5', 'rgba(79,209,197,0.1)');
 }
 
 // ── PARTICLE FACTORIES ─────────────────────────────────────────────────────
@@ -525,29 +530,45 @@ new p5(function(p) {
 
         // Mode-specific velocity update
         if (mode === 'brownian') {
+          // Each random kick = one molecular bombardment collision
           const jitter = params.speed * 0.35;
           pt.vx += (Math.random()-0.5) * jitter;
           pt.vy += (Math.random()-0.5) * jitter;
           pt.vx = p.constrain(pt.vx, -maxSpd, maxSpd);
           pt.vy = p.constrain(pt.vy, -maxSpd, maxSpd);
+          // Count ~1 collision per frame per particle (each jitter IS a molecular hit)
+          // Sample probabilistically so counter feels realistic, not millions/sec
+          if (Math.random() < 0.25) totalCollisions++;
         }
         else if (mode === 'gas') {
-          // Constant speed, elastic bouncing handled below
+          // Keep speed constant — gas particles don't slow down
           const spd = Math.sqrt(pt.vx*pt.vx + pt.vy*pt.vy);
-          if (spd < 0.1) { const a = Math.random()*Math.PI*2; pt.vx = Math.cos(a)*params.speed; pt.vy = Math.sin(a)*params.speed; }
-          // Inter-particle elastic collision (simplified: check against others)
+          if (spd < 0.1) {
+            const a = Math.random()*Math.PI*2;
+            pt.vx = Math.cos(a)*params.speed;
+            pt.vy = Math.sin(a)*params.speed;
+          }
+          // Elastic inter-particle collisions
+          // Threshold: sum of radii = params.size (each particle radius = size/2)
+          const collisionDist = params.size;
           for (let j = i+1; j < particles.length; j++) {
             const pt2 = particles[j];
-            const dx = pt2.x-pt.x, dy = pt2.y-pt.y;
-            const dist = Math.sqrt(dx*dx+dy*dy);
-            if (dist < params.size) {
-              // Swap velocities along collision axis
-              const nx=dx/dist, ny=dy/dist;
-              const dvx=pt2.vx-pt.vx, dvy=pt2.vy-pt.vy;
-              const dot = dvx*nx+dvy*ny;
-              if (dot < 0) {
-                pt.vx  += dot*nx; pt.vy  += dot*ny;
-                pt2.vx -= dot*nx; pt2.vy -= dot*ny;
+            const dx = pt2.x - pt.x, dy = pt2.y - pt.y;
+            const dist2 = dx*dx + dy*dy;
+            if (dist2 < collisionDist*collisionDist && dist2 > 0.0001) {
+              const dist = Math.sqrt(dist2);
+              const nx = dx/dist, ny = dy/dist;
+              // Relative velocity along normal
+              const dvx = pt.vx - pt2.vx, dvy = pt.vy - pt2.vy;
+              const dot = dvx*nx + dvy*ny; // positive = approaching
+              if (dot > 0) {
+                // Elastic equal-mass collision: exchange velocity components along normal
+                pt.vx  -= dot * nx;  pt.vy  -= dot * ny;
+                pt2.vx += dot * nx;  pt2.vy += dot * ny;
+                // Separate overlapping particles to prevent sticking
+                const overlap = (collisionDist - dist) / 2;
+                pt.x  -= nx * overlap;  pt.y  -= ny * overlap;
+                pt2.x += nx * overlap;  pt2.y += ny * overlap;
                 totalCollisions++;
               }
             }
@@ -556,15 +577,16 @@ new p5(function(p) {
         else if (mode === 'levy') {
           pt.levySteps--;
           if (pt.levySteps <= 0) {
-            // Power-law step length: l ~ U^(-1/(μ-1)), μ≈1.5
             const u = Math.random() * 0.99 + 0.01;
-            const l = Math.pow(u, -1/0.5) * 0.4; // Lévy-like
+            const l = Math.pow(u, -1/0.5) * 0.4;
             const stepLen = p.min(l * params.speed, p.width * 0.8);
             const ang = Math.random() * p.TWO_PI;
             const spd = Math.max(stepLen * 0.08, 0.5);
             pt.vx = Math.cos(ang)*spd; pt.vy = Math.sin(ang)*spd;
             pt.levySteps = Math.ceil(stepLen / spd);
           }
+          // Count direction changes as collision events
+          if (pt.levySteps === 1) totalCollisions++;
         }
         else if (mode === 'diffusion') {
           const jitter = params.speed * 0.3;
@@ -572,16 +594,16 @@ new p5(function(p) {
           pt.vy += (Math.random()-0.5)*jitter;
           pt.vx = p.constrain(pt.vx, -maxSpd, maxSpd);
           pt.vy = p.constrain(pt.vy, -maxSpd, maxSpd);
-          // Barrier: x = width/2, gap centred at height/2
+          // Barrier collision
           const barX = p.width / 2;
           const gap = params.barrier;
           const gapY1 = p.height/2 - gap/2;
           const gapY2 = p.height/2 + gap/2;
-          if (Math.abs(pt.x - barX) < Math.abs(pt.vx)) {
-            if (pt.y < gapY1 || pt.y > gapY2) {
-              pt.vx *= -1; // bounce off barrier
-              totalCollisions++;
-            }
+          const nextX = pt.x + pt.vx;
+          const crossingBarrier = (pt.x < barX && nextX >= barX) || (pt.x > barX && nextX <= barX);
+          if (crossingBarrier && (pt.y < gapY1 || pt.y > gapY2)) {
+            pt.vx *= -1;
+            totalCollisions++;
           }
         }
 
@@ -589,11 +611,12 @@ new p5(function(p) {
         pt.x += pt.vx;
         pt.y += pt.vy;
 
-        // Wall bounce
-        if (pt.x < params.size/2) { pt.x = params.size/2; pt.vx *= -1; }
-        if (pt.x > p.width-params.size/2) { pt.x = p.width-params.size/2; pt.vx *= -1; }
-        if (pt.y < params.size/2) { pt.y = params.size/2; pt.vy *= -1; }
-        if (pt.y > p.height-params.size/2) { pt.y = p.height-params.size/2; pt.vy *= -1; }
+        // Wall bounce — count these too for gas (they're physical collisions)
+        const r = params.size / 2;
+        if (pt.x < r)            { pt.x = r;              pt.vx *= -1; if (mode==='gas') totalCollisions++; }
+        if (pt.x > p.width  - r) { pt.x = p.width  - r;   pt.vx *= -1; if (mode==='gas') totalCollisions++; }
+        if (pt.y < r)            { pt.y = r;              pt.vy *= -1; if (mode==='gas') totalCollisions++; }
+        if (pt.y > p.height - r) { pt.y = p.height - r;   pt.vy *= -1; if (mode==='gas') totalCollisions++; }
 
         sumSpd += Math.sqrt(pt.vx*pt.vx+pt.vy*pt.vy);
 
@@ -602,23 +625,27 @@ new p5(function(p) {
         if (pt.trail.length > params.trail + 1) pt.trail.shift();
       }
 
-      // Stats
-      const avgSpd = particles.length > 0 ? sumSpd/particles.length : 0;
+      // ── SCALE: 1 m = 200 px (same as spring sim) ──
+      const PX_PER_M = 200;   // px per metre
+      const FPS_EST  = 60;    // nominal framerate for px/frame → px/s → m/s
+
+      // Stats — convert to SI
+      const avgSpd_ms  = particles.length > 0 ? (sumSpd / particles.length) * FPS_EST / PX_PER_M : 0; // m/s
       // MSD
-      let msd = 0;
+      let msd_px2 = 0;
       for (let i = 0; i < particles.length; i++) {
         const dx = particles[i].x - startPositions[i].x;
         const dy = particles[i].y - startPositions[i].y;
-        msd += dx*dx + dy*dy;
+        msd_px2 += dx*dx + dy*dy;
       }
-      msd = particles.length > 0 ? msd/particles.length : 0;
+      const msd_m2 = particles.length > 0 ? (msd_px2 / particles.length) / (PX_PER_M * PX_PER_M) : 0; // m²
 
-      speedHist.push({ t: frameCount2, v: avgSpd });
-      msdHist.push({ t: frameCount2, m: msd });
+      speedHist.push({ v: avgSpd_ms });
+      msdHist.push({ m: msd_m2 });
       if (speedHist.length > MAX_HIST) speedHist.shift();
       if (msdHist.length  > MAX_HIST) msdHist.shift();
 
-      updateStats(avgSpd, msd, particles.length, totalCollisions);
+      updateStats(avgSpd_ms, msd_m2, particles.length, totalCollisions);
       drawBothGraphs();
     }
 
