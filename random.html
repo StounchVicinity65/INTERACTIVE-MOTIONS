@@ -1,183 +1,765 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🔀 Random Motion</title>
+  <title>Random Motion</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;700&family=Share+Tech+Mono&family=Exo+2:wght@300;400;700;900&display=swap" rel="stylesheet"/>
   <style>
+    :root {
+      --blue:    #90cdf4;
+      --blue-d:  #4a90e2;
+      --green:   #68d391;
+      --yellow:  #f6e05e;
+      --orange:  #f6ad55;
+      --red:     #fc8181;
+      --pink:    #f687b3;
+      --teal:    #4fd1c5;
+      --bg:      #04080f;
+      --card:    rgba(5,14,32,0.88);
+      --dim:     #8ba3bb;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      margin: 0;
-      font-family: sans-serif;
-      text-align: center;
-      background: #09203f;
-      color: white;
-      position: relative;
+      font-family: 'Exo 2', sans-serif;
+      background: var(--bg);
+      color: #f0f0f0;
       min-height: 100vh;
+      overflow-x: hidden;
     }
     body.bangla { font-family: 'Noto Serif Bengali', sans-serif; }
+
+    #bgLayer {
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse at 20% 40%, rgba(252,129,129,0.05) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 60%, rgba(79,209,197,0.04) 0%, transparent 50%),
+        linear-gradient(155deg, rgba(18,8,8,0.97), rgba(4,12,26,0.98));
+    }
+    #bgGrid {
+      position: fixed; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(rgba(252,129,129,0.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(252,129,129,0.018) 1px, transparent 1px);
+      background-size: 44px 44px;
+    }
+
+    .wrapper { position: relative; z-index: 1; display: flex; flex-direction: column; min-height: 100vh; padding-bottom: 2rem; }
+
+    /* TOP BAR */
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.75rem 1.5rem;
+      background: rgba(0,0,0,0.65); backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(252,129,129,0.12);
+      position: sticky; top: 0; z-index: 100;
+    }
     .back-btn {
-      position: absolute;
-      top: 16px;
-      left: 16px;
-      text-decoration: none;
-      color: #ccc;
-      background: #00000055;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 14px;
-      z-index: 10;
+      text-decoration: none; color: var(--dim); background: rgba(0,0,0,0.4);
+      padding: 0.4rem 0.9rem; border-radius: 6px; font-size: 0.85rem;
+      border: 1px solid rgba(252,129,129,0.18); transition: all 0.2s;
+      font-family: 'Share Tech Mono', monospace;
     }
-    .back-btn:hover { color: white; background: #00000088; }
-    h1 { margin-top: 3rem; font-size: 2rem; }
-    #definition {
-      max-width: 1000px;
-      margin: 1rem auto;
-      background: #00000055;
-      padding: 1.2rem 1.5rem;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(255,255,255,0.1);
-      display: flex;
-      justify-content: space-between;
-      gap: 2rem;
-      text-align: left;
-      font-size: 1rem;
-      line-height: 1.4;
-    }
-    #definition div { flex: 1; }
-    #controls {
-      max-width: 600px;
-      margin: 1rem auto 2rem;
-      padding: 1rem;
-      background: #00000055;
-      border-radius: 8px;
-      box-shadow: 0 0 8px rgba(255,255,255,0.1);
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-      flex-wrap: wrap;
-      align-items: center;
-      font-size: 1rem;
-    }
-    label {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      font-weight: 500;
-      gap: 0.3rem;
-      min-width: 160px;
-    }
-    input {
-      padding: 6px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      width: 100px;
-      text-align: center;
-      font-size: 1rem;
-    }
-    button {
-      padding: 0.5rem 1.2rem;
-      border: none;
-      background: #2563eb;
-      color: white;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-    button:hover { background: #1d4ed8; }
-    canvas {
-      display: block;
-      margin: 1rem auto;
-      max-width: 100%;
-      height: auto;
-      border: 1px solid #ccc;
-      background: #dbeafe;
+    .back-btn:hover { color: var(--red); border-color: var(--red); background: rgba(252,129,129,0.1); }
+    .page-title {
+      font-family: 'Exo 2', sans-serif; font-size: 1.35rem; font-weight: 900; font-style: italic;
+      color: var(--red); text-shadow: 0 0 22px rgba(252,129,129,0.35);
     }
     #languageToggle {
-      position: fixed;
-      top: 16px;
-      right: 16px;
-      background: #00000055;
-      color: white;
-      padding: 0.6rem 1.2rem;
-      border: none;
-      border-radius: 6px;
-      font-size: 14px;
-      cursor: pointer;
-      z-index: 10;
+      background: rgba(0,0,0,0.5); color: white; padding: 0.4rem 0.9rem;
+      border: 1px solid rgba(252,129,129,0.28); border-radius: 20px;
+      font-size: 0.78rem; font-weight: 700; cursor: pointer;
+      font-family: 'Share Tech Mono', monospace; transition: all 0.2s;
     }
-    #languageToggle:hover { background: #00000088; }
+    #languageToggle:hover { background: rgba(180,50,50,0.4); border-color: var(--red); }
+
+    /* MODE TABS */
+    .mode-tabs {
+      display: flex; margin: 1rem auto 0; width: fit-content;
+      background: rgba(0,0,0,0.45); border: 1px solid rgba(252,129,129,0.14);
+      border-radius: 10px; overflow: hidden;
+    }
+    .tab-btn {
+      padding: 0.5rem 1.4rem; border: none; background: transparent;
+      color: var(--dim); font-family: 'Exo 2', sans-serif;
+      font-size: 0.85rem; font-weight: 700; cursor: pointer;
+      transition: all 0.22s; letter-spacing: 0.03em;
+      border-right: 1px solid rgba(252,129,129,0.1);
+    }
+    .tab-btn:last-child { border-right: none; }
+    .tab-btn.active { background: rgba(252,129,129,0.14); color: var(--red); }
+    .tab-btn:hover:not(.active) { background: rgba(255,255,255,0.05); color: #ddd; }
+
+    /* MAIN */
+    .main { display: flex; gap: 1.2rem; padding: 1.1rem 1.5rem; flex: 1; }
+
+    /* LEFT */
+    .left-panel { display: flex; flex-direction: column; gap: 0.9rem; width: 282px; min-width: 282px; }
+    .panel {
+      background: var(--card); border: 1px solid rgba(252,129,129,0.12);
+      border-radius: 12px; padding: 1.15rem 1.25rem;
+      backdrop-filter: blur(10px); box-shadow: 0 0 22px rgba(0,0,0,0.45);
+    }
+    .panel-label {
+      font-family: 'Share Tech Mono', monospace; font-size: 0.6rem;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: rgba(252,129,129,0.42); margin-bottom: 0.62rem;
+    }
+    .def-text { font-size: 0.86rem; line-height: 1.72; color: var(--dim); }
+    .def-text strong { color: var(--red); }
+    .def-text em { color: var(--yellow); font-style: normal; font-family: 'Share Tech Mono', monospace; font-size: 0.81rem; }
+
+    .formula-block {
+      margin-top: 0.72rem; background: rgba(0,0,0,0.38); border-radius: 8px;
+      padding: 0.65rem 0.85rem; border-left: 2px solid var(--red);
+    }
+    .formula-row { display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 0.25rem; }
+    .formula-row:last-child { margin-bottom: 0; }
+    .f-lbl { font-size: 0.64rem; color: var(--dim); font-family: 'Share Tech Mono', monospace; min-width: 44px; }
+    .f-eq  { font-family: 'Share Tech Mono', monospace; font-size: 0.84rem; color: var(--yellow); }
+    .f-sub { font-size: 0.63rem; color: rgba(139,163,187,0.5); font-family: 'Share Tech Mono', monospace; }
+
+    /* Controls */
+    .control-row { display: flex; flex-direction: column; gap: 0.18rem; margin-bottom: 0.78rem; }
+    .control-row label { font-size: 0.79rem; color: var(--dim); font-weight: 500; }
+    .control-row input[type="range"] { width: 100%; accent-color: var(--red); cursor: pointer; height: 4px; }
+    .range-val { font-family: 'Share Tech Mono', monospace; font-size: 0.88rem; color: var(--red); margin-left: 0.5rem; min-width: 40px; }
+    .range-row { display: flex; align-items: center; }
+
+    .btn-row { display: flex; gap: 0.55rem; margin-top: 0.25rem; }
+    .btn { flex: 1; padding: 0.58rem 0; border: none; border-radius: 7px; font-size: 0.88rem; font-weight: 700; cursor: pointer; font-family: 'Exo 2', sans-serif; transition: all 0.22s; letter-spacing: 0.03em; }
+    .btn-sim { background: linear-gradient(135deg, #c53030, #822727); color: white; }
+    .btn-sim:hover { filter: brightness(1.2); transform: translateY(-2px); box-shadow: 0 6px 22px rgba(197,48,48,0.4); }
+    .btn-stop { background: rgba(246,173,85,0.18); color: var(--orange); border: 1px solid rgba(246,173,85,0.3); }
+    .btn-stop:hover { background: rgba(246,173,85,0.28); }
+    .btn-reset { background: rgba(255,255,255,0.07); color: var(--dim); border: 1px solid rgba(255,255,255,0.13); }
+    .btn-reset:hover { background: rgba(255,255,255,0.13); color: white; }
+
+    /* Stats */
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; }
+    .stat-card { background: rgba(0,0,0,0.38); border: 1px solid rgba(252,129,129,0.1); border-radius: 8px; padding: 0.52rem 0.68rem; }
+    .stat-label { font-size: 0.63rem; color: var(--dim); font-family: 'Share Tech Mono', monospace; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.15rem; }
+    .stat-val { font-size: 1.12rem; font-weight: 700; color: var(--blue); font-family: 'Share Tech Mono', monospace; }
+    .stat-unit { font-size: 0.62rem; color: var(--dim); margin-left: 0.1rem; }
+    .stat-card.g1 { border-color: rgba(252,129,129,0.28); } .stat-card.g1 .stat-val { color: var(--red); }
+    .stat-card.g2 { border-color: rgba(246,224,94,0.25); }  .stat-card.g2 .stat-val { color: var(--yellow); }
+    .stat-card.g3 { border-color: rgba(79,209,197,0.25); }  .stat-card.g3 .stat-val { color: var(--teal); }
+    .stat-card.g4 { border-color: rgba(246,173,85,0.25); }  .stat-card.g4 .stat-val { color: var(--orange); }
+
+    /* Canvas */
+    .canvas-area { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; min-width: 0; }
+    .canvas-wrap { background: var(--card); border: 1px solid rgba(252,129,129,0.12); border-radius: 12px; overflow: hidden; box-shadow: 0 0 30px rgba(0,0,0,0.55); flex: 1; min-height: 280px; }
+
+    .graph-row { display: flex; gap: 0.75rem; }
+    .graph-wrap { background: var(--card); border: 1px solid rgba(252,129,129,0.1); border-radius: 12px; overflow: hidden; height: 148px; flex: 1; min-width: 0; }
+    .graph-label { font-family: 'Share Tech Mono', monospace; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(252,129,129,0.4); padding: 0.4rem 0.8rem 0; }
+    canvas.graph { display: block; width: 100%; height: 116px; }
+
     .hidden { display: none !important; }
+
+    @media (max-width: 920px) {
+      .main { flex-direction: column; }
+      .left-panel { width: 100%; min-width: auto; flex-direction: row; flex-wrap: wrap; }
+      .panel { flex: 1; min-width: 240px; }
+      .graph-row { flex-direction: column; }
+    }
   </style>
 </head>
-<body>  
-  <button id="languageToggle">বাংলা / English</button>
+<body>
+<div id="bgLayer"></div>
+<div id="bgGrid"></div>
+<div class="wrapper">
 
-   <a href="index.html" class="back-btn">← <span class="lang-en">Back</span><span class="lang-bn hidden">পিছনে</span></a>
-
-  
-  <h1 class="lang-en">🔀 Random Motion</h1>
-  <h1 class="lang-bn hidden">🔀 এলোমেলো গতি</h1>
-
-  <div id="definition">
-    <div class="lang-en">
-      <strong>Definition:</strong> Random motion is the unpredictable movement of particles in different directions and speeds. This motion does not follow a specific path and is often observed in phenomena like Brownian motion of particles in a fluid.
+  <div class="topbar">
+    <a href="index.html" class="back-btn">← <span class="lang-en">Back</span><span class="lang-bn hidden">পিছনে</span></a>
+    <div class="page-title">
+      <span class="lang-en">🔀 Random Motion</span>
+      <span class="lang-bn hidden">🔀 এলোমেলো গতি</span>
     </div>
-    <div class="lang-bn hidden">
-      <strong>সংজ্ঞা:</strong> এলোমেলো গতি হলো এমন এক ধরনের গতি যেখানে কণাগুলো বিভিন্ন দিক ও বেগে এলোমেলোভাবে চলে। এটি পূর্বানুমানযোগ্য নয় এবং তরলের মধ্যে কণার ব্রাউনীয় গতির মতো ঘটনায় দেখা যায়।
-    </div>
+    <button id="languageToggle" onclick="toggleLang()">বাংলা / EN</button>
   </div>
 
-  <div id="controls">
-    <label>
-      <span class="lang-en">Number of Particles:</span>
-      <span class="lang-bn hidden">কণার সংখ্যা:</span>
-      <input type="number" id="count" value="20" min="1" max="10000">
-    </label>
-    <button onclick="startRandomMotion()">
-      <span class="lang-en">Start</span>
-      <span class="lang-bn hidden">শুরু</span>
+  <!-- MODE TABS -->
+  <div class="mode-tabs">
+    <button class="tab-btn active" onclick="switchMode('brownian')">
+      <span class="lang-en">🧫 Brownian</span><span class="lang-bn hidden">🧫 ব্রাউনীয়</span>
     </button>
-    <button onclick="stopRandomMotion()">
-      <span class="lang-en">Stop</span>
-      <span class="lang-bn hidden">বন্ধ</span>
+    <button class="tab-btn" onclick="switchMode('gas')">
+      <span class="lang-en">💨 Ideal Gas</span><span class="lang-bn hidden">💨 আদর্শ গ্যাস</span>
+    </button>
+    <button class="tab-btn" onclick="switchMode('levy')">
+      <span class="lang-en">🦋 Lévy Walk</span><span class="lang-bn hidden">🦋 লেভি হাঁটা</span>
+    </button>
+    <button class="tab-btn" onclick="switchMode('diffusion')">
+      <span class="lang-en">🌊 Diffusion</span><span class="lang-bn hidden">🌊 ব্যাপন</span>
     </button>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
-  <script src="js/random.js"></script>
+  <div class="main">
+    <div class="left-panel">
 
-  <script>
-    // Language Toggle Logic
-    const toggleBtn = document.getElementById('languageToggle');
-    let currentLang = 'en';
-    toggleBtn.addEventListener('click', () => {
-      if (currentLang === 'en') {
-        document.querySelectorAll('.lang-en').forEach(el => el.classList.add('hidden'));
-        document.querySelectorAll('.lang-bn').forEach(el => el.classList.remove('hidden'));
-        document.body.classList.add('bangla');
-        currentLang = 'bn';
-        toggleBtn.textContent = 'English';
-      } else {
-        document.querySelectorAll('.lang-en').forEach(el => el.classList.remove('hidden'));
-        document.querySelectorAll('.lang-bn').forEach(el => el.classList.add('hidden'));
-        document.body.classList.remove('bangla');
-        currentLang = 'en';
-        toggleBtn.textContent = 'বাংলা';
-      }
-    });
+      <!-- Definition -->
+      <div class="panel">
+        <div class="panel-label"><span class="lang-en">Definition</span><span class="lang-bn hidden">সংজ্ঞা</span></div>
+        <p class="def-text lang-en" id="defEn">
+          <strong>Brownian motion</strong> is the erratic, random movement of microscopic particles suspended in a fluid, caused by <em>continuous collisions</em> with surrounding molecules. Observed by Robert Brown (1827), explained by Einstein (1905).
+        </p>
+        <p class="def-text lang-bn hidden" id="defBn">
+          <strong>ব্রাউনীয় গতি</strong> হলো তরলে ভাসমান অণুবীক্ষণীয় কণার অনিয়মিত, এলোমেলো চলাচল, যা আশেপাশের অণুর <em>ক্রমাগত সংঘর্ষের</em> কারণে ঘটে। রবার্ট ব্রাউন (১৮২৭) পর্যবেক্ষণ করেন, আইনস্টাইন (১৯০৫) ব্যাখ্যা করেন।
+        </p>
+        <div class="formula-block" id="formulaBlock">
+          <div class="formula-row"><span class="f-lbl">MSD</span><span class="f-eq">= 2D·t (2D)</span></div>
+          <div class="formula-row"><span class="f-lbl">D</span><span class="f-eq">= k_B·T / (6πηr)</span></div>
+          <div class="formula-row" style="margin-top:0.3rem"><span class="f-sub">D=diffusivity · T=temp · η=viscosity · r=radius</span></div>
+        </div>
+      </div>
 
-    // Input Constraint Logic
-    const input = document.getElementById("count");
-    input.addEventListener("input", function() {
-      let val = parseInt(this.value);
-      if (val > 10000) {
-        this.value = 10000;
-        alert("⚠️ Maximum threshold reached (10,000).");
+      <!-- Controls -->
+      <div class="panel">
+        <div class="panel-label"><span class="lang-en">Parameters</span><span class="lang-bn hidden">প্যারামিটার</span></div>
+
+        <div class="control-row">
+          <label><span class="lang-en">Particles</span><span class="lang-bn hidden">কণার সংখ্যা</span></label>
+          <div class="range-row">
+            <input type="range" id="countSlider" min="1" max="300" value="40" step="1" oninput="syncCtrl()">
+            <span class="range-val" id="countDisplay">40</span>
+          </div>
+        </div>
+
+        <div class="control-row">
+          <label><span class="lang-en">Speed / Jitter</span><span class="lang-bn hidden">গতি / কম্পন</span></label>
+          <div class="range-row">
+            <input type="range" id="speedSlider" min="0.5" max="6.0" value="2.0" step="0.1" oninput="syncCtrl()">
+            <span class="range-val" id="speedDisplay">2.0</span>
+          </div>
+        </div>
+
+        <div class="control-row">
+          <label><span class="lang-en">Particle Size</span><span class="lang-bn hidden">কণার আকার</span></label>
+          <div class="range-row">
+            <input type="range" id="sizeSlider" min="3" max="20" value="8" step="1" oninput="syncCtrl()">
+            <span class="range-val" id="sizeDisplay">8</span>
+          </div>
+        </div>
+
+        <div class="control-row">
+          <label><span class="lang-en">Trail length</span><span class="lang-bn hidden">পথ দৈর্ঘ্য</span></label>
+          <div class="range-row">
+            <input type="range" id="trailSlider" min="0" max="200" value="60" step="5" oninput="syncCtrl()">
+            <span class="range-val" id="trailDisplay">60</span>
+          </div>
+        </div>
+
+        <!-- Diffusion barrier (shown in diffusion mode) -->
+        <div class="control-row" id="barrierRow" style="display:none">
+          <label><span class="lang-en">Barrier gap</span><span class="lang-bn hidden">বাধার ফাঁক</span></label>
+          <div class="range-row">
+            <input type="range" id="barrierSlider" min="10" max="150" value="60" step="5" oninput="syncCtrl()">
+            <span class="range-val" id="barrierDisplay">60</span>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-sim" onclick="startSim()">
+            <span class="lang-en">▶ Start</span><span class="lang-bn hidden">▶ শুরু</span>
+          </button>
+          <button class="btn btn-stop" onclick="pauseSim()">
+            <span class="lang-en">⏸</span><span class="lang-bn hidden">⏸</span>
+          </button>
+          <button class="btn btn-reset" onclick="resetSim()">
+            <span class="lang-en">↺</span><span class="lang-bn hidden">↺</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="panel">
+        <div class="panel-label"><span class="lang-en">Live Readout</span><span class="lang-bn hidden">লাইভ তথ্য</span></div>
+        <div class="stats-grid">
+          <div class="stat-card g1">
+            <div class="stat-label"><span class="lang-en">Particles</span><span class="lang-bn hidden">কণা</span></div>
+            <div><span class="stat-val" id="statCount">0</span></div>
+          </div>
+          <div class="stat-card g2">
+            <div class="stat-label"><span class="lang-en">Avg Speed</span><span class="lang-bn hidden">গড় গতি</span></div>
+            <div><span class="stat-val" id="statSpeed">0.0</span><span class="stat-unit">px/f</span></div>
+          </div>
+          <div class="stat-card g3">
+            <div class="stat-label"><span class="lang-en">MSD</span><span class="lang-bn hidden">MSD</span></div>
+            <div><span class="stat-val" id="statMSD">0.0</span><span class="stat-unit">px²</span></div>
+          </div>
+          <div class="stat-card g4">
+            <div class="stat-label"><span class="lang-en">Collisions</span><span class="lang-bn hidden">সংঘর্ষ</span></div>
+            <div><span class="stat-val" id="statCol">0</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CANVAS AREA -->
+    <div class="canvas-area">
+      <div class="canvas-wrap" id="canvasWrap"></div>
+      <div class="graph-row">
+        <div class="graph-wrap">
+          <div class="graph-label"><span class="lang-en">Mean Speed – Time</span><span class="lang-bn hidden">গড় গতি – সময়</span></div>
+          <canvas id="gSpeed" class="graph"></canvas>
+        </div>
+        <div class="graph-wrap">
+          <div class="graph-label"><span class="lang-en">MSD – Time (Brownian signature)</span><span class="lang-bn hidden">MSD – সময়</span></div>
+          <canvas id="gMSD" class="graph"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+<script>
+// ── LANGUAGE ──────────────────────────────────────────────────────────────
+let lang = 'en';
+function toggleLang() {
+  lang = lang === 'en' ? 'bn' : 'en';
+  document.querySelectorAll('.lang-en').forEach(el => el.classList.toggle('hidden', lang !== 'en'));
+  document.querySelectorAll('.lang-bn').forEach(el => el.classList.toggle('hidden', lang !== 'bn'));
+  document.body.classList.toggle('bangla', lang === 'bn');
+}
+
+// ── MODE ──────────────────────────────────────────────────────────────────
+let mode = 'brownian';
+
+const MODE_INFO = {
+  brownian: {
+    en: `<strong>Brownian motion</strong> is the erratic, random movement of microscopic particles suspended in a fluid, caused by <em>continuous collisions</em> with surrounding molecules. Observed by Robert Brown (1827), explained by Einstein (1905).`,
+    bn: `<strong>ব্রাউনীয় গতি</strong> হলো তরলে ভাসমান অণুবীক্ষণীয় কণার অনিয়মিত, এলোমেলো চলাচল, যা আশেপাশের অণুর <em>ক্রমাগত সংঘর্ষের</em> কারণে ঘটে।`,
+    formula: [['MSD','= 2D·t (2D)'],['D','= k_B·T / (6πηr)']],
+    sub: 'D=diffusivity · T=temp · η=viscosity'
+  },
+  gas: {
+    en: `<strong>Ideal gas particles</strong> move in straight lines at constant speeds, undergoing <em>elastic collisions</em> with walls and each other. The Maxwell-Boltzmann distribution describes their speed distribution at a given temperature.`,
+    bn: `<strong>আদর্শ গ্যাস কণা</strong> সরল রেখায় ধ্রুব গতিতে চলে, দেয়াল ও পরস্পরের সাথে <em>স্থিতিস্থাপক সংঘর্ষ</em> করে।`,
+    formula: [['KE','= ½mv²'],['P·V','= n·R·T'],['v_rms','= √(3RT/M)']],
+    sub: 'R = 8.314 J/mol·K'
+  },
+  levy: {
+    en: `<strong>Lévy walk</strong> combines short local steps with occasional <em>long-distance jumps</em>. Unlike Brownian motion (Gaussian steps), Lévy walks have a power-law step distribution. Found in animal foraging and light scattering.`,
+    bn: `<strong>লেভি হাঁটা</strong> ছোট স্থানীয় পদক্ষেপকে মাঝে মাঝে <em>দীর্ঘ-দূরত্বের লম্ফ</em>এর সাথে মিলিয়ে দেয়। প্রাণীর খাদ্য অনুসন্ধান ও আলো বিচ্ছুরণে পাওয়া যায়।`,
+    formula: [['P(l)','∝ l^(−μ), 1<μ<3'],['MSD','∝ t^γ, γ>1 (superdiffusive)']],
+    sub: 'μ = Lévy exponent'
+  },
+  diffusion: {
+    en: `<strong>Diffusion</strong> is the net movement of particles from a region of <em>high concentration</em> to low concentration. Here particles start on the left and diffuse through a barrier gap into the right half.`,
+    bn: `<strong>ব্যাপন</strong> হলো <em>উচ্চ ঘনত্বের</em> অঞ্চল থেকে কম ঘনত্বের দিকে কণার নেট চলাচল। কণা বাম থেকে শুরু করে বাধার ফাঁক দিয়ে ডান দিকে ছড়িয়ে পড়ে।`,
+    formula: [["Fick's 1st",'J = -D·(dC/dx)'],["Fick's 2nd",'∂C/∂t = D·∇²C']],
+    sub: 'J = flux · C = concentration · D = diffusivity'
+  },
+};
+
+function switchMode(m) {
+  mode = m;
+  document.querySelectorAll('.tab-btn').forEach((b,i) => {
+    b.classList.toggle('active', ['brownian','gas','levy','diffusion'][i] === m);
+  });
+  const info = MODE_INFO[m];
+  document.getElementById('defEn').innerHTML = info.en;
+  document.getElementById('defBn').innerHTML = info.bn;
+  const fb = document.getElementById('formulaBlock');
+  fb.innerHTML = info.formula.map(([l,e]) =>
+    `<div class="formula-row"><span class="f-lbl">${l}</span><span class="f-eq">${e}</span></div>`
+  ).join('') + `<div class="formula-row" style="margin-top:0.3rem"><span class="f-sub">${info.sub}</span></div>`;
+  document.getElementById('barrierRow').style.display = m === 'diffusion' ? '' : 'none';
+  resetSim();
+}
+
+// ── CONTROLS ──────────────────────────────────────────────────────────────
+function syncCtrl() {
+  document.getElementById('countDisplay').textContent   = document.getElementById('countSlider').value;
+  document.getElementById('speedDisplay').textContent   = parseFloat(document.getElementById('speedSlider').value).toFixed(1);
+  document.getElementById('sizeDisplay').textContent    = document.getElementById('sizeSlider').value;
+  document.getElementById('trailDisplay').textContent   = document.getElementById('trailSlider').value;
+  document.getElementById('barrierDisplay').textContent = document.getElementById('barrierSlider').value;
+}
+
+function getParams() {
+  return {
+    count:   parseInt(document.getElementById('countSlider').value),
+    speed:   parseFloat(document.getElementById('speedSlider').value),
+    size:    parseInt(document.getElementById('sizeSlider').value),
+    trail:   parseInt(document.getElementById('trailSlider').value),
+    barrier: parseInt(document.getElementById('barrierSlider').value),
+  };
+}
+
+// ── STATE ──────────────────────────────────────────────────────────────────
+let simRunning = false;
+let particles = [];
+let frameCount2 = 0;
+let totalCollisions = 0;
+let speedHist = [], msdHist = [];
+const MAX_HIST = 400;
+let startPositions = []; // for MSD
+
+function updateStats(avgSpd, msd, count, cols) {
+  document.getElementById('statCount').textContent = count;
+  document.getElementById('statSpeed').textContent = avgSpd.toFixed(1);
+  document.getElementById('statMSD').textContent   = msd.toFixed(0);
+  document.getElementById('statCol').textContent   = cols;
+}
+
+// ── GRAPHS ─────────────────────────────────────────────────────────────────
+function drawGraph(id, hist, yKey, yLabel, lineColor, fillColor) {
+  const gc = document.getElementById(id);
+  const gw = gc.parentElement.clientWidth;
+  gc.width = gw; gc.height = 116;
+  const ctx = gc.getContext('2d');
+  ctx.clearRect(0, 0, gw, 116);
+  const padL=36, padR=10, padT=8, padB=22;
+  const W = gw-padL-padR, H = 116-padT-padB;
+
+  ctx.strokeStyle='rgba(252,129,129,0.3)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(padL,padT); ctx.lineTo(padL,padT+H); ctx.lineTo(padL+W,padT+H); ctx.stroke();
+
+  ctx.font='9px Consolas,monospace'; ctx.fillStyle=lineColor; ctx.textAlign='left';
+  ctx.fillText(yLabel, 2, padT+8);
+  ctx.fillStyle='rgba(139,163,187,0.6)'; ctx.fillText('t', padL+W-5, padT+H+16);
+
+  if (hist.length < 2) return;
+  const maxY = Math.max(...hist.map(p=>p[yKey]), 1);
+  const maxT = Math.max(hist[hist.length-1].t, 0.1);
+
+  // grid
+  [0.25,0.5,0.75,1].forEach(frac => {
+    const y = padT + H - frac*H;
+    ctx.strokeStyle='rgba(252,129,129,0.05)'; ctx.lineWidth=0.5;
+    ctx.beginPath(); ctx.moveTo(padL,y); ctx.lineTo(padL+W,y); ctx.stroke();
+    ctx.fillStyle='rgba(139,163,187,0.65)'; ctx.textAlign='right'; ctx.font='8px Consolas,monospace';
+    ctx.fillText((frac*maxY).toFixed(0), padL-3, y+3);
+  });
+
+  // area
+  ctx.beginPath();
+  hist.forEach((p,i) => {
+    const px=padL+(p.t/maxT)*W, py=padT+H-(p[yKey]/maxY)*H;
+    i===0 ? ctx.moveTo(px,padT+H) : null;
+    ctx.lineTo(px,py);
+  });
+  ctx.lineTo(padL+(hist[hist.length-1].t/maxT)*W, padT+H);
+  ctx.closePath(); ctx.fillStyle=fillColor; ctx.fill();
+
+  // line
+  ctx.beginPath(); ctx.strokeStyle=lineColor; ctx.lineWidth=1.8;
+  hist.forEach((p,i) => {
+    const px=padL+(p.t/maxT)*W, py=padT+H-(p[yKey]/maxY)*H;
+    i===0 ? ctx.moveTo(px,py) : ctx.lineTo(px,py);
+  });
+  ctx.stroke();
+
+  // dot
+  const last=hist[hist.length-1];
+  const dx=padL+(last.t/maxT)*W, dy=padT+H-(last[yKey]/maxY)*H;
+  ctx.beginPath(); ctx.arc(dx,dy,3,0,Math.PI*2); ctx.fillStyle=lineColor; ctx.fill();
+  ctx.fillStyle=lineColor; ctx.font='bold 8px Consolas,monospace';
+  ctx.textAlign=dx>padL+W*0.7?'right':'left';
+  ctx.fillText(last[yKey].toFixed(1), dx+(ctx.textAlign==='left'?4:-4), dy-5);
+}
+
+function drawBothGraphs() {
+  drawGraph('gSpeed', speedHist, 'v', 'v̄',   '#fc8181', 'rgba(252,129,129,0.1)');
+  drawGraph('gMSD',   msdHist,   'm', 'MSD',  '#4fd1c5', 'rgba(79,209,197,0.1)');
+}
+
+// ── PARTICLE FACTORIES ─────────────────────────────────────────────────────
+function makeParticle(p, canvasW, canvasH, forceX, forceY) {
+  const spd = p.speed * (0.5 + Math.random());
+  const ang  = Math.random() * Math.PI * 2;
+  let x = forceX !== undefined ? forceX : Math.random() * canvasW;
+  let y = forceY !== undefined ? forceY : Math.random() * canvasH;
+  // Assign colour per mode
+  const cols = ['#fc8181','#f6ad55','#f6e05e','#68d391','#90cdf4','#b794f4','#f687b3','#4fd1c5'];
+  const col = cols[Math.floor(Math.random() * cols.length)];
+  return { x, y, vx: Math.cos(ang)*spd, vy: Math.sin(ang)*spd, col, trail: [], levySteps: 0 };
+}
+
+// ── P5 SKETCH ─────────────────────────────────────────────────────────────
+new p5(function(p) {
+
+  p.setup = function() {
+    const wrap = document.getElementById('canvasWrap');
+    const cnv  = p.createCanvas(wrap.clientWidth, Math.max(280, window.innerHeight*0.44));
+    cnv.parent('canvasWrap');
+    p.noLoop();
+  };
+
+  function initParticles() {
+    const params = getParams();
+    particles = [];
+    startPositions = [];
+    totalCollisions = 0;
+    frameCount2 = 0;
+    speedHist = []; msdHist = [];
+
+    for (let i = 0; i < params.count; i++) {
+      // Diffusion: all start left half
+      const x = mode === 'diffusion'
+        ? Math.random() * (p.width * 0.45 - 30) + 15
+        : Math.random() * p.width;
+      const y = Math.random() * p.height;
+      const part = makeParticle(params, p.width, p.height, x, y);
+      part.col = mode === 'diffusion' ? '#fc8181' : part.col;
+      particles.push(part);
+      startPositions.push({ x: part.x, y: part.y });
+    }
+  }
+
+  p.draw = function() {
+    const params = getParams();
+    frameCount2++;
+
+    // ── UPDATE PHYSICS ──
+    if (simRunning) {
+      const maxSpd = params.speed * 2;
+      let sumSpd = 0;
+
+      for (let i = 0; i < particles.length; i++) {
+        const pt = particles[i];
+
+        // Mode-specific velocity update
+        if (mode === 'brownian') {
+          const jitter = params.speed * 0.35;
+          pt.vx += (Math.random()-0.5) * jitter;
+          pt.vy += (Math.random()-0.5) * jitter;
+          pt.vx = p.constrain(pt.vx, -maxSpd, maxSpd);
+          pt.vy = p.constrain(pt.vy, -maxSpd, maxSpd);
+        }
+        else if (mode === 'gas') {
+          // Constant speed, elastic bouncing handled below
+          const spd = Math.sqrt(pt.vx*pt.vx + pt.vy*pt.vy);
+          if (spd < 0.1) { const a = Math.random()*Math.PI*2; pt.vx = Math.cos(a)*params.speed; pt.vy = Math.sin(a)*params.speed; }
+          // Inter-particle elastic collision (simplified: check against others)
+          for (let j = i+1; j < particles.length; j++) {
+            const pt2 = particles[j];
+            const dx = pt2.x-pt.x, dy = pt2.y-pt.y;
+            const dist = Math.sqrt(dx*dx+dy*dy);
+            if (dist < params.size) {
+              // Swap velocities along collision axis
+              const nx=dx/dist, ny=dy/dist;
+              const dvx=pt2.vx-pt.vx, dvy=pt2.vy-pt.vy;
+              const dot = dvx*nx+dvy*ny;
+              if (dot < 0) {
+                pt.vx  += dot*nx; pt.vy  += dot*ny;
+                pt2.vx -= dot*nx; pt2.vy -= dot*ny;
+                totalCollisions++;
+              }
+            }
+          }
+        }
+        else if (mode === 'levy') {
+          pt.levySteps--;
+          if (pt.levySteps <= 0) {
+            // Power-law step length: l ~ U^(-1/(μ-1)), μ≈1.5
+            const u = Math.random() * 0.99 + 0.01;
+            const l = Math.pow(u, -1/0.5) * 0.4; // Lévy-like
+            const stepLen = p.min(l * params.speed, p.width * 0.8);
+            const ang = Math.random() * p.TWO_PI;
+            const spd = Math.max(stepLen * 0.08, 0.5);
+            pt.vx = Math.cos(ang)*spd; pt.vy = Math.sin(ang)*spd;
+            pt.levySteps = Math.ceil(stepLen / spd);
+          }
+        }
+        else if (mode === 'diffusion') {
+          const jitter = params.speed * 0.3;
+          pt.vx += (Math.random()-0.5)*jitter;
+          pt.vy += (Math.random()-0.5)*jitter;
+          pt.vx = p.constrain(pt.vx, -maxSpd, maxSpd);
+          pt.vy = p.constrain(pt.vy, -maxSpd, maxSpd);
+          // Barrier: x = width/2, gap centred at height/2
+          const barX = p.width / 2;
+          const gap = params.barrier;
+          const gapY1 = p.height/2 - gap/2;
+          const gapY2 = p.height/2 + gap/2;
+          if (Math.abs(pt.x - barX) < Math.abs(pt.vx)) {
+            if (pt.y < gapY1 || pt.y > gapY2) {
+              pt.vx *= -1; // bounce off barrier
+              totalCollisions++;
+            }
+          }
+        }
+
+        // Move
+        pt.x += pt.vx;
+        pt.y += pt.vy;
+
+        // Wall bounce
+        if (pt.x < params.size/2) { pt.x = params.size/2; pt.vx *= -1; }
+        if (pt.x > p.width-params.size/2) { pt.x = p.width-params.size/2; pt.vx *= -1; }
+        if (pt.y < params.size/2) { pt.y = params.size/2; pt.vy *= -1; }
+        if (pt.y > p.height-params.size/2) { pt.y = p.height-params.size/2; pt.vy *= -1; }
+
+        sumSpd += Math.sqrt(pt.vx*pt.vx+pt.vy*pt.vy);
+
+        // Trail
+        pt.trail.push({ x: pt.x, y: pt.y });
+        if (pt.trail.length > params.trail + 1) pt.trail.shift();
       }
-    });
-  </script>
+
+      // Stats
+      const avgSpd = particles.length > 0 ? sumSpd/particles.length : 0;
+      // MSD
+      let msd = 0;
+      for (let i = 0; i < particles.length; i++) {
+        const dx = particles[i].x - startPositions[i].x;
+        const dy = particles[i].y - startPositions[i].y;
+        msd += dx*dx + dy*dy;
+      }
+      msd = particles.length > 0 ? msd/particles.length : 0;
+
+      speedHist.push({ t: frameCount2, v: avgSpd });
+      msdHist.push({ t: frameCount2, m: msd });
+      if (speedHist.length > MAX_HIST) speedHist.shift();
+      if (msdHist.length  > MAX_HIST) msdHist.shift();
+
+      updateStats(avgSpd, msd, particles.length, totalCollisions);
+      drawBothGraphs();
+    }
+
+    // ── DRAW ──────────────────────────────────────────────────────────────
+    p.background(5, 8, 20);
+
+    // Subtle grid
+    p.stroke(252,129,129,10); p.strokeWeight(0.5);
+    for (let gx=0; gx<p.width; gx+=44)  p.line(gx,0,gx,p.height);
+    for (let gy=0; gy<p.height; gy+=44) p.line(0,gy,p.width,gy);
+    p.noStroke();
+
+    // Heat-map density overlay (brownian / diffusion)
+    if ((mode==='brownian'||mode==='diffusion') && particles.length > 0 && simRunning) {
+      // Draw a soft radial gradient where particles cluster
+      for (const pt of particles) {
+        p.noStroke();
+        p.fill(252, 129, 129, 8);
+        p.ellipse(pt.x, pt.y, 40, 40);
+      }
+    }
+
+    // Diffusion barrier
+    if (mode === 'diffusion') {
+      const params = getParams();
+      const barX = p.width/2;
+      const gapY1 = p.height/2 - params.barrier/2;
+      const gapY2 = p.height/2 + params.barrier/2;
+      p.stroke(79,209,197,120); p.strokeWeight(2.5);
+      p.line(barX, 0,    barX, gapY1 - 4);
+      p.line(barX, gapY2+4, barX, p.height);
+      // Gap arrows
+      p.stroke(79,209,197,80); p.strokeWeight(1.5);
+      p.line(barX, gapY1+2, barX, gapY2-2);
+      p.noStroke(); p.fill(79,209,197,100);
+      p.triangle(barX-4,gapY1+14, barX+4,gapY1+14, barX, gapY1+2);
+      p.triangle(barX-4,gapY2-14, barX+4,gapY2-14, barX, gapY2-2);
+      // Concentration label
+      p.fill(79,209,197,120); p.textFont('Consolas'); p.textSize(9); p.textAlign(p.CENTER);
+      p.text('high →', barX*0.5, 20);
+      p.text('← low', barX*1.5, 20);
+    }
+
+    // Trails
+    for (const pt of particles) {
+      if (pt.trail.length > 1) {
+        for (let i=1; i<pt.trail.length; i++) {
+          const t2 = i/pt.trail.length;
+          const [r,g2,b2] = hexToRgb(pt.col);
+          p.stroke(r,g2,b2, t2*180);
+          p.strokeWeight(0.8 + t2*1.2);
+          p.line(pt.trail[i-1].x, pt.trail[i-1].y, pt.trail[i].x, pt.trail[i].y);
+        }
+      }
+    }
+    p.noStroke();
+
+    // Particles
+    const params2 = getParams();
+    for (const pt of particles) {
+      const [r,g2,b2] = hexToRgb(pt.col);
+      const spd = Math.sqrt(pt.vx*pt.vx+pt.vy*pt.vy);
+      const gA = p.map(spd, 0, params2.speed*2, 10, 60);
+      // Glow
+      p.fill(r,g2,b2,gA*0.4); p.ellipse(pt.x, pt.y, params2.size+10, params2.size+10);
+      p.fill(r,g2,b2,gA*0.6); p.ellipse(pt.x, pt.y, params2.size+4, params2.size+4);
+      // Core
+      p.fill(r,g2,b2); p.ellipse(pt.x, pt.y, params2.size, params2.size);
+      // Highlight
+      p.fill(255,255,255,100);
+      p.ellipse(pt.x - params2.size*0.22, pt.y - params2.size*0.22, params2.size*0.3, params2.size*0.3);
+    }
+
+    // Maxwell-Boltzmann speed distribution hint (gas mode)
+    if (mode==='gas' && particles.length > 0) {
+      const bins = 20;
+      const maxBinSpd = params2.speed * 3;
+      const binCounts = new Array(bins).fill(0);
+      for (const pt of particles) {
+        const spd = Math.sqrt(pt.vx*pt.vx+pt.vy*pt.vy);
+        const bin = Math.floor((spd/maxBinSpd)*bins);
+        if (bin < bins) binCounts[bin]++;
+      }
+      const maxBin = Math.max(...binCounts, 1);
+      const chartW = 130, chartH = 60;
+      const chartX = p.width - chartW - 14, chartY = 14;
+      p.fill(0,0,0,140); p.noStroke(); p.rect(chartX-8, chartY-8, chartW+16, chartH+30, 8);
+      p.fill(252,129,129,120); p.textFont('Consolas'); p.textSize(8); p.textAlign(p.CENTER);
+      p.text('Maxwell-Boltzmann dist.', chartX+chartW/2, chartY+chartH+18);
+      const bw = chartW/bins;
+      for (let i=0; i<bins; i++) {
+        const bh = (binCounts[i]/maxBin)*chartH;
+        const hue = p.map(i, 0, bins, 0, 1);
+        const r2 = p.lerp(252,144,hue), g3 = p.lerp(129,205,hue), b3 = p.lerp(129,244,hue);
+        p.fill(r2,g3,b3,160);
+        p.rect(chartX+i*bw, chartY+chartH-bh, bw-1, bh, 1);
+      }
+    }
+
+    // HUD
+    p.fill(0,0,0,120); p.noStroke(); p.rect(8,8,200,76,8);
+    p.textFont('Consolas'); p.textAlign(p.LEFT,p.TOP); p.fill(252,129,129); p.textSize(10.5);
+    p.text(`mode  = ${mode}`,                16,16);
+    p.text(`n     = ${particles.length}`,    16,31);
+    p.text(`frame = ${frameCount2}`,         16,46);
+    p.text(`FPS   = ${p.frameRate().toFixed(1)}`, 16,61);
+
+    if (!simRunning && particles.length===0) {
+      p.fill(255,255,255,45); p.textFont('Exo 2'); p.textSize(14); p.textAlign(p.CENTER,p.CENTER);
+      p.text('Press ▶ Start to begin', p.width/2, p.height*0.5);
+    }
+  };
+
+  p.windowResized = function() {
+    const wrap = document.getElementById('canvasWrap');
+    p.resizeCanvas(wrap.clientWidth, Math.max(280, window.innerHeight*0.44));
+  };
+
+  window.startSim = function() {
+    initParticles();
+    simRunning = true;
+    p.loop();
+  };
+  window.pauseSim = function() { simRunning = false; };
+  window.resetSim = function() {
+    simRunning = false; particles = []; frameCount2 = 0; totalCollisions = 0;
+    speedHist = []; msdHist = [];
+    updateStats(0,0,0,0); drawBothGraphs();
+    p.noLoop(); p.redraw();
+  };
+
+}, 'canvasWrap');
+
+// ── HELPERS ───────────────────────────────────────────────────────────────
+function hexToRgb(hex) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return [r,g,b];
+}
+</script>
 </body>
 </html>
-
-
 
