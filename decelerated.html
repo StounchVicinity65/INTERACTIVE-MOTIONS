@@ -1,339 +1,613 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🚘 Decelerated Motion</title>
+  <title>Decelerated Motion</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;700&family=Share+Tech+Mono&family=Exo+2:wght@300;400;700;900&display=swap" rel="stylesheet"/>
   <style>
+    :root {
+      --blue: #90cdf4;
+      --blue-d: #4a90e2;
+      --green: #68d391;
+      --yellow: #f6e05e;
+      --orange: #f6ad55;
+      --red: #fc8181;
+      --teal: #4fd1c5;
+      --bg: #04080f;
+      --card: rgba(5,14,32,0.88);
+      --dim: #8ba3bb;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      margin: 0;
-      font-family: sans-serif;
-      background: #09203f;
-      color: white;
-      text-align: center;
-      position: relative;
+      font-family: 'Exo 2', sans-serif;
+      background: var(--bg);
+      color: #f0f0f0;
       min-height: 100vh;
+      overflow-x: hidden;
     }
     body.bangla { font-family: 'Noto Serif Bengali', sans-serif; }
-
+    #bgLayer {
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse at 20% 40%, rgba(183,148,244,0.06) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 60%, rgba(104,211,145,0.04) 0%, transparent 50%),
+        linear-gradient(155deg, rgba(9,32,63,0.96), rgba(4,12,26,0.98));
+    }
+    #bgGrid {
+      position: fixed; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(rgba(144,205,244,0.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(144,205,244,0.018) 1px, transparent 1px);
+      background-size: 44px 44px;
+    }
+    .wrapper { position: relative; z-index: 1; display: flex; flex-direction: column; min-height: 100vh; padding-bottom: 2rem; }
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.75rem 1.5rem;
+      background: rgba(0,0,0,0.65); backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(252,129,129,0.12);
+      position: sticky; top: 0; z-index: 100;
+    }
     .back-btn {
-      position: absolute;
-      top: 16px;
-      left: 16px;
-      text-decoration: none;
-      color: #ccc;
-      background: #00000055;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 14px;
-      z-index: 10;
+      text-decoration: none; color: var(--dim); background: rgba(0,0,0,0.4);
+      padding: 0.4rem 0.9rem; border-radius: 6px; font-size: 0.85rem;
+      border: 1px solid rgba(252,129,129,0.18); transition: all 0.2s;
+      font-family: 'Share Tech Mono', monospace;
     }
-    .back-btn:hover { color: white; background: #00000088; }
-
-    h1 { margin-top: 3rem; font-size: 2rem; }
-
-    #definition {
-      background: #00000055;
-      padding: 1.2rem 1.5rem;
-      max-width: 1000px;
-      margin: 1rem auto;
-      border-radius: 8px;
-      font-size: 1rem;
-      box-shadow: 0 0 10px rgba(255,255,255,0.1);
-      display: flex;
-      justify-content: space-between;
-      gap: 2rem;
-      text-align: left;
+    .back-btn:hover { color: var(--red); border-color: var(--red); background: rgba(252,129,129,0.1); }
+    .page-title {
+      font-family: 'Exo 2', sans-serif; font-size: 1.35rem; font-weight: 900; font-style: italic;
+      color: var(--orange); text-shadow: 0 0 22px rgba(246,173,85,0.35);
     }
-    #definition div { flex: 1; }
-
-    #controls {
-      background: #00000055;
-      padding: 1rem;
-      max-width: 600px;
-      margin: 1rem auto;
-      border-radius: 8px;
-      box-shadow: 0 0 8px rgba(255,255,255,0.1);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 2rem;
-      flex-wrap: wrap;
-    }
-    label {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      font-size: 14px;
-      min-width: 130px;
-    }
-    input {
-      padding: 4px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
-      width: 100px;
-      text-align: center;
-    }
-    button {
-      padding: 0.5rem 1.2rem;
-      background: #2563eb;
-      border: none;
-      color: white;
-      border-radius: 5px;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-    button:hover { background: #1d4ed8; }
-
-    canvas {
-      display: block;
-      margin: 1rem auto;
-      max-width: 100%;
-      height: auto;
-      border: 1px solid #ccc;
-      background: #dbeafe;
-    }
-
     #languageToggle {
-      position: fixed;
-      top: 16px;
-      right: 16px;
-      background: #00000055;
-      color: white;
-      padding: 0.6rem 1.2rem;
-      border: none;
-      border-radius: 6px;
-      font-size: 14px;
-      cursor: pointer;
-      z-index: 10;
+      background: rgba(0,0,0,0.5); color: white; padding: 0.4rem 0.9rem;
+      border: 1px solid rgba(252,129,129,0.28); border-radius: 20px;
+      font-size: 0.78rem; font-weight: 700; cursor: pointer;
+      font-family: 'Share Tech Mono', monospace; transition: all 0.2s;
     }
-    #languageToggle:hover { background: #00000088; }
+    #languageToggle:hover { background: rgba(180,50,50,0.4); border-color: var(--red); }
+    .main { display: flex; gap: 1.2rem; padding: 1.1rem 1.5rem; flex: 1; }
+    .left-panel { display: flex; flex-direction: column; gap: 0.9rem; width: 282px; min-width: 282px; }
+    .panel {
+      background: var(--card); border: 1px solid rgba(252,129,129,0.12);
+      border-radius: 12px; padding: 1.15rem 1.25rem;
+      backdrop-filter: blur(10px); box-shadow: 0 0 22px rgba(0,0,0,0.45);
+    }
+    .panel-label {
+      font-family: 'Share Tech Mono', monospace; font-size: 0.6rem;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: rgba(246,173,85,0.42); margin-bottom: 0.62rem;
+    }
+    .def-text { font-size: 0.86rem; line-height: 1.72; color: var(--dim); }
+    .def-text strong { color: var(--orange); }
+    .def-text em { color: var(--yellow); font-style: normal; font-family: 'Share Tech Mono', monospace; font-size: 0.81rem; }
+    .formula-block {
+      margin-top: 0.72rem; background: rgba(0,0,0,0.38); border-radius: 8px;
+      padding: 0.65rem 0.85rem; border-left: 2px solid var(--orange);
+    }
+    .formula-row { display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 0.25rem; }
+    .formula-row:last-child { margin-bottom: 0; }
+    .f-lbl { font-size: 0.64rem; color: var(--dim); font-family: 'Share Tech Mono', monospace; min-width: 40px; }
+    .f-eq { font-family: 'Share Tech Mono', monospace; font-size: 0.84rem; color: var(--yellow); }
+    .f-sub { font-size: 0.63rem; color: rgba(139,163,187,0.5); font-family: 'Share Tech Mono', monospace; }
+    .control-row { display: flex; flex-direction: column; gap: 0.18rem; margin-bottom: 0.78rem; }
+    .control-row label { font-size: 0.79rem; color: var(--dim); font-weight: 500; }
+    .control-row input[type="range"] { width: 100%; accent-color: var(--orange); cursor: pointer; height: 4px; }
+    .range-val { font-family: 'Share Tech Mono', monospace; font-size: 0.88rem; color: var(--orange); margin-left: 0.5rem; min-width: 44px; }
+    .range-row { display: flex; align-items: center; }
+    .btn-row { display: flex; gap: 0.55rem; margin-top: 0.3rem; }
+    .btn { flex: 1; padding: 0.58rem 0; border: none; border-radius: 7px; font-size: 0.88rem; font-weight: 700; cursor: pointer; font-family: 'Exo 2', sans-serif; transition: all 0.22s; letter-spacing: 0.03em; }
+    .btn-sim { background: linear-gradient(135deg, #c05621, #7b341e); color: white; }
+    .btn-sim:hover { filter: brightness(1.2); transform: translateY(-2px); box-shadow: 0 6px 22px rgba(192,86,33,0.45); }
+    .btn-reset { background: rgba(255,255,255,0.07); color: var(--dim); border: 1px solid rgba(255,255,255,0.13); }
+    .btn-reset:hover { background: rgba(255,255,255,0.13); color: white; }
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; }
+    .stat-card { background: rgba(0,0,0,0.38); border: 1px solid rgba(252,129,129,0.1); border-radius: 8px; padding: 0.52rem 0.68rem; }
+    .stat-label { font-size: 0.63rem; color: var(--dim); font-family: 'Share Tech Mono', monospace; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.15rem; }
+    .stat-val { font-size: 1.12rem; font-weight: 700; color: var(--blue); font-family: 'Share Tech Mono', monospace; }
+    .stat-unit { font-size: 0.62rem; color: var(--dim); margin-left: 0.1rem; }
+    .s1 { border-color: rgba(246,173,85,0.3); } .s1 .stat-val { color: var(--orange); }
+    .s2 { border-color: rgba(252,129,129,0.3); } .s2 .stat-val { color: var(--red); }
+    .s3 { border-color: rgba(246,224,94,0.25); } .s3 .stat-val { color: var(--yellow); }
+    .s4 { border-color: rgba(104,211,145,0.25); } .s4 .stat-val { color: var(--green); }
+    .canvas-area { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; min-width: 0; }
+    .canvas-wrap {
+      background: var(--card); border: 1px solid rgba(252,129,129,0.12);
+      border-radius: 12px; overflow: hidden;
+      box-shadow: 0 0 30px rgba(0,0,0,0.55); flex: 1; min-height: 280px;
+    }
+    .graph-row { display: flex; gap: 0.75rem; }
+    .graph-wrap {
+      background: var(--card); border: 1px solid rgba(252,129,129,0.1);
+      border-radius: 12px; overflow: hidden; height: 148px; flex: 1; min-width: 0;
+    }
+    .graph-label {
+      font-family: 'Share Tech Mono', monospace; font-size: 0.6rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(246,173,85,0.4); padding: 0.4rem 0.8rem 0;
+    }
+    canvas.graph { display: block; width: 100%; height: 116px; }
     .hidden { display: none !important; }
+    @media (max-width: 920px) {
+      .main { flex-direction: column; }
+      .left-panel { width: 100%; min-width: auto; flex-direction: row; flex-wrap: wrap; }
+      .panel { flex: 1; min-width: 240px; }
+      .graph-row { flex-direction: column; }
+    }
   </style>
 </head>
 <body>
-
-  <!-- language toggle -->
-  <button id="languageToggle" aria-label="Switch to Bangla">বাংলা / English</button>
-
-  <a href="index.html" class="back-btn">← 
-    <span class="lang-en">Back</span>
-    <span class="lang-bn hidden">পিছনে</span>
-  </a>
-
-  <h1>
-    <span class="lang-en">🚘 Decelerated Motion</span>
-    <span class="lang-bn hidden">🚘 মন্দিত গতি</span>
-  </h1>
-
-  <div id="definition">
-    <div class="lang-en">
-      <p><strong>Definition:</strong> Decelerated motion refers to the movement of an object where its speed is decreasing over time.</p>
+<div id="bgLayer"></div>
+<div id="bgGrid"></div>
+<div class="wrapper">
+  <div class="topbar">
+    <a href="index.html" class="back-btn">← <span class="lang-en">Back</span><span class="lang-bn hidden">পিছনে</span></a>
+    <div class="page-title">
+      <span class="lang-en">🛑 Decelerated Motion</span>
+      <span class="lang-bn hidden">🛑 মন্দিত গতি</span>
     </div>
-    <div class="lang-bn hidden">
-      <p><strong>সংজ্ঞা:</strong> মন্দিত গতি বলতে কোনো বস্তুর এমন গতিকে বোঝায় যেখানে সময়ের সাথে সাথে তার দ্রুতি হ্রাস পায়।</p>
+    <button id="languageToggle" onclick="toggleLang()">বাংলা / EN</button>
+  </div>
+  <div class="main">
+    <div class="left-panel">
+      <!-- Definition -->
+      <div class="panel">
+        <div class="panel-label"><span class="lang-en">Definition</span><span class="lang-bn hidden">সংজ্ঞা</span></div>
+        <p class="def-text lang-en">
+          <strong>Decelerated motion</strong> occurs when a net retarding force opposes an object's velocity, causing its speed to decrease over time. Acceleration is <em>negative</em> (opposite to velocity). The object eventually comes to rest when <em>v = 0</em>.
+        </p>
+        <p class="def-text lang-bn hidden">
+          <strong>মন্দিত গতি</strong> ঘটে যখন একটি বিপরীতমুখী নিট বল বস্তুর বেগকে ধীরে ধীরে কমিয়ে দেয়। ত্বরণ <em>ঋণাত্মক</em> (বেগের বিপরীত দিকে)। বস্তু শেষে <em>v = 0</em> হলে থেমে যায়।
+        </p>
+        <div class="formula-block">
+          <div class="formula-row"><span class="f-lbl">v</span><span class="f-eq">= u − at</span></div>
+          <div class="formula-row"><span class="f-lbl">s</span><span class="f-eq">= ut − ½at²</span></div>
+          <div class="formula-row"><span class="f-lbl">v²</span><span class="f-eq">= u² − 2as</span></div>
+          <div class="formula-row"><span class="f-lbl">t<sub>stop</sub></span><span class="f-eq">= u / a</span></div>
+          <div class="formula-row" style="margin-top:0.3rem">
+            <span class="f-sub">u = initial speed · a = deceleration (positive magnitude)</span>
+          </div>
+        </div>
+      </div>
+      <!-- Controls -->
+      <div class="panel">
+        <div class="panel-label"><span class="lang-en">Parameters</span><span class="lang-bn hidden">প্যারামিটার</span></div>
+        <div class="control-row">
+          <label><span class="lang-en">Initial Speed u (m/s)</span><span class="lang-bn hidden">আদিবেগ u (m/s)</span></label>
+          <div class="range-row">
+            <input type="range" id="speedSlider" min="10" max="120" value="80" step="5" oninput="syncCtrl()">
+            <span class="range-val" id="speedDisplay">80</span>
+          </div>
+        </div>
+        <div class="control-row">
+          <label><span class="lang-en">Deceleration a (m/s²)</span><span class="lang-bn hidden">মন্দন a (m/s²)</span></label>
+          <div class="range-row">
+            <input type="range" id="decelSlider" min="1" max="40" value="10" step="1" oninput="syncCtrl()">
+            <span class="range-val" id="decelDisplay">10</span>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-sim" onclick="startSim()">
+            <span class="lang-en">▶ Simulate</span><span class="lang-bn hidden">▶ সিমুলেট</span>
+          </button>
+          <button class="btn btn-reset" onclick="resetSim()">
+            <span class="lang-en">↺ Reset</span><span class="lang-bn hidden">↺ রিসেট</span>
+          </button>
+        </div>
+      </div>
+      <!-- Stats -->
+      <div class="panel">
+        <div class="panel-label"><span class="lang-en">Live Readout</span><span class="lang-bn hidden">লাইভ তথ্য</span></div>
+        <div class="stats-grid">
+          <div class="stat-card s1">
+            <div class="stat-label"><span class="lang-en">Speed</span><span class="lang-bn hidden">দ্রুতি</span></div>
+            <div><span class="stat-val" id="statV">0.0</span><span class="stat-unit">m/s</span></div>
+          </div>
+          <div class="stat-card s2">
+            <div class="stat-label"><span class="lang-en">Distance</span><span class="lang-bn hidden">দূরত্ব</span></div>
+            <div><span class="stat-val" id="statS">0.0</span><span class="stat-unit">m</span></div>
+          </div>
+          <div class="stat-card s3">
+            <div class="stat-label"><span class="lang-en">Time</span><span class="lang-bn hidden">সময়</span></div>
+            <div><span class="stat-val" id="statT">0.0</span><span class="stat-unit">s</span></div>
+          </div>
+          <div class="stat-card s4">
+            <div class="stat-label"><span class="lang-en">Stop Time</span><span class="lang-bn hidden">থামার সময়</span></div>
+            <div><span class="stat-val" id="statTstop">—</span><span class="stat-unit">s</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- CANVAS AREA -->
+    <div class="canvas-area">
+      <div class="canvas-wrap" id="canvasWrap"></div>
+      <div class="graph-row">
+        <div class="graph-wrap">
+          <div class="graph-label"><span class="lang-en">Speed – Time</span><span class="lang-bn hidden">দ্রুতি – সময়</span></div>
+          <canvas id="gSpeed" class="graph"></canvas>
+        </div>
+        <div class="graph-wrap">
+          <div class="graph-label"><span class="lang-en">Distance – Time</span><span class="lang-bn hidden">দূরত্ব – সময়</span></div>
+          <canvas id="gDist" class="graph"></canvas>
+        </div>
+      </div>
     </div>
   </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+<script>
+// ── LANGUAGE ──────────────────────────────────────────────────────────────
+let lang = 'en';
+function toggleLang() {
+  lang = lang === 'en' ? 'bn' : 'en';
+  document.querySelectorAll('.lang-en').forEach(el => el.classList.toggle('hidden', lang !== 'en'));
+  document.querySelectorAll('.lang-bn').forEach(el => el.classList.toggle('hidden', lang !== 'bn'));
+  document.body.classList.toggle('bangla', lang === 'bn');
+}
+// ── CONTROLS ──────────────────────────────────────────────────────────────
+function syncCtrl() {
+  document.getElementById('speedDisplay').textContent = document.getElementById('speedSlider').value;
+  document.getElementById('decelDisplay').textContent = document.getElementById('decelSlider').value;
+  updateStopTime();
+}
+function getParams() {
+  return {
+    u: parseFloat(document.getElementById('speedSlider').value),
+    a: parseFloat(document.getElementById('decelSlider').value),
+  };
+}
+function updateStopTime() {
+  const { u, a } = getParams();
+  const ts = u / a;
+  document.getElementById('statTstop').textContent = ts.toFixed(2);
+}
+// ── STATE ──────────────────────────────────────────────────────────────────
+const ROAD_SCALE = 55;
+let simRunning = false;
+let stopped = false;
+let physT = 0;
+let physV = 0;
+let physU = 0;
+let physA = 0;
+let physS = 0;
+let bgScroll = 0;
+let speedHist = [], distHist = [];
+const MAX_HIST = 500;
 
-  <div id="controls">
-    <label>
-      <span class="lang-en">Initial Speed (m/s):</span>
-      <span class="lang-bn hidden">আদিবেগ (m/s):</span>
-      <!-- max 80 -->
-      <input type="number" id="speed" value="8" min="0" max="80" step="0.1" />
-    </label>
+function updateStats(v, s, t) {
+  document.getElementById('statV').textContent = v.toFixed(2);
+  document.getElementById('statS').textContent = s.toFixed(2);
+  document.getElementById('statT').textContent = t.toFixed(2);
+}
+// ── GRAPHS ─────────────────────────────────────────────────────────────────
+function drawGraph(id, hist, yKey, yLabel, lineColor, fillColor) {
+  const gc = document.getElementById(id);
+  const gw = gc.parentElement.clientWidth;
+  gc.width = gw; gc.height = 116;
+  const ctx = gc.getContext('2d');
+  ctx.clearRect(0, 0, gw, 116);
+  const padL=40, padR=10, padT=8, padB=22;
+  const W = gw-padL-padR, H = 116-padT-padB;
+  ctx.strokeStyle='rgba(246,173,85,0.3)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(padL,padT); ctx.lineTo(padL,padT+H); ctx.lineTo(padL+W,padT+H); ctx.stroke();
+  ctx.font='9px Consolas,monospace'; ctx.fillStyle=lineColor; ctx.textAlign='left';
+  ctx.fillText(yLabel, 2, padT+8);
+  ctx.fillStyle='rgba(139,163,187,0.6)'; ctx.fillText('t (s)', padL+W-22, padT+H+16);
+  if (hist.length < 2) return;
+  const n = hist.length;
+  const maxY = Math.max(...hist.map(p=>p[yKey]), 0.001);
+  const tStart = hist[0].t, tEnd = hist[n-1].t;
+  [0.25,0.5,0.75,1].forEach(frac => {
+    const y = padT+H - frac*H;
+    ctx.strokeStyle='rgba(246,173,85,0.05)'; ctx.lineWidth=0.5;
+    ctx.beginPath(); ctx.moveTo(padL,y); ctx.lineTo(padL+W,y); ctx.stroke();
+    ctx.fillStyle='rgba(139,163,187,0.65)'; ctx.textAlign='right'; ctx.font='8px Consolas,monospace';
+    const v = frac*maxY;
+    ctx.fillText(v >= 100 ? v.toFixed(0) : v.toFixed(1), padL-3, y+3);
+  });
+  [0,0.5,1].forEach(frac => {
+    const x = padL + frac*W;
+    ctx.fillStyle='rgba(139,163,187,0.6)'; ctx.textAlign='center'; ctx.font='8px Consolas,monospace';
+    ctx.fillText((tStart + frac*(tEnd-tStart)).toFixed(1), x, padT+H+16);
+  });
+  ctx.beginPath();
+  hist.forEach((p,i) => {
+    const px = padL + (i/(n-1))*W;
+    const py = padT+H - (p[yKey]/maxY)*H;
+    i===0 ? ctx.moveTo(px, padT+H) : null;
+    ctx.lineTo(px, py);
+  });
+  ctx.lineTo(padL+W, padT+H); ctx.closePath();
+  ctx.fillStyle=fillColor; ctx.fill();
+  ctx.beginPath(); ctx.strokeStyle=lineColor; ctx.lineWidth=2;
+  hist.forEach((p,i) => {
+    const px = padL + (i/(n-1))*W;
+    const py = padT+H - (p[yKey]/maxY)*H;
+    i===0 ? ctx.moveTo(px,py) : ctx.lineTo(px,py);
+  });
+  ctx.stroke();
+  const last = hist[n-1];
+  const dotX = padL+W, dotY = padT+H-(last[yKey]/maxY)*H;
+  ctx.beginPath(); ctx.arc(dotX,dotY,3.5,0,Math.PI*2); ctx.fillStyle=lineColor; ctx.fill();
+  ctx.fillStyle=lineColor; ctx.font='bold 8px Consolas,monospace'; ctx.textAlign='right';
+  ctx.fillText(last[yKey].toFixed(1), dotX-5, dotY-5);
+}
+function drawBothGraphs() {
+  drawGraph('gSpeed', speedHist, 'v', 'v (m/s)', '#f6ad55', 'rgba(246,173,85,0.12)');
+  drawGraph('gDist', distHist, 's', 's (m)', '#90cdf4', 'rgba(144,205,244,0.1)');
+}
+// ── P5 SKETCH ─────────────────────────────────────────────────────────────
+new p5(function(p) {
+  let roadY, roadH, carY;
+  let clouds = [];
+  let carX;
+  let firstFrame = false;
+  const CAR_FIXED_RATIO = 0.55;
 
-    <label>
-      <span class="lang-en">Deceleration (m/s²):</span>
-      <span class="lang-bn hidden">মন্দন (m/s²):</span>
-      <!-- max 30 -->
-      <input type="number" id="deceleration" value="1" min="0.1" max="30" step="0.1" />
-    </label>
+  p.setup = function() {
+    const wrap = document.getElementById('canvasWrap');
+    const cnv = p.createCanvas(wrap.clientWidth, Math.max(270, window.innerHeight * 0.44));
+    cnv.parent('canvasWrap');
+    initScene();
+    p.noLoop();
+  };
 
-    <button onclick="simulateDeceleration()">
-      <span class="lang-en">Simulate</span>
-      <span class="lang-bn hidden">সিমুলেট</span>
-    </button>
-  </div>
+  function initScene() {
+    roadY = p.height * 0.52;
+    roadH = p.height * 0.22;
+    carY = roadY + roadH * 0.42;
+    carX = p.width * CAR_FIXED_RATIO;
+    clouds = [];
+    for (let i = 0; i < 7; i++) {
+      clouds.push({ x: p.random(p.width), y: p.random(28, roadY * 0.52), spd: p.random(0.25,0.75), w: p.random(70,140), h: p.random(20,44) });
+    }
+  }
 
-  <!-- validation + language toggle (runs immediately, DOM elements already present) -->
-  <script>
-    // LANGUAGE TOGGLE (same behavior as your other pages)
-    const toggleBtn = document.getElementById('languageToggle');
-    let currentLang = 'en';
-    toggleBtn.addEventListener('click', () => {
-      if (currentLang === 'en') {
-        document.querySelectorAll('.lang-en').forEach(el => el.classList.add('hidden'));
-        document.querySelectorAll('.lang-bn').forEach(el => el.classList.remove('hidden'));
-        document.body.classList.add('bangla');
-        currentLang = 'bn';
-        toggleBtn.textContent = 'English';
-        toggleBtn.setAttribute('aria-label', 'Switch to English');
-      } else {
-        document.querySelectorAll('.lang-en').forEach(el => el.classList.remove('hidden'));
-        document.querySelectorAll('.lang-bn').forEach(el => el.classList.add('hidden'));
-        document.body.classList.remove('bangla');
-        currentLang = 'en';
-        toggleBtn.textContent = 'বাংলা';
-        toggleBtn.setAttribute('aria-label', 'Switch to Bangla');
+  function drawCar(cx, cy) {
+    p.push();
+    p.translate(cx, cy);
+    p.scale(-1, 1);
+    p.noStroke(); p.fill(0,0,0,50); p.ellipse(5, 20, 110, 14);
+    p.fill(20,20,22); p.rect(-52,6,104,8,3);
+    p.fill(220,100,30);
+    p.beginShape();
+    p.vertex(-52,4); p.vertex(-60,0); p.vertex(-55,-8);
+    p.vertex(-28,-14); p.vertex(10,-16); p.vertex(40,-12);
+    p.vertex(52,-4); p.vertex(52,4);
+    p.endShape(p.CLOSE);
+    p.fill(180,70,20);
+    p.beginShape();
+    p.vertex(-20,-14); p.vertex(-10,-24); p.vertex(18,-24); p.vertex(28,-14);
+    p.endShape(p.CLOSE);
+    p.fill(80,180,255,190);
+    p.beginShape();
+    p.vertex(-18,-14); p.vertex(-10,-22); p.vertex(16,-22); p.vertex(26,-14);
+    p.endShape(p.CLOSE);
+    p.fill(240,210,40); p.ellipse(2,-22,18,15);
+    p.fill(80,180,255,220); p.arc(2,-22,18,15,-p.PI*0.85,-p.PI*0.1);
+    p.fill(170,65,15); p.rect(-68,2,18,4,1); p.rect(-66,-1,14,3,1);
+    p.fill(170,65,15);
+    p.rect(48,-18,16,4,1); p.rect(48,-22,16,3,1);
+    p.rect(48,-22,2,10,1); p.rect(62,-22,2,10,1);
+    p.fill(200,80,25); p.rect(-16,-4,30,10,3); p.rect(18,-4,22,10,3);
+    if ((simRunning || stopped) && physV >= 0) {
+      const brakeAlpha = p.map(physA, 1, 40, 20, 160);
+      p.fill(255,80,20, stopped ? 180 : brakeAlpha);
+      p.ellipse(-42,14,16,16);
+      p.ellipse(32,14,16,16);
+    }
+    p.noStroke();
+    [-42, 32].forEach(wx => {
+      p.fill(22,22,24); p.ellipse(wx,14,26,26);
+      p.fill(60,60,65); p.ellipse(wx,14,18,18);
+      p.fill(130,130,140); p.ellipse(wx,14,9,9);
+    });
+    p.scale(-1, 1);
+    p.fill(255,255,255,200); p.noStroke();
+    p.textFont('Consolas'); p.textSize(10); p.textAlign(p.CENTER,p.CENTER);
+    p.text('77', 0,-4);
+    p.pop();
+  }
+
+  function drawTree(tx, ty, dir) {
+    p.push(); p.translate(tx, ty); p.noStroke();
+    p.fill(90,52,15); p.rect(-5,0,10,dir*36,2);
+    p.fill(16,90,34); p.triangle(-26,dir*34,0,dir*72,26,dir*34);
+    p.fill(20,110,42); p.triangle(-20,dir*50,0,dir*86,20,dir*50);
+    p.fill(26,132,50); p.triangle(-14,dir*65,0,dir*99,14,dir*65);
+    p.pop();
+  }
+
+  p.draw = function() {
+    const dt = Math.min(p.deltaTime, 33) / 1000;
+
+    if (simRunning && !stopped) {
+      if (firstFrame) { firstFrame = false; }
+      else {
+        physT += dt;
+        physV = Math.max(0, physV - physA * dt);
+        physS += physV * dt;
+        bgScroll += physV * ROAD_SCALE * dt;
+        speedHist.push({ t: physT, v: physV });
+        distHist.push({ t: physT, s: physS });
+        if (speedHist.length > MAX_HIST) speedHist.shift();
+        if (distHist.length > MAX_HIST) distHist.shift();
+        updateStats(physV, physS, physT);
+        drawBothGraphs();
+        if (physV <= 0) {
+          stopped = true;
+          simRunning = false;
+          speedHist.push({ t: physT, v: 0 });
+          drawBothGraphs();
+          p.noLoop();
+        }
       }
+    }
+
+    p.background(8,16,38);
+    for (let i = 0; i < roadY; i++) {
+      const c = p.lerpColor(p.color(12,28,68), p.color(28,64,128), i/roadY);
+      p.stroke(c); p.line(0,i,p.width,i);
+    }
+    p.noStroke();
+    p.randomSeed(42); p.fill(255,255,255,85);
+    for (let i = 0; i < 50; i++) p.ellipse(p.random(p.width), p.random(roadY*0.82), p.random(1,2.8));
+
+    clouds.forEach(c => {
+      if (simRunning) c.x -= physV * ROAD_SCALE * dt * 0.016 * c.spd;
+      if (c.x + c.w < 0) c.x = p.width + c.w;
+      p.noStroke(); p.fill(255,255,255,30);
+      p.ellipse(c.x,c.y,c.w,c.h);
+      p.ellipse(c.x-c.w*0.22,c.y+5,c.w*0.65,c.h*0.78);
+      p.ellipse(c.x+c.w*0.22,c.y+4,c.w*0.60,c.h*0.72);
     });
 
-    // INPUT VALIDATION (instant popup alerts in English only)
-    const speedInput = document.getElementById('speed');
-    const decelInput = document.getElementById('deceleration');
+    p.noStroke(); p.fill(28,90,42); p.rect(0,roadY,p.width,p.height-roadY);
+    p.fill(36,112,52); p.rect(0,roadY,p.width,8);
+    p.fill(36,112,52); p.rect(0,p.height-8,p.width,8);
 
-    function validateInputs() {
-      let speed = parseFloat(speedInput.value);
-      let decel = parseFloat(decelInput.value);
-      const speedMax = parseFloat(speedInput.max);
-      const decelMax = parseFloat(decelInput.max);
-
-      if (!isNaN(speed) && speed > speedMax) {
-        speedInput.value = speedMax;
-        alert("⚠️ Maximum initial speed is 80 m/s.");
-        speed = speedMax;
-      }
-      if (!isNaN(decel) && decel > decelMax) {
-        decelInput.value = decelMax;
-        alert("⚠️ Maximum deceleration is 30 m/s².");
-        decel = decelMax;
-      }
-
-      // enforce speed >= deceleration by setting speed to decel (same behavior as earlier)
-      if (!isNaN(speed) && !isNaN(decel) && speed < decel) {
-        alert("⚠️ Initial speed must be equal to or greater than deceleration.");
-        speedInput.value = decel; // bring speed up to decel
-      }
-
-      // keep within mins
-      if (!isNaN(speed) && speed < parseFloat(speedInput.min)) speedInput.value = speedInput.min;
-      if (!isNaN(decel) && decel < parseFloat(decelInput.min)) decelInput.value = decelInput.min;
+    const tSpacing = 160;
+    const nSlots = Math.ceil((p.width + tSpacing * 3) / tSpacing);
+    for (let i = 0; i < nSlots; i++) {
+      const raw = (i * tSpacing - bgScroll * 0.88) % (nSlots * tSpacing);
+      const tx = ((raw % (nSlots * tSpacing)) + nSlots * tSpacing) % (nSlots * tSpacing) - tSpacing;
+      if (tx < -80 || tx > p.width + 80) continue;
+      drawTree(tx, roadY, -1);
+      drawTree(tx, roadY + roadH, 1);
     }
 
-    speedInput.addEventListener('input', validateInputs);
-    decelInput.addEventListener('input', validateInputs);
-  </script>
+    p.noStroke(); p.fill(34,34,40); p.rect(0,roadY,p.width,roadH);
+    p.fill(240,200,80); p.rect(0,roadY,p.width,3); p.rect(0,roadY+roadH-3,p.width,3);
 
-  <!-- p5 library -->
-  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
-
-  <!-- Inline p5 sketch (integrated) -->
-  <script>
-    // physics vars (globals used by p5)
-    let x = 0;
-    let v = 0;
-    let a = 0;
-
-    function setup() {
-      createCanvas(windowWidth - 240, windowHeight * 0.6);
-      noLoop(); // start paused until simulate is pressed
-
-      // styling for FPS and car text handled in draw
-      textSize(48);
-      textAlign(CENTER, CENTER);
+    const kerbSz = 18, kerbTotal = kerbSz * 2;
+    const kerbOff = bgScroll % kerbTotal;
+    for (let x = -kerbTotal; x < p.width + kerbTotal; x += kerbTotal) {
+      const kx = x - kerbOff;
+      p.fill(220,30,30); p.rect(kx, roadY, kerbSz, 4);
+      p.fill(255,255,255); p.rect(kx + kerbSz, roadY, kerbSz, 4);
+      p.fill(220,30,30); p.rect(kx, roadY+roadH-4, kerbSz, 4);
+      p.fill(255,255,255); p.rect(kx + kerbSz, roadY+roadH-4, kerbSz, 4);
     }
 
-    function simulateDeceleration() {
-      // read inputs (they are validated by the input listeners)
-      let speed = parseFloat(speedInput.value);
-      let decel = parseFloat(decelInput.value);
+    const dashLen = 52, dashGap = 38, dashTotal = dashLen + dashGap;
+    const dashOff = bgScroll % dashTotal;
+    p.stroke(255,240,60,200); p.strokeWeight(3.5);
+    for (let x = -dashTotal; x < p.width + dashTotal; x += dashTotal) {
+      const dx = x - dashOff;
+      p.line(dx, roadY+roadH/2, dx+dashLen, roadY+roadH/2);
+    }
+    p.noStroke();
 
-      if (isNaN(speed) || isNaN(decel)) {
-        alert("⚠️ Please provide valid numeric inputs.");
-        return;
+    if (simRunning && physV > 1) {
+      const maxStreaks = 16;
+      const cnt = Math.min(Math.floor(physV / 6) + 1, maxStreaks);
+      for (let i = 0; i < cnt; i++) {
+        const alpha = p.map(i, 0, cnt, 160, 0);
+        const len = p.map(i, 0, cnt, 6, Math.min(physV * 0.8, 140));
+        const yBand = ((i * 17) % (roadH - 20)) - roadH * 0.35;
+        p.stroke(200,120,50,alpha); p.strokeWeight(0.8 + (i%4)*0.3);
+        p.line(carX+54+i*12, carY+yBand, carX+54+i*12+len, carY+yBand);
       }
-
-      // final safety checks (duplicate-safe)
-      const speedMax = parseFloat(speedInput.max);
-      const decelMax = parseFloat(decelInput.max);
-      if (speed > speedMax) {
-        speed = speedMax;
-        speedInput.value = speedMax;
-        alert("⚠️ Maximum initial speed is 80 m/s.");
-      }
-      if (decel > decelMax) {
-        decel = decelMax;
-        decelInput.value = decelMax;
-        alert("⚠️ Maximum deceleration is 30 m/s².");
-      }
-      if (speed < decel) {
-        alert("⚠️ Initial speed must be equal to or greater than deceleration.");
-        speed = decel;
-        speedInput.value = decel;
-      }
-
-      // initialize simulation
-      x = width - 100; // start near right edge
-      v = speed;
-      a = -Math.abs(decel);
-      loop();
+      p.noStroke();
     }
 
-    function draw() {
-      // sky
-      background(135, 206, 235);
+    drawCar(carX, carY);
 
-      // grass (top & bottom as in original design)
-      fill(60, 179, 113);
-      rect(0, 0, width, height * 0.2);
-      rect(0, height * 0.8, width, height * 0.2);
-
-      // road
-      let roadY = height * 0.5;
-      let roadHeight = 100;
-      fill(50);
-      rect(0, roadY, width, roadHeight);
-
-      // lane markings
-      stroke(255);
-      strokeWeight(4);
-      for (let i = 0; i < width; i += 40) {
-        line(i, roadY + roadHeight / 2, i + 20, roadY + roadHeight / 2);
-      }
-      noStroke();
-
-      // trees (simple)
-      let spacing = 120;
-      for (let i = 0; i < width; i += spacing) {
-        fill(139, 69, 19); // trunk
-        rect(i + 20, roadY - 60, 10, 40);
-        fill(34, 139, 34); // leaves
-        ellipse(i + 25, roadY - 70, 40);
-
-        rect(i + 60, roadY + roadHeight + 20, 10, 40);
-        ellipse(i + 65, roadY + roadHeight + 20, 40);
-      }
-
-      // car (emoji)
-      push();
-      textSize(48);
-      textAlign(CENTER, CENTER);
-      text("🚗", x, roadY + roadHeight / 2);
-      pop();
-
-      // physics update (scaled to make motion visible)
-      v += a * 0.1;
-      if (v < 0) v = 0;
-      x -= v;
-
-      if (v === 0 || x < -50) noLoop();
-
-      // FPS (isolated styling)
-      push();
-      fill(0);
-      textSize(16);
-      textAlign(LEFT, TOP);
-      noStroke();
-      text(`FPS: ${frameRate().toFixed(1)}`, 10, 30);
-      pop();
+    if (simRunning && physV > 0) {
+      const fA = p.map(physA, 1, 40, 20, 100);
+      p.noStroke(); p.fill(255,40,10,fA*0.5);
+      p.ellipse(carX + 54, carY + 5, 22, 10);
     }
 
-    function windowResized() {
-      resizeCanvas(windowWidth - 240, windowHeight * 0.6);
+    // ── SPEEDOMETER (MAX 120) ──
+    const gX = p.width - 90, gY = 72, gR = 52;
+    p.noFill(); p.stroke(20,30,50); p.strokeWeight(8);
+    p.arc(gX,gY,gR*2,gR*2,p.PI,p.TWO_PI);
+    const frac = p.constrain(physV / 120, 0, 1);
+    const needA = p.PI + frac * p.PI;
+    if (frac > 0) {
+      const greenEnd = p.min(needA, p.PI + 0.5*p.PI);
+      const orangeEnd = p.min(needA, p.PI + 0.75*p.PI);
+      if (greenEnd > p.PI) { p.stroke(60,210,100); p.strokeWeight(7); p.arc(gX,gY,gR*2,gR*2,p.PI,greenEnd); }
+      if (needA > p.PI+0.5*p.PI) { p.stroke(246,173,85); p.strokeWeight(7); p.arc(gX,gY,gR*2,gR*2,p.PI+0.5*p.PI,orangeEnd); }
+      if (needA > p.PI+0.75*p.PI) { p.stroke(240,55,55); p.strokeWeight(7); p.arc(gX,gY,gR*2,gR*2,p.PI+0.75*p.PI,needA); }
     }
-  </script>
+    [0,30,60,90,120].forEach(v => {
+      const a = p.PI + (v/120)*p.PI;
+      p.stroke(190,210,230,160); p.strokeWeight(1.5);
+      p.line(gX+Math.cos(a)*(gR-7),gY+Math.sin(a)*(gR-7), gX+Math.cos(a)*(gR+3),gY+Math.sin(a)*(gR+3));
+      p.noStroke(); p.fill(150,178,205,190);
+      p.textFont('Consolas'); p.textSize(8); p.textAlign(p.CENTER,p.CENTER);
+      p.text(v, gX+Math.cos(a)*(gR-17), gY+Math.sin(a)*(gR-17));
+    });
+    p.stroke(246,173,85); p.strokeWeight(2.5);
+    p.line(gX,gY, gX+Math.cos(needA)*(gR-10), gY+Math.sin(needA)*(gR-10));
+    p.noStroke(); p.fill(246,173,85); p.ellipse(gX,gY,7);
+    p.fill(255); p.noStroke();
+    p.textFont('Consolas'); p.textSize(14); p.textAlign(p.CENTER,p.CENTER);
+    p.text(physV.toFixed(1), gX, gY+18);
+    p.textSize(8); p.fill(139,163,187); p.text('m/s', gX, gY+30);
+    p.textSize(8); p.text('SPEED', gX, gY-gR-8);
 
+    p.fill(0,0,0,120); p.noStroke(); p.rect(8,8,215,90,8);
+    p.textFont('Consolas'); p.textAlign(p.LEFT,p.TOP); p.fill(246,173,85); p.textSize(10.5);
+    p.text(`u = ${physU.toFixed(1)} m/s`, 16,16);
+    p.text(`v = ${physV.toFixed(2)} m/s`, 16,31);
+    p.text(`a = −${physA.toFixed(1)} m/s²`, 16,46);
+    p.text(`s = ${physS.toFixed(1)} m`, 16,61);
+    p.text(`t = ${physT.toFixed(2)} s`, 16,76);
+
+    if (stopped) {
+      p.fill(0,0,0,160); p.noStroke(); p.rect(p.width/2-145, p.height/2-45, 290, 90, 10);
+      p.fill(246,173,85,240); p.textFont('Exo 2'); p.textSize(18); p.textAlign(p.CENTER,p.CENTER);
+      p.text('🛑 STOPPED', p.width/2, p.height/2-18);
+      p.fill(200,230,255,180); p.textFont('Consolas'); p.textSize(11);
+      const totalS = physU * physT - 0.5 * physA * physT * physT;
+      p.text(`s = ${totalS.toFixed(1)} m · t = ${physT.toFixed(2)} s · u = ${physU.toFixed(0)} m/s`, p.width/2, p.height/2+14);
+    }
+
+    if (!simRunning && !stopped && physT === 0) {
+      p.fill(255,255,255,45); p.textFont('Exo 2'); p.textSize(14); p.textAlign(p.CENTER,p.CENTER);
+      p.text('Set parameters and press ▶ Simulate', p.width/2, p.height*0.38);
+    }
+  };
+
+  p.windowResized = function() {
+    const wrap = document.getElementById('canvasWrap');
+    p.resizeCanvas(wrap.clientWidth, Math.max(270, window.innerHeight*0.44));
+    initScene();
+    carX = p.width * CAR_FIXED_RATIO;
+  };
+
+  window.startSim = function() {
+    const { u, a } = getParams();
+    physU = u; physA = a; physV = u; physT = 0; physS = 0;
+    bgScroll = 0;
+    stopped = false; firstFrame = true;
+    speedHist = [{ t: 0, v: u }];
+    distHist = [{ t: 0, s: 0 }];
+    updateStats(u, 0, 0);
+    updateStopTime();
+    simRunning = true;
+    p.loop();
+  };
+
+  window.resetSim = function() {
+    simRunning = false; stopped = false;
+    physT = physV = physS = physU = physA = bgScroll = 0;
+    speedHist = []; distHist = [];
+    document.getElementById('statV').textContent = '0.0';
+    document.getElementById('statS').textContent = '0.0';
+    document.getElementById('statT').textContent = '0.0';
+    document.getElementById('statTstop').textContent = '—';
+    drawBothGraphs();
+    p.noLoop(); p.redraw();
+  };
+}, 'canvasWrap');
+
+syncCtrl();
+</script>
 </body>
 </html>
 
