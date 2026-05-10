@@ -7,17 +7,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;700&family=Share+Tech+Mono&family=Exo+2:wght@300;400;700;900&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --blue:   #90cdf4;
+      --blue: #90cdf4;
       --blue-d: #4a90e2;
-      --green:  #68d391;
+      --green: #68d391;
       --yellow: #f6e05e;
       --orange: #f6ad55;
-      --bg:     #04080f;
-      --card:   rgba(5,14,32,0.88);
-      --dim:    #8ba3bb;
+      --bg: #04080f;
+      --card: rgba(5,14,32,0.88);
+      --dim: #8ba3bb;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       font-family: 'Exo 2', sans-serif;
       background: var(--bg);
@@ -26,7 +25,6 @@
       overflow-x: hidden;
     }
     body.bangla { font-family: 'Noto Serif Bengali', sans-serif; }
-
     /* animated bg */
     #bgLayer {
       position: fixed; inset: 0; z-index: 0;
@@ -43,9 +41,7 @@
         linear-gradient(90deg, rgba(144,205,244,0.025) 1px, transparent 1px);
       background-size: 40px 40px;
     }
-
     .wrapper { position: relative; z-index: 1; display: flex; flex-direction: column; min-height: 100vh; padding-bottom: 2rem; }
-
     /* TOP BAR */
     .topbar {
       display: flex; align-items: center; justify-content: space-between;
@@ -77,7 +73,6 @@
       transition: all 0.2s; letter-spacing: 0.04em;
     }
     #languageToggle:hover { background: var(--blue-d); border-color: transparent; }
-
     /* MODE TABS */
     .mode-tabs {
       display: flex; gap: 0; margin: 1.1rem auto 0;
@@ -98,13 +93,10 @@
       color: var(--blue);
     }
     .tab-btn:hover:not(.active) { background: rgba(255,255,255,0.06); color: #ccc; }
-
     /* MAIN LAYOUT */
     .main { display: flex; gap: 1.2rem; padding: 1.1rem 1.5rem; flex: 1; }
-
     /* LEFT PANEL */
     .left-panel { display: flex; flex-direction: column; gap: 0.9rem; width: 282px; min-width: 282px; }
-
     .panel {
       background: var(--card);
       border: 1px solid rgba(144,205,244,0.14);
@@ -118,12 +110,10 @@
       font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase;
       color: rgba(144,205,244,0.45); margin-bottom: 0.62rem;
     }
-
     /* Definition */
     .def-text { font-size: 0.86rem; line-height: 1.72; color: var(--dim); }
     .def-text strong { color: var(--blue); }
     .def-text em { color: var(--yellow); font-style: normal; font-family: 'Share Tech Mono', monospace; font-size: 0.81rem; }
-
     /* Formula */
     .formula-block {
       margin-top: 0.75rem;
@@ -140,14 +130,12 @@
     .formula-label { font-size: 0.67rem; color: var(--dim); font-family: 'Share Tech Mono', monospace; min-width: 42px; }
     .formula-eq { font-family: 'Share Tech Mono', monospace; font-size: 0.88rem; color: var(--yellow); }
     .formula-note { font-size: 0.67rem; color: rgba(139,163,187,0.6); font-family: 'Share Tech Mono', monospace; }
-
     /* Controls */
     .control-row { display: flex; flex-direction: column; gap: 0.18rem; margin-bottom: 0.8rem; }
     .control-row label { font-size: 0.79rem; color: var(--dim); font-weight: 500; }
     .control-row input[type="range"] { width: 100%; accent-color: var(--blue-d); cursor: pointer; height: 4px; }
     .range-val { font-family: 'Share Tech Mono', monospace; font-size: 0.88rem; color: var(--blue); margin-left: 0.5rem; min-width: 40px; }
     .range-row { display: flex; align-items: center; }
-
     .btn-row { display: flex; gap: 0.55rem; margin-top: 0.25rem; }
     .btn {
       flex: 1; padding: 0.58rem 0; border: none; border-radius: 7px;
@@ -160,7 +148,6 @@
     .btn-stop:hover { background: rgba(246,173,85,0.28); }
     .btn-reset { background: rgba(255,255,255,0.07); color: var(--dim); border: 1px solid rgba(255,255,255,0.13); }
     .btn-reset:hover { background: rgba(255,255,255,0.13); color: white; }
-
     /* Stats */
     .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.58rem; }
     .stat-card {
@@ -175,7 +162,6 @@
     .stat-card.hi1 .stat-val { color: var(--green); }
     .stat-card.hi2 { border-color: rgba(246,224,94,0.28); }
     .stat-card.hi2 .stat-val { color: var(--yellow); }
-
     /* CANVAS AREA */
     .canvas-area { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; min-width: 0; }
     .canvas-wrap {
@@ -186,7 +172,6 @@
       flex: 1; min-height: 280px; position: relative;
     }
     .canvas-wrap canvas { display: block; }
-
     /* Graph row */
     .graph-row { display: flex; gap: 0.75rem; }
     .graph-wrap {
@@ -202,9 +187,7 @@
       color: rgba(144,205,244,0.42); padding: 0.4rem 0.8rem 0;
     }
     canvas.graph { display: block; width: 100%; height: 122px; }
-
     .hidden { display: none !important; }
-
     @media (max-width: 920px) {
       .main { flex-direction: column; }
       .left-panel { width: 100%; min-width: auto; flex-direction: row; flex-wrap: wrap; }
@@ -216,7 +199,6 @@
 <body>
 <div id="bgLayer"></div>
 <div id="bgGrid"></div>
-
 <div class="wrapper">
   <!-- TOP BAR -->
   <div class="topbar">
@@ -227,7 +209,6 @@
     </div>
     <button id="languageToggle">বাংলা / EN</button>
   </div>
-
   <!-- MODE TABS -->
   <div class="mode-tabs" id="modeTabs">
     <button class="tab-btn active" id="tabPendulum" onclick="switchMode('pendulum')">
@@ -237,15 +218,12 @@
       <span class="lang-en">🟢 Spring</span><span class="lang-bn hidden">🟢 স্প্রিং</span>
     </button>
   </div>
-
   <div class="main">
     <!-- LEFT PANEL -->
     <div class="left-panel">
-
       <!-- Definition -->
       <div class="panel">
         <div class="panel-label"><span class="lang-en">Definition</span><span class="lang-bn hidden">সংজ্ঞা</span></div>
-
         <!-- Pendulum definition -->
         <div id="defPendulum">
           <p class="def-text lang-en">
@@ -268,7 +246,6 @@
             </div>
           </div>
         </div>
-
         <!-- Spring definition -->
         <div id="defSpring" class="hidden">
           <p class="def-text lang-en">
@@ -292,11 +269,9 @@
           </div>
         </div>
       </div>
-
       <!-- Controls -->
       <div class="panel">
         <div class="panel-label"><span class="lang-en">Parameters</span><span class="lang-bn hidden">প্যারামিটার</span></div>
-
         <!-- Pendulum controls -->
         <div id="ctrlPendulum">
           <div class="control-row">
@@ -330,7 +305,6 @@
             </div>
           </div>
         </div>
-
         <!-- Spring controls -->
         <div id="ctrlSpring" class="hidden">
           <div class="control-row">
@@ -374,7 +348,6 @@
             </div>
           </div>
         </div>
-
         <div class="btn-row">
           <button class="btn btn-sim" onclick="startSim()">
             <span class="lang-en">▶ Simulate</span>
@@ -389,7 +362,6 @@
           </button>
         </div>
       </div>
-
       <!-- Live Stats -->
       <div class="panel">
         <div class="panel-label">
@@ -416,7 +388,6 @@
         </div>
       </div>
     </div><!-- /left-panel -->
-
     <!-- CANVAS AREA -->
     <div class="canvas-area">
       <div class="canvas-wrap" id="canvasWrap"></div>
@@ -437,10 +408,8 @@
         </div>
       </div>
     </div>
-
   </div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
 <script>
 // ── LANGUAGE ──────────────────────────────────────────────────────────────
@@ -451,7 +420,6 @@ document.getElementById('languageToggle').addEventListener('click', () => {
   document.querySelectorAll('.lang-bn').forEach(el => el.classList.toggle('hidden', currentLang !== 'bn'));
   document.body.classList.toggle('bangla', currentLang === 'bn');
 });
-
 // ── MODE ──────────────────────────────────────────────────────────────────
 let mode = 'pendulum'; // 'pendulum' | 'spring'
 function switchMode(m) {
@@ -464,41 +432,36 @@ function switchMode(m) {
   document.getElementById('ctrlSpring').classList.toggle('hidden', m !== 'spring');
   resetSim();
 }
-
 // ── SLIDER SYNC ───────────────────────────────────────────────────────────
 function syncP() {
-  document.getElementById('angleDisplay').textContent   = document.getElementById('angleSlider').value + '°';
-  document.getElementById('lengthDisplay').textContent  = parseFloat(document.getElementById('lengthSlider').value).toFixed(1) + ' m';
+  document.getElementById('angleDisplay').textContent = document.getElementById('angleSlider').value + '°';
+  document.getElementById('lengthDisplay').textContent = parseFloat(document.getElementById('lengthSlider').value).toFixed(1) + ' m';
   document.getElementById('dampingDisplay').textContent = parseFloat(document.getElementById('dampingSlider').value).toFixed(3);
 }
 function syncS() {
-  document.getElementById('dispDisplay').textContent  = parseFloat(document.getElementById('dispSlider').value).toFixed(2) + ' m';
-  document.getElementById('massDisplay').textContent  = parseFloat(document.getElementById('massSlider').value).toFixed(1);
+  document.getElementById('dispDisplay').textContent = parseFloat(document.getElementById('dispSlider').value).toFixed(2) + ' m';
+  document.getElementById('massDisplay').textContent = parseFloat(document.getElementById('massSlider').value).toFixed(1);
   document.getElementById('stiffDisplay').textContent = parseFloat(document.getElementById('stiffSlider').value).toFixed(1);
   document.getElementById('sdampDisplay').textContent = parseFloat(document.getElementById('sdampSlider').value).toFixed(3);
 }
-
 // ── SIMULATION STATE ──────────────────────────────────────────────────────
 let simRunning = false;
-let physTheta  = 0, physOmega = 0; // pendulum
-let physX      = 0, physV     = 0; // spring (displacement from eq)
-let elapsedT   = 0;
+let physTheta = 0, physOmega = 0; // pendulum
+let physX = 0, physV = 0; // spring (displacement from eq)
+let elapsedT = 0;
 let dispHistory = [], phaseHistory = [];
-const MAX_HIST = 400;
-
+const MAX_HIST = 5000;
 function getPeriodPendulum(Lm) { return 2 * Math.PI * Math.sqrt(Lm / 9.8); } // L in metres, g=9.8 m/s²
 function getPeriodSpring(m, k) { return 2 * Math.PI * Math.sqrt(m / k); }
-
 function updateStats(disp, vel, period) {
-  document.getElementById('statDisp').textContent   = Math.abs(disp) < 0.001 ? disp.toExponential(2) : disp.toFixed(4);
-  document.getElementById('statVel').textContent    = Math.abs(vel)  < 0.001 ? vel.toExponential(2)  : vel.toFixed(4);
+  document.getElementById('statDisp').textContent = Math.abs(disp) < 0.001 ? disp.toExponential(2) : disp.toFixed(4);
+  document.getElementById('statVel').textContent = Math.abs(vel) < 0.001 ? vel.toExponential(2) : vel.toFixed(4);
   document.getElementById('statPeriod').textContent = period > 0 ? period.toFixed(3) : '—';
-  document.getElementById('statFreq').textContent   = period > 0 ? (1 / period).toFixed(3) : '—';
+  document.getElementById('statFreq').textContent = period > 0 ? (1 / period).toFixed(3) : '—';
 }
-
-function startSim()  { simRunning = true;  if (sketch) { sketch.loop(); } }
-function pauseSim()  { simRunning = false; }
-function resetSim()  {
+function startSim() { simRunning = true; if (sketch) { sketch.loop(); } }
+function pauseSim() { simRunning = false; }
+function resetSim() {
   simRunning = false;
   physTheta = physOmega = 0;
   physX = physV = 0;
@@ -507,68 +470,57 @@ function resetSim()  {
   drawGraphs(0, 0);
   if (sketch) { sketch.noLoop(); sketch.redraw(); }
 }
-
 // ── GRAPHS ────────────────────────────────────────────────────────────────
 function drawGraphs(disp, vel) {
   drawDispGraph(disp, vel);
   drawPhaseGraph();
 }
-
 function drawDispGraph(disp, vel) {
-  const gc  = document.getElementById('gDisp');
-  const gw  = gc.parentElement.clientWidth;
-  gc.width  = gw; gc.height = 122;
+  const gc = document.getElementById('gDisp');
+  const gw = gc.parentElement.clientWidth;
+  gc.width = gw; gc.height = 122;
   const ctx = gc.getContext('2d');
   ctx.clearRect(0, 0, gw, 122);
-
   const padL=44, padR=12, padT=10, padB=24;
   const W = gw - padL - padR, H = 122 - padT - padB;
-
   // Grid + axes
   ctx.strokeStyle = 'rgba(144,205,244,0.35)'; ctx.lineWidth = 1;
   ctx.beginPath();
   ctx.moveTo(padL, padT); ctx.lineTo(padL, padT + H);
   ctx.lineTo(padL + W, padT + H); ctx.stroke();
-
   // Zero line
   const midY = padT + H / 2;
   ctx.strokeStyle = 'rgba(144,205,244,0.12)'; ctx.lineWidth = 0.8;
   ctx.beginPath(); ctx.moveTo(padL, midY); ctx.lineTo(padL + W, midY); ctx.stroke();
-
   if (dispHistory.length < 2) {
     ctx.fillStyle = 'rgba(139,163,187,0.5)'; ctx.font = '9px Consolas,monospace'; ctx.textAlign = 'left';
     ctx.fillText('x (m)', 2, padT + 8);
     ctx.fillText('t (s)', padL + W - 14, padT + H + 18);
     return;
   }
-
   const maxAbs = Math.max(...dispHistory.map(p => Math.abs(p.x)), 1);
-  const maxT   = dispHistory[dispHistory.length - 1].t || 1;
-
+  const maxT = dispHistory[dispHistory.length - 1].t || 1;
   // Y ticks — values in metres, show with enough decimal places
   ctx.font = '9px Consolas,monospace';
   [-1, -0.5, 0, 0.5, 1].forEach(frac => {
     const yv = frac * maxAbs;
-    const y  = padT + H / 2 - (frac * H / 2);
+    const y = padT + H / 2 - (frac * H / 2);
     ctx.strokeStyle = 'rgba(144,205,244,0.06)'; ctx.lineWidth = 0.5;
     if (frac !== 0) { ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL + W, y); ctx.stroke(); }
     ctx.fillStyle = 'rgba(139,163,187,0.7)'; ctx.textAlign = 'right';
     const label = Math.abs(yv) < 0.01 ? yv.toFixed(3) : yv.toFixed(2);
     ctx.fillText(label, padL - 3, y + 3);
   });
-
   // X ticks
   [0, 0.25, 0.5, 0.75, 1].forEach(frac => {
     const tv = frac * maxT;
-    const x  = padL + frac * W;
+    const x = padL + frac * W;
     ctx.fillStyle = 'rgba(139,163,187,0.7)'; ctx.textAlign = 'center';
     ctx.fillText(tv.toFixed(1), x, padT + H + 16);
   });
-
   ctx.fillStyle = 'rgba(144,205,244,0.7)'; ctx.textAlign = 'left';
   ctx.fillText('x (m)', 2, padT + 8);
   ctx.fillText('t (s)', padL + W - 12, padT + H + 22);
-
   // Area
   ctx.beginPath();
   dispHistory.forEach((p, i) => {
@@ -580,7 +532,6 @@ function drawDispGraph(disp, vel) {
   ctx.lineTo(padL + (dispHistory[dispHistory.length - 1].t / maxT) * W, midY);
   ctx.closePath();
   ctx.fillStyle = 'rgba(104,211,145,0.09)'; ctx.fill();
-
   // Line (green = forward, fade over time)
   ctx.beginPath();
   ctx.strokeStyle = '#68d391'; ctx.lineWidth = 1.8;
@@ -590,31 +541,26 @@ function drawDispGraph(disp, vel) {
     i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
   });
   ctx.stroke();
-
   // Current dot
   const last = dispHistory[dispHistory.length - 1];
   const dotX = padL + (last.t / maxT) * W;
   const dotY = padT + H / 2 - (last.x / maxAbs) * (H / 2);
   ctx.beginPath(); ctx.arc(dotX, dotY, 3.5, 0, Math.PI * 2);
   ctx.fillStyle = '#68d391'; ctx.fill();
-
   // Value label
   ctx.fillStyle = '#68d391'; ctx.font = 'bold 9px Consolas,monospace';
   ctx.textAlign = dotX > padL + W * 0.75 ? 'right' : 'left';
   ctx.fillText(last.x.toFixed(3) + 'm', dotX + (ctx.textAlign === 'left' ? 5 : -5), dotY - 5);
 }
-
 function drawPhaseGraph() {
-  const gc  = document.getElementById('gPhase');
-  const gw  = gc.parentElement.clientWidth;
-  gc.width  = gw; gc.height = 122;
+  const gc = document.getElementById('gPhase');
+  const gw = gc.parentElement.clientWidth;
+  gc.width = gw; gc.height = 122;
   const ctx = gc.getContext('2d');
   ctx.clearRect(0, 0, gw, 122);
-
   const padL=44, padR=12, padT=10, padB=24;
   const W = gw - padL - padR, H = 122 - padT - padB;
   const midX = padL + W / 2, midY = padT + H / 2;
-
   // Axes
   ctx.strokeStyle = 'rgba(144,205,244,0.35)'; ctx.lineWidth = 1;
   ctx.beginPath();
@@ -622,24 +568,20 @@ function drawPhaseGraph() {
   ctx.strokeStyle = 'rgba(144,205,244,0.12)'; ctx.lineWidth = 0.8;
   ctx.beginPath(); ctx.moveTo(padL, midY); ctx.lineTo(padL + W, midY); ctx.stroke();
   ctx.beginPath(); ctx.moveTo(midX, padT); ctx.lineTo(midX, padT + H); ctx.stroke();
-
   ctx.font = '9px Consolas,monospace';
   ctx.fillStyle = 'rgba(246,224,94,0.8)'; ctx.textAlign = 'left';
   ctx.fillText('v (m/s)', 2, padT + 8);
   ctx.fillText('x (m) →', padL + W - 18, padT + H + 18);
-
   if (phaseHistory.length < 3) return;
-
   const maxX = Math.max(...phaseHistory.map(p => Math.abs(p.x)), 1);
   const maxV = Math.max(...phaseHistory.map(p => Math.abs(p.v)), 1);
-
   // Draw phase orbit — color shifts from start to end
   for (let i = 1; i < phaseHistory.length; i++) {
-    const t    = i / phaseHistory.length;
-    const hue  = 180 + t * 60; // cyan → yellow
+    const t = i / phaseHistory.length;
+    const hue = 180 + t * 60; // cyan → yellow
     const alpha = 0.15 + t * 0.85;
     ctx.strokeStyle = `hsla(${hue}, 80%, 65%, ${alpha})`;
-    ctx.lineWidth   = 1.2;
+    ctx.lineWidth = 1.2;
     ctx.beginPath();
     const px0 = midX + (phaseHistory[i-1].x / maxX) * (W / 2);
     const py0 = midY - (phaseHistory[i-1].v / maxV) * (H / 2);
@@ -647,70 +589,52 @@ function drawPhaseGraph() {
     const py1 = midY - (phaseHistory[i].v / maxV) * (H / 2);
     ctx.moveTo(px0, py0); ctx.lineTo(px1, py1); ctx.stroke();
   }
-
   // Current dot
   const cur = phaseHistory[phaseHistory.length - 1];
-  const cx  = midX + (cur.x / maxX) * (W / 2);
-  const cy  = midY - (cur.v / maxV) * (H / 2);
+  const cx = midX + (cur.x / maxX) * (W / 2);
+  const cy = midY - (cur.v / maxV) * (H / 2);
   ctx.beginPath(); ctx.arc(cx, cy, 4, 0, Math.PI * 2);
   ctx.fillStyle = '#f6e05e'; ctx.fill();
 }
-
 // ── P5 SKETCH ─────────────────────────────────────────────────────────────
 let sketch = null;
-
 new p5(function(p) {
   sketch = p;
   let trailP = []; // pendulum bob trail
   let trailS = []; // spring bob trail
-  let simT   = 0;  // simulation time in frames (for 60fps assumption)
-
+  let simT = 0; // simulation time in frames (for 60fps assumption)
   p.setup = function() {
     const wrap = document.getElementById('canvasWrap');
-    const cnv  = p.createCanvas(wrap.clientWidth, Math.max(280, window.innerHeight * 0.44));
+    const cnv = p.createCanvas(wrap.clientWidth, Math.max(280, window.innerHeight * 0.44));
     cnv.parent('canvasWrap');
     physTheta = p.radians(parseFloat(document.getElementById('angleSlider').value));
-    physX     = parseFloat(document.getElementById('dispSlider').value);
+    physX = parseFloat(document.getElementById('dispSlider').value);
     p.noLoop();
   };
-
   // ── PENDULUM DRAW ──────────────────────────────────────────────────────
   function drawPendulum() {
-    const Lm      = parseFloat(document.getElementById('lengthSlider').value); // metres
-    const damp    = parseFloat(document.getElementById('dampingSlider').value);
-    const g       = 9.8;  // m/s²
-    const dt      = 1 / 60; // seconds per frame
-
-    // Pixel scale: fit longest pendulum (3 m) into 70% of canvas height below pivot
+    const Lm = parseFloat(document.getElementById('lengthSlider').value); // metres
+    const damp = parseFloat(document.getElementById('dampingSlider').value);
+    const g = 9.8; // m/s
+    const dt = 1 / 60; // seconds per frame
     const PX_PER_M = Math.min(200, (p.height * 0.72) / 3.0);
-    const Lpx     = Lm * PX_PER_M; // length in pixels
-
+    const Lpx = Lm * PX_PER_M; // length in pixels
     const originX = p.width / 2;
     const originY = p.height * 0.14;
-
     if (simRunning) {
       const alpha = -(g / Lm) * Math.sin(physTheta); // rad/s²
       physOmega += alpha * dt;
       physOmega *= damp;
       physTheta += physOmega * dt;
-      elapsedT  += dt;
+      elapsedT += dt;
     }
-
     const bobX = originX + Lpx * Math.sin(physTheta);
     const bobY = originY + Lpx * Math.cos(physTheta);
-
-    // SI displacement and velocity
-    const dispM = physTheta * Lm;          // arc displacement in metres
-    const velMS = physOmega * Lm;          // arc velocity in m/s
-
-    // Trail
+    const dispM = physTheta * Lm; // arc displacement in metres
+    const velMS = physOmega * Lm; // arc velocity in m/s
     if (simRunning) trailP.push({ x: bobX, y: bobY });
     if (trailP.length > 80) trailP.shift();
-
-    // Background atmosphere
     p.background(8, 16, 38);
-
-    // Grid dots
     p.noStroke();
     for (let gx = 30; gx < p.width; gx += 40) {
       for (let gy = 30; gy < p.height; gy += 40) {
@@ -718,15 +642,11 @@ new p5(function(p) {
         p.ellipse(gx, gy, 1.5);
       }
     }
-
-    // Pivot point
     p.stroke(144, 205, 244, 180); p.strokeWeight(1);
     p.fill(20, 40, 80);
     p.ellipse(originX, originY, 16, 16);
     p.noStroke(); p.fill(144, 205, 244);
     p.ellipse(originX, originY, 6, 6);
-
-    // Angle arc
     if (Math.abs(physTheta) > 0.01) {
       p.noFill(); p.stroke(246, 224, 94, 100); p.strokeWeight(1);
       p.arc(originX, originY, 60, 60, p.HALF_PI - physTheta, p.HALF_PI, p.PIE);
@@ -736,14 +656,10 @@ new p5(function(p) {
       const labelA = p.HALF_PI - physTheta / 2;
       p.text(`${p.degrees(physTheta).toFixed(1)}°`, originX + labelR * Math.cos(labelA), originY + labelR * Math.sin(labelA));
     }
-
-    // Equilibrium line (dashed)
     p.stroke(144, 205, 244, 40); p.strokeWeight(1);
     for (let y = originY; y < originY + Lpx + 10; y += 12) {
       p.line(originX, y, originX, Math.min(y + 7, originY + Lpx));
     }
-
-    // Trail
     for (let i = 1; i < trailP.length; i++) {
       const t = i / trailP.length;
       p.stroke(104, 211, 145, t * 160);
@@ -751,81 +667,60 @@ new p5(function(p) {
       p.line(trailP[i-1].x, trailP[i-1].y, trailP[i].x, trailP[i].y);
     }
     p.noStroke();
-
-    // Rod
     p.stroke(80, 120, 180); p.strokeWeight(2.5);
     p.line(originX, originY, bobX, bobY);
-
-    // Bob glow
     const gA = p.map(Math.abs(physTheta), 0, 1.4, 30, 100);
     p.noStroke(); p.fill(104, 211, 145, gA * 0.4);
     p.ellipse(bobX, bobY, 52, 52);
     p.fill(104, 211, 145, gA * 0.6);
     p.ellipse(bobX, bobY, 38, 38);
-
-    // Bob
     p.fill(60, 190, 110);
     p.ellipse(bobX, bobY, 28, 28);
     p.fill(100, 230, 150);
     p.ellipse(bobX - 4, bobY - 4, 10, 10);
-
-    // Period (T = 2π√(L/g), pure SI)
     const T = 2 * Math.PI * Math.sqrt(Lm / g);
     updateStats(dispM, velMS, T);
-
-    // HUD — all SI
     p.fill(0, 0, 0, 120); p.noStroke(); p.rect(8, 8, 220, 102, 8);
     p.textFont('Consolas'); p.textAlign(p.LEFT, p.TOP); p.fill(144, 205, 244); p.textSize(10.5);
-    p.text(`θ     = ${p.degrees(physTheta).toFixed(2)}°`,    16, 16);
-    p.text(`ω     = ${physOmega.toFixed(4)} rad/s`,          16, 31);
-    p.text(`x     = ${dispM.toFixed(4)} m`,                  16, 46);
-    p.text(`v     = ${velMS.toFixed(4)} m/s`,                16, 61);
-    p.text(`T     = ${T.toFixed(3)} s`,                      16, 76);
-    p.text(`FPS   = ${p.frameRate().toFixed(1)}`,            16, 91);
-
-    // Record — SI units throughout
+    p.text(`θ = ${p.degrees(physTheta).toFixed(2)}°`, 16, 16);
+    p.text(`ω = ${physOmega.toFixed(4)} rad/s`, 16, 31);
+    p.text(`x = ${dispM.toFixed(4)} m`, 16, 46);
+    p.text(`v = ${velMS.toFixed(4)} m/s`, 16, 61);
+    p.text(`T = ${T.toFixed(3)} s`, 16, 76);
+    p.text(`FPS = ${p.frameRate().toFixed(1)}`, 16, 91);
     if (simRunning) {
       dispHistory.push({ t: elapsedT, x: dispM });
       phaseHistory.push({ x: dispM, v: velMS });
-      if (dispHistory.length  > MAX_HIST) dispHistory.shift();
+      if (dispHistory.length > MAX_HIST) dispHistory.shift();
       if (phaseHistory.length > MAX_HIST) phaseHistory.shift();
       drawGraphs(dispM, velMS);
     }
-
-    // Idle
     if (!simRunning && physTheta === 0 && physOmega === 0) {
       p.fill(255, 255, 255, 45); p.textFont('Exo 2'); p.textSize(14); p.textAlign(p.CENTER, p.CENTER);
       p.text('Set angle and press ▶ Simulate', p.width / 2, p.height * 0.78);
     }
   }
-
   // ── SPRING DRAW ────────────────────────────────────────────────────────
   function drawSpring() {
-    const x0m    = parseFloat(document.getElementById('dispSlider').value);  // metres
-    const mass   = parseFloat(document.getElementById('massSlider').value);  // kg
-    const k      = parseFloat(document.getElementById('stiffSlider').value); // N/m
-    const damp   = parseFloat(document.getElementById('sdampSlider').value);
-    const dt     = 1 / 60; // seconds
-
-    // SI physics: F = -kx (x in metres), a = F/m
+    const x0m = parseFloat(document.getElementById('dispSlider').value); // metres
+    const mass = parseFloat(document.getElementById('massSlider').value); // kg
+    const k = parseFloat(document.getElementById('stiffSlider').value); // N/m
+    const damp = parseFloat(document.getElementById('sdampSlider').value);
+    const dt = 1 / 60; // seconds
     if (simRunning) {
-      const F   = -k * physX;      // N, physX in metres
-      const a   = F / mass;        // m/s²
-      physV    += a * dt;          // m/s
-      physV    *= damp;
-      physX    += physV * dt;      // metres
+      const F = -k * physX; // N, physX in metres
+      const a = F / mass; // m/s²
+      physV += a * dt; // m/s
+      physV *= damp;
+      physX += physV * dt; // metres
       elapsedT += dt;
     }
-
-    // Pixel scale: 1 metre = PX_PER_M pixels
-    const PX_PER_M  = 200;
-    const anchorX   = p.width * 0.18;
-    const anchorY   = p.height / 2;
-    const restLenPx = 160; // natural length in pixels (visual only)
-    const bobPx     = anchorX + restLenPx + physX * PX_PER_M; // bob position in canvas px
-    const bobSize   = p.map(mass, 0.5, 5, 20, 46);
-
-    // Background
+    const PX_PER_M = 200;
+    const anchorX = p.width * 0.18;
+    const anchorY = p.height / 2;
+    const restLenPx = 160; 
+    const bobPx = anchorX + restLenPx + physX * PX_PER_M; 
+    const bobSize = p.map(mass, 0.5, 5, 20, 46);
     p.background(8, 16, 38);
     p.noStroke();
     for (let gx = 30; gx < p.width; gx += 40) {
@@ -834,8 +729,6 @@ new p5(function(p) {
         p.ellipse(gx, gy, 1.5);
       }
     }
-
-    // Wall
     p.fill(30, 55, 90);
     p.rect(0, anchorY - 70, anchorX, 140, 0, 6, 6, 0);
     for (let y = anchorY - 60; y < anchorY + 60; y += 14) {
@@ -843,8 +736,6 @@ new p5(function(p) {
       p.line(anchorX - 18, y, anchorX, y + 10);
     }
     p.noStroke();
-
-    // Equilibrium line (dashed) — at natural rest position
     const eqPx = anchorX + restLenPx;
     p.stroke(144, 205, 244, 35); p.strokeWeight(1);
     for (let y = anchorY - 80; y < anchorY + 80; y += 12) {
@@ -853,11 +744,7 @@ new p5(function(p) {
     p.noStroke();
     p.fill(144, 205, 244, 80); p.textFont('Consolas'); p.textSize(9); p.textAlign(p.CENTER);
     p.text('eq', eqPx, anchorY - 84);
-
-    // Spring coil — pass physX in metres
     drawSpringCoil(p, anchorX, anchorY, bobPx - bobSize / 2, anchorY, physX);
-
-    // Trail
     if (simRunning) trailS.push({ x: bobPx, y: anchorY });
     if (trailS.length > 100) trailS.shift();
     for (let i = 1; i < trailS.length; i++) {
@@ -867,8 +754,6 @@ new p5(function(p) {
       p.line(trailS[i-1].x, trailS[i-1].y, trailS[i].x, trailS[i].y);
     }
     p.noStroke();
-
-    // Force arrow (F = -kx in Newtons)
     const Fval = -k * physX;
     if (Math.abs(physX) > 0.005) {
       const arrowScale = p.map(Math.abs(Fval), 0, k * 0.8, 0, 55);
@@ -882,8 +767,6 @@ new p5(function(p) {
       p.fill(240, 80, 80, 160); p.textFont('Consolas'); p.textSize(9); p.textAlign(p.CENTER);
       p.text(`F=${Fval.toFixed(2)}N`, arrowX + fx / 2, anchorY - 12);
     }
-
-    // Displacement arrow — show SI value in metres
     if (Math.abs(physX) > 0.005) {
       p.stroke(104, 211, 145, 120); p.strokeWeight(1.5);
       p.line(eqPx, anchorY - 30, bobPx, anchorY - 30);
@@ -893,68 +776,51 @@ new p5(function(p) {
       p.fill(104, 211, 145, 150); p.textFont('Consolas'); p.textSize(9); p.textAlign(p.CENTER);
       p.text(`x=${physX.toFixed(3)}m`, (eqPx + bobPx) / 2, anchorY - 40);
     }
-
-    // Bob glow
     const speed = Math.abs(physV);
     const gA = p.map(speed, 0, 2.0, 20, 120);
     p.noStroke(); p.fill(246, 173, 85, gA * 0.4);
     p.ellipse(bobPx, anchorY, bobSize + 28, bobSize + 28);
     p.fill(246, 173, 85, gA * 0.5);
     p.ellipse(bobPx, anchorY, bobSize + 14, bobSize + 14);
-
-    // Bob
     p.fill(220, 120, 40);
     p.ellipse(bobPx, anchorY, bobSize, bobSize);
     p.fill(255, 160, 70);
     p.ellipse(bobPx - bobSize * 0.18, anchorY - bobSize * 0.18, bobSize * 0.35, bobSize * 0.35);
-
-    // Mass label
     p.fill(255, 255, 255, 200); p.noStroke();
     p.textFont('Consolas'); p.textSize(10); p.textAlign(p.CENTER, p.CENTER);
     p.text(`${mass.toFixed(1)}kg`, bobPx, anchorY);
-
-    // Period T = 2π√(m/k) — pure SI
     const T = 2 * Math.PI * Math.sqrt(mass / k);
     updateStats(physX, physV, T);
-
-    // HUD — all SI
     p.fill(0, 0, 0, 120); p.noStroke(); p.rect(8, 8, 220, 116, 8);
     p.textFont('Consolas'); p.textAlign(p.LEFT, p.TOP); p.fill(144, 205, 244); p.textSize(10.5);
-    p.text(`x     = ${physX.toFixed(4)} m`,        16, 16);
-    p.text(`v     = ${physV.toFixed(4)} m/s`,       16, 31);
-    p.text(`F     = ${Fval.toFixed(3)} N`,          16, 46);
-    p.text(`T     = ${T.toFixed(3)} s`,             16, 61);
-    p.text(`k     = ${k.toFixed(1)} N/m`,           16, 76);
-    p.text(`m     = ${mass.toFixed(1)} kg`,         16, 91);
-    p.text(`FPS   = ${p.frameRate().toFixed(1)}`,   16, 106);
-
-    // Record — SI
+    p.text(`x = ${physX.toFixed(4)} m`, 16, 16);
+    p.text(`v = ${physV.toFixed(4)} m/s`, 16, 31);
+    p.text(`F = ${Fval.toFixed(3)} N`, 16, 46);
+    p.text(`T = ${T.toFixed(3)} s`, 16, 61);
+    p.text(`k = ${k.toFixed(1)} N/m`, 16, 76);
+    p.text(`m = ${mass.toFixed(1)} kg`, 16, 91);
+    p.text(`FPS = ${p.frameRate().toFixed(1)}`, 16, 106);
     if (simRunning) {
       dispHistory.push({ t: elapsedT, x: physX });
       phaseHistory.push({ x: physX, v: physV });
-      if (dispHistory.length  > MAX_HIST) dispHistory.shift();
+      if (dispHistory.length > MAX_HIST) dispHistory.shift();
       if (phaseHistory.length > MAX_HIST) phaseHistory.shift();
       drawGraphs(physX, physV);
     }
-
-    // Idle
     if (!simRunning && physX === 0 && physV === 0) {
       p.fill(255, 255, 255, 45); p.textFont('Exo 2'); p.textSize(14); p.textAlign(p.CENTER, p.CENTER);
       p.text('Set displacement and press ▶ Simulate', p.width / 2, p.height * 0.82);
     }
   }
-
-  // Draw spring coil between two points
   function drawSpringCoil(p, x1, y1, x2, y2, extensionM) {
     const coils = 14;
-    // extensionM in metres; map 0–0.8m → amplitude 14–28px
-    const amp   = p.map(Math.abs(extensionM), 0, 0.8, 14, 28);
+    const amp = p.map(Math.abs(extensionM), 0, 0.8, 14, 28);
     const steps = coils * 12;
     p.stroke(144, 205, 244, 200); p.strokeWeight(2);
     p.beginShape();
     p.noFill();
     for (let i = 0; i <= steps; i++) {
-      const t  = i / steps;
+      const t = i / steps;
       const cx = p.lerp(x1, x2, t);
       const cy = y1 + Math.sin(t * coils * Math.PI * 2) * amp;
       p.vertex(cx, cy);
@@ -962,18 +828,14 @@ new p5(function(p) {
     p.endShape();
     p.noStroke();
   }
-
   p.draw = function() {
     if (mode === 'pendulum') drawPendulum();
-    else                     drawSpring();
+    else drawSpring();
   };
-
   p.windowResized = function() {
     const wrap = document.getElementById('canvasWrap');
     p.resizeCanvas(wrap.clientWidth, Math.max(280, window.innerHeight * 0.44));
   };
-
-  // Global controls
   window.startSim = function() {
     if (mode === 'pendulum') {
       if (!simRunning && elapsedT === 0) {
@@ -988,24 +850,21 @@ new p5(function(p) {
     }
     simRunning = true; p.loop();
   };
-
   window.pauseSim = function() { simRunning = false; };
-
   window.resetSim = function() {
     simRunning = false;
     physTheta = 0; physOmega = 0;
-    physX = 0;    physV = 0;
+    physX = 0; physV = 0;
     elapsedT = 0;
     trailP = []; trailS = [];
     dispHistory = []; phaseHistory = [];
     document.getElementById('statPeriod').textContent = '—';
-    document.getElementById('statFreq').textContent   = '—';
-    document.getElementById('statDisp').textContent   = '0.0';
-    document.getElementById('statVel').textContent    = '0.0';
+    document.getElementById('statFreq').textContent = '—';
+    document.getElementById('statDisp').textContent = '0.0';
+    document.getElementById('statVel').textContent = '0.0';
     drawGraphs(0, 0);
     p.noLoop(); p.redraw();
   };
-
 }, 'canvasWrap');
 </script>
 </body>
