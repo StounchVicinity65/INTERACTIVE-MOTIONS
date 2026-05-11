@@ -120,14 +120,14 @@
     .graph-row { display: flex; gap: 0.75rem; }
     .graph-wrap {
       background: var(--card); border: 1px solid rgba(252,129,129,0.1);
-      border-radius: 12px; overflow: hidden; height: 148px; flex: 1; min-width: 0;
+      border-radius: 12px; overflow: hidden; height: 170px; flex: 1; min-width: 0;
     }
     .graph-label {
       font-family: 'Share Tech Mono', monospace; font-size: 0.6rem;
       letter-spacing: 0.12em; text-transform: uppercase;
       color: rgba(246,173,85,0.4); padding: 0.4rem 0.8rem 0;
     }
-    canvas.graph { display: block; width: 100%; height: 116px; }
+    canvas.graph { display: block; width: 100%; height: 138px; }
     .hidden { display: none !important; }
     @media (max-width: 920px) {
       .main { flex-direction: column; }
@@ -281,15 +281,16 @@ new p5(function(p) {
   let firstFrame = false;
   let postCrashScroll = 0;
   const CAR_FIXED_RATIO = 0.55;
+  const DPR = window.devicePixelRatio || 1;
 
   p.setup = function() {
     const wrap = document.getElementById('canvasWrap');
     const cnv = p.createCanvas(wrap.clientWidth, Math.max(270, window.innerHeight * 0.44));
     cnv.parent('canvasWrap');
-    p.pixelDensity(4);                    // MAX sharpness fix
-    p.textFont('Consolas');
+    // Use device pixel ratio only — NOT an arbitrary 4x multiplier
+    p.pixelDensity(Math.min(DPR, 2));
+    p.textFont('Consolas, monospace');
     p.textStyle(p.BOLD);
-    p.drawingContext.imageSmoothingEnabled = false;
     initScene();
     p.noLoop();
   };
@@ -457,117 +458,211 @@ new p5(function(p) {
     if (truckVisible) drawTruck(truckX, carY - 8);
     drawCar(carX, carY);
 
-    const gX = p.width - 90, gY = 72, gR = 52;
-    p.noFill(); p.stroke(20,30,50); p.strokeWeight(8);
+    // ── SPEEDOMETER ────────────────────────────────────────────────
+    const gX = p.width - 100, gY = 82, gR = 62;
+    // backdrop
+    p.fill(0,0,0,160); p.noStroke();
+    p.ellipse(gX, gY, gR*2+28, gR*2+28);
+    p.noFill(); p.stroke(20,30,50); p.strokeWeight(10);
     p.arc(gX,gY,gR*2,gR*2,p.PI,p.TWO_PI);
     const frac = p.constrain(physV / MAX_SPEED, 0, 1);
     const needA = p.PI + frac * p.PI;
     if (frac > 0) {
       const greenEnd = p.min(needA, p.PI + 0.5*p.PI);
       const orangeEnd = p.min(needA, p.PI + 0.75*p.PI);
-      if (greenEnd > p.PI) { p.stroke(60,210,100); p.strokeWeight(7); p.arc(gX,gY,gR*2,gR*2,p.PI,greenEnd); }
-      if (needA > p.PI+0.5*p.PI) { p.stroke(246,173,85); p.strokeWeight(7); p.arc(gX,gY,gR*2,gR*2,p.PI+0.5*p.PI,orangeEnd); }
-      if (needA > p.PI+0.75*p.PI) { p.stroke(240,55,55); p.strokeWeight(7); p.arc(gX,gY,gR*2,gR*2,p.PI+0.75*p.PI,needA); }
+      if (greenEnd > p.PI) { p.stroke(60,210,100); p.strokeWeight(8); p.arc(gX,gY,gR*2,gR*2,p.PI,greenEnd); }
+      if (needA > p.PI+0.5*p.PI) { p.stroke(246,173,85); p.strokeWeight(8); p.arc(gX,gY,gR*2,gR*2,p.PI+0.5*p.PI,orangeEnd); }
+      if (needA > p.PI+0.75*p.PI) { p.stroke(240,55,55); p.strokeWeight(8); p.arc(gX,gY,gR*2,gR*2,p.PI+0.75*p.PI,needA); }
     }
+    // tick marks + labels
     [0,30,60,90,120].forEach(v => {
       const a = p.PI + (v/120)*p.PI;
-      p.stroke(190,210,230,160); p.strokeWeight(1.5);
-      p.line(gX+Math.cos(a)*(gR-7),gY+Math.sin(a)*(gR-7), gX+Math.cos(a)*(gR+3),gY+Math.sin(a)*(gR+3));
-      p.fill(150,178,205,190);
-      p.textFont('Consolas'); p.textSize(8); p.textAlign(p.CENTER,p.CENTER);
-      p.text(v, gX+Math.cos(a)*(gR-17), gY+Math.sin(a)*(gR-17));
+      const cosA = Math.cos(a), sinA = Math.sin(a);
+      p.stroke(190,210,230,200); p.strokeWeight(2);
+      p.line(gX+cosA*(gR-9),gY+sinA*(gR-9), gX+cosA*(gR+4),gY+sinA*(gR+4));
+      p.fill(200,220,240); p.noStroke();
+      p.textFont('Consolas, monospace');
+      p.textStyle(p.BOLD);
+      p.textSize(11);
+      p.textAlign(p.CENTER,p.CENTER);
+      p.text(v, gX+cosA*(gR-20), gY+sinA*(gR-20));
     });
-    p.stroke(246,173,85); p.strokeWeight(2.5);
-    p.line(gX,gY, gX+Math.cos(needA)*(gR-10), gY+Math.sin(needA)*(gR-10));
-    p.fill(246,173,85); p.ellipse(gX,gY,7);
-    p.fill(255); p.textSize(14); p.textAlign(p.CENTER,p.CENTER);
-    p.text(physV.toFixed(1), gX, gY+18);
-    p.textSize(8); p.fill(139,163,187); p.text('m/s', gX, gY+30);
-    p.textSize(8); p.text('SPEED', gX, gY-gR-8);
+    // needle
+    p.stroke(246,173,85); p.strokeWeight(3);
+    p.line(gX,gY, gX+Math.cos(needA)*(gR-12), gY+Math.sin(needA)*(gR-12));
+    p.fill(246,173,85); p.noStroke(); p.ellipse(gX,gY,9);
+    // speed readout
+    p.fill(255,255,255);
+    p.textFont('Consolas, monospace');
+    p.textStyle(p.BOLD);
+    p.textSize(18);
+    p.textAlign(p.CENTER,p.CENTER);
+    p.text(physV.toFixed(1), gX, gY+22);
+    p.textSize(11);
+    p.fill(139,163,187);
+    p.text('m/s', gX, gY+38);
+    p.textSize(10);
+    p.fill(200,220,240,180);
+    p.text('SPEED', gX, gY-gR-10);
 
-    p.fill(0,0,0,120); p.rect(8,8,215,90,8);
-    p.textFont('Consolas'); p.textAlign(p.LEFT,p.TOP); p.fill(246,173,85); p.textSize(10.5);
-    p.text(`u = ${physU.toFixed(1)} m/s`, 16,16);
-    p.text(`v = ${physV.toFixed(2)} m/s`, 16,31);
-    p.text(`a = +${physA.toFixed(1)} m/s²`, 16,46);
-    p.text(`s = ${physS.toFixed(1)} m`, 16,61);
-    p.text(`t = ${physT.toFixed(2)} s`, 16,76);
+    // ── HUD INFO BOX ───────────────────────────────────────────────
+    const boxW = 205, boxH = 100, boxX = 10, boxY = 10;
+    p.fill(0,0,0,145); p.noStroke();
+    p.rect(boxX, boxY, boxW, boxH, 10);
+    p.textFont('Consolas, monospace');
+    p.textStyle(p.BOLD);
+    p.textAlign(p.LEFT, p.TOP);
+    p.textSize(13);
+    const lines = [
+      { label: 'u = ', val: `${physU.toFixed(1)} m/s` },
+      { label: 'v = ', val: `${physV.toFixed(2)} m/s` },
+      { label: 'a = ', val: `+${physA.toFixed(1)} m/s²` },
+      { label: 's = ', val: `${physS.toFixed(1)} m` },
+      { label: 't = ', val: `${physT.toFixed(2)} s` },
+    ];
+    lines.forEach((ln, i) => {
+      p.fill(139,163,187);
+      p.text(ln.label, boxX + 12, boxY + 12 + i * 17);
+      p.fill(246,173,85);
+      p.text(ln.val, boxX + 46, boxY + 12 + i * 17);
+    });
 
+    // ── CRASH OVERLAY ──────────────────────────────────────────────
     if (crashed) {
-      p.fill(0,0,0,180); p.rect(p.width/2-160, p.height/2-55, 320, 120, 12);
-      p.fill(240,60,60); p.textFont('Exo 2'); p.textSize(22); p.textAlign(p.CENTER,p.CENTER);
-      p.text('💥 CRASH!', p.width/2, p.height/2-12);
-      p.fill(255,220,100); p.textSize(12);
-      p.text(`Final speed ${physV.toFixed(0)} m/s`, p.width/2, p.height/2+22);
+      p.fill(0,0,0,190); p.rect(p.width/2-170, p.height/2-65, 340, 130, 14);
+      p.fill(240,60,60);
+      p.textFont('Exo 2, sans-serif');
+      p.textStyle(p.BOLD);
+      p.textSize(28);
+      p.textAlign(p.CENTER,p.CENTER);
+      p.text('💥 CRASH!', p.width/2, p.height/2-16);
+      p.fill(255,220,100);
+      p.textSize(15);
+      p.text(`Final speed: ${physV.toFixed(0)} m/s`, p.width/2, p.height/2+24);
     }
 
+    // ── IDLE HINT ─────────────────────────────────────────────────
     if (!simRunning && !crashed && physT === 0) {
-      p.fill(255,255,255,45); p.textFont('Exo 2'); p.textSize(14); p.textAlign(p.CENTER,p.CENTER);
+      p.fill(255,255,255,50);
+      p.textFont('Exo 2, sans-serif');
+      p.textStyle(p.NORMAL);
+      p.textSize(15);
+      p.textAlign(p.CENTER,p.CENTER);
       p.text('Set parameters and press ▶ Simulate', p.width/2, p.height*0.38);
     }
   };
 
   function drawBothGraphs() {
     drawGraph('gSpeed', speedHist, 'v', 'v (m/s)', '#f6ad55', 'rgba(246,173,85,0.12)');
-    drawGraph('gDist', distHist, 's', 's (m)', '#90cdf4', 'rgba(144,205,244,0.1)');
+    drawGraph('gDist',  distHist,  's', 's (m)',   '#90cdf4', 'rgba(144,205,244,0.10)');
   }
 
   function drawGraph(id, hist, yKey, yLabel, lineColor, fillColor) {
     const gc = document.getElementById(id);
-    const gw = gc.parentElement.clientWidth;
-    gc.width = gw; gc.height = 116;
+    const dpr = window.devicePixelRatio || 1;
+    const logicalW = gc.parentElement.clientWidth;
+    const logicalH = 138;
+    gc.width  = logicalW * dpr;
+    gc.height = logicalH * dpr;
+    gc.style.width  = logicalW + 'px';
+    gc.style.height = logicalH + 'px';
     const ctx = gc.getContext('2d');
-    ctx.clearRect(0, 0, gw, 116);
-    const padL=40, padR=10, padT=8, padB=22;
-    const W = gw-padL-padR, H = 116-padT-padB;
-    ctx.strokeStyle='rgba(246,173,85,0.3)'; ctx.lineWidth=1;
-    ctx.beginPath(); ctx.moveTo(padL,padT); ctx.lineTo(padL,padT+H); ctx.lineTo(padL+W,padT+H); ctx.stroke();
-    ctx.font='9px Consolas,monospace'; ctx.fillStyle=lineColor; ctx.textAlign='left';
-    ctx.fillText(yLabel, 2, padT+8);
-    ctx.fillStyle='rgba(139,163,187,0.6)'; ctx.fillText('t (s)', padL+W-22, padT+H+16);
-    if (hist.length < 2) return;
-    const n = hist.length;
-    const maxY = Math.max(...hist.map(p=>p[yKey]), 0.001);
-    const tStart = hist[0].t, tEnd = hist[n-1].t;
-    [0.25,0.5,0.75,1].forEach(frac => {
-      const y = padT+H - frac*H;
-      ctx.strokeStyle='rgba(246,173,85,0.05)'; ctx.lineWidth=0.5;
-      ctx.beginPath(); ctx.moveTo(padL,y); ctx.lineTo(padL+W,y); ctx.stroke();
-      ctx.fillStyle='rgba(139,163,187,0.65)'; ctx.textAlign='right'; ctx.font='8px Consolas,monospace';
-      const v = frac*maxY;
-      ctx.fillText(v >= 100 ? v.toFixed(0) : v.toFixed(1), padL-3, y+3);
-    });
-    [0,0.5,1].forEach(frac => {
-      const x = padL + frac*W;
-      ctx.fillStyle='rgba(139,163,187,0.6)'; ctx.textAlign='center'; ctx.font='8px Consolas,monospace';
-      ctx.fillText((tStart + frac*(tEnd-tStart)).toFixed(1), x, padT+H+16);
-    });
+    ctx.scale(dpr, dpr);
+    ctx.clearRect(0, 0, logicalW, logicalH);
+
+    const padL = 48, padR = 12, padT = 10, padB = 26;
+    const W = logicalW - padL - padR;
+    const H = logicalH - padT - padB;
+
+    // axes
+    ctx.strokeStyle = 'rgba(246,173,85,0.35)';
+    ctx.lineWidth = 1;
     ctx.beginPath();
-    hist.forEach((p,i) => {
-      const px = padL + (i/(n-1))*W;
-      const py = padT+H - (p[yKey]/maxY)*H;
-      i===0 ? ctx.moveTo(px, padT+H) : null;
-      ctx.lineTo(px, py);
+    ctx.moveTo(padL, padT);
+    ctx.lineTo(padL, padT + H);
+    ctx.lineTo(padL + W, padT + H);
+    ctx.stroke();
+
+    // axis labels
+    ctx.font = 'bold 11px Consolas, monospace';
+    ctx.fillStyle = lineColor;
+    ctx.textAlign = 'left';
+    ctx.fillText(yLabel, 2, padT + 10);
+
+    ctx.fillStyle = 'rgba(139,163,187,0.75)';
+    ctx.font = '11px Consolas, monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText('t (s)', padL + W / 2, padT + H + 22);
+
+    if (hist.length < 2) return;
+
+    const n = hist.length;
+    const maxY = Math.max(...hist.map(p => p[yKey]), 0.001);
+    const tStart = hist[0].t, tEnd = hist[n - 1].t;
+
+    // horizontal grid + y-axis ticks
+    [0.25, 0.5, 0.75, 1].forEach(frac => {
+      const y = padT + H - frac * H;
+      ctx.strokeStyle = 'rgba(246,173,85,0.07)';
+      ctx.lineWidth = 0.5;
+      ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL + W, y); ctx.stroke();
+      ctx.fillStyle = 'rgba(200,220,240,0.8)';
+      ctx.textAlign = 'right';
+      ctx.font = 'bold 10px Consolas, monospace';
+      const v = frac * maxY;
+      ctx.fillText(v >= 100 ? v.toFixed(0) : v.toFixed(1), padL - 4, y + 4);
     });
-    ctx.lineTo(padL+W, padT+H); ctx.closePath();
-    ctx.fillStyle=fillColor; ctx.fill();
-    ctx.beginPath(); ctx.strokeStyle=lineColor; ctx.lineWidth=2;
-    hist.forEach((p,i) => {
-      const px = padL + (i/(n-1))*W;
-      const py = padT+H - (p[yKey]/maxY)*H;
-      i===0 ? ctx.moveTo(px,py) : ctx.lineTo(px,py);
+
+    // x-axis ticks
+    [0, 0.5, 1].forEach(frac => {
+      const x = padL + frac * W;
+      ctx.fillStyle = 'rgba(200,220,240,0.75)';
+      ctx.textAlign = 'center';
+      ctx.font = '10px Consolas, monospace';
+      ctx.fillText((tStart + frac * (tEnd - tStart)).toFixed(1), x, padT + H + 16);
+    });
+
+    // fill area
+    ctx.beginPath();
+    hist.forEach((pt, i) => {
+      const px = padL + (i / (n - 1)) * W;
+      const py = padT + H - (pt[yKey] / maxY) * H;
+      if (i === 0) { ctx.moveTo(px, padT + H); ctx.lineTo(px, py); }
+      else ctx.lineTo(px, py);
+    });
+    ctx.lineTo(padL + W, padT + H);
+    ctx.closePath();
+    ctx.fillStyle = fillColor;
+    ctx.fill();
+
+    // line
+    ctx.beginPath();
+    ctx.strokeStyle = lineColor;
+    ctx.lineWidth = 2.5;
+    hist.forEach((pt, i) => {
+      const px = padL + (i / (n - 1)) * W;
+      const py = padT + H - (pt[yKey] / maxY) * H;
+      i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
     });
     ctx.stroke();
-    const last = hist[n-1];
-    const dotX = padL+W, dotY = padT+H-(last[yKey]/maxY)*H;
-    ctx.beginPath(); ctx.arc(dotX,dotY,3.5,0,Math.PI*2); ctx.fillStyle=lineColor; ctx.fill();
-    ctx.fillStyle=lineColor; ctx.font='bold 8px Consolas,monospace'; ctx.textAlign='right';
-    ctx.fillText(last[yKey].toFixed(1), dotX-5, dotY-5);
+
+    // live dot + value label
+    const last = hist[n - 1];
+    const dotX = padL + W;
+    const dotY = padT + H - (last[yKey] / maxY) * H;
+    ctx.beginPath();
+    ctx.arc(dotX, dotY, 4.5, 0, Math.PI * 2);
+    ctx.fillStyle = lineColor;
+    ctx.fill();
+    ctx.fillStyle = lineColor;
+    ctx.font = 'bold 11px Consolas, monospace';
+    ctx.textAlign = 'right';
+    ctx.fillText(last[yKey].toFixed(1), dotX - 6, dotY - 7);
   }
 
   p.windowResized = function() {
     const wrap = document.getElementById('canvasWrap');
-    p.resizeCanvas(wrap.clientWidth, Math.max(270, window.innerHeight*0.44));
+    p.resizeCanvas(wrap.clientWidth, Math.max(270, window.innerHeight * 0.44));
     initScene();
     carX = p.width * CAR_FIXED_RATIO;
   };
@@ -578,7 +673,7 @@ new p5(function(p) {
     bgScroll = 0; postCrashScroll = 0;
     crashed = false; truckVisible = false; firstFrame = true;
     speedHist = [{ t: 0, v: u }];
-    distHist = [{ t: 0, s: 0 }];
+    distHist  = [{ t: 0, s: 0 }];
     updateStats(u, 0, 0);
     updateT120();
     simRunning = true;
