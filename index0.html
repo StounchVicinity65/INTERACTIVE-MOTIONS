@@ -3,590 +3,389 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Motion Simulations</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<title>Interactive Motion Simulations</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;700&family=Share+Tech+Mono&family=Exo+2:ital,wght@0,300;0,400;0,700;0,900;1,700&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #0f1115;
-    --panel: #161b24;
-    --border: #1e2430;
-    --text: #e2e8f0;
-    --muted: #94a3b8;
-    --accent: #3b82f6;
-    --green: #4ade80;
-    --gold: #fbbf24;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: Inter, system-ui, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    line-height: 1.5;
-    min-height: 100vh;
-  }
-  body.bangla { font-family: 'Noto Serif Bengali', serif; }
-  .hidden { display: none !important; }
-  a { color: inherit; text-decoration: none; }
+:root{
+  --bg-app:#090d13; --bg-sidebar:#0c1017; --bg-panel:#121822; --bg-panel-2:#0d1420;
+  --border:rgba(255,255,255,.08); --border-soft:rgba(255,255,255,.05);
+  --text:#e7edf3; --text-dim:rgba(231,237,243,.62); --text-faint:rgba(231,237,243,.38);
+  --blue:#90cdf4; --accent:#4a90e2; --accent-soft:rgba(74,144,226,.14);
+  --green:#68d391; --gold:#f6e05e; --pink:#f472b6;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Exo 2',Arial,sans-serif;background:var(--bg-app);color:var(--text);font-size:16px;line-height:1.5;}
+body.bangla{font-family:'Noto Serif Bengali',Arial,sans-serif;}
+.hidden{display:none!important;}
+a{color:inherit;}
 
-  .app { display: flex; min-height: 100vh; }
+.app{display:flex;min-height:100vh;}
 
-  /* Sidebar */
-  .sidebar {
-    width: 220px;
-    min-width: 220px;
-    background: #0c0e12;
-    border-right: 1px solid var(--border);
-    padding: 1.2rem 0.9rem;
-    display: flex;
-    flex-direction: column;
-    position: sticky;
-    top: 0;
-    height: 100vh;
-  }
-  .brand {
-    font-weight: 700;
-    font-size: 1.05rem;
-    padding: 0.3rem 0.5rem 1.2rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .side-nav { display: flex; flex-direction: column; gap: 0.25rem; }
-  .side-item {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    padding: 0.55rem 0.75rem;
-    border-radius: 8px;
-    color: var(--muted);
-    background: none;
-    border: none;
-    font: inherit;
-    cursor: pointer;
-    text-align: left;
-    width: 100%;
-    font-size: 0.88rem;
-  }
-  .side-item:hover { background: #1a1f2a; color: var(--text); }
-  .side-item.active { background: var(--accent); color: #fff; font-weight: 600; }
-  .side-divider { border: none; border-top: 1px solid var(--border); margin: 0.6rem 0.2rem; }
-  .side-qr {
-    margin-top: auto;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .side-qr-label {
-    font-size: 0.65rem;
-    color: #64748b;
-    text-align: center;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-  #qrPlaceholder {
-    background: #fff;
-    padding: 4px;
-    border-radius: 6px;
-    line-height: 0;
-  }
+/* ============================================================
+   SIDEBAR
+============================================================ */
+.sidebar{width:236px;min-width:236px;background:var(--bg-sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:1.1rem .85rem;position:sticky;top:0;height:100vh;}
+.brand{display:flex;align-items:center;gap:.55rem;font-weight:800;font-size:1.05rem;padding:.4rem .55rem 1.2rem;color:#fff;}
+.brand .logo{filter:drop-shadow(0 0 8px var(--accent));animation:logoPulse 2.5s ease-in-out infinite;}
+@keyframes logoPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.12);}}
+.side-nav{display:flex;flex-direction:column;gap:.3rem;}
+.side-item{display:flex;align-items:center;gap:.65rem;padding:.62rem .8rem;border-radius:10px;color:var(--text-dim);text-decoration:none;font-size:.87rem;background:none;border:none;font-family:inherit;cursor:pointer;text-align:left;width:100%;transition:all .18s;}
+.side-item:hover{background:rgba(255,255,255,.05);color:var(--text);}
+.side-item.active{background:var(--accent);color:#fff;font-weight:700;}
+.side-item .ico{width:1.1rem;text-align:center;flex-shrink:0;}
+.side-divider{border:none;border-top:1px solid var(--border-soft);margin:.6rem .2rem;}
+.side-qr{margin-top:auto;padding-top:1rem;border-top:1px solid var(--border-soft);display:flex;flex-direction:column;align-items:center;gap:.55rem;}
+.side-qr-label{font-size:.62rem;color:var(--text-faint);text-transform:uppercase;letter-spacing:.1em;font-family:'Share Tech Mono',monospace;text-align:center;}
+#qrPlaceholder{background:#fff;padding:5px;border-radius:8px;line-height:0;box-shadow:0 0 18px rgba(74,144,226,.18);}
 
-  /* Main */
-  .main-col { flex: 1; display: flex; flex-direction: column; min-width: 0; }
-  .topbar {
-    height: 52px;
-    display: flex;
-    align-items: center;
-    padding: 0 1.5rem;
-    border-bottom: 1px solid var(--border);
-    font-weight: 600;
-    font-size: 0.95rem;
-    color: #93c5fd;
-  }
-  .content { flex: 1; padding: 1.8rem 1.8rem 2.5rem; }
-  .view { display: none; }
-  .view.active { display: block; }
+/* ============================================================
+   MAIN COLUMN
+============================================================ */
+.main-col{flex:1;display:flex;flex-direction:column;min-width:0;}
+.topbar{height:60px;flex-shrink:0;display:flex;align-items:center;padding:0 1.9rem;border-bottom:1px solid var(--border);background:rgba(9,13,19,.7);backdrop-filter:blur(10px);position:sticky;top:0;z-index:5;}
+.topbar-title{font-weight:700;color:var(--blue);font-size:1rem;display:flex;gap:.5rem;align-items:center;font-family:'Share Tech Mono',monospace;letter-spacing:.02em;}
+.content{flex:1;padding:2.2rem 2.4rem 3rem;}
+.view{display:none;}
+.view.active{display:block;animation:fadeUp .5s ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
 
-  /* Hero */
-  .hero {
-    text-align: center;
-    margin-bottom: 2rem;
-    padding: 1.8rem 1rem;
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-  }
-  .hero h1 { font-size: 1.6rem; font-weight: 700; color: #fff; margin-bottom: 0.4rem; }
-  .hero p { color: var(--muted); font-size: 0.92rem; max-width: 480px; margin: 0 auto 1.2rem; }
-  .hero-btns { display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap; }
-  .btn {
-    padding: 0.55rem 1.2rem;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 0.88rem;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
-  }
-  .btn-primary { background: var(--accent); color: #fff; }
-  .btn-primary:hover { filter: brightness(1.1); }
-  .btn-outline {
-    background: transparent;
-    color: var(--text);
-    border: 1px solid var(--border);
-  }
-  .btn-outline:hover { background: #1a1f2a; }
+/* ── HERO ── */
+.hero{position:relative;border-radius:20px;padding:3.4rem 2rem;text-align:center;overflow:hidden;margin-bottom:2.6rem;border:1px solid var(--border);
+  background:radial-gradient(ellipse at 25% 15%,rgba(74,144,226,.18),transparent 55%),
+             radial-gradient(ellipse at 78% 65%,rgba(244,114,182,.10),transparent 55%),
+             radial-gradient(ellipse at 55% 100%,rgba(104,211,145,.08),transparent 50%),
+             var(--bg-panel);}
+.hero-dot{position:absolute;width:5px;height:5px;border-radius:50%;opacity:.55;pointer-events:none;}
+.pill{display:inline-block;background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--text-dim);font-size:.72rem;padding:.32rem .85rem;border-radius:20px;margin-bottom:1.2rem;letter-spacing:.03em;font-family:'Share Tech Mono',monospace;position:relative;z-index:1;}
+.hero h1{position:relative;z-index:1;font-size:clamp(2rem,4.2vw,3rem);font-weight:800;color:#fff;margin-bottom:.9rem;line-height:1.16;}
+.hero p{position:relative;z-index:1;max-width:580px;margin:0 auto 1.7rem;color:var(--text-dim);font-size:.98rem;line-height:1.65;}
+.hero-btns{position:relative;z-index:1;display:flex;gap:.8rem;justify-content:center;flex-wrap:wrap;}
+.btn-solid{background:var(--accent);color:#fff;padding:.75rem 1.5rem;border-radius:10px;font-weight:700;text-decoration:none;font-size:.9rem;border:none;cursor:pointer;transition:all .2s;display:inline-block;}
+.btn-solid:hover{filter:brightness(1.14);transform:translateY(-2px);box-shadow:0 8px 24px rgba(74,144,226,.35);}
+.btn-outline{background:transparent;color:var(--text);padding:.75rem 1.5rem;border-radius:10px;font-weight:700;border:1px solid var(--border);font-size:.9rem;cursor:pointer;transition:all .2s;}
+.btn-outline:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.2);}
 
-  /* Sim grid */
-  .section-title { font-size: 1.05rem; font-weight: 600; margin-bottom: 0.9rem; }
-  .sim-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 0.9rem;
-  }
-  .sim-card {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 1.1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.45rem;
-  }
-  .sim-card:hover { border-color: #3b82f6; }
-  .sim-top { display: flex; align-items: center; gap: 0.6rem; }
-  .sim-icon { font-size: 1.25rem; }
-  .sim-title { font-weight: 600; color: #fff; font-size: 0.95rem; }
-  .sim-meta { font-size: 0.7rem; color: #64748b; }
-  .sim-desc { font-size: 0.82rem; color: var(--muted); flex: 1; }
-  .sim-btn {
-    align-self: flex-end;
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: #60a5fa;
-    margin-top: 0.3rem;
-  }
-  .sim-btn:hover { text-decoration: underline; }
+/* ── SIMULATION GRID ── */
+.section-title{font-size:1.15rem;font-weight:700;color:#fff;margin-bottom:1.1rem;}
+.sim-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.1rem;}
+.sim-card{background:var(--bg-panel);border:1px solid var(--border);border-radius:16px;padding:1.3rem;display:flex;flex-direction:column;gap:.7rem;transition:border-color .2s,transform .2s,box-shadow .2s;}
+.sim-card:hover{border-color:rgba(74,144,226,.4);transform:translateY(-3px);box-shadow:0 14px 28px rgba(0,0,0,.35);}
+.sim-top{display:flex;align-items:center;gap:.75rem;}
+.sim-icon{width:42px;height:42px;flex-shrink:0;border-radius:11px;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;font-size:1.3rem;}
+.sim-title{font-weight:700;color:#fff;font-size:1rem;}
+.sim-meta{font-size:.68rem;color:var(--text-faint);font-family:'Share Tech Mono',monospace;letter-spacing:.06em;text-transform:uppercase;margin-top:.15rem;}
+.sim-desc{font-size:.83rem;color:var(--text-dim);line-height:1.55;flex-grow:1;}
+.sim-actions{display:flex;justify-content:flex-end;}
+.sim-btn{background:var(--accent);color:#fff;padding:.5rem 1.15rem;border-radius:8px;font-size:.82rem;font-weight:700;text-decoration:none;transition:all .18s;}
+.sim-btn:hover{filter:brightness(1.16);transform:translateY(-1px);}
 
-  /* Solver */
-  .back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    color: var(--muted);
-    font-size: 0.85rem;
-    margin-bottom: 1.1rem;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
-  }
-  .back-link:hover { color: #93c5fd; }
-  .solver-grid {
-    display: grid;
-    grid-template-columns: 300px 1fr;
-    gap: 1.2rem;
-    align-items: start;
-  }
-  @media (max-width: 900px) {
-    .solver-grid { grid-template-columns: 1fr; }
-    .sidebar { position: fixed; left: 0; top: 0; bottom: 0; z-index: 50; transform: translateX(-100%); transition: transform 0.2s; }
-    .sidebar.open { transform: translateX(0); }
-  }
-  .panel {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 1.2rem;
-  }
-  .panel + .panel { margin-top: 1rem; }
-  .panel h1 { font-size: 1rem; color: #93c5fd; margin-bottom: 0.5rem; }
-  .panel p { font-size: 0.85rem; color: var(--muted); margin-bottom: 0.6rem; }
-  .panel ul { list-style: none; }
-  .panel li {
-    font-size: 0.82rem;
-    color: var(--muted);
-    padding: 0.2rem 0;
-    border-bottom: 1px solid var(--border);
-  }
-  .panel li::before { content: "• "; color: var(--accent); }
+/* ============================================================
+   SOLVER VIEW
+============================================================ */
+.back-link{display:inline-flex;align-items:center;gap:.4rem;color:var(--text-dim);text-decoration:none;font-size:.85rem;margin-bottom:1.3rem;background:none;border:none;cursor:pointer;font-family:inherit;padding:0;}
+.back-link:hover{color:var(--blue);}
+.solver-grid{display:grid;grid-template-columns:340px 1fr;gap:1.4rem;align-items:start;}
+@media(max-width:960px){ .solver-grid{grid-template-columns:1fr;} }
+.panel{background:var(--bg-panel);border:1px solid var(--border);border-radius:16px;padding:1.4rem;}
+.panel + .panel{margin-top:1.2rem;}
+.panel h1{font-size:1.05rem;color:var(--blue);font-weight:700;margin-bottom:.6rem;line-height:1.4;}
+.panel p{font-size:.86rem;color:var(--text-dim);margin-bottom:.7rem;}
+.panel ul{list-style:none;margin-top:.3rem;}
+.panel li{display:flex;align-items:center;gap:.5rem;font-size:.83rem;color:var(--text-dim);padding:.22rem 0;border-bottom:1px solid var(--border-soft);}
+.panel li::before{content:'›';color:var(--blue);font-weight:700;font-size:1rem;flex-shrink:0;}
 
-  .solver-title { font-size: 1.05rem; font-weight: 600; color: #93c5fd; margin-bottom: 0.15rem; }
-  .solver-sub { font-size: 0.75rem; color: #64748b; margin-bottom: 0.8rem; }
+.solver-title{font-size:1.15rem;font-weight:700;color:var(--blue);display:flex;align-items:center;gap:.5rem;margin-bottom:.15rem;}
+.solver-sub{font-size:.76rem;color:var(--text-faint);font-family:'Share Tech Mono',monospace;letter-spacing:.06em;text-transform:uppercase;margin-bottom:.9rem;}
 
-  /* Unit converter */
-  .ucPanel { background: #12161e; border-radius: 8px; padding: 10px; border: 1px solid var(--border); }
-  .ucTitle { font-size: 0.65rem; color: #93c5fd; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
-  .ucCatRow { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
-  .ucCatBtn {
-    padding: 3px 8px;
-    border: 1px solid var(--border);
-    border-radius: 5px;
-    background: transparent;
-    color: #64748b;
-    font-size: 0.65rem;
-    cursor: pointer;
-    font-family: inherit;
-  }
-  .ucCatBtn.active { border-color: var(--accent); background: rgba(59,130,246,0.15); color: #93c5fd; }
-  .ucRow { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; margin-bottom: 6px; }
-  .ucSel, .ucIn {
-    background: #0a0d12;
-    border: 1px solid var(--border);
-    color: #fff;
-    font-size: 0.8rem;
-    border-radius: 5px;
-    padding: 4px 6px;
-    outline: none;
-  }
-  .ucIn { width: 70px; }
-  .ucSel { min-width: 85px; }
-  .ucOut {
-    font-size: 0.85rem;
-    color: #93c5fd;
-    margin-top: 4px;
-    padding: 4px 6px;
-    background: rgba(59,130,246,0.1);
-    border-radius: 5px;
-    min-height: 22px;
-  }
+/* Unit converter (reused ids/classes from the original solver) */
+.ucPanel{background:var(--bg-panel-2);border-radius:10px;padding:12px;border:1px solid var(--border);}
+.ucTitle{font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--blue);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px;}
+.ucCatRow{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;}
+.ucCatBtn{padding:3px 8px;border:1px solid var(--border);border-radius:5px;background:rgba(255,255,255,.02);color:var(--text-faint);font-family:'Share Tech Mono',monospace;font-size:.55rem;cursor:pointer;transition:all .18s;letter-spacing:.04em;}
+.ucCatBtn.active{border-color:rgba(74,144,226,.55);background:var(--accent-soft);color:var(--blue);}
+.ucCatBtn:hover:not(.active){border-color:rgba(74,144,226,.3);color:rgba(144,205,244,.7);}
+.ucRow{display:flex;gap:5px;align-items:center;margin-bottom:6px;flex-wrap:wrap;}
+.ucSel{background:#0a0f17!important;border:1px solid var(--border);color:#fff;font-family:'Share Tech Mono',monospace;font-size:9.5px;border-radius:5px;outline:none;padding:4px 6px;cursor:pointer;min-width:90px;appearance:none;}
+.ucSel option{background-color:#0a0f17;color:#fff;}
+.ucIn{background:#0a0f17;border:1px solid var(--border);color:#fff;font-family:'Share Tech Mono',monospace;font-size:9.5px;border-radius:5px;outline:none;padding:4px 6px;width:75px;}
+.ucIn:focus,.ucSel:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(74,144,226,.25);}
+.ucArrow{color:var(--blue);opacity:.6;font-size:.8rem;}
+.ucOut{font-family:'Share Tech Mono',monospace;font-size:10.5px;color:var(--blue);margin-top:5px;min-height:18px;padding:4px 6px;background:var(--accent-soft);border-radius:5px;border:1px solid rgba(74,144,226,.18);}
 
-  /* Solver controls */
-  .solver-tabs { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 0.8rem; }
-  .solver-tab {
-    padding: 4px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.75rem;
-    border: 1px solid var(--border);
-    background: transparent;
-    color: #64748b;
-    font-family: inherit;
-  }
-  .solver-tab.active { border-color: var(--accent); background: rgba(59,130,246,0.15); color: #93c5fd; font-weight: 600; }
-  .solver-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 0.7rem; }
-  .solver-label { font-size: 0.75rem; color: #64748b; min-width: 55px; }
-  .solver-sel, .find-sel {
-    background: #0a0d12;
-    border: 1px solid var(--border);
-    color: #fff;
-    font-size: 0.82rem;
-    border-radius: 5px;
-    padding: 5px 8px;
-    outline: none;
-    flex: 1;
-    min-width: 140px;
-  }
-  .knowns-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 6px;
-    margin-bottom: 0.9rem;
-  }
-  .known-field { display: flex; flex-direction: column; gap: 2px; }
-  .known-lbl { font-size: 0.7rem; color: #64748b; }
-  .known-inp {
-    background: #0a0d12;
-    border: 1px solid var(--border);
-    color: #fff;
-    font-size: 0.82rem;
-    border-radius: 5px;
-    padding: 5px 7px;
-    outline: none;
-    width: 100%;
-  }
-  .known-inp.target-field { border-color: #4ade80; background: rgba(74,222,128,0.06); color: var(--green); }
-  .known-inp:disabled { opacity: 0.35; cursor: not-allowed; }
-  .solve-btn {
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: 7px;
-    padding: 0.5rem 1.2rem;
-    font-size: 0.88rem;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: inherit;
-  }
-  .solve-btn:hover { filter: brightness(1.1); }
-  .clear-btn {
-    background: transparent;
-    color: var(--muted);
-    border: 1px solid var(--border);
-    border-radius: 7px;
-    padding: 0.5rem 1rem;
-    font-size: 0.88rem;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: inherit;
-  }
-  .clear-btn:hover { background: #1a1f2a; color: #fff; }
+/* Problem solver */
+.solver-tabs{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:.9rem;}
+.solver-tab{padding:4px 11px;border-radius:6px;cursor:pointer;font-size:.76rem;font-family:'Share Tech Mono',monospace;letter-spacing:.04em;border:1px solid var(--border);background:rgba(255,255,255,.02);color:var(--text-faint);transition:all .18s;}
+.solver-tab.active{border-color:rgba(74,144,226,.55);background:var(--accent-soft);color:var(--blue);font-weight:700;}
+.solver-tab:hover:not(.active){border-color:rgba(74,144,226,.3);color:rgba(144,205,244,.75);}
+.solver-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:.75rem;}
+.solver-label{font-size:.75rem;color:rgba(144,205,244,.65);font-family:'Share Tech Mono',monospace;letter-spacing:.08em;text-transform:uppercase;min-width:64px;}
+.solver-sel{background:#0a0f17!important;border:1px solid var(--border);color:#fff;font-family:'Share Tech Mono',monospace;font-size:.8rem;border-radius:6px;outline:none;padding:5px 9px;cursor:pointer;appearance:none;flex:1;min-width:160px;}
+.solver-sel option{background:#0a0f17;color:#fff;}
+.solver-sel:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(74,144,226,.25);}
+.find-sel{background:#0a0f17!important;border:1px solid var(--border);color:#fff;font-family:'Share Tech Mono',monospace;font-size:.8rem;border-radius:6px;outline:none;padding:5px 9px;cursor:pointer;appearance:none;}
+.find-sel option{background:#0a0f17;color:#fff;}
+.knowns-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:7px;margin-bottom:1rem;}
+.known-field{display:flex;flex-direction:column;gap:2px;}
+.known-lbl{font-size:.68rem;color:rgba(144,205,244,.65);font-family:'Share Tech Mono',monospace;}
+.known-inp{background:#0a0f17;border:1px solid var(--border);color:#fff;font-family:'Share Tech Mono',monospace;font-size:.82rem;border-radius:6px;outline:none;padding:5px 8px;width:100%;}
+.known-inp:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(74,144,226,.25);}
+.known-inp.target-field{border-color:rgba(104,211,145,.45);background:rgba(104,211,145,.05);color:var(--green);}
+.known-inp:disabled{opacity:.3;cursor:not-allowed;}
 
-  .result-box {
-    background: #0a0d12;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 0.8rem 1rem;
-    margin-top: 0.9rem;
-    min-height: 140px;
-  }
-  .result-lbl { font-size: 0.65rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.35rem; }
-  .result-formula-used { font-size: 0.82rem; color: var(--gold); }
-  .result-answer { font-size: 1.1rem; color: var(--green); font-weight: 700; }
-  .result-steps { font-size: 0.8rem; color: #93c5fd; white-space: pre-line; line-height: 1.7; margin-top: 0.3rem; }
-  .result-error { font-size: 0.82rem; color: #f87171; }
-  .s-divider { border: none; border-top: 1px solid var(--border); margin: 0.9rem 0; }
+.solve-btn{background:linear-gradient(135deg,#4a90e2,#1d4ed8);color:#fff;border:none;border-radius:8px;padding:.6rem 1.4rem;font-size:.88rem;font-weight:700;cursor:pointer;font-family:'Exo 2',sans-serif;transition:all .22s;letter-spacing:.03em;}
+.solve-btn:hover{filter:brightness(1.16);transform:translateY(-2px);box-shadow:0 6px 22px rgba(74,144,226,.4);}
+.clear-btn{background:rgba(255,255,255,.06);color:var(--text-dim);border:1px solid var(--border);border-radius:8px;padding:.6rem 1.1rem;font-size:.88rem;font-weight:700;cursor:pointer;font-family:'Exo 2',sans-serif;transition:all .22s;}
+.clear-btn:hover{background:rgba(255,255,255,.12);color:#fff;}
 
-  .scale-title { font-size: 0.7rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.5rem; }
-  .scale-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
-  @media (max-width: 700px) { .scale-cards { grid-template-columns: 1fr; } }
-  .scale-card {
-    background: #12161e;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 0.7rem 0.8rem;
-    font-size: 0.78rem;
-    color: var(--muted);
-  }
-  .scale-card strong { color: #93c5fd; display: block; margin-bottom: 0.2rem; }
+.result-box{background:rgba(0,0,0,.35);border:1px solid var(--border);border-radius:10px;padding:.9rem 1rem;display:flex;flex-direction:column;gap:.4rem;height:180px;overflow:hidden;position:relative;margin-top:1rem;}
+.result-box-inner{flex:1;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column;gap:.4rem;scrollbar-width:thin;scrollbar-color:rgba(144,205,244,.25) transparent;}
+.result-box-inner::-webkit-scrollbar{width:3px;}
+.result-box-inner::-webkit-scrollbar-thumb{background:rgba(144,205,244,.25);border-radius:2px;}
+.tw-speed-row{display:flex;align-items:center;gap:6px;border-top:1px solid var(--border-soft);padding-top:6px;flex-shrink:0;}
+.tw-speed-lbl{font-family:'Share Tech Mono',monospace;font-size:.58rem;color:var(--text-faint);letter-spacing:.1em;text-transform:uppercase;white-space:nowrap;}
+.tw-speed-slider{flex:1;accent-color:var(--accent);height:3px;cursor:pointer;}
+.tw-speed-val{font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--blue);min-width:24px;text-align:right;}
+.result-answer{font-family:'Share Tech Mono',monospace;font-size:1.15rem;color:var(--green);font-weight:700;}
+.result-formula-used{font-family:'Share Tech Mono',monospace;font-size:.78rem;color:var(--gold);opacity:.9;}
+.result-steps{font-family:'Share Tech Mono',monospace;font-size:.78rem;color:rgba(144,205,244,.8);line-height:1.8;border-top:1px solid var(--border-soft);padding-top:.5rem;white-space:pre-line;min-height:20px;}
+.tw-cursor::after{content:'▌';color:var(--blue);animation:twBlink .7s step-end infinite;}
+@keyframes twBlink{0%,100%{opacity:1;}50%{opacity:0;}}
+.result-error{font-family:'Share Tech Mono',monospace;font-size:.82rem;color:#fc8181;}
+.result-lbl{font-size:.65rem;color:var(--text-faint);font-family:'Share Tech Mono',monospace;text-transform:uppercase;letter-spacing:.1em;}
+.s-divider{border:none;border-top:1px solid var(--border-soft);margin:1rem 0;}
+
+/* Scale note cards */
+.scale-title{font-family:'Share Tech Mono',monospace;font-size:.62rem;letter-spacing:.13em;text-transform:uppercase;color:var(--text-faint);padding-bottom:.5rem;}
+.scale-cards{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;}
+@media(max-width:700px){ .scale-cards{grid-template-columns:1fr;} }
+.scale-card{background:var(--bg-panel-2);border:1px solid var(--border-soft);border-radius:10px;padding:.8rem .9rem;display:flex;gap:.6rem;align-items:flex-start;transition:border-color .2s,background .2s;}
+.scale-card:hover{border-color:rgba(74,144,226,.28);background:rgba(74,144,226,.04);}
+.sc-icon{font-size:1.2rem;flex-shrink:0;margin-top:1px;}
+.sc-body{display:flex;flex-direction:column;gap:.28rem;}
+.sc-head{font-size:.8rem;font-weight:700;color:var(--blue);line-height:1.4;}
+.sc-text{font-size:.77rem;color:var(--text-dim);line-height:1.6;}
+.sc-text code{font-family:'Share Tech Mono',monospace;color:var(--gold);font-size:.74rem;}
+.sc-text em{font-style:normal;color:var(--green);}
+
+@media(max-width:900px){
+  .sidebar{position:fixed;left:0;top:0;bottom:0;z-index:50;transform:translateX(-100%);transition:transform .25s;}
+  .sidebar.open{transform:translateX(0);}
+  .content{padding:1.4rem 1.2rem 2.4rem;}
+}
 </style>
 </head>
 <body>
 
 <div class="app">
-  <!-- Sidebar -->
+  <!-- ============================================================
+       SIDEBAR
+  ============================================================ -->
   <aside class="sidebar">
-    <div class="brand">
-      <span>⚛</span>
+    <div class="brand"><span class="logo">⚛</span>
       <span><span class="lang-en">Motion Sim</span><span class="lang-bn hidden">মোশন সিম</span></span>
     </div>
 
     <nav class="side-nav">
       <a class="side-item" href="https://stounchvicinity65.github.io/portal/">
-        <span>🏠</span>
+        <span class="ico">🏠</span>
         <span class="lang-en">Back to Portal</span><span class="lang-bn hidden">পোর্টালে ফিরুন</span>
       </a>
 
       <hr class="side-divider">
 
       <button class="side-item" onclick="toggleLang()">
-        <span>🌐</span>
+        <span class="ico">🌐</span>
         <span class="lang-en">বাংলা</span><span class="lang-bn hidden">English</span>
       </button>
       <button class="side-item" id="navSolver" data-view="solver" onclick="showView('solver')">
-        <span>🧮</span>
+        <span class="ico">🧮</span>
         <span class="lang-en">Problem Solver</span><span class="lang-bn hidden">সমস্যা সমাধানকারী</span>
       </button>
 
       <hr class="side-divider">
 
       <a class="side-item" href="review.html">
-        <span>⭐</span>
+        <span class="ico">⭐</span>
         <span class="lang-en">Review</span><span class="lang-bn hidden">পর্যালোচনা</span>
       </a>
       <a class="side-item" href="aboutus.html">
-        <span>ℹ️</span>
+        <span class="ico">ℹ️</span>
         <span class="lang-en">About Us</span><span class="lang-bn hidden">আমাদের সম্পর্কে</span>
       </a>
     </nav>
 
     <div class="side-qr">
-      <div class="side-qr-label">
-        <span class="lang-en">Scan to open on phone</span>
-        <span class="lang-bn hidden">ফোনে খুলতে স্ক্যান করুন</span>
-      </div>
+      <div class="side-qr-label"><span class="lang-en">Scan to open on your phone</span><span class="lang-bn hidden">ফোনে খুলতে স্ক্যান করুন</span></div>
       <div id="qrPlaceholder"></div>
     </div>
   </aside>
 
-  <!-- Main -->
+  <!-- ============================================================
+       MAIN COLUMN
+  ============================================================ -->
   <div class="main-col">
     <header class="topbar">
-      ⚛
-      <span class="lang-en">Interactive Motion Simulations</span>
-      <span class="lang-bn hidden">ইন্টারেক্টিভ মোশন সিমুলেশন</span>
+      <span class="topbar-title">⚛
+        <span class="lang-en" id="topTitleHome">Interactive Motion Simulations</span>
+        <span class="lang-bn hidden">ইন্টারেক্টিভ মোশন সিমুলেশন</span>
+      </span>
     </header>
 
     <main class="content">
 
-      <!-- HOME -->
+      <!-- ================= HOME VIEW ================= -->
       <section id="view-home" class="view active">
         <div class="hero">
-          <h1>
-            <span class="lang-en">Explore Motion</span>
-            <span class="lang-bn hidden">গতি অন্বেষণ করুন</span>
-          </h1>
+          <span class="hero-dot" style="top:16%;left:10%;background:var(--blue);"></span>
+          <span class="hero-dot" style="top:70%;left:6%;background:var(--pink);"></span>
+          <span class="hero-dot" style="top:24%;right:8%;background:var(--gold);"></span>
+          <span class="hero-dot" style="top:66%;right:14%;background:var(--green);"></span>
+          <span class="hero-dot" style="top:44%;left:22%;background:var(--pink);width:3px;height:3px;"></span>
+          <span class="hero-dot" style="top:82%;right:30%;background:var(--blue);width:3px;height:3px;"></span>
+
+          <span class="pill"><span class="lang-en">Free · No installation</span><span class="lang-bn hidden">বিনামূল্যে · ইনস্টলেশন ছাড়াই</span></span>
+          <h1><span class="lang-en">Explore Motion, Interactively</span><span class="lang-bn hidden">গতি অন্বেষণ করুন, ইন্টারঅ্যাক্টিভভাবে</span></h1>
           <p>
-            <span class="lang-en">Change variables and watch classical mechanics in real time.</span>
-            <span class="lang-bn hidden">চলরাশি পরিবর্তন করুন এবং বাস্তব সময়ে ধ্রুপদী বলবিদ্যা দেখুন।</span>
+            <span class="lang-en">Manipulate real variables — angle, mass, gravity, spring constant — and watch classical mechanics play out in real time, right in your browser.</span>
+            <span class="lang-bn hidden">প্রকৃত চলরাশি পরিবর্তন করুন — কোণ, ভর, অভিকর্ষ, স্প্রিং ধ্রুবক — এবং ব্রাউজারেই বাস্তব সময়ে ধ্রুপদী বলবিদ্যা প্রত্যক্ষ করুন।</span>
           </p>
           <div class="hero-btns">
-            <a href="#grid" class="btn btn-primary">
-              <span class="lang-en">Choose a simulation</span>
-              <span class="lang-bn hidden">সিমুলেশন বেছে নিন</span>
-            </a>
-            <button class="btn btn-outline" onclick="showView('solver')">
-              <span class="lang-en">🧮 Problem Solver</span>
-              <span class="lang-bn hidden">🧮 সমস্যা সমাধানকারী</span>
+            <a href="#grid" class="btn-solid"><span class="lang-en">Choose a simulation</span><span class="lang-bn hidden">একটি সিমুলেশন বেছে নিন</span></a>
+            <button class="btn-outline" onclick="showView('solver')">
+              <span class="lang-en">🧮 Problem Solver</span><span class="lang-bn hidden">🧮 সমস্যা সমাধানকারী</span>
             </button>
           </div>
         </div>
 
-        <h2 class="section-title" id="grid">
-          <span class="lang-en">All Simulations</span>
-          <span class="lang-bn hidden">সমস্ত সিমুলেশন</span>
-        </h2>
+        <h2 class="section-title" id="grid"><span class="lang-en">All Simulations</span><span class="lang-bn hidden">সমস্ত সিমুলেশন</span></h2>
 
         <div class="sim-grid">
+
           <div class="sim-card">
             <div class="sim-top">
               <div class="sim-icon">🎯</div>
-              <div>
-                <div class="sim-title"><span class="lang-en">Projectile Motion</span><span class="lang-bn hidden">প্রাসের গতি</span></div>
-                <div class="sim-meta"><span class="lang-en">Angle · Speed · Gravity</span><span class="lang-bn hidden">কোণ · বেগ · অভিকর্ষ</span></div>
-              </div>
+              <div><div class="sim-title"><span class="lang-en">Projectile Motion</span><span class="lang-bn hidden">প্রাসের গতি</span></div>
+              <div class="sim-meta"><span class="lang-en">Angle · Speed · Gravity</span><span class="lang-bn hidden">কোণ · বেগ · অভিকর্ষ</span></div></div>
             </div>
-            <div class="sim-desc"><span class="lang-en">Launch angle and speed shape the arc.</span><span class="lang-bn hidden">নিক্ষেপণ কোণ ও বেগ গতিপথ নির্ধারণ করে।</span></div>
-            <a href="projectile.html" class="sim-btn"><span class="lang-en">Open →</span><span class="lang-bn hidden">খুলুন →</span></a>
+            <div class="sim-desc"><span class="lang-en">Launch angle and speed shape the arc a body traces through the air.</span><span class="lang-bn hidden">নিক্ষেপণ কোণ ও বেগ বাতাসে বস্তুর গতিপথ নির্ধারণ করে।</span></div>
+            <div class="sim-actions"><a href="projectile.html" class="sim-btn"><span class="lang-en">Open Simulation →</span><span class="lang-bn hidden">সিমুলেশন খুলুন →</span></a></div>
           </div>
 
           <div class="sim-card">
             <div class="sim-top">
               <div class="sim-icon">🌊</div>
-              <div>
-                <div class="sim-title"><span class="lang-en">Oscillatory Motion</span><span class="lang-bn hidden">দোলন গতি</span></div>
-                <div class="sim-meta"><span class="lang-en">Period · Frequency</span><span class="lang-bn hidden">পর্যায়কাল · কম্পাঙ্ক</span></div>
-              </div>
+              <div><div class="sim-title"><span class="lang-en">Oscillatory Motion</span><span class="lang-bn hidden">দোলন গতি</span></div>
+              <div class="sim-meta"><span class="lang-en">Period · Frequency</span><span class="lang-bn hidden">পর্যায়কাল · কম্পাঙ্ক</span></div></div>
             </div>
-            <div class="sim-desc"><span class="lang-en">Periodic motion around equilibrium.</span><span class="lang-bn hidden">ভারসাম্য বিন্দুর চারপাশে পর্যায়ক্রমিক গতি।</span></div>
-            <a href="oscillatory.html" class="sim-btn"><span class="lang-en">Open →</span><span class="lang-bn hidden">খুলুন →</span></a>
+            <div class="sim-desc"><span class="lang-en">Periodic motion that repeats back and forth around equilibrium.</span><span class="lang-bn hidden">ভারসাম্য বিন্দুর চারপাশে পর্যায়ক্রমিক গতি।</span></div>
+            <div class="sim-actions"><a href="oscillatory.html" class="sim-btn"><span class="lang-en">Open Simulation →</span><span class="lang-bn hidden">সিমুলেশন খুলুন →</span></a></div>
           </div>
 
           <div class="sim-card">
             <div class="sim-top">
               <div class="sim-icon">🌀</div>
-              <div>
-                <div class="sim-title"><span class="lang-en">Simple Harmonic Motion</span><span class="lang-bn hidden">সরল স্পন্দন গতি</span></div>
-                <div class="sim-meta"><span class="lang-en">Spring · Pendulum</span><span class="lang-bn hidden">স্প্রিং · দোলক</span></div>
-              </div>
+              <div><div class="sim-title"><span class="lang-en">Simple Harmonic Motion</span><span class="lang-bn hidden">সরল স্পন্দন গতি</span></div>
+              <div class="sim-meta"><span class="lang-en">Spring · Pendulum</span><span class="lang-bn hidden">স্প্রিং · দোলক</span></div></div>
             </div>
-            <div class="sim-desc"><span class="lang-en">Restoring force proportional to displacement.</span><span class="lang-bn hidden">সরণের সমানুপাতিক পুনরুদ্ধারকারী বল।</span></div>
-            <a href="sharmonic.html" class="sim-btn"><span class="lang-en">Open →</span><span class="lang-bn hidden">খুলুন →</span></a>
+            <div class="sim-desc"><span class="lang-en">Restoring force proportional to displacement — springs and pendulums.</span><span class="lang-bn hidden">সরণের সমানুপাতিক পুনরুদ্ধারকারী বল — স্প্রিং ও দোলক।</span></div>
+            <div class="sim-actions"><a href="sharmonic.html" class="sim-btn"><span class="lang-en">Open Simulation →</span><span class="lang-bn hidden">সিমুলেশন খুলুন →</span></a></div>
           </div>
 
           <div class="sim-card">
             <div class="sim-top">
               <div class="sim-icon">🔄</div>
-              <div>
-                <div class="sim-title"><span class="lang-en">Circular Motion</span><span class="lang-bn hidden">বৃত্তাকার গতি</span></div>
-                <div class="sim-meta"><span class="lang-en">Radius · Centripetal</span><span class="lang-bn hidden">ব্যাসার্ধ · কেন্দ্রমুখী</span></div>
-              </div>
+              <div><div class="sim-title"><span class="lang-en">Circular Motion</span><span class="lang-bn hidden">বৃত্তাকার গতি</span></div>
+              <div class="sim-meta"><span class="lang-en">Radius · Centripetal</span><span class="lang-bn hidden">ব্যাসার্ধ · কেন্দ্রমুখী</span></div></div>
             </div>
-            <div class="sim-desc"><span class="lang-en">Constant speed, changing direction.</span><span class="lang-bn hidden">স্থির দ্রুতি, পরিবর্তনশীল দিক।</span></div>
-            <a href="circular.html" class="sim-btn"><span class="lang-en">Open →</span><span class="lang-bn hidden">খুলুন →</span></a>
+            <div class="sim-desc"><span class="lang-en">Constant speed, ever-changing direction — always accelerating inward.</span><span class="lang-bn hidden">স্থির দ্রুতি, ক্রমাগত পরিবর্তনশীল দিক — সর্বদা কেন্দ্রের দিকে ত্বরণ।</span></div>
+            <div class="sim-actions"><a href="circular.html" class="sim-btn"><span class="lang-en">Open Simulation →</span><span class="lang-bn hidden">সিমুলেশন খুলুন →</span></a></div>
           </div>
 
           <div class="sim-card">
             <div class="sim-top">
               <div class="sim-icon">🎲</div>
-              <div>
-                <div class="sim-title"><span class="lang-en">Random Motion</span><span class="lang-bn hidden">এলোমেলো গতি</span></div>
-                <div class="sim-meta"><span class="lang-en">Brownian · Stochastic</span><span class="lang-bn hidden">ব্রাউনীয় · সম্ভাবনাভিত্তিক</span></div>
-              </div>
+              <div><div class="sim-title"><span class="lang-en">Random Motion</span><span class="lang-bn hidden">এলোমেলো গতি</span></div>
+              <div class="sim-meta"><span class="lang-en">Brownian · Stochastic</span><span class="lang-bn hidden">ব্রাউনীয় · সম্ভাবনাভিত্তিক</span></div></div>
             </div>
-            <div class="sim-desc"><span class="lang-en">Irregular motion from tiny collisions.</span><span class="lang-bn hidden">ক্ষুদ্র সংঘর্ষে চালিত অনিয়মিত গতি।</span></div>
-            <a href="random.html" class="sim-btn"><span class="lang-en">Open →</span><span class="lang-bn hidden">খুলুন →</span></a>
+            <div class="sim-desc"><span class="lang-en">Unpredictable, irregular motion driven by countless tiny collisions.</span><span class="lang-bn hidden">অসংখ্য ক্ষুদ্র সংঘর্ষে চালিত অনিয়মিত, অনিশ্চিত গতি।</span></div>
+            <div class="sim-actions"><a href="random.html" class="sim-btn"><span class="lang-en">Open Simulation →</span><span class="lang-bn hidden">সিমুলেশন খুলুন →</span></a></div>
           </div>
 
           <div class="sim-card">
             <div class="sim-top">
               <div class="sim-icon">➡️</div>
-              <div>
-                <div class="sim-title"><span class="lang-en">Linear Motion</span><span class="lang-bn hidden">সরলরৈখিক গতি</span></div>
-                <div class="sim-meta"><span class="lang-en">Uniform · Non-uniform</span><span class="lang-bn hidden">সুষম · অসুষম</span></div>
-              </div>
+              <div><div class="sim-title"><span class="lang-en">Linear Motion</span><span class="lang-bn hidden">সরলরৈখিক গতি</span></div>
+              <div class="sim-meta"><span class="lang-en">Uniform · Non-uniform</span><span class="lang-bn hidden">সুষম · অসুষম</span></div></div>
             </div>
-            <div class="sim-desc"><span class="lang-en">Straight-line motion.</span><span class="lang-bn hidden">সরল রেখায় গতি।</span></div>
-            <a href="linear.html" class="sim-btn"><span class="lang-en">Open →</span><span class="lang-bn hidden">খুলুন →</span></a>
+            <div class="sim-desc"><span class="lang-en">Straight-line motion at constant or steadily changing velocity.</span><span class="lang-bn hidden">সরল রেখায় সমবেগ বা ক্রমাগত পরিবর্তিত বেগে গতি।</span></div>
+            <div class="sim-actions"><a href="linear.html" class="sim-btn"><span class="lang-en">Open Simulation →</span><span class="lang-bn hidden">সিমুলেশন খুলুন →</span></a></div>
           </div>
 
           <div class="sim-card">
             <div class="sim-top">
               <div class="sim-icon">🚗</div>
-              <div>
-                <div class="sim-title"><span class="lang-en">Translational Motion</span><span class="lang-bn hidden">চলন গতি</span></div>
-                <div class="sim-meta"><span class="lang-en">Rigid body</span><span class="lang-bn hidden">দৃঢ় বস্তু</span></div>
-              </div>
+              <div><div class="sim-title"><span class="lang-en">Translational Motion</span><span class="lang-bn hidden">চলন গতি</span></div>
+              <div class="sim-meta"><span class="lang-en">Rigid body</span><span class="lang-bn hidden">দৃঢ় বস্তু</span></div></div>
             </div>
-            <div class="sim-desc"><span class="lang-en">Motion without rotation.</span><span class="lang-bn hidden">ঘূর্ণন ছাড়া গতি।</span></div>
-            <a href="translational.html" class="sim-btn"><span class="lang-en">Open →</span><span class="lang-bn hidden">খুলুন →</span></a>
+            <div class="sim-desc"><span class="lang-en">A body moving from one point to another without rotating.</span><span class="lang-bn hidden">ঘূর্ণন ছাড়াই এক বিন্দু থেকে অন্য বিন্দুতে বস্তুর গতি।</span></div>
+            <div class="sim-actions"><a href="translational.html" class="sim-btn"><span class="lang-en">Open Simulation →</span><span class="lang-bn hidden">সিমুলেশন খুলুন →</span></a></div>
           </div>
 
           <div class="sim-card">
             <div class="sim-top">
               <div class="sim-icon">🚀</div>
-              <div>
-                <div class="sim-title"><span class="lang-en">Accelerated Motion</span><span class="lang-bn hidden">ত্বরিত গতি</span></div>
-                <div class="sim-meta">a &gt; 0</div>
-              </div>
+              <div><div class="sim-title"><span class="lang-en">Accelerated Motion</span><span class="lang-bn hidden">ত্বরিত গতি</span></div>
+              <div class="sim-meta"><span class="lang-en">a &gt; 0</span></div></div>
             </div>
-            <div class="sim-desc"><span class="lang-en">Speed increasing over time.</span><span class="lang-bn hidden">সময়ের সাথে বেগ বৃদ্ধি।</span></div>
-            <a href="accelerated.html" class="sim-btn"><span class="lang-en">Open →</span><span class="lang-bn hidden">খুলুন →</span></a>
+            <div class="sim-desc"><span class="lang-en">Speed increasing over time under a constant net force.</span><span class="lang-bn hidden">ধ্রুব নেট বলের অধীনে সময়ের সাথে বেগ বৃদ্ধি পায়।</span></div>
+            <div class="sim-actions"><a href="accelerated.html" class="sim-btn"><span class="lang-en">Open Simulation →</span><span class="lang-bn hidden">সিমুলেশন খুলুন →</span></a></div>
           </div>
 
           <div class="sim-card">
             <div class="sim-top">
               <div class="sim-icon">🛑</div>
-              <div>
-                <div class="sim-title"><span class="lang-en">Decelerated Motion</span><span class="lang-bn hidden">মন্দিত গতি</span></div>
-                <div class="sim-meta">a &lt; 0</div>
-              </div>
+              <div><div class="sim-title"><span class="lang-en">Decelerated Motion</span><span class="lang-bn hidden">মন্দিত গতি</span></div>
+              <div class="sim-meta"><span class="lang-en">a &lt; 0</span></div></div>
             </div>
-            <div class="sim-desc"><span class="lang-en">Speed decreasing over time.</span><span class="lang-bn hidden">সময়ের সাথে বেগ হ্রাস।</span></div>
-            <a href="decelerated.html" class="sim-btn"><span class="lang-en">Open →</span><span class="lang-bn hidden">খুলুন →</span></a>
+            <div class="sim-desc"><span class="lang-en">Speed decreasing over time as a body slows toward rest.</span><span class="lang-bn hidden">বস্তু থামার দিকে অগ্রসর হওয়ায় সময়ের সাথে বেগ হ্রাস পায়।</span></div>
+            <div class="sim-actions"><a href="decelerated.html" class="sim-btn"><span class="lang-en">Open Simulation →</span><span class="lang-bn hidden">সিমুলেশন খুলুন →</span></a></div>
           </div>
+
         </div>
       </section>
 
-      <!-- SOLVER -->
+      <!-- ================= SOLVER VIEW ================= -->
       <section id="view-solver" class="view">
         <button class="back-link" onclick="showView('home')">
-          <span class="lang-en">← Back to Simulations</span>
-          <span class="lang-bn hidden">← সিমুলেশনে ফিরুন</span>
+          <span class="lang-en">← Back to Simulations</span><span class="lang-bn hidden">← সিমুলেশনে ফিরুন</span>
         </button>
 
         <div class="solver-grid">
-          <!-- Left column -->
+          <!-- LEFT: intro + unit converter -->
           <div>
             <div class="panel">
-              <h1>
-                <span class="lang-en">Welcome</span>
-                <span class="lang-bn hidden">স্বাগতম</span>
-              </h1>
-              <p>
-                <span class="lang-en">Use the solver to work physics problems, or convert units below.</span>
-                <span class="lang-bn hidden">সমাধানকারী দিয়ে সমস্যা সমাধান করুন, বা একক রূপান্তর করুন।</span>
-              </p>
+              <h1><span class="lang-en">Welcome to Interactive Motion Simulations</span><span class="lang-bn hidden">ইন্টারেক্টিভ মোশন সিমুলেশনে স্বাগতম</span></h1>
+              <p><span class="lang-en">Use the solver on the right to work physics problems, or convert between units below.</span><span class="lang-bn hidden">ডানদিকের সমাধানকারী দিয়ে সমস্যা সমাধান করুন, বা নিচে একক রূপান্তর করুন।</span></p>
               <ul>
-                <li><span class="lang-en">9 interactive simulations</span><span class="lang-bn hidden">৯টি ইন্টারেক্টিভ সিমুলেশন</span></li>
-                <li><span class="lang-en">20+ solvable formulas</span><span class="lang-bn hidden">২০+ সমাধানযোগ্য সূত্র</span></li>
+                <li><span class="lang-en">9 interactive motion simulations</span><span class="lang-bn hidden">৯টি ইন্টারেক্টিভ গতি সিমুলেশন</span></li>
+                <li><span class="lang-en">20+ solvable physics formulas</span><span class="lang-bn hidden">২০+ সমাধানযোগ্য সূত্র</span></li>
                 <li><span class="lang-en">18-category unit converter</span><span class="lang-bn hidden">১৮ শ্রেণির একক রূপান্তরকারী</span></li>
               </ul>
             </div>
 
             <div class="panel">
-              <div class="solver-title">🔁 <span class="lang-en">Unit Converter</span><span class="lang-bn hidden">একক রূপান্তরকারী</span></div>
-              <div style="height:0.5rem"></div>
+              <div class="solver-title" style="font-size:1rem;"><span>🔁</span><span class="lang-en">Unit Converter</span><span class="lang-bn hidden">একক রূপান্তরকারী</span></div>
+              <div style="height:.6rem;"></div>
               <div class="ucPanel">
-                <div class="ucTitle"><span class="lang-en">Category</span><span class="lang-bn hidden">বিভাগ</span></div>
+                <div class="ucTitle lang-en">Category</div>
+                <div class="ucTitle lang-bn hidden">বিভাগ</div>
                 <div class="ucCatRow" id="ucCats"></div>
                 <div class="ucRow">
-                  <input class="ucIn" id="ucVal" type="number" value="1" oninput="doUC()" />
-                  <span style="color:#64748b">→</span>
+                  <input class="ucIn" id="ucVal" type="number" value="1" placeholder="value" oninput="doUC()"/>
+                  <span class="ucArrow">→</span>
                   <select class="ucSel" id="ucFrom" onchange="doUC()"></select>
-                  <span style="color:#64748b">→</span>
+                  <span class="ucArrow">→</span>
                   <select class="ucSel" id="ucTo" onchange="doUC()"></select>
                 </div>
                 <div class="ucOut" id="ucOut">—</div>
@@ -594,74 +393,102 @@
             </div>
           </div>
 
-          <!-- Right column: solver -->
+          <!-- RIGHT: physics problem solver -->
           <div class="panel">
-            <div class="solver-title">🧮 <span class="lang-en">Physics Problem Solver</span><span class="lang-bn hidden">পদার্থবিজ্ঞান সমস্যা সমাধানকারী</span></div>
-            <div class="solver-sub">
-              <span class="lang-en">Enter known values → select what to find → solve</span>
-              <span class="lang-bn hidden">পরিচিত মান দিন → কী খুঁজতে হবে বেছে নিন → সমাধান করুন</span>
-            </div>
+            <div class="solver-title"><span>🧮</span><span class="lang-en">Physics Problem Solver</span><span class="lang-bn hidden">পদার্থবিজ্ঞান সমস্যা সমাধানকারী</span></div>
+            <div class="solver-sub lang-en">Enter known values → select what to find → solve</div>
+            <div class="solver-sub lang-bn hidden">পরিচিত মান দিন → কী খুঁজতে হবে বেছে নিন → সমাধান করুন</div>
 
             <div class="solver-tabs" id="solverTabs"></div>
-            <hr class="s-divider" />
+            <hr class="s-divider"/>
 
             <div class="solver-row">
-              <span class="solver-label"><span class="lang-en">Formula</span><span class="lang-bn hidden">সূত্র</span></span>
+              <span class="solver-label lang-en">Formula</span>
+              <span class="solver-label lang-bn hidden">সূত্র</span>
               <select class="solver-sel" id="formulaSel" onchange="onFormulaChange()"></select>
             </div>
 
             <div class="solver-row">
-              <span class="solver-label"><span class="lang-en">Find</span><span class="lang-bn hidden">খুঁজুন</span></span>
+              <span class="solver-label lang-en">Find</span>
+              <span class="solver-label lang-bn hidden">খুঁজুন</span>
               <select class="find-sel" id="findSel" onchange="onFindChange()"></select>
             </div>
 
             <div class="knowns-grid" id="knownsGrid"></div>
 
-            <div class="solver-row" style="margin-bottom:0">
-              <button class="solve-btn" onclick="solve()">
-                <span class="lang-en">⚡ Solve</span><span class="lang-bn hidden">⚡ সমাধান</span>
-              </button>
-              <button class="clear-btn" onclick="clearSolver()">
-                <span class="lang-en">✕ Clear</span><span class="lang-bn hidden">✕ মুছুন</span>
-              </button>
+            <div class="solver-row" style="margin-bottom:0;">
+              <button class="solve-btn" onclick="solve()"><span class="lang-en">⚡ Solve</span><span class="lang-bn hidden">⚡ সমাধান</span></button>
+              <button class="clear-btn" onclick="clearSolver()"><span class="lang-en">✕ Clear</span><span class="lang-bn hidden">✕ মুছুন</span></button>
             </div>
 
             <div class="result-box" id="resultBox">
-              <div class="result-lbl"><span class="lang-en">Formula used</span><span class="lang-bn hidden">ব্যবহৃত সূত্র</span></div>
-              <div class="result-formula-used" id="resFormula" style="opacity:0.4">select a formula and press Solve</div>
-              <div class="result-lbl"><span class="lang-en">Answer</span><span class="lang-bn hidden">উত্তর</span></div>
-              <div class="result-answer" id="resAnswer" style="opacity:0.3">—</div>
-              <div class="result-lbl"><span class="lang-en">Working</span><span class="lang-bn hidden">কার্যপ্রক্রিয়া</span></div>
-              <div class="result-steps" id="resSteps" style="opacity:0.25">steps will appear here...</div>
-              <div class="result-error hidden" id="resError"></div>
+              <div class="result-box-inner" id="resultInner">
+                <div class="result-lbl lang-en">Formula used</div>
+                <div class="result-lbl lang-bn hidden">ব্যবহৃত সূত্র</div>
+                <div class="result-formula-used" id="resFormula" style="opacity:0.3;font-style:italic">select a formula above and press ⚡ Solve</div>
+                <div class="result-lbl lang-en" style="margin-top:2px">Answer</div>
+                <div class="result-lbl lang-bn hidden" style="margin-top:2px">উত্তর</div>
+                <div class="result-answer" id="resAnswer" style="opacity:0.22">—</div>
+                <div class="result-lbl lang-en" style="margin-top:2px">Working</div>
+                <div class="result-lbl lang-bn hidden" style="margin-top:2px">কার্যপ্রক্রিয়া</div>
+                <div class="result-steps" id="resSteps" style="opacity:0.18">steps will appear here...</div>
+                <div class="result-error hidden" id="resError"></div>
+              </div>
+              <div class="tw-speed-row">
+                <span class="tw-speed-lbl lang-en">type speed</span>
+                <span class="tw-speed-lbl lang-bn hidden">টাইপ গতি</span>
+                <input type="range" class="tw-speed-slider" id="twSpeed" min="1" max="5" value="3" step="1" oninput="updateTwSpeed()"/>
+                <span class="tw-speed-val" id="twSpeedVal">3</span>
+              </div>
             </div>
 
-            <hr class="s-divider" />
+            <hr class="s-divider"/>
 
-            <div class="scale-title">
-              <span class="lang-en">Why units can look different across simulations</span>
-              <span class="lang-bn hidden">একই একক বিভিন্ন সিমুলেশনে ভিন্ন দেখায় কেন</span>
-            </div>
-            <div class="scale-cards">
-              <div class="scale-card">
-                <strong><span class="lang-en">Scale is for visibility</span><span class="lang-bn hidden">স্কেল দৃশ্যমানতার জন্য</span></strong>
-                <span class="lang-en">Each sim picks a pixel scale so motion fills the canvas. Physics ratios stay correct.</span>
-                <span class="lang-bn hidden">প্রতিটি সিম ক্যানভাস পূরণের জন্য স্কেল বেছে নেয়। পদার্থবিজ্ঞান সঠিক থাকে।</span>
-              </div>
-              <div class="scale-card">
-                <strong><span class="lang-en">Time is real seconds</span><span class="lang-bn hidden">সময় প্রকৃত সেকেন্ড</span></strong>
-                <span class="lang-en">Animations use real elapsed time, so a 2 s swing takes 2 real seconds on any screen.</span>
-                <span class="lang-bn hidden">অ্যানিমেশন প্রকৃত সময় ব্যবহার করে, তাই ২ সেকেন্ডের দোলন যেকোনো স্ক্রিনে ২ সেকেন্ড নেয়।</span>
-              </div>
-              <div class="scale-card">
-                <strong><span class="lang-en">Trust the HUD numbers</span><span class="lang-bn hidden">HUD সংখ্যায় বিশ্বাস করুন</span></strong>
-                <span class="lang-en">On-screen values are always in SI units. The canvas is only a visual aid.</span>
-                <span class="lang-bn hidden">অন-স্ক্রিন মান সবসময় SI এককে। ক্যানভাস শুধু দৃশ্যমান সহায়তা।</span>
-              </div>
-              <div class="scale-card">
-                <strong><span class="lang-en">Physics stays correct</span><span class="lang-bn hidden">পদার্থবিজ্ঞান সঠিক থাকে</span></strong>
-                <span class="lang-en">Doubling pendulum length still changes the period correctly, regardless of pixel scale.</span>
-                <span class="lang-bn hidden">দোলকের দৈর্ঘ্য দ্বিগুণ করলে পর্যায়কাল সঠিকভাবে পরিবর্তিত হয়।</span>
+            <div id="scaleNote">
+              <div class="scale-title lang-en">📐 Why the same unit can look different across simulations</div>
+              <div class="scale-title lang-bn hidden">📐 একই একক বিভিন্ন সিমুলেশনে ভিন্ন দেখায় কেন</div>
+              <div class="scale-cards" id="scaleCards">
+
+                <div class="scale-card">
+                  <div class="sc-icon">🔭</div>
+                  <div class="sc-body">
+                    <div class="sc-head lang-en">Scale is chosen for visibility, not realism</div>
+                    <div class="sc-head lang-bn hidden">স্কেল বাস্তবতার জন্য নয়, দৃশ্যমানতার জন্য</div>
+                    <div class="sc-text lang-en">Each simulation picks a pixel-per-unit ratio that makes the motion fill the canvas nicely. A 1 m pendulum and a 200 m projectile range both need to fit the same screen — so their scales are completely different numbers.</div>
+                    <div class="sc-text lang-bn hidden">প্রতিটি সিমুলেশন এমন একটি পিক্সেল-প্রতি-একক অনুপাত বেছে নেয় যা গতিকে ক্যানভাসে সুন্দরভাবে পূরণ করে। ১ m দোলক ও ২০০ m পাল্লার প্রক্ষেপণ উভয়ই একই স্ক্রিনে ফিট করতে হয় — তাই তাদের স্কেল সম্পূর্ণ ভিন্ন।</div>
+                  </div>
+                </div>
+
+                <div class="scale-card">
+                  <div class="sc-icon">⚖️</div>
+                  <div class="sc-body">
+                    <div class="sc-head lang-en">Physics stays correct regardless of scale</div>
+                    <div class="sc-head lang-bn hidden">স্কেল নির্বিশেষে পদার্থবিজ্ঞান সঠিক থাকে</div>
+                    <div class="sc-text lang-en">Ratios and relationships — like how doubling the length of a pendulum changes its period — are exactly preserved. The formulas are applied correctly; only the visual magnification differs.</div>
+                    <div class="sc-text lang-bn hidden">অনুপাত ও সম্পর্কগুলো — যেমন দোলকের দৈর্ঘ্য দ্বিগুণ করলে পর্যায়কাল কীভাবে পরিবর্তিত হয় — সঠিকভাবে সংরক্ষিত থাকে। শুধু দৃশ্যমান বিবর্ধন আলাদা।</div>
+                  </div>
+                </div>
+
+                <div class="scale-card">
+                  <div class="sc-icon">🕐</div>
+                  <div class="sc-body">
+                    <div class="sc-head lang-en">Time is real seconds — not frames</div>
+                    <div class="sc-head lang-bn hidden">সময় প্রকৃত সেকেন্ড — ফ্রেম নয়</div>
+                    <div class="sc-text lang-en">All simulations use <code>deltaTime</code> (actual elapsed milliseconds per frame) so the animation runs at the same physical speed on any monitor — 60 Hz or 144 Hz. A 2-second pendulum swing takes 2 real seconds.</div>
+                    <div class="sc-text lang-bn hidden">সকল সিমুলেশন <code>deltaTime</code> ব্যবহার করে তাই যেকোনো মনিটরে — ৬০ Hz বা ১৪৪ Hz — একই ভৌত গতিতে চলে। একটি ২-সেকেন্ডের দোলন ২টি প্রকৃত সেকেন্ড নেয়।</div>
+                  </div>
+                </div>
+
+                <div class="scale-card">
+                  <div class="sc-icon">📊</div>
+                  <div class="sc-body">
+                    <div class="sc-head lang-en">Read the HUD, not the canvas size</div>
+                    <div class="sc-head lang-bn hidden">ক্যানভাস আকার নয়, HUD পড়ুন</div>
+                    <div class="sc-text lang-en">The on-screen numbers — velocity, displacement, period, force — are always in SI units. The canvas is just a visual aid. If the HUD says <em>v = 12.5 m/s</em>, that is the real physical value regardless of how large or small the ball appears.</div>
+                    <div class="sc-text lang-bn hidden">অন-স্ক্রিন সংখ্যাগুলো — বেগ, সরণ, পর্যায়কাল, বল — সর্বদা SI এককে। ক্যানভাস শুধু একটি দৃশ্যমান সহায়তা। যদি HUD বলে <em>v = 12.5 m/s</em>, এটি প্রকৃত ভৌত মান।</div>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
@@ -674,99 +501,109 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
-// View switching
-function showView(name) {
-  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-  document.getElementById('view-' + name).classList.add('active');
-  document.querySelectorAll('[data-view]').forEach(b => b.classList.toggle('active', b.dataset.view === name));
-  document.querySelector('.content').scrollTo({ top: 0, behavior: 'smooth' });
+// ============================================================
+//  VIEW SWITCHING
+// ============================================================
+function showView(name){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+  document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active', b.dataset.view===name));
+  document.querySelector('.content').scrollTo({top:0,behavior:'smooth'});
 }
 
-// Language
-let currentLang = 'en';
-function toggleLang() {
-  if (currentLang === 'en') {
-    document.querySelectorAll('.lang-en').forEach(el => el.classList.add('hidden'));
-    document.querySelectorAll('.lang-bn').forEach(el => el.classList.remove('hidden'));
-    document.body.classList.add('bangla');
-    currentLang = 'bn';
+// ============================================================
+//  LANGUAGE
+// ============================================================
+let currentLang = "en";
+function toggleLang(){
+  if(currentLang==="en"){
+    document.querySelectorAll(".lang-en").forEach(el=>el.classList.add("hidden"));
+    document.querySelectorAll(".lang-bn").forEach(el=>el.classList.remove("hidden"));
+    document.body.classList.add("bangla");
+    currentLang="bn";
   } else {
-    document.querySelectorAll('.lang-en').forEach(el => el.classList.remove('hidden'));
-    document.querySelectorAll('.lang-bn').forEach(el => el.classList.add('hidden'));
-    document.body.classList.remove('bangla');
-    currentLang = 'en';
+    document.querySelectorAll(".lang-en").forEach(el=>el.classList.remove("hidden"));
+    document.querySelectorAll(".lang-bn").forEach(el=>el.classList.add("hidden"));
+    document.body.classList.remove("bangla");
+    currentLang="en";
   }
 }
 
-// Unit Converter
+// ══════════════════════════════════════════════════════════════════════════
+// UNIT CONVERTER
+// ══════════════════════════════════════════════════════════════════════════
 const UC_CATS = {
   'Length': {
-    units: ['m','km','cm','mm','µm','nm','ft','in','yd','mile','nmi','ly','AU','Å'],
+    units:   ['m','km','cm','mm','µm','nm','ft','in','yd','mile','nmi','ly','AU','Å'],
     factors: [1, 1e3, 1e-2, 1e-3, 1e-6, 1e-9, 0.3048, 0.0254, 0.9144, 1609.344, 1852, 9.461e15, 1.496e11, 1e-10]
   },
   'Time': {
-    units: ['s','ms','µs','ns','min','hr','day','week','month','year'],
-    factors: [1, 1e-3, 1e-6, 1e-9, 60, 3600, 86400, 604800, 2.628e6, 3.156e7]
+    units:   ['s','ms','µs','ns','min','hr','day','week','month','year','frame@24','frame@30','frame@60'],
+    factors: [1, 1e-3, 1e-6, 1e-9, 60, 3600, 86400, 604800, 2.628e6, 3.156e7, 1/24, 1/30, 1/60]
   },
   'Speed': {
-    units: ['m/s','km/h','mph','cm/s','ft/s','knot','mach','c (light)'],
-    factors: [1, 1/3.6, 0.44704, 0.01, 0.3048, 0.514444, 340.3, 2.998e8]
+    units:   ['m/s','km/h','mph','cm/s','mm/s','ft/s','ft/min','knot','mach','c (light)'],
+    factors: [1, 1/3.6, 0.44704, 0.01, 0.001, 0.3048, 0.00508, 0.514444, 340.3, 2.998e8]
   },
   'Accel': {
-    units: ['m/s²','cm/s²','ft/s²','g (9.81)','Gal'],
-    factors: [1, 0.01, 0.3048, 9.80665, 0.01]
+    units:   ['m/s²','cm/s²','mm/s²','ft/s²','in/s²','g (9.81)','Gal','mGal'],
+    factors: [1, 0.01, 0.001, 0.3048, 0.0254, 9.80665, 0.01, 1e-5]
   },
   'Force': {
-    units: ['N','kN','mN','dyne','lbf','kgf'],
-    factors: [1, 1e3, 1e-3, 1e-5, 4.44822, 9.80665]
+    units:   ['N','kN','MN','mN','µN','dyne','lbf','ozf','kgf','tonf'],
+    factors: [1, 1e3, 1e6, 1e-3, 1e-6, 1e-5, 4.44822, 0.278014, 9.80665, 9806.65]
   },
   'Energy': {
-    units: ['J','kJ','cal','kcal','Wh','kWh','eV','BTU'],
-    factors: [1, 1e3, 4.184, 4184, 3600, 3.6e6, 1.602e-19, 1055.06]
+    units:   ['J','kJ','MJ','mJ','µJ','cal','kcal','Wh','kWh','eV','MeV','BTU','ft·lbf','erg'],
+    factors: [1, 1e3, 1e6, 1e-3, 1e-6, 4.184, 4184, 3600, 3.6e6, 1.602e-19, 1.602e-13, 1055.06, 1.35582, 1e-7]
   },
   'Power': {
-    units: ['W','kW','hp (mech)','BTU/hr'],
-    factors: [1, 1e3, 745.7, 0.29307]
+    units:   ['W','kW','MW','mW','µW','hp (mech)','hp (elec)','BTU/hr','cal/s','kcal/hr'],
+    factors: [1, 1e3, 1e6, 1e-3, 1e-6, 745.7, 746, 0.29307, 4.184, 1.163]
   },
   'Mass': {
-    units: ['kg','g','mg','t','lb','oz','slug'],
-    factors: [1, 1e-3, 1e-6, 1e3, 0.453592, 0.02835, 14.5939]
+    units:   ['kg','g','mg','µg','t (metric)','lb','oz','slug','u (amu)','stone'],
+    factors: [1, 1e-3, 1e-6, 1e-9, 1e3, 0.453592, 0.028350, 14.5939, 1.66054e-27, 6.35029]
   },
   'Pressure': {
-    units: ['Pa','kPa','bar','atm','mmHg','psi'],
-    factors: [1, 1e3, 1e5, 101325, 133.322, 6894.76]
+    units:   ['Pa','kPa','MPa','hPa','bar','mbar','atm','mmHg','cmH₂O','psi','torr'],
+    factors: [1, 1e3, 1e6, 100, 1e5, 100, 101325, 133.322, 98.0665, 6894.76, 133.322]
   },
   'Temp': {
-    units: ['°C','°F','K','°R'],
+    units:   ['°C','°F','K','°R'],
     factors: null
   },
   'Angle': {
-    units: ['rad','deg','grad','arcmin','rev'],
-    factors: [1, Math.PI/180, Math.PI/200, Math.PI/10800, 2*Math.PI]
+    units:   ['rad','deg','grad','arcmin','arcsec','rev','mrad'],
+    factors: [1, Math.PI/180, Math.PI/200, Math.PI/10800, Math.PI/648000, 2*Math.PI, 0.001]
+  },
+  'Ang. Speed': {
+    units:   ['rad/s','deg/s','rev/s','rpm','rad/min','deg/min'],
+    factors: [1, Math.PI/180, 2*Math.PI, Math.PI/30, Math.PI/30/1, Math.PI/10800*60]
   },
   'Frequency': {
-    units: ['Hz','kHz','MHz','rpm','rad/s'],
-    factors: [1, 1e3, 1e6, 1/60, 1/(2*Math.PI)]
+    units:   ['Hz','kHz','MHz','GHz','THz','rpm (as Hz)','rad/s'],
+    factors: [1, 1e3, 1e6, 1e9, 1e12, 1/60, 1/(2*Math.PI)]
   },
   'Area': {
-    units: ['m²','km²','cm²','ft²','acre','ha'],
-    factors: [1, 1e6, 1e-4, 0.092903, 4046.86, 1e4]
+    units:   ['m²','km²','cm²','mm²','ft²','in²','yd²','acre','ha','mi²'],
+    factors: [1, 1e6, 1e-4, 1e-6, 0.092903, 6.4516e-4, 0.836127, 4046.86, 1e4, 2.59e6]
   },
   'Volume': {
-    units: ['m³','L','mL','cm³','ft³','gal (US)'],
-    factors: [1, 0.001, 1e-6, 1e-6, 0.0283168, 0.003785]
+    units:   ['m³','L','mL','cm³','mm³','ft³','in³','gal (US)','fl oz (US)','pint (US)'],
+    factors: [1, 0.001, 1e-6, 1e-6, 1e-9, 0.0283168, 1.63871e-5, 0.003785, 2.9574e-5, 4.7318e-4]
   },
   'Density': {
-    units: ['kg/m³','g/cm³','g/L','lb/ft³'],
-    factors: [1, 1000, 1, 16.0185]
+    units:   ['kg/m³','g/cm³','g/L','kg/L','lb/ft³','lb/in³','oz/ft³'],
+    factors: [1, 1000, 1, 1000, 16.0185, 27679.9, 1.00115]
   },
   'Torque': {
-    units: ['N·m','kN·m','lbf·ft','kgf·m'],
-    factors: [1, 1000, 1.35582, 9.80665]
+    units:   ['N·m','kN·m','mN·m','N·cm','lbf·ft','lbf·in','kgf·m','dyne·cm'],
+    factors: [1, 1000, 1e-3, 0.01, 1.35582, 0.112985, 9.80665, 1e-7]
   },
   'Data': {
-    units: ['bit','byte','KB','MB','GB','TB'],
-    factors: [1, 8, 8192, 8388608, 8589934592, 8796093022208]
+    units:   ['bit','byte','KB','MB','GB','TB','PB','Kbit','Mbit','Gbit'],
+    factors: [1, 8, 8192, 8388608, 8589934592, 8796093022208, 9007199254740992, 1000, 1e6, 1e9]
   },
 };
 
@@ -776,29 +613,23 @@ Object.keys(UC_CATS).forEach(cat => {
   const b = document.createElement('button');
   b.className = 'ucCatBtn' + (cat === ucCat ? ' active' : '');
   b.textContent = cat;
-  b.onclick = () => {
-    ucCat = cat;
-    document.querySelectorAll('.ucCatBtn').forEach(x => x.classList.remove('active'));
-    b.classList.add('active');
-    buildUCSels();
-    doUC();
-  };
+  b.onclick = () => { ucCat = cat; document.querySelectorAll('.ucCatBtn').forEach(x=>x.classList.remove('active')); b.classList.add('active'); buildUCSels(); doUC(); };
   ucCatRow.appendChild(b);
 });
 
 function buildUCSels() {
   const { units } = UC_CATS[ucCat];
-  ['ucFrom', 'ucTo'].forEach((id, i) => {
+  ['ucFrom','ucTo'].forEach((id,i) => {
     const sel = document.getElementById(id);
-    sel.innerHTML = units.map((u, j) => `<option value="${j}">${u}</option>`).join('');
-    if (i === 1 && units.length > 1) sel.selectedIndex = 1;
+    sel.innerHTML = units.map((u,j) => `<option value="${j}">${u}</option>`).join('');
+    if(i===1 && units.length > 1) sel.selectedIndex = 1;
   });
 }
 
 function doUC() {
   const val = parseFloat(document.getElementById('ucVal').value);
-  const fi = parseInt(document.getElementById('ucFrom').value);
-  const ti = parseInt(document.getElementById('ucTo').value);
+  const fi  = parseInt(document.getElementById('ucFrom').value);
+  const ti  = parseInt(document.getElementById('ucTo').value);
   const out = document.getElementById('ucOut');
   if (isNaN(val)) { out.textContent = '—'; return; }
 
@@ -809,18 +640,18 @@ function doUC() {
     let celsius;
     if (fromU === '°C') celsius = val;
     else if (fromU === '°F') celsius = (val - 32) * 5/9;
-    else if (fromU === 'K') celsius = val - 273.15;
+    else if (fromU === 'K')  celsius = val - 273.15;
     else if (fromU === '°R') celsius = (val - 491.67) * 5/9;
     let result;
     if (toU === '°C') result = celsius;
     else if (toU === '°F') result = celsius * 9/5 + 32;
-    else if (toU === 'K') result = celsius + 273.15;
+    else if (toU === 'K')  result = celsius + 273.15;
     else if (toU === '°R') result = (celsius + 273.15) * 9/5;
     out.textContent = `${val} ${fromU} = ${parseFloat(result.toPrecision(6))} ${toU}`;
     return;
   }
 
-  const base = val * factors[fi];
+  const base   = val * factors[fi];
   const result = base / factors[ti];
   const disp = Math.abs(result) < 0.001 || Math.abs(result) > 1e6
     ? result.toExponential(4)
@@ -828,281 +659,299 @@ function doUC() {
   out.textContent = `${val} ${units[fi]} = ${disp} ${units[ti]}`;
 }
 
-buildUCSels();
-doUC();
+buildUCSels(); doUC();
 
-// Physics Problem Solver
+// ══════════════════════════════════════════════════════════════════════════
+// PHYSICS PROBLEM SOLVER
+// ══════════════════════════════════════════════════════════════════════════
 const FORMULAS = [
   {
     cat: 'Kinematics', name: 'v = u + at',
     vars: [
-      { s: 'v', label: 'Final velocity (v)', unit: 'm/s' },
-      { s: 'u', label: 'Initial velocity (u)', unit: 'm/s' },
-      { s: 'a', label: 'Acceleration (a)', unit: 'm/s²' },
-      { s: 't', label: 'Time (t)', unit: 's' },
+      { s:'v', label:'Final velocity (v)', unit:'m/s' },
+      { s:'u', label:'Initial velocity (u)', unit:'m/s' },
+      { s:'a', label:'Acceleration (a)', unit:'m/s²' },
+      { s:'t', label:'Time (t)', unit:'s' },
     ],
     solvers: {
-      v: { formula: 'v = u + at', fn: k => k.u + k.a * k.t, steps: (k, r) => `v = u + at\nv = ${k.u} + (${k.a})(${k.t})\nv = ${r} m/s` },
-      u: { formula: 'u = v - at', fn: k => k.v - k.a * k.t, steps: (k, r) => `u = v - at\nu = ${k.v} - (${k.a})(${k.t})\nu = ${r} m/s` },
-      a: { formula: 'a = (v - u) / t', fn: k => (k.v - k.u) / k.t, steps: (k, r) => `a = (v - u) / t\na = (${k.v} - ${k.u}) / ${k.t}\na = ${r} m/s²` },
-      t: { formula: 't = (v - u) / a', fn: k => (k.v - k.u) / k.a, steps: (k, r) => `t = (v - u) / a\nt = (${k.v} - ${k.u}) / ${k.a}\nt = ${r} s` },
+      v: { formula:'v = u + at',        fn:k => k.u + k.a*k.t,            steps:(k,r)=>`v = u + at\nv = ${k.u} + (${k.a})(${k.t})\nv = ${k.u} + ${k.a*k.t}\nv = ${r} m/s` },
+      u: { formula:'u = v - at',        fn:k => k.v - k.a*k.t,            steps:(k,r)=>`u = v - at\nu = ${k.v} - (${k.a})(${k.t})\nu = ${k.v} - ${k.a*k.t}\nu = ${r} m/s` },
+      a: { formula:'a = (v - u) / t',   fn:k => (k.v - k.u)/k.t,          steps:(k,r)=>`a = (v - u) / t\na = (${k.v} - ${k.u}) / ${k.t}\na = ${k.v-k.u} / ${k.t}\na = ${r} m/s²` },
+      t: { formula:'t = (v - u) / a',   fn:k => (k.v - k.u)/k.a,          steps:(k,r)=>`t = (v - u) / a\nt = (${k.v} - ${k.u}) / ${k.a}\nt = ${k.v-k.u} / ${k.a}\nt = ${r} s` },
     }
   },
   {
     cat: 'Kinematics', name: 's = ut + ½at²',
     vars: [
-      { s: 's', label: 'Displacement (s)', unit: 'm' },
-      { s: 'u', label: 'Initial velocity (u)', unit: 'm/s' },
-      { s: 'a', label: 'Acceleration (a)', unit: 'm/s²' },
-      { s: 't', label: 'Time (t)', unit: 's' },
+      { s:'s', label:'Displacement (s)', unit:'m' },
+      { s:'u', label:'Initial velocity (u)', unit:'m/s' },
+      { s:'a', label:'Acceleration (a)', unit:'m/s²' },
+      { s:'t', label:'Time (t)', unit:'s' },
     ],
     solvers: {
-      s: { formula: 's = ut + ½at²', fn: k => k.u * k.t + 0.5 * k.a * k.t ** 2, steps: (k, r) => `s = ut + ½at²\ns = (${k.u})(${k.t}) + 0.5(${k.a})(${k.t})²\ns = ${r} m` },
-      u: { formula: 'u = (s - ½at²) / t', fn: k => (k.s - 0.5 * k.a * k.t ** 2) / k.t, steps: (k, r) => `u = (s - ½at²) / t\nu = ${r} m/s` },
-      t: { formula: 'Solve ½at² + ut - s = 0', fn: k => {
-        if (k.a === 0) return k.s / k.u;
-        const disc = k.u ** 2 + 2 * k.a * k.s;
-        if (disc < 0) return NaN;
+      s: { formula:'s = ut + ½at²',      fn:k => k.u*k.t + 0.5*k.a*k.t**2,    steps:(k,r)=>`s = ut + ½at²\ns = (${k.u})(${k.t}) + 0.5(${k.a})(${k.t})²\ns = ${k.u*k.t} + ${0.5*k.a*k.t**2}\ns = ${r} m` },
+      u: { formula:'u = (s - ½at²) / t', fn:k => (k.s - 0.5*k.a*k.t**2)/k.t,  steps:(k,r)=>`u = (s - ½at²) / t\nu = (${k.s} - 0.5×${k.a}×${k.t}²) / ${k.t}\nu = (${k.s} - ${0.5*k.a*k.t**2}) / ${k.t}\nu = ${r} m/s` },
+      t: { formula:'Solve ½at² + ut - s = 0', fn:k => {
+        if(k.a === 0) return k.s / k.u;
+        const disc = k.u**2 + 2*k.a*k.s;
+        if(disc < 0) return NaN;
         const t1 = (-k.u + Math.sqrt(disc)) / k.a;
         const t2 = (-k.u - Math.sqrt(disc)) / k.a;
         return t1 >= 0 ? t1 : t2;
-      }, steps: (k, r) => `½at² + ut - s = 0\nt = ${r} s` },
-      a: { formula: 'a = 2(s - ut) / t²', fn: k => 2 * (k.s - k.u * k.t) / k.t ** 2, steps: (k, r) => `a = 2(s - ut) / t²\na = ${r} m/s²` },
+      }, steps:(k,r)=>`½at² + ut - s = 0\nUsing quadratic formula:\nt = (-u ± √(u² + 2as)) / a\nt = (-${k.u} ± √(${k.u}² + 2×${k.a}×${k.s})) / ${k.a}\nt = ${r} s` },
+      a: { formula:'a = 2(s - ut) / t²',  fn:k => 2*(k.s - k.u*k.t)/k.t**2,   steps:(k,r)=>`a = 2(s - ut) / t²\na = 2(${k.s} - ${k.u}×${k.t}) / ${k.t}²\na = 2(${k.s - k.u*k.t}) / ${k.t**2}\na = ${r} m/s²` },
     }
   },
   {
     cat: 'Kinematics', name: 'v² = u² + 2as',
     vars: [
-      { s: 'v', label: 'Final velocity (v)', unit: 'm/s' },
-      { s: 'u', label: 'Initial velocity (u)', unit: 'm/s' },
-      { s: 'a', label: 'Acceleration (a)', unit: 'm/s²' },
-      { s: 's', label: 'Displacement (s)', unit: 'm' },
+      { s:'v', label:'Final velocity (v)', unit:'m/s' },
+      { s:'u', label:'Initial velocity (u)', unit:'m/s' },
+      { s:'a', label:'Acceleration (a)', unit:'m/s²' },
+      { s:'s', label:'Displacement (s)', unit:'m' },
     ],
     solvers: {
-      v: { formula: 'v = √(u² + 2as)', fn: k => Math.sqrt(k.u ** 2 + 2 * k.a * k.s), steps: (k, r) => `v = √(u² + 2as)\nv = ${r} m/s` },
-      u: { formula: 'u = √(v² - 2as)', fn: k => Math.sqrt(k.v ** 2 - 2 * k.a * k.s), steps: (k, r) => `u = √(v² - 2as)\nu = ${r} m/s` },
-      a: { formula: 'a = (v² - u²) / 2s', fn: k => (k.v ** 2 - k.u ** 2) / (2 * k.s), steps: (k, r) => `a = (v² - u²) / 2s\na = ${r} m/s²` },
-      s: { formula: 's = (v² - u²) / 2a', fn: k => (k.v ** 2 - k.u ** 2) / (2 * k.a), steps: (k, r) => `s = (v² - u²) / 2a\ns = ${r} m` },
+      v: { formula:'v = √(u² + 2as)',    fn:k => Math.sqrt(k.u**2 + 2*k.a*k.s),  steps:(k,r)=>`v² = u² + 2as\nv² = ${k.u}² + 2(${k.a})(${k.s})\nv² = ${k.u**2} + ${2*k.a*k.s} = ${k.u**2+2*k.a*k.s}\nv = √${k.u**2+2*k.a*k.s} = ${r} m/s` },
+      u: { formula:'u = √(v² - 2as)',    fn:k => Math.sqrt(k.v**2 - 2*k.a*k.s),  steps:(k,r)=>`u² = v² - 2as\nu² = ${k.v}² - 2(${k.a})(${k.s})\nu² = ${k.v**2} - ${2*k.a*k.s} = ${k.v**2-2*k.a*k.s}\nu = √${k.v**2-2*k.a*k.s} = ${r} m/s` },
+      a: { formula:'a = (v² - u²) / 2s', fn:k => (k.v**2 - k.u**2)/(2*k.s),     steps:(k,r)=>`a = (v² - u²) / (2s)\na = (${k.v}² - ${k.u}²) / (2×${k.s})\na = (${k.v**2} - ${k.u**2}) / ${2*k.s}\na = ${r} m/s²` },
+      s: { formula:'s = (v² - u²) / 2a', fn:k => (k.v**2 - k.u**2)/(2*k.a),     steps:(k,r)=>`s = (v² - u²) / (2a)\ns = (${k.v}² - ${k.u}²) / (2×${k.a})\ns = (${k.v**2} - ${k.u**2}) / ${2*k.a}\ns = ${r} m` },
     }
   },
   {
     cat: 'Kinematics', name: 's = (u + v)t / 2',
     vars: [
-      { s: 's', label: 'Displacement (s)', unit: 'm' },
-      { s: 'u', label: 'Initial velocity (u)', unit: 'm/s' },
-      { s: 'v', label: 'Final velocity (v)', unit: 'm/s' },
-      { s: 't', label: 'Time (t)', unit: 's' },
+      { s:'s', label:'Displacement (s)', unit:'m' },
+      { s:'u', label:'Initial velocity (u)', unit:'m/s' },
+      { s:'v', label:'Final velocity (v)', unit:'m/s' },
+      { s:'t', label:'Time (t)', unit:'s' },
     ],
     solvers: {
-      s: { formula: 's = (u + v)t / 2', fn: k => (k.u + k.v) * k.t / 2, steps: (k, r) => `s = (u + v)t / 2\ns = ${r} m` },
-      t: { formula: 't = 2s / (u + v)', fn: k => 2 * k.s / (k.u + k.v), steps: (k, r) => `t = 2s / (u + v)\nt = ${r} s` },
-      u: { formula: 'u = 2s/t - v', fn: k => 2 * k.s / k.t - k.v, steps: (k, r) => `u = 2s/t - v\nu = ${r} m/s` },
-      v: { formula: 'v = 2s/t - u', fn: k => 2 * k.s / k.t - k.u, steps: (k, r) => `v = 2s/t - u\nv = ${r} m/s` },
+      s: { formula:'s = (u + v)t / 2',   fn:k => (k.u+k.v)*k.t/2,             steps:(k,r)=>`s = (u + v)t / 2\ns = (${k.u} + ${k.v}) × ${k.t} / 2\ns = ${(k.u+k.v)*k.t} / 2 = ${r} m` },
+      t: { formula:'t = 2s / (u + v)',    fn:k => 2*k.s/(k.u+k.v),             steps:(k,r)=>`t = 2s / (u + v)\nt = 2×${k.s} / (${k.u} + ${k.v})\nt = ${2*k.s} / ${k.u+k.v} = ${r} s` },
+      u: { formula:'u = 2s/t - v',        fn:k => 2*k.s/k.t - k.v,             steps:(k,r)=>`u = 2s/t - v\nu = 2×${k.s}/${k.t} - ${k.v}\nu = ${2*k.s/k.t} - ${k.v} = ${r} m/s` },
+      v: { formula:'v = 2s/t - u',        fn:k => 2*k.s/k.t - k.u,             steps:(k,r)=>`v = 2s/t - u\nv = 2×${k.s}/${k.t} - ${k.u}\nv = ${2*k.s/k.t} - ${k.u} = ${r} m/s` },
     }
   },
   {
     cat: 'Projectile', name: 'Range R = v₀²sin2θ / g',
     vars: [
-      { s: 'R', label: 'Range (R)', unit: 'm' },
-      { s: 'v0', label: 'Initial speed (v₀)', unit: 'm/s' },
-      { s: 'theta', label: 'Angle (θ)', unit: '°' },
-      { s: 'g', label: 'Gravity (g)', unit: 'm/s²' },
+      { s:'R', label:'Range (R)', unit:'m' },
+      { s:'v0', label:'Initial speed (v₀)', unit:'m/s' },
+      { s:'theta', label:'Angle (θ)', unit:'°' },
+      { s:'g', label:'Gravity (g)', unit:'m/s²' },
     ],
     solvers: {
-      R: { formula: 'R = v₀² sin2θ / g', fn: k => k.v0 ** 2 * Math.sin(2 * k.theta * Math.PI / 180) / k.g, steps: (k, r) => `R = v₀² sin2θ / g\nR = ${r} m` },
-      v0: { formula: 'v₀ = √(Rg / sin2θ)', fn: k => Math.sqrt(k.R * k.g / Math.sin(2 * k.theta * Math.PI / 180)), steps: (k, r) => `v₀ = √(Rg / sin2θ)\nv₀ = ${r} m/s` },
-      theta: { formula: 'θ = ½ arcsin(Rg / v₀²)', fn: k => Math.asin(k.R * k.g / k.v0 ** 2) / 2 * 180 / Math.PI, steps: (k, r) => `θ = ½ arcsin(Rg / v₀²)\nθ = ${r}°` },
-      g: { formula: 'g = v₀² sin2θ / R', fn: k => k.v0 ** 2 * Math.sin(2 * k.theta * Math.PI / 180) / k.R, steps: (k, r) => `g = v₀² sin2θ / R\ng = ${r} m/s²` },
+      R:     { formula:'R = v₀² sin2θ / g',       fn:k => k.v0**2 * Math.sin(2*k.theta*Math.PI/180)/k.g,  steps:(k,r)=>`R = v₀² sin2θ / g\nR = ${k.v0}² × sin(2×${k.theta}°) / ${k.g}\nR = ${k.v0**2} × ${Math.sin(2*k.theta*Math.PI/180).toFixed(4)} / ${k.g}\nR = ${r} m` },
+      v0:    { formula:'v₀ = √(Rg / sin2θ)',       fn:k => Math.sqrt(k.R*k.g/Math.sin(2*k.theta*Math.PI/180)),  steps:(k,r)=>`v₀ = √(Rg / sin2θ)\nv₀ = √(${k.R}×${k.g} / sin(2×${k.theta}°))\nv₀ = √(${k.R*k.g} / ${Math.sin(2*k.theta*Math.PI/180).toFixed(4)})\nv₀ = ${r} m/s` },
+      theta: { formula:'θ = ½ arcsin(Rg / v₀²)',   fn:k => Math.asin(k.R*k.g/k.v0**2)/2 * 180/Math.PI,  steps:(k,r)=>`sin2θ = Rg/v₀² = ${k.R*k.g}/${k.v0**2} = ${(k.R*k.g/k.v0**2).toFixed(4)}\n2θ = arcsin(${(k.R*k.g/k.v0**2).toFixed(4)})\nθ = ${r}°` },
+      g:     { formula:'g = v₀² sin2θ / R',        fn:k => k.v0**2*Math.sin(2*k.theta*Math.PI/180)/k.R,   steps:(k,r)=>`g = v₀² sin2θ / R\ng = ${k.v0}² × sin(${2*k.theta}°) / ${k.R}\ng = ${r} m/s²` },
     }
   },
   {
     cat: 'Projectile', name: 'Max Height H = v₀²sin²θ / 2g',
     vars: [
-      { s: 'H', label: 'Max height (H)', unit: 'm' },
-      { s: 'v0', label: 'Initial speed (v₀)', unit: 'm/s' },
-      { s: 'theta', label: 'Angle (θ)', unit: '°' },
-      { s: 'g', label: 'Gravity (g)', unit: 'm/s²' },
+      { s:'H', label:'Max height (H)', unit:'m' },
+      { s:'v0', label:'Initial speed (v₀)', unit:'m/s' },
+      { s:'theta', label:'Angle (θ)', unit:'°' },
+      { s:'g', label:'Gravity (g)', unit:'m/s²' },
     ],
     solvers: {
-      H: { formula: 'H = v₀²sin²θ / 2g', fn: k => k.v0 ** 2 * Math.sin(k.theta * Math.PI / 180) ** 2 / (2 * k.g), steps: (k, r) => `H = v₀²sin²θ / 2g\nH = ${r} m` },
-      v0: { formula: 'v₀ = √(2gH / sin²θ)', fn: k => Math.sqrt(2 * k.g * k.H / Math.sin(k.theta * Math.PI / 180) ** 2), steps: (k, r) => `v₀ = √(2gH / sin²θ)\nv₀ = ${r} m/s` },
-      theta: { formula: 'θ = arcsin(√(2gH/v₀²))', fn: k => Math.asin(Math.sqrt(2 * k.g * k.H / k.v0 ** 2)) * 180 / Math.PI, steps: (k, r) => `θ = arcsin(√(2gH/v₀²))\nθ = ${r}°` },
-      g: { formula: 'g = v₀²sin²θ / 2H', fn: k => k.v0 ** 2 * Math.sin(k.theta * Math.PI / 180) ** 2 / (2 * k.H), steps: (k, r) => `g = v₀²sin²θ / 2H\ng = ${r} m/s²` },
+      H:     { formula:'H = v₀²sin²θ / 2g',    fn:k => k.v0**2*Math.sin(k.theta*Math.PI/180)**2/(2*k.g),  steps:(k,r)=>`H = v₀²sin²θ / 2g\nH = ${k.v0}² × sin²(${k.theta}°) / (2×${k.g})\nH = ${k.v0**2} × ${Math.sin(k.theta*Math.PI/180)**2 .toFixed(4)} / ${2*k.g}\nH = ${r} m` },
+      v0:    { formula:'v₀ = √(2gH / sin²θ)',   fn:k => Math.sqrt(2*k.g*k.H/Math.sin(k.theta*Math.PI/180)**2),  steps:(k,r)=>`v₀ = √(2gH / sin²θ)\nv₀ = √(2×${k.g}×${k.H} / sin²(${k.theta}°))\nv₀ = ${r} m/s` },
+      theta: { formula:'θ = arcsin(√(2gH/v₀²))', fn:k => Math.asin(Math.sqrt(2*k.g*k.H/k.v0**2))*180/Math.PI, steps:(k,r)=>`sin²θ = 2gH/v₀² = ${(2*k.g*k.H/k.v0**2).toFixed(4)}\nθ = arcsin(√${(2*k.g*k.H/k.v0**2).toFixed(4)}) = ${r}°` },
+      g:     { formula:'g = v₀²sin²θ / 2H',     fn:k => k.v0**2*Math.sin(k.theta*Math.PI/180)**2/(2*k.H),  steps:(k,r)=>`g = v₀²sin²θ / 2H\ng = ${k.v0}² × sin²(${k.theta}°) / (2×${k.H})\ng = ${r} m/s²` },
     }
   },
   {
     cat: 'Projectile', name: 'Time of flight T = 2v₀sinθ / g',
     vars: [
-      { s: 'T', label: 'Time of flight (T)', unit: 's' },
-      { s: 'v0', label: 'Initial speed (v₀)', unit: 'm/s' },
-      { s: 'theta', label: 'Angle (θ)', unit: '°' },
-      { s: 'g', label: 'Gravity (g)', unit: 'm/s²' },
+      { s:'T', label:'Time of flight (T)', unit:'s' },
+      { s:'v0', label:'Initial speed (v₀)', unit:'m/s' },
+      { s:'theta', label:'Angle (θ)', unit:'°' },
+      { s:'g', label:'Gravity (g)', unit:'m/s²' },
     ],
     solvers: {
-      T: { formula: 'T = 2v₀sinθ / g', fn: k => 2 * k.v0 * Math.sin(k.theta * Math.PI / 180) / k.g, steps: (k, r) => `T = 2v₀sinθ / g\nT = ${r} s` },
-      v0: { formula: 'v₀ = Tg / (2sinθ)', fn: k => k.T * k.g / (2 * Math.sin(k.theta * Math.PI / 180)), steps: (k, r) => `v₀ = Tg / (2sinθ)\nv₀ = ${r} m/s` },
-      theta: { formula: 'θ = arcsin(Tg / 2v₀)', fn: k => Math.asin(k.T * k.g / (2 * k.v0)) * 180 / Math.PI, steps: (k, r) => `θ = arcsin(Tg / 2v₀)\nθ = ${r}°` },
-      g: { formula: 'g = 2v₀sinθ / T', fn: k => 2 * k.v0 * Math.sin(k.theta * Math.PI / 180) / k.T, steps: (k, r) => `g = 2v₀sinθ / T\ng = ${r} m/s²` },
+      T:     { formula:'T = 2v₀sinθ / g',     fn:k => 2*k.v0*Math.sin(k.theta*Math.PI/180)/k.g,           steps:(k,r)=>`T = 2v₀sinθ / g\nT = 2×${k.v0}×sin(${k.theta}°) / ${k.g}\nT = ${2*k.v0*Math.sin(k.theta*Math.PI/180).toFixed(4)} / ${k.g}\nT = ${r} s` },
+      v0:    { formula:'v₀ = Tg / (2sinθ)',    fn:k => k.T*k.g/(2*Math.sin(k.theta*Math.PI/180)),           steps:(k,r)=>`v₀ = Tg / (2sinθ)\nv₀ = ${k.T}×${k.g} / (2×sin(${k.theta}°))\nv₀ = ${r} m/s` },
+      theta: { formula:'θ = arcsin(Tg / 2v₀)', fn:k => Math.asin(k.T*k.g/(2*k.v0))*180/Math.PI,            steps:(k,r)=>`sinθ = Tg / 2v₀ = ${(k.T*k.g/(2*k.v0)).toFixed(4)}\nθ = arcsin(${(k.T*k.g/(2*k.v0)).toFixed(4)}) = ${r}°` },
+      g:     { formula:'g = 2v₀sinθ / T',      fn:k => 2*k.v0*Math.sin(k.theta*Math.PI/180)/k.T,           steps:(k,r)=>`g = 2v₀sinθ / T\ng = 2×${k.v0}×sin(${k.theta}°) / ${k.T}\ng = ${r} m/s²` },
     }
   },
   {
     cat: "Newton's Laws", name: 'F = ma',
     vars: [
-      { s: 'F', label: 'Force (F)', unit: 'N' },
-      { s: 'm', label: 'Mass (m)', unit: 'kg' },
-      { s: 'a', label: 'Acceleration (a)', unit: 'm/s²' },
+      { s:'F', label:'Force (F)', unit:'N' },
+      { s:'m', label:'Mass (m)', unit:'kg' },
+      { s:'a', label:'Acceleration (a)', unit:'m/s²' },
     ],
     solvers: {
-      F: { formula: 'F = ma', fn: k => k.m * k.a, steps: (k, r) => `F = ma\nF = ${k.m} × ${k.a}\nF = ${r} N` },
-      m: { formula: 'm = F / a', fn: k => k.F / k.a, steps: (k, r) => `m = F / a\nm = ${r} kg` },
-      a: { formula: 'a = F / m', fn: k => k.F / k.m, steps: (k, r) => `a = F / m\na = ${r} m/s²` },
+      F: { formula:'F = ma',        fn:k => k.m*k.a,      steps:(k,r)=>`F = ma\nF = ${k.m} × ${k.a}\nF = ${r} N` },
+      m: { formula:'m = F / a',     fn:k => k.F/k.a,      steps:(k,r)=>`m = F / a\nm = ${k.F} / ${k.a}\nm = ${r} kg` },
+      a: { formula:'a = F / m',     fn:k => k.F/k.m,      steps:(k,r)=>`a = F / m\na = ${k.F} / ${k.m}\na = ${r} m/s²` },
     }
   },
   {
     cat: "Newton's Laws", name: 'Weight W = mg',
     vars: [
-      { s: 'W', label: 'Weight (W)', unit: 'N' },
-      { s: 'm', label: 'Mass (m)', unit: 'kg' },
-      { s: 'g', label: 'Gravity (g)', unit: 'm/s²' },
+      { s:'W', label:'Weight (W)', unit:'N' },
+      { s:'m', label:'Mass (m)', unit:'kg' },
+      { s:'g', label:'Gravity (g)', unit:'m/s²' },
     ],
     solvers: {
-      W: { formula: 'W = mg', fn: k => k.m * k.g, steps: (k, r) => `W = mg\nW = ${r} N` },
-      m: { formula: 'm = W / g', fn: k => k.W / k.g, steps: (k, r) => `m = W / g\nm = ${r} kg` },
-      g: { formula: 'g = W / m', fn: k => k.W / k.m, steps: (k, r) => `g = W / m\ng = ${r} m/s²` },
+      W: { formula:'W = mg',      fn:k => k.m*k.g,     steps:(k,r)=>`W = mg\nW = ${k.m} × ${k.g}\nW = ${r} N` },
+      m: { formula:'m = W / g',   fn:k => k.W/k.g,     steps:(k,r)=>`m = W / g\nm = ${k.W} / ${k.g}\nm = ${r} kg` },
+      g: { formula:'g = W / m',   fn:k => k.W/k.m,     steps:(k,r)=>`g = W / m\ng = ${k.W} / ${k.m}\ng = ${r} m/s²` },
     }
   },
   {
     cat: "Newton's Laws", name: 'Friction f = μN',
     vars: [
-      { s: 'f', label: 'Friction force (f)', unit: 'N' },
-      { s: 'mu', label: 'Coefficient μ', unit: '' },
-      { s: 'N', label: 'Normal force (N)', unit: 'N' },
+      { s:'f', label:'Friction force (f)', unit:'N' },
+      { s:'mu', label:'Coefficient μ', unit:'' },
+      { s:'N', label:'Normal force (N)', unit:'N' },
     ],
     solvers: {
-      f: { formula: 'f = μN', fn: k => k.mu * k.N, steps: (k, r) => `f = μN\nf = ${r} N` },
-      mu: { formula: 'μ = f / N', fn: k => k.f / k.N, steps: (k, r) => `μ = f / N\nμ = ${r}` },
-      N: { formula: 'N = f / μ', fn: k => k.f / k.mu, steps: (k, r) => `N = f / μ\nN = ${r} N` },
+      f:  { formula:'f = μN',      fn:k => k.mu*k.N,    steps:(k,r)=>`f = μN\nf = ${k.mu} × ${k.N}\nf = ${r} N` },
+      mu: { formula:'μ = f / N',   fn:k => k.f/k.N,     steps:(k,r)=>`μ = f / N\nμ = ${k.f} / ${k.N}\nμ = ${r}` },
+      N:  { formula:'N = f / μ',   fn:k => k.f/k.mu,    steps:(k,r)=>`N = f / μ\nN = ${k.f} / ${k.mu}\nN = ${r} N` },
+    }
+  },
+  {
+    cat: "Newton's Laws", name: 'Impulse J = FΔt = mΔv',
+    vars: [
+      { s:'J', label:'Impulse (J)', unit:'N·s' },
+      { s:'F', label:'Force (F)', unit:'N' },
+      { s:'dt', label:'Time interval (Δt)', unit:'s' },
+      { s:'m', label:'Mass (m)', unit:'kg' },
+      { s:'dv', label:'Δv (v − u)', unit:'m/s' },
+    ],
+    solvers: {
+      J:  { formula:'J = FΔt',       fn:k => k.F*k.dt,        steps:(k,r)=>`J = FΔt\nJ = ${k.F} × ${k.dt}\nJ = ${r} N·s` },
+      F:  { formula:'F = J / Δt',    fn:k => k.J/k.dt,        steps:(k,r)=>`F = J / Δt\nF = ${k.J} / ${k.dt}\nF = ${r} N` },
+      dt: { formula:'Δt = J / F',    fn:k => k.J/k.F,         steps:(k,r)=>`Δt = J / F\nΔt = ${k.J} / ${k.F}\nΔt = ${r} s` },
+      m:  { formula:'m = J / Δv',    fn:k => k.J/k.dv,        steps:(k,r)=>`m = J / Δv\nm = ${k.J} / ${k.dv}\nm = ${r} kg` },
+      dv: { formula:'Δv = J / m',    fn:k => k.J/k.m,         steps:(k,r)=>`Δv = J / m\nΔv = ${k.J} / ${k.m}\nΔv = ${r} m/s` },
     }
   },
   {
     cat: 'Energy & Work', name: 'KE = ½mv²',
     vars: [
-      { s: 'KE', label: 'Kinetic energy (KE)', unit: 'J' },
-      { s: 'm', label: 'Mass (m)', unit: 'kg' },
-      { s: 'v', label: 'Velocity (v)', unit: 'm/s' },
+      { s:'KE', label:'Kinetic energy (KE)', unit:'J' },
+      { s:'m', label:'Mass (m)', unit:'kg' },
+      { s:'v', label:'Velocity (v)', unit:'m/s' },
     ],
     solvers: {
-      KE: { formula: 'KE = ½mv²', fn: k => 0.5 * k.m * k.v ** 2, steps: (k, r) => `KE = ½mv²\nKE = ${r} J` },
-      m: { formula: 'm = 2KE / v²', fn: k => 2 * k.KE / k.v ** 2, steps: (k, r) => `m = 2KE / v²\nm = ${r} kg` },
-      v: { formula: 'v = √(2KE / m)', fn: k => Math.sqrt(2 * k.KE / k.m), steps: (k, r) => `v = √(2KE / m)\nv = ${r} m/s` },
+      KE: { formula:'KE = ½mv²',       fn:k => 0.5*k.m*k.v**2,       steps:(k,r)=>`KE = ½mv²\nKE = 0.5 × ${k.m} × ${k.v}²\nKE = 0.5 × ${k.m} × ${k.v**2}\nKE = ${r} J` },
+      m:  { formula:'m = 2KE / v²',    fn:k => 2*k.KE/k.v**2,        steps:(k,r)=>`m = 2KE / v²\nm = 2×${k.KE} / ${k.v}²\nm = ${2*k.KE} / ${k.v**2}\nm = ${r} kg` },
+      v:  { formula:'v = √(2KE / m)',   fn:k => Math.sqrt(2*k.KE/k.m), steps:(k,r)=>`v = √(2KE / m)\nv = √(2×${k.KE} / ${k.m})\nv = √${2*k.KE/k.m}\nv = ${r} m/s` },
     }
   },
   {
     cat: 'Energy & Work', name: 'PE = mgh',
     vars: [
-      { s: 'PE', label: 'Potential energy (PE)', unit: 'J' },
-      { s: 'm', label: 'Mass (m)', unit: 'kg' },
-      { s: 'g', label: 'Gravity (g)', unit: 'm/s²' },
-      { s: 'h', label: 'Height (h)', unit: 'm' },
+      { s:'PE', label:'Potential energy (PE)', unit:'J' },
+      { s:'m', label:'Mass (m)', unit:'kg' },
+      { s:'g', label:'Gravity (g)', unit:'m/s²' },
+      { s:'h', label:'Height (h)', unit:'m' },
     ],
     solvers: {
-      PE: { formula: 'PE = mgh', fn: k => k.m * k.g * k.h, steps: (k, r) => `PE = mgh\nPE = ${r} J` },
-      m: { formula: 'm = PE / gh', fn: k => k.PE / (k.g * k.h), steps: (k, r) => `m = PE / gh\nm = ${r} kg` },
-      g: { formula: 'g = PE / mh', fn: k => k.PE / (k.m * k.h), steps: (k, r) => `g = PE / mh\ng = ${r} m/s²` },
-      h: { formula: 'h = PE / mg', fn: k => k.PE / (k.m * k.g), steps: (k, r) => `h = PE / mg\nh = ${r} m` },
+      PE: { formula:'PE = mgh',      fn:k => k.m*k.g*k.h,      steps:(k,r)=>`PE = mgh\nPE = ${k.m} × ${k.g} × ${k.h}\nPE = ${r} J` },
+      m:  { formula:'m = PE / gh',   fn:k => k.PE/(k.g*k.h),   steps:(k,r)=>`m = PE / gh\nm = ${k.PE} / (${k.g}×${k.h})\nm = ${k.PE} / ${k.g*k.h}\nm = ${r} kg` },
+      g:  { formula:'g = PE / mh',   fn:k => k.PE/(k.m*k.h),   steps:(k,r)=>`g = PE / mh\ng = ${k.PE} / (${k.m}×${k.h})\ng = ${r} m/s²` },
+      h:  { formula:'h = PE / mg',   fn:k => k.PE/(k.m*k.g),   steps:(k,r)=>`h = PE / mg\nh = ${k.PE} / (${k.m}×${k.g})\nh = ${r} m` },
     }
   },
   {
     cat: 'Energy & Work', name: 'W = Fs cosθ',
     vars: [
-      { s: 'W', label: 'Work (W)', unit: 'J' },
-      { s: 'F', label: 'Force (F)', unit: 'N' },
-      { s: 's', label: 'Displacement (s)', unit: 'm' },
-      { s: 'theta', label: 'Angle θ', unit: '°' },
+      { s:'W', label:'Work (W)', unit:'J' },
+      { s:'F', label:'Force (F)', unit:'N' },
+      { s:'s', label:'Displacement (s)', unit:'m' },
+      { s:'theta', label:'Angle θ', unit:'°' },
     ],
     solvers: {
-      W: { formula: 'W = Fs cosθ', fn: k => k.F * k.s * Math.cos(k.theta * Math.PI / 180), steps: (k, r) => `W = Fs cosθ\nW = ${r} J` },
-      F: { formula: 'F = W / (s cosθ)', fn: k => k.W / (k.s * Math.cos(k.theta * Math.PI / 180)), steps: (k, r) => `F = W / (s cosθ)\nF = ${r} N` },
-      s: { formula: 's = W / (F cosθ)', fn: k => k.W / (k.F * Math.cos(k.theta * Math.PI / 180)), steps: (k, r) => `s = W / (F cosθ)\ns = ${r} m` },
-      theta: { formula: 'θ = arccos(W / Fs)', fn: k => Math.acos(k.W / (k.F * k.s)) * 180 / Math.PI, steps: (k, r) => `θ = arccos(W / Fs)\nθ = ${r}°` },
+      W:     { formula:'W = Fs cosθ',        fn:k => k.F*k.s*Math.cos(k.theta*Math.PI/180),  steps:(k,r)=>`W = Fs cosθ\nW = ${k.F} × ${k.s} × cos(${k.theta}°)\nW = ${k.F*k.s} × ${Math.cos(k.theta*Math.PI/180).toFixed(4)}\nW = ${r} J` },
+      F:     { formula:'F = W / (s cosθ)',    fn:k => k.W/(k.s*Math.cos(k.theta*Math.PI/180)), steps:(k,r)=>`F = W / (s cosθ)\nF = ${k.W} / (${k.s} × cos(${k.theta}°))\nF = ${r} N` },
+      s:     { formula:'s = W / (F cosθ)',    fn:k => k.W/(k.F*Math.cos(k.theta*Math.PI/180)), steps:(k,r)=>`s = W / (F cosθ)\ns = ${k.W} / (${k.F} × cos(${k.theta}°))\ns = ${r} m` },
+      theta: { formula:'θ = arccos(W / Fs)',  fn:k => Math.acos(k.W/(k.F*k.s))*180/Math.PI,   steps:(k,r)=>`cosθ = W / Fs = ${k.W} / (${k.F}×${k.s}) = ${(k.W/(k.F*k.s)).toFixed(4)}\nθ = arccos(${(k.W/(k.F*k.s)).toFixed(4)}) = ${r}°` },
     }
   },
   {
-    cat: 'Energy & Work', name: 'Power P = W/t',
+    cat: 'Energy & Work', name: 'Power P = W/t = Fv',
     vars: [
-      { s: 'P', label: 'Power (P)', unit: 'W' },
-      { s: 'W', label: 'Work/Energy (W)', unit: 'J' },
-      { s: 't', label: 'Time (t)', unit: 's' },
+      { s:'P', label:'Power (P)', unit:'W' },
+      { s:'W', label:'Work/Energy (W)', unit:'J' },
+      { s:'t', label:'Time (t)', unit:'s' },
     ],
     solvers: {
-      P: { formula: 'P = W / t', fn: k => k.W / k.t, steps: (k, r) => `P = W / t\nP = ${r} W` },
-      W: { formula: 'W = Pt', fn: k => k.P * k.t, steps: (k, r) => `W = Pt\nW = ${r} J` },
-      t: { formula: 't = W / P', fn: k => k.W / k.P, steps: (k, r) => `t = W / P\nt = ${r} s` },
+      P: { formula:'P = W / t',  fn:k => k.W/k.t,   steps:(k,r)=>`P = W / t\nP = ${k.W} / ${k.t}\nP = ${r} W` },
+      W: { formula:'W = Pt',     fn:k => k.P*k.t,   steps:(k,r)=>`W = Pt\nW = ${k.P} × ${k.t}\nW = ${r} J` },
+      t: { formula:'t = W / P',  fn:k => k.W/k.P,   steps:(k,r)=>`t = W / P\nt = ${k.W} / ${k.P}\nt = ${r} s` },
     }
   },
   {
     cat: 'SHM', name: 'Pendulum period T = 2π√(L/g)',
     vars: [
-      { s: 'T', label: 'Period (T)', unit: 's' },
-      { s: 'L', label: 'Length (L)', unit: 'm' },
-      { s: 'g', label: 'Gravity (g)', unit: 'm/s²' },
+      { s:'T', label:'Period (T)', unit:'s' },
+      { s:'L', label:'Length (L)', unit:'m' },
+      { s:'g', label:'Gravity (g)', unit:'m/s²' },
     ],
     solvers: {
-      T: { formula: 'T = 2π√(L/g)', fn: k => 2 * Math.PI * Math.sqrt(k.L / k.g), steps: (k, r) => `T = 2π√(L/g)\nT = ${r} s` },
-      L: { formula: 'L = g(T/2π)²', fn: k => k.g * (k.T / (2 * Math.PI)) ** 2, steps: (k, r) => `L = g(T/2π)²\nL = ${r} m` },
-      g: { formula: 'g = L(2π/T)²', fn: k => k.L * (2 * Math.PI / k.T) ** 2, steps: (k, r) => `g = L(2π/T)²\ng = ${r} m/s²` },
+      T: { formula:'T = 2π√(L/g)',   fn:k => 2*Math.PI*Math.sqrt(k.L/k.g),   steps:(k,r)=>`T = 2π√(L/g)\nT = 2π × √(${k.L}/${k.g})\nT = 2π × √${(k.L/k.g).toFixed(4)}\nT = 2π × ${Math.sqrt(k.L/k.g).toFixed(4)}\nT = ${r} s` },
+      L: { formula:'L = g(T/2π)²',   fn:k => k.g*(k.T/(2*Math.PI))**2,       steps:(k,r)=>`L = g(T/2π)²\nL = ${k.g} × (${k.T}/(2π))²\nL = ${k.g} × ${((k.T/(2*Math.PI))**2).toFixed(4)}\nL = ${r} m` },
+      g: { formula:'g = L(2π/T)²',   fn:k => k.L*(2*Math.PI/k.T)**2,         steps:(k,r)=>`g = L(2π/T)²\ng = ${k.L} × (2π/${k.T})²\ng = ${k.L} × ${((2*Math.PI/k.T)**2).toFixed(4)}\ng = ${r} m/s²` },
     }
   },
   {
     cat: 'SHM', name: 'Spring period T = 2π√(m/k)',
     vars: [
-      { s: 'T', label: 'Period (T)', unit: 's' },
-      { s: 'm', label: 'Mass (m)', unit: 'kg' },
-      { s: 'k', label: 'Spring const (k)', unit: 'N/m' },
+      { s:'T', label:'Period (T)', unit:'s' },
+      { s:'m', label:'Mass (m)', unit:'kg' },
+      { s:'k', label:'Spring const (k)', unit:'N/m' },
     ],
     solvers: {
-      T: { formula: 'T = 2π√(m/k)', fn: k => 2 * Math.PI * Math.sqrt(k.m / k.k), steps: (k, r) => `T = 2π√(m/k)\nT = ${r} s` },
-      m: { formula: 'm = k(T/2π)²', fn: k => k.k * (k.T / (2 * Math.PI)) ** 2, steps: (k, r) => `m = k(T/2π)²\nm = ${r} kg` },
-      k: { formula: 'k = m(2π/T)²', fn: k => k.m * (2 * Math.PI / k.T) ** 2, steps: (k, r) => `k = m(2π/T)²\nk = ${r} N/m` },
+      T: { formula:'T = 2π√(m/k)',   fn:kv => 2*Math.PI*Math.sqrt(kv.m/kv.k),  steps:(k,r)=>`T = 2π√(m/k)\nT = 2π × √(${k.m}/${k.k})\nT = 2π × ${Math.sqrt(k.m/k.k).toFixed(4)}\nT = ${r} s` },
+      m: { formula:'m = k(T/2π)²',   fn:kv => kv.k*(kv.T/(2*Math.PI))**2,       steps:(k,r)=>`m = k(T/2π)²\nm = ${k.k} × (${k.T}/(2π))²\nm = ${r} kg` },
+      k: { formula:'k = m(2π/T)²',   fn:kv => kv.m*(2*Math.PI/kv.T)**2,         steps:(k,r)=>`k = m(2π/T)²\nk = ${k.m} × (2π/${k.T})²\nk = ${r} N/m` },
     }
   },
   {
-    cat: 'SHM', name: "Hooke's Law F = -kx",
+    cat: 'SHM', name: 'Hooke\'s Law F = -kx',
     vars: [
-      { s: 'F', label: 'Force (F)', unit: 'N' },
-      { s: 'k', label: 'Spring const (k)', unit: 'N/m' },
-      { s: 'x', label: 'Displacement (x)', unit: 'm' },
+      { s:'F', label:'Force (F)', unit:'N' },
+      { s:'k', label:'Spring const (k)', unit:'N/m' },
+      { s:'x', label:'Displacement (x)', unit:'m' },
     ],
     solvers: {
-      F: { formula: 'F = -kx', fn: k => -k.k * k.x, steps: (k, r) => `F = -kx\nF = ${r} N` },
-      k: { formula: 'k = -F / x', fn: k => -k.F / k.x, steps: (k, r) => `k = -F / x\nk = ${r} N/m` },
-      x: { formula: 'x = -F / k', fn: k => -k.F / k.k, steps: (k, r) => `x = -F / k\nx = ${r} m` },
+      F: { formula:'F = -kx',     fn:k => -k.k*k.x,    steps:(k,r)=>`F = -kx\nF = -(${k.k})(${k.x})\nF = ${r} N` },
+      k: { formula:'k = -F / x',  fn:k => -k.F/k.x,    steps:(k,r)=>`k = -F / x\nk = -(${k.F}) / ${k.x}\nk = ${r} N/m` },
+      x: { formula:'x = -F / k',  fn:k => -k.F/k.k,    steps:(k,r)=>`x = -F / k\nx = -(${k.F}) / ${k.k}\nx = ${r} m` },
     }
   },
   {
     cat: 'Circular', name: 'Centripetal a = v²/r',
     vars: [
-      { s: 'ac', label: 'Centripetal accel (ac)', unit: 'm/s²' },
-      { s: 'v', label: 'Speed (v)', unit: 'm/s' },
-      { s: 'r', label: 'Radius (r)', unit: 'm' },
+      { s:'ac', label:'Centripetal accel (ac)', unit:'m/s²' },
+      { s:'v', label:'Speed (v)', unit:'m/s' },
+      { s:'r', label:'Radius (r)', unit:'m' },
     ],
     solvers: {
-      ac: { formula: 'ac = v²/r', fn: k => k.v ** 2 / k.r, steps: (k, r) => `ac = v²/r\nac = ${r} m/s²` },
-      v: { formula: 'v = √(ac·r)', fn: k => Math.sqrt(k.ac * k.r), steps: (k, r) => `v = √(ac·r)\nv = ${r} m/s` },
-      r: { formula: 'r = v²/ac', fn: k => k.v ** 2 / k.ac, steps: (k, r) => `r = v²/ac\nr = ${r} m` },
+      ac: { formula:'ac = v²/r',      fn:k => k.v**2/k.r,       steps:(k,r)=>`ac = v²/r\nac = ${k.v}² / ${k.r}\nac = ${k.v**2} / ${k.r}\nac = ${r} m/s²` },
+      v:  { formula:'v = √(ac·r)',    fn:k => Math.sqrt(k.ac*k.r), steps:(k,r)=>`v = √(ac·r)\nv = √(${k.ac}×${k.r})\nv = √${k.ac*k.r}\nv = ${r} m/s` },
+      r:  { formula:'r = v²/ac',      fn:k => k.v**2/k.ac,       steps:(k,r)=>`r = v²/ac\nr = ${k.v}² / ${k.ac}\nr = ${k.v**2} / ${k.ac}\nr = ${r} m` },
     }
   },
   {
     cat: 'Circular', name: 'Period T = 2πr/v',
     vars: [
-      { s: 'T', label: 'Period (T)', unit: 's' },
-      { s: 'r', label: 'Radius (r)', unit: 'm' },
-      { s: 'v', label: 'Speed (v)', unit: 'm/s' },
+      { s:'T', label:'Period (T)', unit:'s' },
+      { s:'r', label:'Radius (r)', unit:'m' },
+      { s:'v', label:'Speed (v)', unit:'m/s' },
     ],
     solvers: {
-      T: { formula: 'T = 2πr/v', fn: k => 2 * Math.PI * k.r / k.v, steps: (k, r) => `T = 2πr/v\nT = ${r} s` },
-      r: { formula: 'r = vT/2π', fn: k => k.v * k.T / (2 * Math.PI), steps: (k, r) => `r = vT/2π\nr = ${r} m` },
-      v: { formula: 'v = 2πr/T', fn: k => 2 * Math.PI * k.r / k.T, steps: (k, r) => `v = 2πr/T\nv = ${r} m/s` },
+      T: { formula:'T = 2πr/v',    fn:k => 2*Math.PI*k.r/k.v,     steps:(k,r)=>`T = 2πr/v\nT = 2π×${k.r}/${k.v}\nT = ${r} s` },
+      r: { formula:'r = vT/2π',    fn:k => k.v*k.T/(2*Math.PI),    steps:(k,r)=>`r = vT/2π\nr = ${k.v}×${k.T}/(2π)\nr = ${r} m` },
+      v: { formula:'v = 2πr/T',    fn:k => 2*Math.PI*k.r/k.T,     steps:(k,r)=>`v = 2πr/T\nv = 2π×${k.r}/${k.T}\nv = ${r} m/s` },
     }
   },
 ];
@@ -1112,9 +961,9 @@ let activeCat = cats[0];
 let activeFormIdx = 0;
 let findSym = '';
 
-const tabsEl = document.getElementById('solverTabs');
+const tabsEl   = document.getElementById('solverTabs');
 const formulaSel = document.getElementById('formulaSel');
-const findSelEl = document.getElementById('findSel');
+const findSelEl  = document.getElementById('findSel');
 const knownsGrid = document.getElementById('knownsGrid');
 
 cats.forEach(cat => {
@@ -1138,8 +987,7 @@ function buildFormulaSel() {
   formulaSel.innerHTML = '';
   catFormulas().forEach((f, i) => {
     const o = document.createElement('option');
-    o.value = i;
-    o.textContent = f.name;
+    o.value = i; o.textContent = f.name;
     formulaSel.appendChild(o);
   });
   formulaSel.value = activeFormIdx;
@@ -1175,7 +1023,7 @@ function buildKnownsGrid() {
     const div = document.createElement('div');
     div.className = 'known-field';
     div.innerHTML = `
-      <span class="known-lbl">${v.label} ${v.unit ? '(' + v.unit + ')' : ''}</span>
+      <span class="known-lbl">${v.label} ${v.unit ? '('+v.unit+')' : ''}</span>
       <input class="known-inp${isTarget ? ' target-field' : ''}" id="inp_${v.s}"
         type="number" step="any"
         placeholder="${isTarget ? '← solve for this' : 'enter value'}"
@@ -1183,6 +1031,72 @@ function buildKnownsGrid() {
     `;
     knownsGrid.appendChild(div);
   });
+}
+
+const TW_SPEEDS = [40, 25, 14, 6, 0];
+let twCharDelay = 14;
+
+function updateTwSpeed() {
+  const v = parseInt(document.getElementById('twSpeed').value);
+  document.getElementById('twSpeedVal').textContent = v;
+  twCharDelay = TW_SPEEDS[v - 1];
+}
+
+function scrollResultToBottom() {
+  const inner = document.getElementById('resultInner');
+  if (inner) inner.scrollTop = inner.scrollHeight;
+}
+
+let twTimer = null;
+
+function typewriterSequence(sequence) {
+  if (twTimer) clearTimeout(twTimer);
+
+  sequence.forEach(s => {
+    s.el.textContent = '';
+    s.el.style.opacity = '1';
+    s.el.style.fontStyle = 'normal';
+    s.el.classList.remove('tw-cursor');
+  });
+
+  let seqIdx = 0;
+
+  function runNext() {
+    if (seqIdx >= sequence.length) return;
+    const { el, text, delay_before = 0 } = sequence[seqIdx];
+    seqIdx++;
+
+    if (twCharDelay === 0) {
+      twTimer = setTimeout(() => {
+        el.textContent = text;
+        scrollResultToBottom();
+        runNext();
+      }, delay_before);
+      return;
+    }
+
+    twTimer = setTimeout(() => {
+      el.classList.add('tw-cursor');
+      let charIdx = 0;
+
+      function typeChar() {
+        if (charIdx < text.length) {
+          el.textContent += text[charIdx];
+          charIdx++;
+          scrollResultToBottom();
+          const ch = text[charIdx - 1];
+          const delay = ch === '\n' ? twCharDelay * 7 : twCharDelay;
+          twTimer = setTimeout(typeChar, delay);
+        } else {
+          el.classList.remove('tw-cursor');
+          runNext();
+        }
+      }
+      typeChar();
+    }, delay_before);
+  }
+
+  runNext();
 }
 
 function solve() {
@@ -1200,13 +1114,13 @@ function solve() {
     else known[v.s] = val;
   });
 
-  if (missing.length > 0) return showError('Missing value(s):\n' + missing.join('\n'));
+  if (missing.length > 0) return showError(`Missing value(s):\n${missing.join('\n')}`);
 
   let result;
-  try { result = solver.fn(known); } catch (e) { return showError('Calculation error: ' + e.message); }
+  try { result = solver.fn(known); } catch(e) { return showError('Calculation error: ' + e.message); }
 
   if (isNaN(result) || !isFinite(result))
-    return showError('Result is undefined.\nCheck inputs (e.g. negative under square root, or division by zero).');
+    return showError('Result is undefined.\nCheck inputs — e.g. negative\nunder a square root, or\ndivision by zero.');
 
   const disp = Math.abs(result) < 0.0001 || Math.abs(result) > 1e7
     ? result.toExponential(4)
@@ -1217,34 +1131,43 @@ function solve() {
   const stepsText = solver.steps(known, disp);
 
   document.getElementById('resError').classList.add('hidden');
-  document.getElementById('resFormula').textContent = solver.formula;
-  document.getElementById('resFormula').style.opacity = '1';
-  document.getElementById('resAnswer').textContent = `${findSym} = ${disp} ${unit}`;
-  document.getElementById('resAnswer').style.opacity = '1';
-  document.getElementById('resSteps').textContent = stepsText;
-  document.getElementById('resSteps').style.opacity = '1';
+
+  typewriterSequence([
+    { el: document.getElementById('resFormula'), text: solver.formula                          },
+    { el: document.getElementById('resAnswer'),  text: `${findSym} = ${disp} ${unit}`, delay_before: 120 },
+    { el: document.getElementById('resSteps'),   text: stepsText,                      delay_before: 180 },
+  ]);
 }
 
 function showError(msg) {
-  document.getElementById('resFormula').textContent = 'error';
-  document.getElementById('resFormula').style.opacity = '0.4';
-  document.getElementById('resAnswer').textContent = '—';
-  document.getElementById('resAnswer').style.opacity = '0.3';
-  document.getElementById('resSteps').textContent = '';
-  const errEl = document.getElementById('resError');
+  if (twTimer) clearTimeout(twTimer);
+  const formulaEl = document.getElementById('resFormula');
+  const answerEl  = document.getElementById('resAnswer');
+  const stepsEl   = document.getElementById('resSteps');
+  const errEl     = document.getElementById('resError');
+
+  formulaEl.textContent = ''; formulaEl.style.opacity = '0.3'; formulaEl.style.fontStyle = 'italic';
+  formulaEl.textContent = 'error';
+  answerEl.textContent  = '—'; answerEl.style.opacity = '0.22';
+  stepsEl.textContent   = ''; stepsEl.style.opacity = '1';
+
   errEl.classList.remove('hidden');
-  errEl.textContent = '⚠ ' + msg;
+  typewriterSequence([{ el: errEl, text: '⚠ ' + msg }]);
 }
 
 function hideResult() {
-  document.getElementById('resFormula').textContent = 'select a formula and press Solve';
-  document.getElementById('resFormula').style.opacity = '0.4';
-  document.getElementById('resAnswer').textContent = '—';
-  document.getElementById('resAnswer').style.opacity = '0.3';
-  document.getElementById('resSteps').textContent = 'steps will appear here...';
-  document.getElementById('resSteps').style.opacity = '0.25';
-  document.getElementById('resError').classList.add('hidden');
-  document.getElementById('resError').textContent = '';
+  if (twTimer) clearTimeout(twTimer);
+  const formulaEl = document.getElementById('resFormula');
+  const answerEl  = document.getElementById('resAnswer');
+  const stepsEl   = document.getElementById('resSteps');
+  const errEl     = document.getElementById('resError');
+  [formulaEl, answerEl, stepsEl, errEl].forEach(el => el.classList.remove('tw-cursor'));
+
+  formulaEl.textContent = 'select a formula above and press ⚡ Solve';
+  formulaEl.style.opacity = '0.3'; formulaEl.style.fontStyle = 'italic';
+  answerEl.textContent = '—'; answerEl.style.opacity = '0.22';
+  stepsEl.textContent = 'steps will appear here...'; stepsEl.style.opacity = '0.18';
+  errEl.classList.add('hidden'); errEl.textContent = '';
 }
 
 function clearSolver() {
@@ -1255,13 +1178,11 @@ function clearSolver() {
 buildFormulaSel();
 onFormulaChange();
 
-// QR
-new QRCode(document.getElementById('qrPlaceholder'), {
-  text: 'https://stounchvicinity65.github.io/INTERACTIVE-MOTIONS/',
-  width: 90,
-  height: 90,
-  colorDark: '#000000',
-  colorLight: '#ffffff',
+// ── QR ─────────────────────────────────────────────────────────────────────
+new QRCode(document.getElementById("qrPlaceholder"), {
+  text: "https://stounchvicinity65.github.io/INTERACTIVE-MOTIONS/",
+  width: 96, height: 96,
+  colorDark: "#000000", colorLight: "#ffffff",
   correctLevel: QRCode.CorrectLevel.H
 });
 </script>
