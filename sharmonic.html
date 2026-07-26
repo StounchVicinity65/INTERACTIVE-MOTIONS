@@ -239,10 +239,10 @@
             </div>
             <div class="formula-row">
               <span class="formula-label">Accel</span>
-              <span class="formula-eq">α = −(g/L) sinθ</span>
+              <span class="formula-eq">α = −(g/L)sinθ − 2ζω₀θ'</span>
             </div>
             <div class="formula-row" style="margin-top:0.4rem">
-              <span class="formula-note">L = length · g = 9.8 m/s² · θ = angle</span>
+              <span class="formula-note">L = length · g = 9.8 m/s² · θ = angle · ζ = damping ratio · ω₀ = √(g/L)</span>
             </div>
           </div>
         </div>
@@ -261,10 +261,10 @@
             </div>
             <div class="formula-row">
               <span class="formula-label">Force</span>
-              <span class="formula-eq">F = −kx</span>
+              <span class="formula-eq">F = −kx − 2ζω₀mx'</span>
             </div>
             <div class="formula-row" style="margin-top:0.4rem">
-              <span class="formula-note">m = mass (kg) · k = spring constant · x = displacement</span>
+              <span class="formula-note">m = mass (kg) · k = spring constant · x = displacement · ζ = damping ratio · ω₀ = √(k/m)</span>
             </div>
           </div>
         </div>
@@ -296,12 +296,12 @@
           </div>
           <div class="control-row">
             <label>
-              <span class="lang-en">Damping</span>
-              <span class="lang-bn hidden">অবমন্দন</span>
+              <span class="lang-en">Damping Ratio (ζ)</span>
+              <span class="lang-bn hidden">অবমন্দন অনুপাত (ζ)</span>
             </label>
             <div class="range-row">
-              <input type="range" id="dampingSlider" min="0.98" max="1.00" value="0.995" step="0.001" oninput="syncP()">
-              <span class="range-val" id="dampingDisplay">0.995</span>
+              <input type="range" id="dampingSlider" min="0" max="1.5" value="0.05" step="0.01" oninput="syncP()">
+              <span class="range-val" id="dampingDisplay">0.05</span>
             </div>
           </div>
         </div>
@@ -339,12 +339,12 @@
           </div>
           <div class="control-row">
             <label>
-              <span class="lang-en">Damping</span>
-              <span class="lang-bn hidden">অবমন্দন</span>
+              <span class="lang-en">Damping Ratio (ζ)</span>
+              <span class="lang-bn hidden">অবমন্দন অনুপাত (ζ)</span>
             </label>
             <div class="range-row">
-              <input type="range" id="sdampSlider" min="0.96" max="1.00" value="0.998" step="0.001" oninput="syncS()">
-              <span class="range-val" id="sdampDisplay">0.998</span>
+              <input type="range" id="sdampSlider" min="0" max="1.5" value="0.05" step="0.01" oninput="syncS()">
+              <span class="range-val" id="sdampDisplay">0.05</span>
             </div>
           </div>
         </div>
@@ -436,13 +436,13 @@ function switchMode(m) {
 function syncP() {
   document.getElementById('angleDisplay').textContent = document.getElementById('angleSlider').value + '°';
   document.getElementById('lengthDisplay').textContent = parseFloat(document.getElementById('lengthSlider').value).toFixed(1) + ' m';
-  document.getElementById('dampingDisplay').textContent = parseFloat(document.getElementById('dampingSlider').value).toFixed(3);
+  document.getElementById('dampingDisplay').textContent = parseFloat(document.getElementById('dampingSlider').value).toFixed(2);
 }
 function syncS() {
   document.getElementById('dispDisplay').textContent = parseFloat(document.getElementById('dispSlider').value).toFixed(2) + ' m';
   document.getElementById('massDisplay').textContent = parseFloat(document.getElementById('massSlider').value).toFixed(1);
   document.getElementById('stiffDisplay').textContent = parseFloat(document.getElementById('stiffSlider').value).toFixed(1);
-  document.getElementById('sdampDisplay').textContent = parseFloat(document.getElementById('sdampSlider').value).toFixed(3);
+  document.getElementById('sdampDisplay').textContent = parseFloat(document.getElementById('sdampSlider').value).toFixed(2);
 }
 // ── SIMULATION STATE ──────────────────────────────────────────────────────
 let simRunning = false;
@@ -614,7 +614,7 @@ new p5(function(p) {
   // ── PENDULUM DRAW ──────────────────────────────────────────────────────
   function drawPendulum() {
     const Lm = parseFloat(document.getElementById('lengthSlider').value); // metres
-    const damp = parseFloat(document.getElementById('dampingSlider').value);
+    const zeta = parseFloat(document.getElementById('dampingSlider').value); // damping ratio
     const g = 9.8; // m/s
     const dt = 1 / 60; // seconds per frame
     const PX_PER_M = Math.min(200, (p.height * 0.72) / 3.0);
@@ -622,9 +622,9 @@ new p5(function(p) {
     const originX = p.width / 2;
     const originY = p.height * 0.14;
     if (simRunning) {
-      const alpha = -(g / Lm) * Math.sin(physTheta); // rad/s²
+      const omega0 = Math.sqrt(g / Lm); // natural frequency, rad/s
+      const alpha = -(g / Lm) * Math.sin(physTheta) - 2 * zeta * omega0 * physOmega; // rad/s²
       physOmega += alpha * dt;
-      physOmega *= damp;
       physTheta += physOmega * dt;
       elapsedT += dt;
     }
@@ -705,13 +705,14 @@ new p5(function(p) {
     const x0m = parseFloat(document.getElementById('dispSlider').value); // metres
     const mass = parseFloat(document.getElementById('massSlider').value); // kg
     const k = parseFloat(document.getElementById('stiffSlider').value); // N/m
-    const damp = parseFloat(document.getElementById('sdampSlider').value);
+    const zeta = parseFloat(document.getElementById('sdampSlider').value); // damping ratio
     const dt = 1 / 60; // seconds
     if (simRunning) {
-      const F = -k * physX; // N, physX in metres
+      const omega0 = Math.sqrt(k / mass); // natural frequency, rad/s
+      const c = 2 * zeta * omega0 * mass; // damping coefficient, N·s/m
+      const F = -k * physX - c * physV; // N, physX in metres
       const a = F / mass; // m/s²
       physV += a * dt; // m/s
-      physV *= damp;
       physX += physV * dt; // metres
       elapsedT += dt;
     }
