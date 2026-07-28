@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Interactive Motion Simulations</title>
+<title>Physics Lab — Interactive Simulations</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;700&family=Share+Tech+Mono&family=Bebas+Neue&family=Exo+2:ital,wght@0,300;0,400;0,700;0,900;1,700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -75,6 +75,16 @@ body.bangla .hero h1{font-family:'Noto Serif Bengali',sans-serif;font-size:2.1re
 
 /* ── SIMULATION GRID ── */
 .section-title{font-size:1.15rem;font-weight:700;color:#fff;margin-bottom:1.1rem;}
+.filter-row{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1.4rem;}
+.filter-pill{padding:.42rem 1rem;border-radius:20px;cursor:pointer;font-size:.8rem;font-weight:700;font-family:'Share Tech Mono',monospace;letter-spacing:.03em;border:1px solid var(--border);background:rgba(255,255,255,.02);color:var(--text-faint);transition:all .18s;}
+.filter-pill:hover{border-color:rgba(74,144,226,.4);color:rgba(144,205,244,.85);}
+.filter-pill.active{border-color:rgba(74,144,226,.6);background:var(--accent-soft);color:var(--blue);}
+.sim-card.filtered-out{display:none;}
+.grid-empty{text-align:center;padding:3rem 1rem;border:1px dashed var(--border);border-radius:16px;}
+.grid-empty.hidden{display:none;}
+.grid-empty-icon{font-size:2.2rem;opacity:.4;margin-bottom:.8rem;}
+.grid-empty-title{font-weight:700;color:var(--text);font-size:1rem;margin-bottom:.4rem;}
+.grid-empty-sub{font-size:.85rem;color:var(--text-faint);}
 .sim-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.1rem;}
 .sim-card{background:var(--bg-panel);border:1px solid var(--border);border-radius:16px;padding:1.3rem;display:flex;flex-direction:column;gap:.7rem;transition:border-color .2s,transform .2s,box-shadow .2s;}
 .sim-card:hover{border-color:rgba(74,144,226,.4);transform:translateY(-3px);box-shadow:0 14px 28px rgba(0,0,0,.35);}
@@ -239,8 +249,8 @@ body.bangla .hero h1{font-family:'Noto Serif Bengali',sans-serif;font-size:2.1re
   <div class="main-col">
     <header class="topbar">
       <span class="topbar-title">⚛
-        <span class="lang-en" id="topTitleHome">Interactive Motion Simulations</span>
-        <span class="lang-bn hidden">ইন্টারেক্টিভ মোশন সিমুলেশন</span>
+        <span class="lang-en" id="topTitleHome">Physics Lab — Interactive Simulations</span>
+        <span class="lang-bn hidden">পদার্থবিজ্ঞান — ইন্টারেক্টিভ সিমুলেশন</span>
       </span>
     </header>
 
@@ -272,9 +282,11 @@ body.bangla .hero h1{font-family:'Noto Serif Bengali',sans-serif;font-size:2.1re
 
         <h2 class="section-title" id="grid"><span class="lang-en">All Simulations</span><span class="lang-bn hidden">সমস্ত সিমুলেশন</span></h2>
 
-        <div class="sim-grid">
+        <div class="filter-row" id="filterRow"></div>
 
-          <div class="sim-card">
+        <div class="sim-grid" id="simGrid">
+
+          <div class="sim-card" data-cat="Kinematics & Dynamics">
             <div class="sim-top">
               <div class="sim-icon">🎯</div>
               <div><div class="sim-title"><span class="lang-en">Projectile Motion</span><span class="lang-bn hidden">প্রাসের গতি</span></div>
@@ -284,7 +296,7 @@ body.bangla .hero h1{font-family:'Noto Serif Bengali',sans-serif;font-size:2.1re
             <div class="sim-actions"><a href="projectile.html" class="sim-btn"><span class="lang-en">Open Simulation →</span><span class="lang-bn hidden">সিমুলেশন খুলুন →</span></a></div>
           </div>
 
-          <div class="sim-card">
+          <div class="sim-card" data-cat="Kinematics & Dynamics">
             <div class="sim-top">
               <div class="sim-icon">🌊</div>
               <div><div class="sim-title"><span class="lang-en">Oscillatory Motion</span><span class="lang-bn hidden">দোলন গতি</span></div>
@@ -294,7 +306,7 @@ body.bangla .hero h1{font-family:'Noto Serif Bengali',sans-serif;font-size:2.1re
             <div class="sim-actions"><a href="oscillatory.html" class="sim-btn"><span class="lang-en">Open Simulation →</span><span class="lang-bn hidden">সিমুলেশন খুলুন →</span></a></div>
           </div>
 
-          <div class="sim-card">
+          <div class="sim-card" data-cat="Kinematics & Dynamics">
             <div class="sim-top">
               <div class="sim-icon">🌀</div>
               <div><div class="sim-title"><span class="lang-en">Simple Harmonic Motion</span><span class="lang-bn hidden">সরল স্পন্দন গতি</span></div>
@@ -304,7 +316,7 @@ body.bangla .hero h1{font-family:'Noto Serif Bengali',sans-serif;font-size:2.1re
             <div class="sim-actions"><a href="sharmonic.html" class="sim-btn"><span class="lang-en">Open Simulation →</span><span class="lang-bn hidden">সিমুলেশন খুলুন →</span></a></div>
           </div>
 
-          <div class="sim-card">
+          <div class="sim-card" data-cat="Kinematics & Dynamics">
             <div class="sim-top">
               <div class="sim-icon">🔄</div>
               <div><div class="sim-title"><span class="lang-en">Circular Motion</span><span class="lang-bn hidden">বৃত্তাকার গতি</span></div>
@@ -314,7 +326,7 @@ body.bangla .hero h1{font-family:'Noto Serif Bengali',sans-serif;font-size:2.1re
             <div class="sim-actions"><a href="circular.html" class="sim-btn"><span class="lang-en">Open Simulation →</span><span class="lang-bn hidden">সিমুলেশন খুলুন →</span></a></div>
           </div>
 
-          <div class="sim-card">
+          <div class="sim-card" data-cat="Kinematics & Dynamics">
             <div class="sim-top">
               <div class="sim-icon">🎲</div>
               <div><div class="sim-title"><span class="lang-en">Random Motion</span><span class="lang-bn hidden">এলোমেলো গতি</span></div>
@@ -324,7 +336,7 @@ body.bangla .hero h1{font-family:'Noto Serif Bengali',sans-serif;font-size:2.1re
             <div class="sim-actions"><a href="random.html" class="sim-btn"><span class="lang-en">Open Simulation →</span><span class="lang-bn hidden">সিমুলেশন খুলুন →</span></a></div>
           </div>
 
-          <div class="sim-card">
+          <div class="sim-card" data-cat="Kinematics & Dynamics">
             <div class="sim-top">
               <div class="sim-icon">➡️</div>
               <div><div class="sim-title"><span class="lang-en">Linear Motion</span><span class="lang-bn hidden">সরলরৈখিক গতি</span></div>
@@ -334,7 +346,7 @@ body.bangla .hero h1{font-family:'Noto Serif Bengali',sans-serif;font-size:2.1re
             <div class="sim-actions"><a href="linear.html" class="sim-btn"><span class="lang-en">Open Simulation →</span><span class="lang-bn hidden">সিমুলেশন খুলুন →</span></a></div>
           </div>
 
-          <div class="sim-card">
+          <div class="sim-card" data-cat="Kinematics & Dynamics">
             <div class="sim-top">
               <div class="sim-icon">🚗</div>
               <div><div class="sim-title"><span class="lang-en">Translational Motion</span><span class="lang-bn hidden">চলন গতি</span></div>
@@ -344,7 +356,7 @@ body.bangla .hero h1{font-family:'Noto Serif Bengali',sans-serif;font-size:2.1re
             <div class="sim-actions"><a href="translational.html" class="sim-btn"><span class="lang-en">Open Simulation →</span><span class="lang-bn hidden">সিমুলেশন খুলুন →</span></a></div>
           </div>
 
-          <div class="sim-card">
+          <div class="sim-card" data-cat="Kinematics & Dynamics">
             <div class="sim-top">
               <div class="sim-icon">🚀</div>
               <div><div class="sim-title"><span class="lang-en">Accelerated Motion</span><span class="lang-bn hidden">ত্বরিত গতি</span></div>
@@ -354,7 +366,7 @@ body.bangla .hero h1{font-family:'Noto Serif Bengali',sans-serif;font-size:2.1re
             <div class="sim-actions"><a href="accelerated.html" class="sim-btn"><span class="lang-en">Open Simulation →</span><span class="lang-bn hidden">সিমুলেশন খুলুন →</span></a></div>
           </div>
 
-          <div class="sim-card">
+          <div class="sim-card" data-cat="Kinematics & Dynamics">
             <div class="sim-top">
               <div class="sim-icon">🛑</div>
               <div><div class="sim-title"><span class="lang-en">Decelerated Motion</span><span class="lang-bn hidden">মন্দিত গতি</span></div>
@@ -555,6 +567,53 @@ body.bangla .hero h1{font-family:'Noto Serif Bengali',sans-serif;font-size:2.1re
   }
   init(); draw();
   window.addEventListener('resize',init);
+})();
+
+// ============================================================
+//  SUB-CATEGORY FILTER PILLS
+//  Fixed category list — pills show even before matching
+//  simulations exist yet. To add a new simulation later:
+//  just give its .sim-card a matching data-cat and it will
+//  automatically appear under that pill. No JS changes needed.
+// ============================================================
+(function(){
+  const grid = document.getElementById('simGrid');
+  const row  = document.getElementById('filterRow');
+  if(!grid || !row) return;
+
+  // The fixed roadmap of categories — edit this list to add/rename topics.
+  const CATS = ['All', 'Kinematics & Dynamics', 'Energy', 'Work & Power', 'Waves & Optics'];
+
+  const cards = Array.from(grid.querySelectorAll('.sim-card'));
+
+  // Empty-state placeholder shown when a category has no cards yet
+  const empty = document.createElement('div');
+  empty.id = 'gridEmpty';
+  empty.className = 'grid-empty hidden';
+  empty.innerHTML = `
+    <div class="grid-empty-icon">🧪</div>
+    <div class="grid-empty-title"><span class="lang-en">More simulations coming soon</span><span class="lang-bn hidden">শীঘ্রই আরও সিমুলেশন আসছে</span></div>
+    <div class="grid-empty-sub"><span class="lang-en">This category doesn't have any simulations yet — check back later.</span><span class="lang-bn hidden">এই বিভাগে এখনও কোনো সিমুলেশন নেই — পরে আবার দেখুন।</span></div>
+  `;
+  grid.parentNode.insertBefore(empty, grid.nextSibling);
+
+  CATS.forEach((cat, i) => {
+    const b = document.createElement('button');
+    b.className = 'filter-pill' + (i === 0 ? ' active' : '');
+    b.textContent = cat;
+    b.onclick = () => {
+      row.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+      b.classList.add('active');
+      let visibleCount = 0;
+      cards.forEach(c => {
+        const show = cat === 'All' || c.dataset.cat === cat;
+        c.classList.toggle('filtered-out', !show);
+        if (show) visibleCount++;
+      });
+      empty.classList.toggle('hidden', visibleCount > 0);
+    };
+    row.appendChild(b);
+  });
 })();
 
 // ============================================================
