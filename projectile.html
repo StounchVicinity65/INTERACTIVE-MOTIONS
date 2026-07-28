@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Projectile Motion</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;700&family=Share+Tech+Mono&family=Exo+2:wght@300;400;700;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;700&family=Share+Tech+Mono&family=Bebas+Neue&family=Exo+2:wght@300;400;700;900&display=swap" rel="stylesheet"/>
   <style>
     :root {
       --blue:    #90cdf4;
@@ -13,8 +13,9 @@
       --orange:  #f6ad55;
       --green:   #68d391;
       --red:     #fc8181;
-      --bg:      #04080f;
-      --card:    rgba(5,14,32,0.88);
+      --bg:      #010306;
+      --panel:   #080d16;
+      --card:    rgba(8,13,22,0.88);
       --dim:     #8ba3bb;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -28,18 +29,19 @@
     }
     body.bangla { font-family: 'Noto Serif Bengali', sans-serif; }
 
+    #pCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.7;}
     #bgLayer {
       position: fixed; inset: 0; z-index: 0;
       background:
-        radial-gradient(ellipse at 15% 60%, rgba(74,144,226,0.07) 0%, transparent 55%),
-        radial-gradient(ellipse at 85% 25%, rgba(246,224,94,0.04) 0%, transparent 50%),
-        linear-gradient(155deg, rgba(9,32,63,0.96), rgba(4,12,26,0.98));
+        radial-gradient(ellipse at 15% 60%, rgba(74,144,226,0.09) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 25%, rgba(144,205,244,0.05) 0%, transparent 50%),
+        linear-gradient(155deg, rgba(1,3,6,0.9), rgba(1,3,6,0.98));
     }
     #bgGrid {
       position: fixed; inset: 0; z-index: 0;
       background-image:
-        linear-gradient(rgba(144,205,244,0.022) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(144,205,244,0.022) 1px, transparent 1px);
+        linear-gradient(rgba(144,205,244,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(144,205,244,0.02) 1px, transparent 1px);
       background-size: 40px 40px;
     }
 
@@ -49,24 +51,24 @@
     .topbar {
       display: flex; align-items: center; justify-content: space-between;
       padding: 0.75rem 1.5rem;
-      background: rgba(0,0,0,0.65);
+      background: rgba(1,3,6,0.75);
       backdrop-filter: blur(14px);
-      border-bottom: 1px solid rgba(144,205,244,0.12);
+      border-bottom: 1px solid rgba(144,205,244,0.14);
       position: sticky; top: 0; z-index: 100;
     }
     .back-btn {
       text-decoration: none; color: var(--dim);
       background: rgba(0,0,0,0.4);
       padding: 0.4rem 0.9rem; border-radius: 6px;
-      font-size: 0.85rem; border: 1px solid rgba(144,205,244,0.18);
+      font-size: 0.85rem; border: 1px solid rgba(144,205,244,0.2);
       transition: all 0.2s; font-family: 'Share Tech Mono', monospace;
     }
     .back-btn:hover { color: var(--blue); border-color: var(--blue); background: rgba(74,144,226,0.12); }
     .page-title {
-      font-family: 'Exo 2', sans-serif;
-      font-size: 1.35rem; font-weight: 900; font-style: italic;
-      color: var(--gold);
-      text-shadow: 0 0 22px rgba(246,224,94,0.32);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.55rem; letter-spacing: .03em;
+      color: var(--blue);
+      text-shadow: 0 0 22px rgba(144,205,244,0.4);
     }
     #languageToggle {
       background: rgba(0,0,0,0.5); color: white;
@@ -85,7 +87,7 @@
 
     .panel {
       background: var(--card);
-      border: 1px solid rgba(144,205,244,0.13);
+      border: 1px solid rgba(144,205,244,0.14);
       border-radius: 12px;
       padding: 1.15rem 1.25rem;
       backdrop-filter: blur(10px);
@@ -94,31 +96,31 @@
     .panel-label {
       font-family: 'Share Tech Mono', monospace;
       font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase;
-      color: rgba(144,205,244,0.42); margin-bottom: 0.62rem;
+      color: rgba(144,205,244,0.5); margin-bottom: 0.62rem;
     }
 
     .def-text { font-size: 0.86rem; line-height: 1.72; color: var(--dim); }
     .def-text strong { color: var(--blue); }
-    .def-text em { color: var(--gold); font-style: normal; font-family: 'Share Tech Mono', monospace; font-size: 0.81rem; }
+    .def-text em { color: var(--blue); opacity: .85; font-style: normal; font-family: 'Share Tech Mono', monospace; font-size: 0.81rem; }
 
     .formula-block {
       margin-top: 0.75rem;
       background: rgba(0,0,0,0.38);
       border-radius: 8px;
       padding: 0.7rem 0.9rem;
-      border-left: 2px solid var(--gold);
+      border-left: 2px solid var(--blue-d);
     }
     .formula-row { display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 0.28rem; }
     .formula-row:last-child { margin-bottom: 0; }
     .formula-lbl { font-size: 0.65rem; color: var(--dim); font-family: 'Share Tech Mono', monospace; min-width: 36px; }
-    .formula-eq  { font-family: 'Share Tech Mono', monospace; font-size: 0.86rem; color: var(--gold); }
+    .formula-eq  { font-family: 'Share Tech Mono', monospace; font-size: 0.86rem; color: var(--blue); }
     .formula-sub { font-size: 0.65rem; color: rgba(139,163,187,0.55); font-family: 'Share Tech Mono', monospace; }
 
     /* Controls */
     .control-row { display: flex; flex-direction: column; gap: 0.18rem; margin-bottom: 0.8rem; }
     .control-row label { font-size: 0.79rem; color: var(--dim); font-weight: 500; }
-    .control-row input[type="range"] { width: 100%; accent-color: var(--gold); cursor: pointer; height: 4px; }
-    .range-val { font-family: 'Share Tech Mono', monospace; font-size: 0.88rem; color: var(--gold); margin-left: 0.5rem; min-width: 44px; }
+    .control-row input[type="range"] { width: 100%; accent-color: var(--blue-d); cursor: pointer; height: 4px; }
+    .range-val { font-family: 'Share Tech Mono', monospace; font-size: 0.88rem; color: var(--blue); margin-left: 0.5rem; min-width: 44px; }
     .range-row { display: flex; align-items: center; }
 
     .btn-row { display: flex; gap: 0.55rem; margin-top: 0.25rem; }
@@ -127,8 +129,8 @@
       font-size: 0.88rem; font-weight: 700; cursor: pointer;
       font-family: 'Exo 2', sans-serif; transition: all 0.22s; letter-spacing: 0.03em;
     }
-    .btn-launch { background: linear-gradient(135deg, #d97706, #b45309); color: white; }
-    .btn-launch:hover { filter: brightness(1.2); transform: translateY(-2px); box-shadow: 0 6px 22px rgba(217,119,6,0.42); }
+    .btn-launch { background: linear-gradient(135deg, var(--blue-d), #1d4ed8); color: white; }
+    .btn-launch:hover { filter: brightness(1.16); transform: translateY(-2px); box-shadow: 0 6px 22px rgba(74,144,226,0.42); }
     .btn-reset  { background: rgba(255,255,255,0.07); color: var(--dim); border: 1px solid rgba(255,255,255,0.13); }
     .btn-reset:hover  { background: rgba(255,255,255,0.13); color: white; }
 
@@ -136,7 +138,7 @@
     .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.58rem; }
     .stat-card {
       background: rgba(0,0,0,0.38);
-      border: 1px solid rgba(144,205,244,0.11);
+      border: 1px solid rgba(144,205,244,0.13);
       border-radius: 8px; padding: 0.55rem 0.7rem;
     }
     .stat-label { font-size: 0.63rem; color: var(--dim); font-family: 'Share Tech Mono', monospace; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.18rem; }
@@ -153,7 +155,7 @@
     .canvas-area { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; min-width: 0; }
     .canvas-wrap {
       background: var(--card);
-      border: 1px solid rgba(144,205,244,0.13);
+      border: 1px solid rgba(144,205,244,0.14);
       border-radius: 12px; overflow: hidden;
       box-shadow: 0 0 30px rgba(0,0,0,0.55);
       flex: 1; min-height: 300px;
@@ -163,7 +165,7 @@
     .graph-row { display: flex; gap: 0.75rem; }
     .graph-wrap {
       background: var(--card);
-      border: 1px solid rgba(144,205,244,0.12);
+      border: 1px solid rgba(144,205,244,0.13);
       border-radius: 12px; overflow: hidden;
       box-shadow: 0 0 16px rgba(0,0,0,0.35);
       height: 155px; flex: 1; min-width: 0;
@@ -171,7 +173,7 @@
     .graph-label {
       font-family: 'Share Tech Mono', monospace;
       font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase;
-      color: rgba(144,205,244,0.42); padding: 0.4rem 0.8rem 0;
+      color: rgba(144,205,244,0.5); padding: 0.4rem 0.8rem 0;
     }
     canvas.graph { display: block; width: 100%; height: 122px; }
 
@@ -186,6 +188,7 @@
   </style>
 </head>
 <body>
+<canvas id="pCanvas"></canvas>
 <div id="bgLayer"></div>
 <div id="bgGrid"></div>
 
@@ -347,6 +350,48 @@
 
 <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
 <script>
+// ── PARTICLES (background) — same pattern as the portal/motion-sim index ──
+(function(){
+  const c = document.getElementById('pCanvas');
+  const ctx = c.getContext('2d');
+  let W, H, pts = [];
+  function resize(){ W=c.width=innerWidth; H=c.height=innerHeight; }
+  function init(){
+    resize();
+    pts = Array.from({length:55},()=>({
+      x:Math.random()*W, y:Math.random()*H,
+      vx:(Math.random()-.5)*.55, vy:(Math.random()-.5)*.55,
+      r:Math.random()*1.2+.4
+    }));
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    pts.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0||p.x>W) p.vx*=-1;
+      if(p.y<0||p.y>H) p.vy*=-1;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(144,205,244,0.4)';
+      ctx.fill();
+    });
+    pts.forEach((a,i)=>pts.slice(i+1).forEach(b=>{
+      const d=Math.hypot(a.x-b.x,a.y-b.y);
+      if(d<90){
+        ctx.beginPath();
+        ctx.moveTo(a.x,a.y);
+        ctx.lineTo(b.x,b.y);
+        ctx.strokeStyle=`rgba(144,205,244,${.07*(1-d/90)})`;
+        ctx.lineWidth=.5;
+        ctx.stroke();
+      }
+    }));
+    requestAnimationFrame(draw);
+  }
+  init(); draw();
+  window.addEventListener('resize',init);
+})();
+
 // ── LANGUAGE ──────────────────────────────────────────────────────────────
 let currentLang = 'en';
 document.getElementById('languageToggle').addEventListener('click', () => {
@@ -377,15 +422,20 @@ function syncControls() {
 syncControls();
 
 // ── HISTORY FOR GRAPHS ────────────────────────────────────────────────────
+// FIX: previously capped at 600 samples with a sliding shift() — for long
+// flights (low gravity / high speed) this silently dropped the earliest
+// points while the x-axis kept using the ever-growing elapsed time, so the
+// plotted line would appear to detach from the origin and "jump"/compress
+// into the right edge instead of drawing a clean, complete curve.
+// A full flight only ever produces a few thousand samples at most, so we
+// simply stop discarding old points — the array is cleared on every new
+// launch anyway, so there is no unbounded growth risk.
 let hHistory = []; // { t, y }
 let sHistory = []; // { t, spd }
-const MAX_H  = 600;
 
 function recordHistory(t, y, spd) {
   hHistory.push({ t, y });
   sHistory.push({ t, spd });
-  if (hHistory.length > MAX_H) hHistory.shift();
-  if (sHistory.length > MAX_H) sHistory.shift();
 }
 
 function drawLineGraph(canvasId, history, yKey, yLabel, unitLabel, lineColor, fillColor, zeroed) {
@@ -413,6 +463,9 @@ function drawLineGraph(canvasId, history, yKey, yLabel, unitLabel, lineColor, fi
   if (history.length < 2) return;
 
   const maxY = Math.max(...history.map(p => p[yKey]), 0.1);
+  // Always scale the x-axis from t=0 (launch) to the current elapsed time,
+  // using the FULL history array (see fix note above) so the curve is
+  // always continuous from the origin, however long the flight runs.
   const maxT = Math.max(history[history.length - 1].t, 0.1);
 
   // Grid + tick labels
@@ -467,8 +520,8 @@ function drawLineGraph(canvasId, history, yKey, yLabel, unitLabel, lineColor, fi
 }
 
 function drawBothGraphs() {
-  drawLineGraph('gHeight', hHistory, 'y',   'y (m)',     'm',    '#f6e05e', 'rgba(246,224,94,0.10)');
-  drawLineGraph('gSpeed',  sHistory, 'spd', 'v (m/s)',   'm/s',  '#90cdf4', 'rgba(144,205,244,0.10)');
+  drawLineGraph('gHeight', hHistory, 'y',   'y (m)',     'm',    '#90cdf4', 'rgba(144,205,244,0.10)');
+  drawLineGraph('gSpeed',  sHistory, 'spd', 'v (m/s)',   'm/s',  '#4a90e2', 'rgba(74,144,226,0.10)');
 }
 
 // ── P5 SKETCH ─────────────────────────────────────────────────────────────
@@ -545,7 +598,7 @@ new p5(function(p) {
 
   p.draw = function() {
     // ── BACKGROUND ──
-    p.background(6, 14, 34);
+    p.background(4, 8, 18);
 
     // Subtle grid
     p.stroke(144, 205, 244, 14); p.strokeWeight(0.5);
@@ -587,7 +640,7 @@ new p5(function(p) {
     if (!launched && predictedPath.length > 1) {
       for (let i = 1; i < predictedPath.length; i++) {
         const t = i / predictedPath.length;
-        p.stroke(246, 224, 94, 40 + t * 60); p.strokeWeight(1.5);
+        p.stroke(144, 205, 244, 40 + t * 60); p.strokeWeight(1.5);
         const prev = predictedPath[i - 1], cur = predictedPath[i];
         if (i % 3 !== 0) p.line(prev.cx, prev.cy, cur.cx, cur.cy); // dashed
       }
@@ -595,15 +648,15 @@ new p5(function(p) {
       // Angle arc — drawn at ground surface level
       const ang = parseFloat(document.getElementById('angleSlider').value);
       const arcR = 40;
-      p.noFill(); p.stroke(246, 224, 94, 120); p.strokeWeight(1.2);
+      p.noFill(); p.stroke(144, 205, 244, 130); p.strokeWeight(1.2);
       p.arc(originX, groundY - BALL_R, arcR * 2, arcR * 2, -p.radians(ang), 0);
-      p.noStroke(); p.fill(246, 224, 94, 160);
+      p.noStroke(); p.fill(144, 205, 244, 170);
       p.textFont('Consolas'); p.textSize(10); p.textAlign(p.CENTER);
       p.text(ang + '°', originX + arcR * 0.7, groundY - BALL_R - arcR * 0.4);
 
       // Landing point marker
       const last = predictedPath[predictedPath.length - 1];
-      p.stroke(246, 173, 85, 130); p.strokeWeight(2); p.noFill();
+      p.stroke(74, 144, 226, 150); p.strokeWeight(2); p.noFill();
       p.line(last.cx - 8, groundY - BALL_R, last.cx + 8, groundY - BALL_R);
       p.line(last.cx, groundY - BALL_R - 8, last.cx, groundY - BALL_R + 4);
       // Max height marker
@@ -659,9 +712,9 @@ new p5(function(p) {
       for (let i = 1; i < trail.length; i++) {
         const t     = i / trail.length;
         const alpha = t * 220;
-        const r = p.lerp(246, 144, t);
-        const g = p.lerp(224, 205, t);
-        const b = p.lerp(94,  244, t);
+        const r = p.lerp(144, 90, t);
+        const g = p.lerp(205, 144, t);
+        const b = p.lerp(244, 226, t);
         p.stroke(r, g, b, alpha);
         p.strokeWeight(1.5 + t * 1.5);
         p.line(trail[i-1].cx, trail[i-1].cy, trail[i].cx, trail[i].cy);
@@ -690,24 +743,24 @@ new p5(function(p) {
 
       // Glow
       p.noStroke();
-      p.fill(246, 224, 94, 35); p.ellipse(last.cx, last.cy, 38, 38);
-      p.fill(246, 224, 94, 55); p.ellipse(last.cx, last.cy, 24, 24);
+      p.fill(144, 205, 244, 35); p.ellipse(last.cx, last.cy, 38, 38);
+      p.fill(144, 205, 244, 55); p.ellipse(last.cx, last.cy, 24, 24);
 
       // Arrow showing velocity direction
       p.push();
       p.translate(last.cx, last.cy);
       p.rotate(ang);
-      p.fill(246, 224, 94, 200); p.noStroke();
+      p.fill(144, 205, 244, 210); p.noStroke();
       p.triangle(16, 0, 5, -5, 5, 5);
-      p.stroke(246, 224, 94, 160); p.strokeWeight(2);
+      p.stroke(144, 205, 244, 170); p.strokeWeight(2);
       p.line(0, 0, 12, 0);
       p.pop();
 
       // Ball
       p.noStroke();
-      p.fill(220, 180, 40);
+      p.fill(74, 144, 226);
       p.ellipse(last.cx, last.cy, 18, 18);
-      p.fill(255, 220, 80);
+      p.fill(190, 220, 250);
       p.ellipse(last.cx - 3, last.cy - 3, 6, 6);
 
       // Velocity component lines
@@ -729,9 +782,9 @@ new p5(function(p) {
     if (landed && trail.length > 0) {
       const last = trail[trail.length - 1];
       // Impact marker at ground surface
-      p.noStroke(); p.fill(246, 173, 85, 180);
+      p.noStroke(); p.fill(74, 144, 226, 190);
       p.ellipse(last.cx, groundY - BALL_R, 22, 10);
-      p.fill(246, 224, 94, 220);
+      p.fill(144, 205, 244, 220);
       p.textFont('Share Tech Mono'); p.textSize(11); p.textAlign(p.CENTER);
       p.text('LANDED', last.cx, groundY - BALL_R - 18);
 
@@ -740,7 +793,7 @@ new p5(function(p) {
       const H = peakCanvas ? peakCanvas.h.toFixed(1) : '—';
       p.fill(0, 0, 0, 140); p.noStroke();
       p.rect(p.width / 2 - 130, p.height / 2 - 50, 260, 90, 10);
-      p.fill(246, 224, 94); p.textFont('Exo 2'); p.textSize(14); p.textAlign(p.CENTER, p.CENTER);
+      p.fill(144, 205, 244); p.textFont('Exo 2'); p.textSize(14); p.textAlign(p.CENTER, p.CENTER);
       p.text('Trajectory Complete', p.width / 2, p.height / 2 - 28);
       p.fill(200, 230, 255); p.textFont('Consolas'); p.textSize(11);
       p.text(`Range: ${R} m   |   Max Height: ${H} m`, p.width / 2, p.height / 2 - 6);
