@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Convex Mirror</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;700&family=Share+Tech+Mono&family=Bebas+Neue&family=Exo+2:wght@300;400;700;900&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --blue:    #90cdf4;
+      --blue-d:  #4a90e2;
+      --gold:    #f6e05e;
+      --orange:  #f6ad55;
+      --green:   #68d391;
+      --red:     #fc8181;
+      --bg:      #010306;
+      --panel:   #080d16;
+      --card:    rgba(8,13,22,0.88);
+      --dim:     #8ba3bb;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Exo 2', sans-serif;
+      background: var(--bg);
+      color: #f0f0f0;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    body.bangla { font-family: 'Noto Serif Bengali', sans-serif; }
+
+    #pCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.7;}
+    #bgLayer {
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse at 15% 60%, rgba(74,144,226,0.09) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 25%, rgba(144,205,244,0.05) 0%, transparent 50%),
+        linear-gradient(155deg, rgba(1,3,6,0.9), rgba(1,3,6,0.98));
+    }
+    #bgGrid {
+      position: fixed; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(rgba(144,205,244,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(144,205,244,0.02) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    .wrapper { position: relative; z-index: 1; display: flex; flex-direction: column; min-height: 100vh; padding-bottom: 2rem; }
+
+    /* TOP BAR */
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.75rem 1.5rem;
+      background: rgba(1,3,6,0.75);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(144,205,244,0.14);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .back-btn {
+      text-decoration: none; color: var(--dim);
+      background: rgba(0,0,0,0.4);
+      padding: 0.4rem 0.9rem; border-radius: 6px;
+      font-size: 0.85rem; border: 1px solid rgba(144,205,244,0.2);
+      transition: all 0.2s; font-family: 'Share Tech Mono', monospace;
+    }
+    .back-btn:hover { color: var(--blue); border-color: var(--blue); background: rgba(74,144,226,0.12); }
+    .page-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.55rem; letter-spacing: .03em;
+      color: var(--blue);
+      text-shadow: 0 0 22px rgba(144,205,244,0.4);
+    }
+    #languageToggle {
+      background: rgba(0,0,0,0.5); color: white;
+      padding: 0.4rem 0.9rem; border: 1px solid rgba(144,205,244,0.28);
+      border-radius: 20px; font-size: 0.78rem; font-weight: 700;
+      cursor: pointer; font-family: 'Share Tech Mono', monospace;
+      transition: all 0.2s; letter-spacing: 0.04em;
+    }
+    #languageToggle:hover { background: var(--blue-d); border-color: transparent; }
+
+    /* MAIN */
+    .main { display: flex; gap: 1.2rem; padding: 1.1rem 1.5rem; flex: 1; }
+
+    /* LEFT PANEL */
+    .left-panel { display: flex; flex-direction: column; gap: 0.9rem; width: 282px; min-width: 282px; }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid rgba(144,205,244,0.14);
+      border-radius: 12px;
+      padding: 1.15rem 1.25rem;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 22px rgba(0,0,0,0.45);
+    }
+    .panel-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase;
+      color: rgba(144,205,244,0.5); margin-bottom: 0.62rem;
+    }
+
+    .def-text { font-size: 0.86rem; line-height: 1.72; color: var(--dim); }
+    .def-text strong { color: var(--blue); }
+    .def-text em { color: var(--blue); opacity: .85; font-style: normal; font-family: 'Share Tech Mono', monospace; font-size: 0.81rem; }
+
+    .formula-block {
+      margin-top: 0.75rem;
+      background: rgba(0,0,0,0.38);
+      border-radius: 8px;
+      padding: 0.7rem 0.9rem;
+      border-left: 2px solid var(--blue-d);
+    }
+    .formula-row { display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 0.28rem; }
+    .formula-row:last-child { margin-bottom: 0; }
+    .formula-lbl { font-size: 0.65rem; color: var(--dim); font-family: 'Share Tech Mono', monospace; min-width: 62px; }
+    .formula-eq  { font-family: 'Share Tech Mono', monospace; font-size: 0.86rem; color: var(--blue); }
+    .formula-sub { font-size: 0.65rem; color: rgba(139,163,187,0.55); font-family: 'Share Tech Mono', monospace; }
+
+    /* Controls */
+    .control-row { display: flex; flex-direction: column; gap: 0.18rem; margin-bottom: 0.8rem; }
+    .control-row:last-child { margin-bottom: 0; }
+    .control-row label { font-size: 0.79rem; color: var(--dim); font-weight: 500; }
+    .control-row input[type="range"] { width: 100%; accent-color: var(--blue-d); cursor: pointer; height: 4px; }
+    .range-val { font-family: 'Share Tech Mono', monospace; font-size: 0.88rem; color: var(--blue); margin-left: 0.5rem; min-width: 52px; text-align:right; }
+    .range-row { display: flex; align-items: center; }
+
+    .btn-row { display: flex; gap: 0.55rem; margin-top: 0.9rem; }
+    .btn {
+      flex: 1; padding: 0.58rem 0; border: none; border-radius: 7px;
+      font-size: 0.88rem; font-weight: 700; cursor: pointer;
+      font-family: 'Exo 2', sans-serif; transition: all 0.22s; letter-spacing: 0.03em;
+    }
+    .btn-reset  { background: rgba(255,255,255,0.07); color: var(--dim); border: 1px solid rgba(255,255,255,0.13); }
+    .btn-reset:hover  { background: rgba(255,255,255,0.13); color: white; }
+
+    /* Stats */
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.58rem; }
+    .stat-card {
+      background: rgba(0,0,0,0.38);
+      border: 1px solid rgba(144,205,244,0.13);
+      border-radius: 8px; padding: 0.55rem 0.7rem;
+    }
+    .stat-label { font-size: 0.63rem; color: var(--dim); font-family: 'Share Tech Mono', monospace; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.18rem; }
+    .stat-val   { font-size: 1.15rem; font-weight: 700; color: var(--blue); font-family: 'Share Tech Mono', monospace; }
+    .stat-unit  { font-size: 0.62rem; color: var(--dim); margin-left: 0.12rem; }
+    .stat-card.g1 { border-color: rgba(246,224,94,0.28); }
+    .stat-card.g1 .stat-val { color: var(--gold); }
+    .stat-card.g2 { border-color: rgba(104,211,145,0.25); }
+    .stat-card.g2 .stat-val { color: var(--green); }
+
+    .nature-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
+    .nature-tag {
+      font-family: 'Share Tech Mono', monospace; font-size: 0.66rem; letter-spacing: 0.08em;
+      padding: 0.28rem 0.6rem; border-radius: 20px;
+      background: rgba(74,144,226,0.1); border: 1px solid rgba(144,205,244,0.28); color: var(--blue);
+    }
+
+    /* CANVAS AREA */
+    .canvas-area { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; min-width: 0; }
+    .canvas-wrap {
+      background: var(--card);
+      border: 1px solid rgba(144,205,244,0.14);
+      border-radius: 12px; overflow: hidden;
+      box-shadow: 0 0 30px rgba(0,0,0,0.55);
+      flex: 1; min-height: 300px;
+    }
+
+    /* Graphs */
+    .graph-row { display: flex; gap: 0.75rem; }
+    .graph-wrap {
+      background: var(--card);
+      border: 1px solid rgba(144,205,244,0.13);
+      border-radius: 12px; overflow: hidden;
+      box-shadow: 0 0 16px rgba(0,0,0,0.35);
+      height: 155px; flex: 1; min-width: 0;
+    }
+    .graph-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(144,205,244,0.5); padding: 0.4rem 0.8rem 0;
+    }
+    canvas.graph { display: block; width: 100%; height: 122px; }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 920px) {
+      .main { flex-direction: column; }
+      .left-panel { width: 100%; min-width: auto; flex-direction: row; flex-wrap: wrap; }
+      .panel { flex: 1; min-width: 240px; }
+      .graph-row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+<canvas id="pCanvas"></canvas>
+<div id="bgLayer"></div>
+<div id="bgGrid"></div>
+
+<div class="wrapper">
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <a href="index.html" class="back-btn">← <span class="lang-en">Back</span><span class="lang-bn hidden">পিছনে</span></a>
+    <div class="page-title">
+      <span class="lang-en">🪞 Convex Mirror</span>
+      <span class="lang-bn hidden">🪞 উত্তল দর্পণ</span>
+    </div>
+    <button id="languageToggle">বাংলা / EN</button>
+  </div>
+
+  <div class="main">
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+
+      <!-- Definition -->
+      <div class="panel">
+        <div class="panel-label"><span class="lang-en">Definition</span><span class="lang-bn hidden">সংজ্ঞা</span></div>
+        <p class="def-text lang-en">
+          A <strong>convex mirror</strong> curves outward toward the object, so parallel rays <em>diverge</em> after reflection and appear to come from a <em>virtual focus</em> behind the mirror. It always forms a <em>virtual, erect, diminished</em> image — regardless of object distance.
+        </p>
+        <p class="def-text lang-bn hidden">
+          <strong>উত্তল দর্পণ</strong> বস্তুর দিকে বাহিরের দিকে বেঁকে থাকে, তাই সমান্তরাল রশ্মি প্রতিফলনের পর <em>বিচ্ছুরিত</em> হয় এবং দর্পণের পেছনে একটি <em>অলীক ফোকাস</em> থেকে আসছে বলে মনে হয়। এটি সর্বদা <em>অলীক, সোজা, ক্ষুদ্রীকৃত</em> প্রতিবিম্ব গঠন করে — বস্তুর দূরত্ব যাই হোক না কেন।
+        </p>
+        <div class="formula-block">
+          <div class="formula-row">
+            <span class="formula-lbl">Mirror</span>
+            <span class="formula-eq">1/v + 1/u = 1/f</span>
+          </div>
+          <div class="formula-row">
+            <span class="formula-lbl">Magnif.</span>
+            <span class="formula-eq">m = −v/u = hᵢ/hₒ</span>
+          </div>
+          <div class="formula-row">
+            <span class="formula-lbl">Radius</span>
+            <span class="formula-eq">R = 2f</span>
+          </div>
+          <div class="formula-row" style="margin-top:0.4rem">
+            <span class="formula-sub lang-en">Cartesian sign convention · u &lt; 0 (object in front) · f &gt; 0 (convex)</span>
+            <span class="formula-sub lang-bn hidden">কার্তেসীয় সাইন কনভেনশন · u &lt; 0 (বস্তু সম্মুখে) · f &gt; 0 (উত্তল)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Controls -->
+      <div class="panel">
+        <div class="panel-label"><span class="lang-en">Parameters</span><span class="lang-bn hidden">প্যারামিটার</span></div>
+
+        <div class="control-row">
+          <label>
+            <span class="lang-en">Object Distance, u (cm)</span>
+            <span class="lang-bn hidden">বস্তুর দূরত্ব, u (cm)</span>
+          </label>
+          <div class="range-row">
+            <input type="range" id="uSlider" min="10" max="150" value="60" step="1" oninput="updateAll()">
+            <span class="range-val" id="uDisplay">60 cm</span>
+          </div>
+        </div>
+
+        <div class="control-row">
+          <label>
+            <span class="lang-en">Object Height, hₒ (cm)</span>
+            <span class="lang-bn hidden">বস্তুর উচ্চতা, hₒ (cm)</span>
+          </label>
+          <div class="range-row">
+            <input type="range" id="hoSlider" min="5" max="60" value="25" step="1" oninput="updateAll()">
+            <span class="range-val" id="hoDisplay">25 cm</span>
+          </div>
+        </div>
+
+        <div class="control-row">
+          <label>
+            <span class="lang-en">Focal Length, f (cm)</span>
+            <span class="lang-bn hidden">ফোকাস দৈর্ঘ্য, f (cm)</span>
+          </label>
+          <div class="range-row">
+            <input type="range" id="fSlider" min="5" max="60" value="20" step="1" oninput="updateAll()">
+            <span class="range-val" id="fDisplay">20 cm</span>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-reset" onclick="resetSim()">
+            <span class="lang-en">↺ Reset</span>
+            <span class="lang-bn hidden">↺ রিসেট</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Stats -->
+      <div class="panel">
+        <div class="panel-label">
+          <span class="lang-en">Live Readout</span>
+          <span class="lang-bn hidden">লাইভ তথ্য</span>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card g1">
+            <div class="stat-label"><span class="lang-en">Image Distance</span><span class="lang-bn hidden">প্রতিবিম্বের দূরত্ব</span></div>
+            <div><span class="stat-val" id="statV">—</span><span class="stat-unit">cm</span></div>
+          </div>
+          <div class="stat-card g2">
+            <div class="stat-label"><span class="lang-en">Magnification</span><span class="lang-bn hidden">বিবর্ধন</span></div>
+            <div><span class="stat-val" id="statM">—</span><span class="stat-unit">×</span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label"><span class="lang-en">Image Height</span><span class="lang-bn hidden">প্রতিবিম্বের উচ্চতা</span></div>
+            <div><span class="stat-val" id="statHi">—</span><span class="stat-unit">cm</span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label"><span class="lang-en">Radius, R = 2f</span><span class="lang-bn hidden">ব্যাসার্ধ, R = 2f</span></div>
+            <div><span class="stat-val" id="statR">—</span><span class="stat-unit">cm</span></div>
+          </div>
+        </div>
+
+        <div class="nature-row">
+          <span class="nature-tag"><span class="lang-en">Virtual</span><span class="lang-bn hidden">অলীক</span></span>
+          <span class="nature-tag"><span class="lang-en">Erect</span><span class="lang-bn hidden">সোজা</span></span>
+          <span class="nature-tag" id="sizeTag"><span class="lang-en">Diminished</span><span class="lang-bn hidden">ক্ষুদ্রীকৃত</span></span>
+        </div>
+      </div>
+
+    </div><!-- /left-panel -->
+
+    <!-- CANVAS AREA -->
+    <div class="canvas-area">
+      <div class="canvas-wrap" id="canvasWrap"></div>
+      <div class="graph-row">
+        <div class="graph-wrap">
+          <div class="graph-label">
+            <span class="lang-en">Image Distance vs Object Distance</span>
+            <span class="lang-bn hidden">প্রতিবিম্ব দূরত্ব বনাম বস্তু দূরত্ব</span>
+          </div>
+          <canvas id="gV" class="graph"></canvas>
+        </div>
+        <div class="graph-wrap">
+          <div class="graph-label">
+            <span class="lang-en">Magnification vs Object Distance</span>
+            <span class="lang-bn hidden">বিবর্ধন বনাম বস্তু দূরত্ব</span>
+          </div>
+          <canvas id="gM" class="graph"></canvas>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+<script>
+// ── PARTICLES (background) — same pattern as the portal/motion-sim index ──
+(function(){
+  const c = document.getElementById('pCanvas');
+  const ctx = c.getContext('2d');
+  let W, H, pts = [];
+  function resize(){ W=c.width=innerWidth; H=c.height=innerHeight; }
+  function init(){
+    resize();
+    pts = Array.from({length:55},()=>({
+      x:Math.random()*W, y:Math.random()*H,
+      vx:(Math.random()-.5)*.55, vy:(Math.random()-.5)*.55,
+      r:Math.random()*1.2+.4
+    }));
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    pts.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0||p.x>W) p.vx*=-1;
+      if(p.y<0||p.y>H) p.vy*=-1;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle='rgba(144,205,244,0.4)';
+      ctx.fill();
+    });
+    pts.forEach((a,i)=>pts.slice(i+1).forEach(b=>{
+      const d=Math.hypot(a.x-b.x,a.y-b.y);
+      if(d<90){
+        ctx.beginPath();
+        ctx.moveTo(a.x,a.y);
+        ctx.lineTo(b.x,b.y);
+        ctx.strokeStyle=`rgba(144,205,244,${.07*(1-d/90)})`;
+        ctx.lineWidth=.5;
+        ctx.stroke();
+      }
+    }));
+    requestAnimationFrame(draw);
+  }
+  init(); draw();
+  window.addEventListener('resize',init);
+})();
+
+// ── LANGUAGE ──────────────────────────────────────────────────────────────
+let currentLang = 'en';
+document.getElementById('languageToggle').addEventListener('click', () => {
+  currentLang = currentLang === 'en' ? 'bn' : 'en';
+  document.querySelectorAll('.lang-en').forEach(el => el.classList.toggle('hidden', currentLang !== 'en'));
+  document.querySelectorAll('.lang-bn').forEach(el => el.classList.toggle('hidden', currentLang !== 'bn'));
+  document.body.classList.toggle('bangla', currentLang === 'bn');
+});
+
+// ── OPTICS (Cartesian sign convention) ─────────────────────────────────────
+// u = -|objectDistance|   (object always in front, real)
+// f = +|focalLength|      (positive for convex/diverging mirror)
+// 1/v = 1/f - 1/u  →  v is always positive (virtual, behind mirror)
+// m = -v/u = v/|u|        (always positive → erect)
+function computeOptics(uMag, f) {
+  const u = -uMag;
+  const v = 1 / (1 / f - 1 / u);
+  const m = -v / u;
+  return { v, m };
+}
+
+let DEFAULTS = { u: 60, ho: 25, f: 20 };
+
+function updateAll() {
+  const uMag = parseFloat(document.getElementById('uSlider').value);
+  const ho   = parseFloat(document.getElementById('hoSlider').value);
+  const f    = parseFloat(document.getElementById('fSlider').value);
+
+  document.getElementById('uDisplay').textContent  = uMag + ' cm';
+  document.getElementById('hoDisplay').textContent = ho + ' cm';
+  document.getElementById('fDisplay').textContent  = f + ' cm';
+
+  const { v, m } = computeOptics(uMag, f);
+  const hi = m * ho;
+
+  document.getElementById('statV').textContent  = v.toFixed(1);
+  document.getElementById('statM').textContent  = m.toFixed(2);
+  document.getElementById('statHi').textContent = hi.toFixed(1);
+  document.getElementById('statR').textContent  = (2 * f).toFixed(0);
+
+  const sizeTag = document.getElementById('sizeTag');
+  if (m > 0.97) {
+    sizeTag.innerHTML = '<span class="lang-en">Same Size</span><span class="lang-bn' + (currentLang==='bn'?'':' hidden') + '">সমান আকার</span>';
+  } else {
+    sizeTag.innerHTML = '<span class="lang-en' + (currentLang==='en'?'':' hidden') + '">Diminished</span><span class="lang-bn' + (currentLang==='bn'?'':' hidden') + '">ক্ষুদ্রীকৃত</span>';
+  }
+
+  drawBothGraphs(uMag, f);
+  if (window.__mirrorRedraw) window.__mirrorRedraw();
+}
+
+function resetSim() {
+  document.getElementById('uSlider').value  = DEFAULTS.u;
+  document.getElementById('hoSlider').value = DEFAULTS.ho;
+  document.getElementById('fSlider').value  = DEFAULTS.f;
+  updateAll();
+}
+
+// ── GRAPHS: v(u) and m(u) curves for the current f, with a live marker ────
+function buildCurve(f, key) {
+  const pts = [];
+  for (let u = 5; u <= 160; u += 2) {
+    const { v, m } = computeOptics(u, f);
+    pts.push({ t: u, y: key === 'v' ? v : m });
+  }
+  return pts;
+}
+
+function drawCurveGraph(canvasId, curve, liveU, liveY, yLabel, unitLabel, lineColor, fillColor) {
+  const gc = document.getElementById(canvasId);
+  const gw = gc.parentElement.clientWidth;
+  gc.width = gw; gc.height = 122;
+  const ctx = gc.getContext('2d');
+  ctx.clearRect(0, 0, gw, 122);
+
+  const padL = 44, padR = 12, padT = 10, padB = 24;
+  const W = gw - padL - padR, H = 122 - padT - padB;
+
+  ctx.strokeStyle = 'rgba(144,205,244,0.35)'; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(padL, padT); ctx.lineTo(padL, padT + H); ctx.lineTo(padL + W, padT + H);
+  ctx.stroke();
+
+  ctx.font = '9px Consolas, monospace';
+  ctx.fillStyle = lineColor; ctx.textAlign = 'left';
+  ctx.fillText(yLabel, 2, padT + 8);
+  ctx.fillStyle = 'rgba(139,163,187,0.6)';
+  ctx.fillText('u (cm)', padL + W - 24, padT + H + 18);
+
+  if (curve.length < 2) return;
+
+  const maxY = Math.max(...curve.map(p => p.y), 0.1);
+  const maxT = curve[curve.length - 1].t;
+
+  [0, 0.25, 0.5, 0.75, 1].forEach(frac => {
+    const yv = frac * maxY;
+    const y  = padT + H - frac * H;
+    ctx.strokeStyle = 'rgba(144,205,244,0.06)'; ctx.lineWidth = 0.5;
+    if (frac > 0 && frac < 1) { ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL + W, y); ctx.stroke(); }
+    ctx.fillStyle = 'rgba(139,163,187,0.7)'; ctx.textAlign = 'right'; ctx.font = '9px Consolas, monospace';
+    ctx.fillText(yv.toFixed(yv < 10 ? 2 : 0), padL - 3, y + 3);
+  });
+  [0, 0.5, 1].forEach(frac => {
+    const tv = frac * maxT;
+    const x  = padL + frac * W;
+    ctx.fillStyle = 'rgba(139,163,187,0.7)'; ctx.textAlign = 'center'; ctx.font = '9px Consolas, monospace';
+    ctx.fillText(tv.toFixed(0), x, padT + H + 16);
+  });
+
+  ctx.fillStyle = lineColor; ctx.textAlign = 'right';
+  ctx.fillText(unitLabel, padL + W, padT + 8);
+
+  // Area fill
+  ctx.beginPath();
+  curve.forEach((p, i) => {
+    const px = padL + (p.t / maxT) * W;
+    const py = padT + H - (p.y / maxY) * H;
+    i === 0 ? ctx.moveTo(px, padT + H) : ctx.lineTo(px, py);
+  });
+  ctx.lineTo(padL + (curve[curve.length-1].t / maxT) * W, padT + H);
+  ctx.closePath(); ctx.fillStyle = fillColor; ctx.fill();
+
+  // Line
+  ctx.beginPath(); ctx.strokeStyle = lineColor; ctx.lineWidth = 2;
+  curve.forEach((p, i) => {
+    const px = padL + (p.t / maxT) * W;
+    const py = padT + H - (p.y / maxY) * H;
+    i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+  });
+  ctx.stroke();
+
+  // Live marker (current u,y position on the curve)
+  const lx = padL + (liveU / maxT) * W;
+  const ly = padT + H - (liveY / maxY) * H;
+  ctx.beginPath(); ctx.arc(lx, ly, 4, 0, Math.PI * 2);
+  ctx.fillStyle = '#fff'; ctx.fill();
+  ctx.beginPath(); ctx.arc(lx, ly, 4, 0, Math.PI * 2);
+  ctx.strokeStyle = lineColor; ctx.lineWidth = 2; ctx.stroke();
+  ctx.font = 'bold 9px Consolas, monospace'; ctx.fillStyle = lineColor;
+  ctx.textAlign = lx > padL + W * 0.72 ? 'right' : 'left';
+  ctx.fillText(liveY.toFixed(2), lx + (ctx.textAlign === 'left' ? 6 : -6), ly - 6);
+}
+
+function drawBothGraphs(uMag, f) {
+  const { v, m } = computeOptics(uMag, f);
+  const vCurve = buildCurve(f, 'v');
+  const mCurve = buildCurve(f, 'm');
+  drawCurveGraph('gV', vCurve, uMag, v, 'v (cm)', 'cm', '#90cdf4', 'rgba(144,205,244,0.10)');
+  drawCurveGraph('gM', mCurve, uMag, m, 'm',       '×',  '#4a90e2', 'rgba(74,144,226,0.10)');
+}
+
+// ── P5 RAY-DIAGRAM SKETCH ───────────────────────────────────────────────
+new p5(function(p) {
+
+  let mirrorX = 0, axisY = 0, scale = 1;
+  const U_MAX = 150, R_MAX = 120; // slider-max-based scale so the diagram doesn't jump
+
+  p.setup = function() {
+    const wrap = document.getElementById('canvasWrap');
+    const cnv = p.createCanvas(wrap.clientWidth, Math.max(300, window.innerHeight * 0.46));
+    cnv.parent('canvasWrap');
+    layout();
+    p.noLoop();
+    window.__mirrorRedraw = () => p.redraw();
+  };
+
+  function layout() {
+    mirrorX = p.width * 0.42;
+    axisY   = p.height * 0.5;
+    const leftPx  = mirrorX - 20;
+    const rightPx = p.width - mirrorX - 20;
+    scale = Math.max(0.5, Math.min(leftPx / U_MAX, rightPx / R_MAX));
+  }
+
+  p.windowResized = function() {
+    const wrap = document.getElementById('canvasWrap');
+    p.resizeCanvas(wrap.clientWidth, Math.max(300, window.innerHeight * 0.46));
+    layout();
+    p.redraw();
+  };
+
+  p.draw = function() {
+    p.background(4, 8, 18);
+
+    const uMag = parseFloat(document.getElementById('uSlider').value);
+    const ho   = parseFloat(document.getElementById('hoSlider').value);
+    const f    = parseFloat(document.getElementById('fSlider').value);
+    const { v, m } = computeOptics(uMag, f);
+    const hi = m * ho;
+
+    // Subtle grid
+    p.stroke(144, 205, 244, 12); p.strokeWeight(0.5);
+    for (let gx = 0; gx < p.width; gx += 40) p.line(gx, 0, gx, p.height);
+    for (let gy = 0; gy < p.height; gy += 40) p.line(0, gy, p.width, gy);
+
+    // Principal axis
+    p.stroke(144, 205, 244, 70); p.strokeWeight(1);
+    p.line(0, axisY, p.width, axisY);
+
+    // Positions
+    const objX   = mirrorX - uMag * scale;
+    const Fx     = mirrorX + f * scale;
+    const Cx     = mirrorX + 2 * f * scale;
+    const imgX   = mirrorX + v * scale;
+    const objTopY = axisY - ho * scale;
+    const imgTopY = axisY - hi * scale;
+
+    // Mirror (curved, bulging toward the object)
+    p.noFill(); p.stroke(200, 225, 250, 230); p.strokeWeight(2.5);
+    const mHalf = p.height * 0.4;
+    p.beginShape();
+    for (let yy = -mHalf; yy <= mHalf; yy += 4) {
+      const bulge = 16 * (1 - (yy*yy)/(mHalf*mHalf));
+      p.curveVertex(mirrorX - bulge, axisY + yy);
+    }
+    p.endShape();
+    // Hatching behind the mirror (silvered back)
+    p.stroke(144, 205, 244, 60); p.strokeWeight(1);
+    for (let yy = -mHalf; yy <= mHalf; yy += 12) {
+      p.line(mirrorX + 2, axisY + yy, mirrorX + 10, axisY + yy + 8);
+    }
+
+    // F and C markers
+    drawMarker(Fx, axisY, 'F', p.color(246, 224, 94));
+    drawMarker(Cx, axisY, 'C', p.color(104, 211, 145));
+    drawMarker(mirrorX, axisY, 'P', p.color(144, 205, 244));
+
+    function drawMarker(x, y, label, col) {
+      p.noStroke(); p.fill(col);
+      p.ellipse(x, y, 6, 6);
+      p.textFont('Consolas'); p.textSize(10); p.textAlign(p.CENTER);
+      p.text(label, x, y + 18);
+    }
+
+    // ── OBJECT (solid arrow, upright, in front of mirror) ──
+    p.stroke(255, 210, 120); p.strokeWeight(2.5);
+    p.line(objX, axisY, objX, objTopY);
+    p.push(); p.translate(objX, objTopY); p.noStroke(); p.fill(255, 210, 120);
+    p.triangle(-6, 8, 6, 8, 0, -4); p.pop();
+
+    // ── IMAGE (dashed arrow, upright, behind mirror, smaller) ──
+    p.drawingContext.setLineDash([4, 4]);
+    p.stroke(144, 205, 244, 220); p.strokeWeight(2);
+    p.line(imgX, axisY, imgX, imgTopY);
+    p.drawingContext.setLineDash([]);
+    p.push(); p.translate(imgX, imgTopY); p.noStroke(); p.fill(144, 205, 244);
+    p.triangle(-5, 6, 5, 6, 0, -3); p.pop();
+
+    // ── RAY 1: parallel → reflects through F ──
+    const hitY1 = objTopY;
+    p.stroke(252, 129, 129, 210); p.strokeWeight(1.4);
+    p.line(objX, hitY1, mirrorX, hitY1);
+    const dir1 = p.createVector(mirrorX - Fx, hitY1 - axisY).normalize();
+    const solidEnd1 = { x: mirrorX + dir1.x * 260, y: hitY1 + dir1.y * 260 };
+    p.line(mirrorX, hitY1, solidEnd1.x, solidEnd1.y);
+    p.drawingContext.setLineDash([3, 4]);
+    p.stroke(252, 129, 129, 110);
+    p.line(mirrorX, hitY1, imgX, imgTopY);
+    p.drawingContext.setLineDash([]);
+
+    // ── RAY 2: toward F → reflects parallel ──
+    const t2 = (mirrorX - objX) / (Fx - objX);
+    const hitY2 = objTopY + (axisY - objTopY) * t2;
+    p.stroke(104, 211, 145, 210); p.strokeWeight(1.4);
+    p.line(objX, objTopY, mirrorX, hitY2);
+    p.line(mirrorX, hitY2, mirrorX + 260, hitY2);
+    p.drawingContext.setLineDash([3, 4]);
+    p.stroke(104, 211, 145, 110);
+    p.line(mirrorX, hitY2, imgX, imgTopY);
+    p.drawingContext.setLineDash([]);
+
+    // ── RAY 3: toward C → reflects straight back through C ──
+    const t3 = (mirrorX - objX) / (Cx - objX);
+    const hitY3 = objTopY + (axisY - objTopY) * t3;
+    p.stroke(246, 224, 94, 210); p.strokeWeight(1.4);
+    p.line(objX, objTopY, mirrorX, hitY3);
+    const dir3 = p.createVector(mirrorX - objX, hitY3 - objTopY).normalize();
+    const solidEnd3 = { x: mirrorX + dir3.x * 260, y: hitY3 + dir3.y * 260 };
+    p.line(mirrorX, hitY3, solidEnd3.x, solidEnd3.y);
+    p.drawingContext.setLineDash([3, 4]);
+    p.stroke(246, 224, 94, 110);
+    p.line(mirrorX, hitY3, imgX, imgTopY);
+    p.drawingContext.setLineDash([]);
+    p.noStroke();
+
+    // Labels
+    p.fill(255, 210, 120); p.textFont('Consolas'); p.textSize(10); p.textAlign(p.CENTER);
+    p.text('Object', objX, objTopY - 12);
+    p.fill(144, 205, 244);
+    p.text('Image', imgX, imgTopY - 10 < 12 ? imgTopY + 16 : imgTopY - 10);
+
+    // HUD
+    p.fill(0, 0, 0, 130); p.noStroke(); p.rect(8, 8, 190, 76, 8);
+    p.fill(144, 205, 244); p.textFont('Consolas'); p.textSize(10.5); p.textAlign(p.LEFT, p.TOP);
+    p.text(`u  = ${uMag.toFixed(0)} cm`, 16, 16);
+    p.text(`f  = ${f.toFixed(0)} cm`,    16, 31);
+    p.text(`v  = ${v.toFixed(1)} cm`,    16, 46);
+    p.text(`m  = ${m.toFixed(2)}×`,      16, 61);
+  };
+
+}, 'canvasWrap');
+
+// Initial draw
+updateAll();
+</script>
+</body>
+</html>
