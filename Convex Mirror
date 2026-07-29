@@ -165,29 +165,12 @@
       flex: 1; min-height: 300px;
     }
 
-    /* Graphs */
-    .graph-row { display: flex; gap: 0.75rem; }
-    .graph-wrap {
-      background: var(--card);
-      border: 1px solid rgba(144,205,244,0.13);
-      border-radius: 12px; overflow: hidden;
-      box-shadow: 0 0 16px rgba(0,0,0,0.35);
-      height: 155px; flex: 1; min-width: 0;
-    }
-    .graph-label {
-      font-family: 'Share Tech Mono', monospace;
-      font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase;
-      color: rgba(144,205,244,0.5); padding: 0.4rem 0.8rem 0;
-    }
-    canvas.graph { display: block; width: 100%; height: 122px; }
-
     .hidden { display: none !important; }
 
     @media (max-width: 920px) {
       .main { flex-direction: column; }
       .left-panel { width: 100%; min-width: auto; flex-direction: row; flex-wrap: wrap; }
       .panel { flex: 1; min-width: 240px; }
-      .graph-row { flex-direction: column; }
     }
   </style>
 </head>
@@ -322,22 +305,6 @@
     <!-- CANVAS AREA -->
     <div class="canvas-area">
       <div class="canvas-wrap" id="canvasWrap"></div>
-      <div class="graph-row">
-        <div class="graph-wrap">
-          <div class="graph-label">
-            <span class="lang-en">Image Distance vs Object Distance</span>
-            <span class="lang-bn hidden">প্রতিবিম্ব দূরত্ব বনাম বস্তু দূরত্ব</span>
-          </div>
-          <canvas id="gV" class="graph"></canvas>
-        </div>
-        <div class="graph-wrap">
-          <div class="graph-label">
-            <span class="lang-en">Magnification vs Object Distance</span>
-            <span class="lang-bn hidden">বিবর্ধন বনাম বস্তু দূরত্ব</span>
-          </div>
-          <canvas id="gM" class="graph"></canvas>
-        </div>
-      </div>
     </div>
 
   </div>
@@ -434,7 +401,6 @@ function updateAll() {
     sizeTag.innerHTML = '<span class="lang-en' + (currentLang==='en'?'':' hidden') + '">Diminished</span><span class="lang-bn' + (currentLang==='bn'?'':' hidden') + '">ক্ষুদ্রীকৃত</span>';
   }
 
-  drawBothGraphs(uMag, f);
   if (window.__mirrorRedraw) window.__mirrorRedraw();
 }
 
@@ -445,99 +411,6 @@ function resetSim() {
   updateAll();
 }
 
-// ── GRAPHS: v(u) and m(u) curves for the current f, with a live marker ────
-function buildCurve(f, key) {
-  const pts = [];
-  for (let u = 5; u <= 160; u += 2) {
-    const { v, m } = computeOptics(u, f);
-    pts.push({ t: u, y: key === 'v' ? v : m });
-  }
-  return pts;
-}
-
-function drawCurveGraph(canvasId, curve, liveU, liveY, yLabel, unitLabel, lineColor, fillColor) {
-  const gc = document.getElementById(canvasId);
-  const gw = gc.parentElement.clientWidth;
-  gc.width = gw; gc.height = 122;
-  const ctx = gc.getContext('2d');
-  ctx.clearRect(0, 0, gw, 122);
-
-  const padL = 44, padR = 12, padT = 10, padB = 24;
-  const W = gw - padL - padR, H = 122 - padT - padB;
-
-  ctx.strokeStyle = 'rgba(144,205,244,0.35)'; ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(padL, padT); ctx.lineTo(padL, padT + H); ctx.lineTo(padL + W, padT + H);
-  ctx.stroke();
-
-  ctx.font = '9px Consolas, monospace';
-  ctx.fillStyle = lineColor; ctx.textAlign = 'left';
-  ctx.fillText(yLabel, 2, padT + 8);
-  ctx.fillStyle = 'rgba(139,163,187,0.6)';
-  ctx.fillText('u (cm)', padL + W - 24, padT + H + 18);
-
-  if (curve.length < 2) return;
-
-  const maxY = Math.max(...curve.map(p => p.y), 0.1);
-  const maxT = curve[curve.length - 1].t;
-
-  [0, 0.25, 0.5, 0.75, 1].forEach(frac => {
-    const yv = frac * maxY;
-    const y  = padT + H - frac * H;
-    ctx.strokeStyle = 'rgba(144,205,244,0.06)'; ctx.lineWidth = 0.5;
-    if (frac > 0 && frac < 1) { ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL + W, y); ctx.stroke(); }
-    ctx.fillStyle = 'rgba(139,163,187,0.7)'; ctx.textAlign = 'right'; ctx.font = '9px Consolas, monospace';
-    ctx.fillText(yv.toFixed(yv < 10 ? 2 : 0), padL - 3, y + 3);
-  });
-  [0, 0.5, 1].forEach(frac => {
-    const tv = frac * maxT;
-    const x  = padL + frac * W;
-    ctx.fillStyle = 'rgba(139,163,187,0.7)'; ctx.textAlign = 'center'; ctx.font = '9px Consolas, monospace';
-    ctx.fillText(tv.toFixed(0), x, padT + H + 16);
-  });
-
-  ctx.fillStyle = lineColor; ctx.textAlign = 'right';
-  ctx.fillText(unitLabel, padL + W, padT + 8);
-
-  // Area fill
-  ctx.beginPath();
-  curve.forEach((p, i) => {
-    const px = padL + (p.t / maxT) * W;
-    const py = padT + H - (p.y / maxY) * H;
-    i === 0 ? ctx.moveTo(px, padT + H) : ctx.lineTo(px, py);
-  });
-  ctx.lineTo(padL + (curve[curve.length-1].t / maxT) * W, padT + H);
-  ctx.closePath(); ctx.fillStyle = fillColor; ctx.fill();
-
-  // Line
-  ctx.beginPath(); ctx.strokeStyle = lineColor; ctx.lineWidth = 2;
-  curve.forEach((p, i) => {
-    const px = padL + (p.t / maxT) * W;
-    const py = padT + H - (p.y / maxY) * H;
-    i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
-  });
-  ctx.stroke();
-
-  // Live marker (current u,y position on the curve)
-  const lx = padL + (liveU / maxT) * W;
-  const ly = padT + H - (liveY / maxY) * H;
-  ctx.beginPath(); ctx.arc(lx, ly, 4, 0, Math.PI * 2);
-  ctx.fillStyle = '#fff'; ctx.fill();
-  ctx.beginPath(); ctx.arc(lx, ly, 4, 0, Math.PI * 2);
-  ctx.strokeStyle = lineColor; ctx.lineWidth = 2; ctx.stroke();
-  ctx.font = 'bold 9px Consolas, monospace'; ctx.fillStyle = lineColor;
-  ctx.textAlign = lx > padL + W * 0.72 ? 'right' : 'left';
-  ctx.fillText(liveY.toFixed(2), lx + (ctx.textAlign === 'left' ? 6 : -6), ly - 6);
-}
-
-function drawBothGraphs(uMag, f) {
-  const { v, m } = computeOptics(uMag, f);
-  const vCurve = buildCurve(f, 'v');
-  const mCurve = buildCurve(f, 'm');
-  drawCurveGraph('gV', vCurve, uMag, v, 'v (cm)', 'cm', '#90cdf4', 'rgba(144,205,244,0.10)');
-  drawCurveGraph('gM', mCurve, uMag, m, 'm',       '×',  '#4a90e2', 'rgba(74,144,226,0.10)');
-}
-
 // ── P5 RAY-DIAGRAM SKETCH ───────────────────────────────────────────────
 new p5(function(p) {
 
@@ -546,7 +419,7 @@ new p5(function(p) {
 
   p.setup = function() {
     const wrap = document.getElementById('canvasWrap');
-    const cnv = p.createCanvas(wrap.clientWidth, Math.max(300, window.innerHeight * 0.46));
+    const cnv = p.createCanvas(wrap.clientWidth, Math.max(420, window.innerHeight * 0.72));
     cnv.parent('canvasWrap');
     layout();
     p.noLoop();
@@ -559,11 +432,13 @@ new p5(function(p) {
     const leftPx  = mirrorX - 20;
     const rightPx = p.width - mirrorX - 20;
     scale = Math.max(0.5, Math.min(leftPx / U_MAX, rightPx / R_MAX));
+    scale *= 1.35; // bump everything up — mirror/object/image drawn larger
+    // (canvas-wrap clips overflow, so extreme slider values just crop cleanly)
   }
 
   p.windowResized = function() {
     const wrap = document.getElementById('canvasWrap');
-    p.resizeCanvas(wrap.clientWidth, Math.max(300, window.innerHeight * 0.46));
+    p.resizeCanvas(wrap.clientWidth, Math.max(420, window.innerHeight * 0.72));
     layout();
     p.redraw();
   };
@@ -594,19 +469,20 @@ new p5(function(p) {
     const objTopY = axisY - ho * scale;
     const imgTopY = axisY - hi * scale;
 
-    // Mirror (curved, bulging toward the object)
-    p.noFill(); p.stroke(200, 225, 250, 230); p.strokeWeight(2.5);
+    // Mirror (curved, bulging toward the object — more pronounced curve)
+    p.noFill(); p.stroke(210, 232, 253, 240); p.strokeWeight(3.5);
     const mHalf = p.height * 0.4;
     p.beginShape();
     for (let yy = -mHalf; yy <= mHalf; yy += 4) {
-      const bulge = 16 * (1 - (yy*yy)/(mHalf*mHalf));
+      const bulge = 42 * (1 - (yy*yy)/(mHalf*mHalf));
       p.curveVertex(mirrorX - bulge, axisY + yy);
     }
     p.endShape();
-    // Hatching behind the mirror (silvered back)
-    p.stroke(144, 205, 244, 60); p.strokeWeight(1);
-    for (let yy = -mHalf; yy <= mHalf; yy += 12) {
-      p.line(mirrorX + 2, axisY + yy, mirrorX + 10, axisY + yy + 8);
+    // Hatching behind the mirror (silvered back) — thicker, lighter strokes
+    p.stroke(190, 220, 250, 130); p.strokeWeight(2.5);
+    for (let yy = -mHalf; yy <= mHalf; yy += 14) {
+      const bulge = 42 * (1 - (yy*yy)/(mHalf*mHalf));
+      p.line(mirrorX - bulge + 3, axisY + yy, mirrorX - bulge + 16, axisY + yy + 10);
     }
 
     // F and C markers
@@ -622,27 +498,27 @@ new p5(function(p) {
     }
 
     // ── OBJECT (solid arrow, upright, in front of mirror) ──
-    p.stroke(255, 210, 120); p.strokeWeight(2.5);
+    p.stroke(255, 210, 120); p.strokeWeight(3.5);
     p.line(objX, axisY, objX, objTopY);
     p.push(); p.translate(objX, objTopY); p.noStroke(); p.fill(255, 210, 120);
-    p.triangle(-6, 8, 6, 8, 0, -4); p.pop();
+    p.triangle(-9, 12, 9, 12, 0, -6); p.pop();
 
     // ── IMAGE (dashed arrow, upright, behind mirror, smaller) ──
-    p.drawingContext.setLineDash([4, 4]);
-    p.stroke(144, 205, 244, 220); p.strokeWeight(2);
+    p.drawingContext.setLineDash([5, 5]);
+    p.stroke(144, 205, 244, 220); p.strokeWeight(2.8);
     p.line(imgX, axisY, imgX, imgTopY);
     p.drawingContext.setLineDash([]);
     p.push(); p.translate(imgX, imgTopY); p.noStroke(); p.fill(144, 205, 244);
-    p.triangle(-5, 6, 5, 6, 0, -3); p.pop();
+    p.triangle(-7, 9, 7, 9, 0, -4); p.pop();
 
     // ── RAY 1: parallel → reflects through F ──
     const hitY1 = objTopY;
-    p.stroke(252, 129, 129, 210); p.strokeWeight(1.4);
+    p.stroke(252, 129, 129, 210); p.strokeWeight(2);
     p.line(objX, hitY1, mirrorX, hitY1);
     const dir1 = p.createVector(mirrorX - Fx, hitY1 - axisY).normalize();
-    const solidEnd1 = { x: mirrorX + dir1.x * 260, y: hitY1 + dir1.y * 260 };
+    const solidEnd1 = { x: mirrorX + dir1.x * 320, y: hitY1 + dir1.y * 320 };
     p.line(mirrorX, hitY1, solidEnd1.x, solidEnd1.y);
-    p.drawingContext.setLineDash([3, 4]);
+    p.drawingContext.setLineDash([4, 5]);
     p.stroke(252, 129, 129, 110);
     p.line(mirrorX, hitY1, imgX, imgTopY);
     p.drawingContext.setLineDash([]);
@@ -650,10 +526,10 @@ new p5(function(p) {
     // ── RAY 2: toward F → reflects parallel ──
     const t2 = (mirrorX - objX) / (Fx - objX);
     const hitY2 = objTopY + (axisY - objTopY) * t2;
-    p.stroke(104, 211, 145, 210); p.strokeWeight(1.4);
+    p.stroke(104, 211, 145, 210); p.strokeWeight(2);
     p.line(objX, objTopY, mirrorX, hitY2);
-    p.line(mirrorX, hitY2, mirrorX + 260, hitY2);
-    p.drawingContext.setLineDash([3, 4]);
+    p.line(mirrorX, hitY2, mirrorX + 320, hitY2);
+    p.drawingContext.setLineDash([4, 5]);
     p.stroke(104, 211, 145, 110);
     p.line(mirrorX, hitY2, imgX, imgTopY);
     p.drawingContext.setLineDash([]);
@@ -661,12 +537,12 @@ new p5(function(p) {
     // ── RAY 3: toward C → reflects straight back through C ──
     const t3 = (mirrorX - objX) / (Cx - objX);
     const hitY3 = objTopY + (axisY - objTopY) * t3;
-    p.stroke(246, 224, 94, 210); p.strokeWeight(1.4);
+    p.stroke(246, 224, 94, 210); p.strokeWeight(2);
     p.line(objX, objTopY, mirrorX, hitY3);
     const dir3 = p.createVector(mirrorX - objX, hitY3 - objTopY).normalize();
-    const solidEnd3 = { x: mirrorX + dir3.x * 260, y: hitY3 + dir3.y * 260 };
+    const solidEnd3 = { x: mirrorX + dir3.x * 320, y: hitY3 + dir3.y * 320 };
     p.line(mirrorX, hitY3, solidEnd3.x, solidEnd3.y);
-    p.drawingContext.setLineDash([3, 4]);
+    p.drawingContext.setLineDash([4, 5]);
     p.stroke(246, 224, 94, 110);
     p.line(mirrorX, hitY3, imgX, imgTopY);
     p.drawingContext.setLineDash([]);
