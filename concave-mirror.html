@@ -255,12 +255,6 @@
             <span class="lang-bn hidden">↺ রিসেট</span>
           </button>
         </div>
-        <div class="zone-row">
-          <button class="zone-btn" onclick="jumpZone('beyondC')"><span class="lang-en">Beyond C</span><span class="lang-bn hidden">C-এর বাইরে</span></button>
-          <button class="zone-btn" onclick="jumpZone('atC')"><span class="lang-en">At C</span><span class="lang-bn hidden">C বিন্দুতে</span></button>
-          <button class="zone-btn" onclick="jumpZone('betweenFC')"><span class="lang-en">Between F &amp; C</span><span class="lang-bn hidden">F ও C-এর মাঝে</span></button>
-          <button class="zone-btn" onclick="jumpZone('insideF')"><span class="lang-en">Inside F</span><span class="lang-bn hidden">F-এর ভেতরে</span></button>
-        </div>
       </div>
       <!-- Live Stats -->
       <div class="panel">
@@ -410,17 +404,6 @@ function resetSim() {
   document.getElementById('fSlider').value = DEFAULTS.f;
   updateAll();
 }
-// Quick-jump buttons to showcase each classic zone
-function jumpZone(zone) {
-  const f = parseFloat(document.getElementById('fSlider').value);
-  let u;
-  if (zone === 'beyondC') u = Math.min(140, 2 * f + Math.round(f * 0.8));
-  if (zone === 'atC') u = 2 * f;
-  if (zone === 'betweenFC') u = Math.round(1.5 * f);
-  if (zone === 'insideF') u = Math.max(5, Math.round(f * 0.5));
-  document.getElementById('uSlider').value = u;
-  updateAll();
-}
 // ── P5 RAY-DIAGRAM SKETCH ───────────────────────────────────────────────
 new p5(function(p) {
   let mirrorX = 0, axisY = 0, scale = 1;
@@ -511,18 +494,39 @@ new p5(function(p) {
     p.fill(255, 210, 120); p.noStroke(); p.textFont('Consolas'); p.textSize(10); p.textAlign(p.CENTER);
     p.text('Object', objX, objTopY - 12);
     if (atFocus) {
-      // ── Degenerate case: object at F → reflected rays run parallel,
-      // image forms at infinity. Only Ray 1 stays well-defined (Ray 2's
-      // "aim at F" target coincides with the object itself here).
+      // ── Object at F → image at infinity.
+      // Two reflected rays are drawn parallel so they never meet.
+      // EXT is large so the lines clearly run off the canvas without converging.
+
+      // Ray 1 (red): parallel to principal axis → reflects through F, continues far left
+      // and also extended as dashed line far behind the mirror (right) so both ends never meet
       const hitY1 = objTopY;
       const hitX1 = surfaceX(hitY1 - axisY);
-      p.stroke(252, 129, 129, 200); p.strokeWeight(2);
-      p.line(objX, hitY1, hitX1, hitY1);
+      p.stroke(252, 129, 129, 220); p.strokeWeight(2.2);
+      p.line(objX, hitY1, hitX1, hitY1);                         // incident
       const dir1 = p.createVector(Fx - hitX1, axisY - hitY1).normalize();
-      p.line(hitX1, hitY1, hitX1 + dir1.x * EXT, hitY1 + dir1.y * EXT);
+      p.line(hitX1, hitY1, hitX1 + dir1.x * EXT, hitY1 + dir1.y * EXT); // reflected (through F, continues left)
+      // dashed extension behind the mirror (rightward, opposite of dir1)
+      p.drawingContext.setLineDash([5, 6]);
+      p.stroke(252, 129, 129, 130);
+      p.line(hitX1, hitY1, hitX1 - dir1.x * EXT, hitY1 - dir1.y * EXT);
+      p.drawingContext.setLineDash([]);
+
+      // Ray 2 (green): different incidence, reflected parallel to Ray 1 (never meets)
+      const hitY2 = axisY + (objTopY - axisY) * 0.35;
+      const hitX2 = surfaceX(hitY2 - axisY);
+      p.stroke(104, 211, 145, 220); p.strokeWeight(2.2);
+      p.line(objX, objTopY, hitX2, hitY2);                       // incident
+      p.line(hitX2, hitY2, hitX2 + dir1.x * EXT, hitY2 + dir1.y * EXT); // reflected (parallel, left)
+      // dashed extension behind the mirror
+      p.drawingContext.setLineDash([5, 6]);
+      p.stroke(104, 211, 145, 130);
+      p.line(hitX2, hitY2, hitX2 - dir1.x * EXT, hitY2 - dir1.y * EXT);
+      p.drawingContext.setLineDash([]);
+
       p.noStroke();
-      p.fill(255, 255, 255, 170); p.textFont('Exo 2'); p.textSize(13); p.textAlign(p.CENTER);
-      p.text('Object at F — image forms at infinity', p.width / 2, 26);
+      p.fill(255, 255, 255, 180); p.textFont('Exo 2'); p.textSize(13); p.textAlign(p.CENTER);
+      p.text('Object at F — reflected rays are parallel (image at ∞)', p.width / 2, 26);
     } else {
       const { v, m } = computeOptics(uMag, fMag);
       const hi = m * ho;
