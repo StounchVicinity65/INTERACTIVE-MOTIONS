@@ -7,19 +7,18 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;700&family=Share+Tech+Mono&family=Bebas+Neue&family=Exo+2:wght@300;400;700;900&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --blue:    #90cdf4;
-      --blue-d:  #4a90e2;
-      --gold:    #f6e05e;
-      --orange:  #f6ad55;
-      --green:   #68d391;
-      --red:     #fc8181;
-      --bg:      #010306;
-      --panel:   #080d16;
-      --card:    rgba(8,13,22,0.88);
-      --dim:     #8ba3bb;
+      --blue: #90cdf4;
+      --blue-d: #4a90e2;
+      --gold: #f6e05e;
+      --orange: #f6ad55;
+      --green: #68d391;
+      --red: #fc8181;
+      --bg: #010306;
+      --panel: #080d16;
+      --card: rgba(8,13,22,0.88);
+      --dim: #8ba3bb;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       font-family: 'Exo 2', sans-serif;
       background: var(--bg);
@@ -28,7 +27,6 @@
       overflow-x: hidden;
     }
     body.bangla { font-family: 'Noto Serif Bengali', sans-serif; }
-
     #pCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.7;}
     #bgLayer {
       position: fixed; inset: 0; z-index: 0;
@@ -44,9 +42,7 @@
         linear-gradient(90deg, rgba(144,205,244,0.02) 1px, transparent 1px);
       background-size: 40px 40px;
     }
-
     .wrapper { position: relative; z-index: 1; display: flex; flex-direction: column; min-height: 100vh; padding-bottom: 2rem; }
-
     /* TOP BAR */
     .topbar {
       display: flex; align-items: center; justify-content: space-between;
@@ -78,13 +74,10 @@
       transition: all 0.2s; letter-spacing: 0.04em;
     }
     #languageToggle:hover { background: var(--blue-d); border-color: transparent; }
-
     /* MAIN */
     .main { display: flex; gap: 1.2rem; padding: 1.1rem 1.5rem; flex: 1; }
-
     /* LEFT PANEL */
     .left-panel { display: flex; flex-direction: column; gap: 0.9rem; width: 282px; min-width: 282px; }
-
     .panel {
       background: var(--card);
       border: 1px solid rgba(144,205,244,0.14);
@@ -98,11 +91,9 @@
       font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase;
       color: rgba(144,205,244,0.5); margin-bottom: 0.62rem;
     }
-
     .def-text { font-size: 0.86rem; line-height: 1.72; color: var(--dim); }
     .def-text strong { color: var(--blue); }
     .def-text em { color: var(--blue); opacity: .85; font-style: normal; font-family: 'Share Tech Mono', monospace; font-size: 0.81rem; }
-
     .formula-block {
       margin-top: 0.75rem;
       background: rgba(0,0,0,0.38);
@@ -113,9 +104,8 @@
     .formula-row { display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 0.28rem; }
     .formula-row:last-child { margin-bottom: 0; }
     .formula-lbl { font-size: 0.65rem; color: var(--dim); font-family: 'Share Tech Mono', monospace; min-width: 62px; }
-    .formula-eq  { font-family: 'Share Tech Mono', monospace; font-size: 0.86rem; color: var(--blue); }
+    .formula-eq { font-family: 'Share Tech Mono', monospace; font-size: 0.86rem; color: var(--blue); }
     .formula-sub { font-size: 0.65rem; color: rgba(139,163,187,0.55); font-family: 'Share Tech Mono', monospace; }
-
     /* Controls */
     .control-row { display: flex; flex-direction: column; gap: 0.18rem; margin-bottom: 0.8rem; }
     .control-row:last-child { margin-bottom: 0; }
@@ -123,16 +113,14 @@
     .control-row input[type="range"] { width: 100%; accent-color: var(--blue-d); cursor: pointer; height: 4px; }
     .range-val { font-family: 'Share Tech Mono', monospace; font-size: 0.88rem; color: var(--blue); margin-left: 0.5rem; min-width: 52px; text-align:right; }
     .range-row { display: flex; align-items: center; }
-
     .btn-row { display: flex; gap: 0.55rem; margin-top: 0.9rem; }
     .btn {
       flex: 1; padding: 0.58rem 0; border: none; border-radius: 7px;
       font-size: 0.88rem; font-weight: 700; cursor: pointer;
       font-family: 'Exo 2', sans-serif; transition: all 0.22s; letter-spacing: 0.03em;
     }
-    .btn-reset  { background: rgba(255,255,255,0.07); color: var(--dim); border: 1px solid rgba(255,255,255,0.13); }
-    .btn-reset:hover  { background: rgba(255,255,255,0.13); color: white; }
-
+    .btn-reset { background: rgba(255,255,255,0.07); color: var(--dim); border: 1px solid rgba(255,255,255,0.13); }
+    .btn-reset:hover { background: rgba(255,255,255,0.13); color: white; }
     /* Zone quick-jump buttons */
     .zone-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.85rem; }
     .zone-btn {
@@ -142,7 +130,6 @@
       cursor: pointer; transition: all .18s; text-align: center;
     }
     .zone-btn:hover { background: rgba(74,144,226,0.18); border-color: var(--blue); }
-
     /* Stats */
     .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.58rem; }
     .stat-card {
@@ -151,13 +138,12 @@
       border-radius: 8px; padding: 0.55rem 0.7rem;
     }
     .stat-label { font-size: 0.63rem; color: var(--dim); font-family: 'Share Tech Mono', monospace; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.18rem; }
-    .stat-val   { font-size: 1.15rem; font-weight: 700; color: var(--blue); font-family: 'Share Tech Mono', monospace; }
-    .stat-unit  { font-size: 0.62rem; color: var(--dim); margin-left: 0.12rem; }
+    .stat-val { font-size: 1.15rem; font-weight: 700; color: var(--blue); font-family: 'Share Tech Mono', monospace; }
+    .stat-unit { font-size: 0.62rem; color: var(--dim); margin-left: 0.12rem; }
     .stat-card.g1 { border-color: rgba(246,224,94,0.28); }
     .stat-card.g1 .stat-val { color: var(--gold); }
     .stat-card.g2 { border-color: rgba(104,211,145,0.25); }
     .stat-card.g2 .stat-val { color: var(--green); }
-
     .nature-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
     .nature-tag {
       font-family: 'Share Tech Mono', monospace; font-size: 0.66rem; letter-spacing: 0.08em;
@@ -165,10 +151,9 @@
       background: rgba(74,144,226,0.1); border: 1px solid rgba(144,205,244,0.28); color: var(--blue);
       transition: all .15s;
     }
-    .nature-tag.real   { background: rgba(252,129,129,0.1); border-color: rgba(252,129,129,0.32); color: var(--red); }
+    .nature-tag.real { background: rgba(252,129,129,0.1); border-color: rgba(252,129,129,0.32); color: var(--red); }
     .nature-tag.invert { background: rgba(246,224,94,0.1); border-color: rgba(246,224,94,0.32); color: var(--gold); }
-    .nature-tag.mag    { background: rgba(104,211,145,0.1); border-color: rgba(104,211,145,0.32); color: var(--green); }
-
+    .nature-tag.mag { background: rgba(104,211,145,0.1); border-color: rgba(104,211,145,0.32); color: var(--green); }
     /* CANVAS AREA */
     .canvas-area { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; min-width: 0; }
     .canvas-wrap {
@@ -178,9 +163,7 @@
       box-shadow: 0 0 30px rgba(0,0,0,0.55);
       flex: 1; min-height: 300px;
     }
-
     .hidden { display: none !important; }
-
     @media (max-width: 920px) {
       .main { flex-direction: column; }
       .left-panel { width: 100%; min-width: auto; flex-direction: row; flex-wrap: wrap; }
@@ -192,7 +175,6 @@
 <canvas id="pCanvas"></canvas>
 <div id="bgLayer"></div>
 <div id="bgGrid"></div>
-
 <div class="wrapper">
   <!-- TOP BAR -->
   <div class="topbar">
@@ -203,11 +185,9 @@
     </div>
     <button id="languageToggle">বাংলা / EN</button>
   </div>
-
   <div class="main">
     <!-- LEFT PANEL -->
     <div class="left-panel">
-
       <!-- Definition -->
       <div class="panel">
         <div class="panel-label"><span class="lang-en">Definition</span><span class="lang-bn hidden">সংজ্ঞা</span></div>
@@ -236,11 +216,9 @@
           </div>
         </div>
       </div>
-
       <!-- Controls -->
       <div class="panel">
         <div class="panel-label"><span class="lang-en">Parameters</span><span class="lang-bn hidden">প্যারামিটার</span></div>
-
         <div class="control-row">
           <label>
             <span class="lang-en">Object Distance, u (cm)</span>
@@ -251,7 +229,6 @@
             <span class="range-val" id="uDisplay">50 cm</span>
           </div>
         </div>
-
         <div class="control-row">
           <label>
             <span class="lang-en">Object Height, hₒ (cm)</span>
@@ -262,7 +239,6 @@
             <span class="range-val" id="hoDisplay">25 cm</span>
           </div>
         </div>
-
         <div class="control-row">
           <label>
             <span class="lang-en">Focal Length, f (cm)</span>
@@ -273,14 +249,12 @@
             <span class="range-val" id="fDisplay">20 cm</span>
           </div>
         </div>
-
         <div class="btn-row">
           <button class="btn btn-reset" onclick="resetSim()">
             <span class="lang-en">↺ Reset</span>
             <span class="lang-bn hidden">↺ রিসেট</span>
           </button>
         </div>
-
         <div class="zone-row">
           <button class="zone-btn" onclick="jumpZone('beyondC')"><span class="lang-en">Beyond C</span><span class="lang-bn hidden">C-এর বাইরে</span></button>
           <button class="zone-btn" onclick="jumpZone('atC')"><span class="lang-en">At C</span><span class="lang-bn hidden">C বিন্দুতে</span></button>
@@ -288,7 +262,6 @@
           <button class="zone-btn" onclick="jumpZone('insideF')"><span class="lang-en">Inside F</span><span class="lang-bn hidden">F-এর ভেতরে</span></button>
         </div>
       </div>
-
       <!-- Live Stats -->
       <div class="panel">
         <div class="panel-label">
@@ -313,20 +286,15 @@
             <div><span class="stat-val" id="statR">—</span><span class="stat-unit">cm</span></div>
           </div>
         </div>
-
         <div class="nature-row" id="natureRow"></div>
       </div>
-
     </div><!-- /left-panel -->
-
     <!-- CANVAS AREA -->
     <div class="canvas-area">
       <div class="canvas-wrap" id="canvasWrap"></div>
     </div>
-
   </div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
 <script>
 // ── PARTICLES (background) — same pattern as the portal/motion-sim index ──
@@ -370,7 +338,6 @@
   init(); draw();
   window.addEventListener('resize',init);
 })();
-
 // ── LANGUAGE ──────────────────────────────────────────────────────────────
 let currentLang = 'en';
 document.getElementById('languageToggle').addEventListener('click', () => {
@@ -380,103 +347,86 @@ document.getElementById('languageToggle').addEventListener('click', () => {
   document.body.classList.toggle('bangla', currentLang === 'bn');
   updateAll(); // refresh dynamically-built nature tags in the new language
 });
-
 // ── OPTICS (Real-is-positive convention) ───────────────────────────────────
-// u = +|objectDistance|   (object always real/in front → always positive)
-// f = +|focalLength|      (positive for concave — its focus is real)
+// u = +|objectDistance| (object always real/in front → always positive)
+// f = +|focalLength| (positive for concave — its focus is real)
 // 1/v = 1/f - 1/u
-//   • v > 0 → REAL image (same side as object, in front of mirror)
-//   • v < 0 → VIRTUAL image (behind the mirror)
+// • v > 0 → REAL image (same side as object, in front of mirror)
+// • v < 0 → VIRTUAL image (behind the mirror)
 // m = -v/u
 const EPS = 4; // cm — "close enough to f" to treat as image-at-infinity
-
 function computeOptics(uMag, fMag) {
   const u = uMag, f = fMag;
   const v = 1 / (1 / f - 1 / u);
   const m = -v / u;
   return { v, m };
 }
-
 let DEFAULTS = { u: 50, ho: 25, f: 20 };
-
 function fmt(val, cap, dec) {
   if (!isFinite(val)) return '∞';
   if (Math.abs(val) > cap) return (val > 0 ? '> ' : '< -') + cap;
   return val.toFixed(dec);
 }
-
 function natureTag(cls, en, bn) {
   return `<span class="nature-tag ${cls}"><span class="lang-en${currentLang==='en'?'':' hidden'}">${en}</span><span class="lang-bn${currentLang==='bn'?'':' hidden'}">${bn}</span></span>`;
 }
-
 function updateAll() {
   const uMag = parseFloat(document.getElementById('uSlider').value);
-  const ho   = parseFloat(document.getElementById('hoSlider').value);
+  const ho = parseFloat(document.getElementById('hoSlider').value);
   const fMag = parseFloat(document.getElementById('fSlider').value);
-
-  document.getElementById('uDisplay').textContent  = uMag + ' cm';
+  document.getElementById('uDisplay').textContent = uMag + ' cm';
   document.getElementById('hoDisplay').textContent = ho + ' cm';
-  document.getElementById('fDisplay').textContent  = fMag + ' cm';
-  document.getElementById('statR').textContent     = (2 * fMag).toFixed(0); // positive for concave
-
+  document.getElementById('fDisplay').textContent = fMag + ' cm';
+  document.getElementById('statR').textContent = (2 * fMag).toFixed(0); // positive for concave
   const natureRow = document.getElementById('natureRow');
   const atFocus = Math.abs(uMag - fMag) <= EPS;
-
   if (atFocus) {
-    document.getElementById('statV').textContent  = '∞';
-    document.getElementById('statM').textContent  = '∞';
+    document.getElementById('statV').textContent = '∞';
+    document.getElementById('statM').textContent = '∞';
     document.getElementById('statHi').textContent = '∞';
     natureRow.innerHTML = natureTag('real', 'Image at Infinity', 'অসীমে প্রতিবিম্ব');
   } else {
     const { v, m } = computeOptics(uMag, fMag);
     const hi = m * ho;
-    document.getElementById('statV').textContent  = fmt(v, 800, 1);
-    document.getElementById('statM').textContent  = fmt(m, 30, 2);
+    document.getElementById('statV').textContent = fmt(v, 800, 1);
+    document.getElementById('statM').textContent = fmt(m, 30, 2);
     document.getElementById('statHi').textContent = fmt(hi, 400, 1);
-
     const real = v > 0;
     const erect = m > 0;
     const ratio = Math.abs(m);
-    const sizeCls  = ratio > 1.03 ? 'mag' : (ratio < 0.97 ? '' : '');
-    const sizeEn   = ratio > 1.03 ? 'Magnified' : (ratio < 0.97 ? 'Diminished' : 'Same Size');
-    const sizeBn   = ratio > 1.03 ? 'বিবর্ধিত'   : (ratio < 0.97 ? 'ক্ষুদ্রীকৃত' : 'সমান আকার');
-
+    const sizeCls = ratio > 1.03 ? 'mag' : (ratio < 0.97 ? '' : '');
+    const sizeEn = ratio > 1.03 ? 'Magnified' : (ratio < 0.97 ? 'Diminished' : 'Same Size');
+    const sizeBn = ratio > 1.03 ? 'বিবর্ধিত' : (ratio < 0.97 ? 'ক্ষুদ্রীকৃত' : 'সমান আকার');
     natureRow.innerHTML =
       natureTag(real ? 'real' : '', real ? 'Real' : 'Virtual', real ? 'বাস্তব' : 'অলীক') +
       natureTag(erect ? '' : 'invert', erect ? 'Erect' : 'Inverted', erect ? 'সোজা' : 'উল্টানো') +
       natureTag(sizeCls, sizeEn, sizeBn);
   }
-
   if (window.__mirrorRedraw) window.__mirrorRedraw();
 }
-
 function resetSim() {
-  document.getElementById('uSlider').value  = DEFAULTS.u;
+  document.getElementById('uSlider').value = DEFAULTS.u;
   document.getElementById('hoSlider').value = DEFAULTS.ho;
-  document.getElementById('fSlider').value  = DEFAULTS.f;
+  document.getElementById('fSlider').value = DEFAULTS.f;
   updateAll();
 }
-
 // Quick-jump buttons to showcase each classic zone
 function jumpZone(zone) {
   const f = parseFloat(document.getElementById('fSlider').value);
   let u;
-  if (zone === 'beyondC')    u = Math.min(140, 2 * f + Math.round(f * 0.8));
-  if (zone === 'atC')        u = 2 * f;
-  if (zone === 'betweenFC')  u = Math.round(1.5 * f);
-  if (zone === 'insideF')    u = Math.max(5, Math.round(f * 0.5));
+  if (zone === 'beyondC') u = Math.min(140, 2 * f + Math.round(f * 0.8));
+  if (zone === 'atC') u = 2 * f;
+  if (zone === 'betweenFC') u = Math.round(1.5 * f);
+  if (zone === 'insideF') u = Math.max(5, Math.round(f * 0.5));
   document.getElementById('uSlider').value = u;
   updateAll();
 }
-
 // ── P5 RAY-DIAGRAM SKETCH ───────────────────────────────────────────────
 new p5(function(p) {
-
   let mirrorX = 0, axisY = 0, scale = 1;
-  const U_MAX = 140, C_MAX = 100;      // slider-max-based left extent (object side)
-  const VIRT_MAX = 130;                // clamp for how far right a virtual image is drawn
-  const EXT = 900;                     // how far rays are extended for visual convergence
-
+  const U_MAX = 140, C_MAX = 100; // slider-max-based left extent (object side)
+  const VIRT_MAX = 130; // clamp for how far right a virtual image is drawn
+  const EXT = 900; // how far rays are extended for visual convergence
   p.setup = function() {
     const wrap = document.getElementById('canvasWrap');
     const cnv = p.createCanvas(wrap.clientWidth, Math.max(420, window.innerHeight * 0.72));
@@ -485,23 +435,20 @@ new p5(function(p) {
     p.noLoop();
     window.__mirrorRedraw = () => p.redraw();
   };
-
   function layout() {
     mirrorX = p.width * 0.56;
-    axisY   = p.height * 0.5;
-    const leftPx  = mirrorX - 20;
+    axisY = p.height * 0.5;
+    const leftPx = mirrorX - 20;
     const rightPx = p.width - mirrorX - 20;
     scale = Math.max(0.4, Math.min(leftPx / U_MAX, rightPx / VIRT_MAX));
     scale *= 1.3;
   }
-
   p.windowResized = function() {
     const wrap = document.getElementById('canvasWrap');
     p.resizeCanvas(wrap.clientWidth, Math.max(420, window.innerHeight * 0.72));
     layout();
     p.redraw();
   };
-
   function drawArrow(x, baseY, topY, col, dashed) {
     const up = topY < baseY;
     if (dashed) p.drawingContext.setLineDash([5, 5]);
@@ -512,29 +459,23 @@ new p5(function(p) {
     if (up) p.triangle(-8, 10, 8, 10, 0, -6); else p.triangle(-8, -10, 8, -10, 0, 6);
     p.pop();
   }
-
   p.draw = function() {
     p.background(4, 8, 18);
-
     const uMag = parseFloat(document.getElementById('uSlider').value);
-    const ho   = parseFloat(document.getElementById('hoSlider').value);
+    const ho = parseFloat(document.getElementById('hoSlider').value);
     const fMag = parseFloat(document.getElementById('fSlider').value);
     const atFocus = Math.abs(uMag - fMag) <= EPS;
-
     // Subtle grid
     p.stroke(144, 205, 244, 12); p.strokeWeight(0.5);
     for (let gx = 0; gx < p.width; gx += 40) p.line(gx, 0, gx, p.height);
     for (let gy = 0; gy < p.height; gy += 40) p.line(0, gy, p.width, gy);
-
     // Principal axis
     p.stroke(144, 205, 244, 70); p.strokeWeight(1);
     p.line(0, axisY, p.width, axisY);
-
     const objX = mirrorX - uMag * scale;
-    const Fx   = mirrorX - fMag * scale;
-    const Cx   = mirrorX - 2 * fMag * scale;
+    const Fx = mirrorX - fMag * scale;
+    const Cx = mirrorX - 2 * fMag * scale;
     const objTopY = axisY - ho * scale;
-
     // Mirror curve: pole sits exactly at (mirrorX, axisY). For a concave
     // mirror the pole is the point FARTHEST from the object (deepest into
     // the bowl), and the edges curve TOWARD the object — so
@@ -543,21 +484,19 @@ new p5(function(p) {
     // flat plane) so they visibly meet the glass instead of floating
     // inside/outside it.
     const mHalf = p.height * 0.4;
-    const MAXB  = 42;
+    const MAXB = 42;
     function bulge(yy) { return MAXB * (yy*yy) / (mHalf*mHalf); }
     function surfaceX(yy) { return mirrorX - bulge(yy); }
-
     p.noFill(); p.stroke(210, 232, 253, 240); p.strokeWeight(3.5);
     p.beginShape();
     for (let yy = -mHalf; yy <= mHalf; yy += 4) p.curveVertex(surfaceX(yy), axisY + yy);
     p.endShape();
-    // Silvering hatch — thicker, lighter, follows the curve
+    // Silvering hatch — on the BACK (outer / right) side of the concave surface
     p.stroke(190, 220, 250, 130); p.strokeWeight(2.5);
     for (let yy = -mHalf; yy <= mHalf; yy += 14) {
       const sx = surfaceX(yy);
-      p.line(sx - 3, axisY + yy, sx - 16, axisY + yy + 10);
+      p.line(sx + 3, axisY + yy, sx + 16, axisY + yy + 10);
     }
-
     function marker(x, y, label, col) {
       p.noStroke(); p.fill(col);
       p.ellipse(x, y, 6, 6);
@@ -567,12 +506,10 @@ new p5(function(p) {
     marker(Fx, axisY, 'F', p.color(246, 224, 94));
     marker(Cx, axisY, 'C', p.color(104, 211, 145));
     marker(mirrorX, axisY, 'P', p.color(144, 205, 244));
-
     // ── OBJECT (always solid, upright, in front of mirror) ──
     drawArrow(objX, axisY, objTopY, [255, 210, 120, 255], false);
     p.fill(255, 210, 120); p.noStroke(); p.textFont('Consolas'); p.textSize(10); p.textAlign(p.CENTER);
     p.text('Object', objX, objTopY - 12);
-
     if (atFocus) {
       // ── Degenerate case: object at F → reflected rays run parallel,
       // image forms at infinity. Only Ray 1 stays well-defined (Ray 2's
@@ -584,20 +521,16 @@ new p5(function(p) {
       const dir1 = p.createVector(Fx - hitX1, axisY - hitY1).normalize();
       p.line(hitX1, hitY1, hitX1 + dir1.x * EXT, hitY1 + dir1.y * EXT);
       p.noStroke();
-
       p.fill(255, 255, 255, 170); p.textFont('Exo 2'); p.textSize(13); p.textAlign(p.CENTER);
       p.text('Object at F — image forms at infinity', p.width / 2, 26);
-
     } else {
       const { v, m } = computeOptics(uMag, fMag);
       const hi = m * ho;
       const virtual = v < 0; // real-is-positive: negative v = virtual (behind mirror)
-
-      const drawV  = Math.max(-(VIRT_MAX - 10), Math.min(U_MAX - 10, v));
+      const drawV = Math.max(-(VIRT_MAX - 10), Math.min(U_MAX - 10, v));
       const drawHi = Math.max(-100, Math.min(100, hi));
-      const imgX    = mirrorX - drawV * scale; // positive v (real) → left; negative (virtual) → right
+      const imgX = mirrorX - drawV * scale; // positive v (real) → left; negative (virtual) → right
       const imgTopY = axisY - drawHi * scale;
-
       // ── RAY 1: parallel to axis → converges toward F ──
       const hitY1 = objTopY;
       const hitX1 = surfaceX(hitY1 - axisY);
@@ -611,7 +544,6 @@ new p5(function(p) {
         p.line(hitX1, hitY1, imgX, imgTopY);
         p.drawingContext.setLineDash([]);
       }
-
       // ── RAY 2: aimed at F → reflects parallel to the axis (leftward) ──
       const t2 = (mirrorX - objX) / (Fx - objX);
       const hitY2raw = objTopY + (axisY - objTopY) * t2;
@@ -626,25 +558,21 @@ new p5(function(p) {
         p.drawingContext.setLineDash([]);
       }
       p.noStroke();
-
       // ── IMAGE (dashed if virtual, solid if real) ──
       drawArrow(imgX, axisY, imgTopY, [144, 205, 244, 255], virtual);
-      p.fill(144, 205, 244); p.textFont('Consolas'); p.textSize(10); p.textAlign(p.CENTER);
+      p.fill(144, 205, 244); p.noStroke(); p.textFont('Consolas'); p.textSize(10); p.textAlign(p.CENTER);
       const labelAbove = imgTopY < axisY;
       p.text('Image', imgX, labelAbove ? imgTopY - 10 : imgTopY + 18);
-
       // HUD
       p.fill(0, 0, 0, 130); p.noStroke(); p.rect(8, 8, 200, 76, 8);
       p.fill(144, 205, 244); p.textFont('Consolas'); p.textSize(10.5); p.textAlign(p.LEFT, p.TOP);
-      p.text(`u  = ${uMag.toFixed(0)} cm`, 16, 16);
-      p.text(`f  = ${fMag.toFixed(0)} cm`, 16, 31);
-      p.text(`v  = ${fmt(v, 800, 1)} cm`,  16, 46);
-      p.text(`m  = ${fmt(m, 30, 2)}×`,     16, 61);
+      p.text(`u = ${uMag.toFixed(0)} cm`, 16, 16);
+      p.text(`f = ${fMag.toFixed(0)} cm`, 16, 31);
+      p.text(`v = ${fmt(v, 800, 1)} cm`, 16, 46);
+      p.text(`m = ${fmt(m, 30, 2)}×`, 16, 61);
     }
   };
-
 }, 'canvasWrap');
-
 // Initial draw
 updateAll();
 </script>
