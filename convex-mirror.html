@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Concave Mirror</title>
+  <title>Convex Mirror</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;700&family=Share+Tech+Mono&family=Bebas+Neue&family=Exo+2:wght@300;400;700;900&display=swap" rel="stylesheet"/>
   <style>
     :root {
@@ -133,16 +133,6 @@
     .btn-reset  { background: rgba(255,255,255,0.07); color: var(--dim); border: 1px solid rgba(255,255,255,0.13); }
     .btn-reset:hover  { background: rgba(255,255,255,0.13); color: white; }
 
-    /* Zone quick-jump buttons */
-    .zone-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.85rem; }
-    .zone-btn {
-      flex: 1 1 calc(50% - .4rem); padding: 0.4rem 0.3rem; border-radius: 7px;
-      background: rgba(74,144,226,0.08); border: 1px solid rgba(144,205,244,0.22); color: var(--blue);
-      font-family: 'Share Tech Mono', monospace; font-size: 0.62rem; letter-spacing: 0.03em;
-      cursor: pointer; transition: all .18s; text-align: center;
-    }
-    .zone-btn:hover { background: rgba(74,144,226,0.18); border-color: var(--blue); }
-
     /* Stats */
     .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.58rem; }
     .stat-card {
@@ -163,11 +153,7 @@
       font-family: 'Share Tech Mono', monospace; font-size: 0.66rem; letter-spacing: 0.08em;
       padding: 0.28rem 0.6rem; border-radius: 20px;
       background: rgba(74,144,226,0.1); border: 1px solid rgba(144,205,244,0.28); color: var(--blue);
-      transition: all .15s;
     }
-    .nature-tag.real   { background: rgba(252,129,129,0.1); border-color: rgba(252,129,129,0.32); color: var(--red); }
-    .nature-tag.invert { background: rgba(246,224,94,0.1); border-color: rgba(246,224,94,0.32); color: var(--gold); }
-    .nature-tag.mag    { background: rgba(104,211,145,0.1); border-color: rgba(104,211,145,0.32); color: var(--green); }
 
     /* CANVAS AREA */
     .canvas-area { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; min-width: 0; }
@@ -198,8 +184,8 @@
   <div class="topbar">
     <a href="index.html" class="back-btn">← <span class="lang-en">Back</span><span class="lang-bn hidden">পিছনে</span></a>
     <div class="page-title">
-      <span class="lang-en">🪞 Concave Mirror</span>
-      <span class="lang-bn hidden">🪞 অবতল দর্পণ</span>
+      <span class="lang-en">🪞 Convex Mirror</span>
+      <span class="lang-bn hidden">🪞 উত্তল দর্পণ</span>
     </div>
     <button id="languageToggle">বাংলা / EN</button>
   </div>
@@ -212,10 +198,10 @@
       <div class="panel">
         <div class="panel-label"><span class="lang-en">Definition</span><span class="lang-bn hidden">সংজ্ঞা</span></div>
         <p class="def-text lang-en">
-          A <strong>concave mirror</strong> curves inward like the inside of a bowl, so parallel rays <em>converge</em> to a <em>real focus</em> in front of the mirror. Unlike a convex mirror, the image type <em>depends on where the object sits</em> — real &amp; inverted beyond F, virtual &amp; erect (magnified) between the mirror and F.
+          A <strong>convex mirror</strong> curves outward toward the object, so parallel rays <em>diverge</em> after reflection and appear to come from a <em>virtual focus</em> behind the mirror. It always forms a <em>virtual, erect, diminished</em> image — regardless of object distance.
         </p>
         <p class="def-text lang-bn hidden">
-          <strong>অবতল দর্পণ</strong> বাটির ভেতরের দিকের মতো ভেতরে বেঁকে থাকে, তাই সমান্তরাল রশ্মি দর্পণের সামনে একটি <em>বাস্তব ফোকাসে</em> <em>অভিসারিত</em> হয়। উত্তল দর্পণের বিপরীতে, প্রতিবিম্বের ধরন <em>বস্তুর অবস্থানের উপর নির্ভর করে</em> — F-এর বাইরে বাস্তব ও উল্টানো, দর্পণ ও F-এর মাঝে অলীক ও সোজা (বিবর্ধিত)।
+          <strong>উত্তল দর্পণ</strong> বস্তুর দিকে বাহিরের দিকে বেঁকে থাকে, তাই সমান্তরাল রশ্মি প্রতিফলনের পর <em>বিচ্ছুরিত</em> হয় এবং দর্পণের পেছনে একটি <em>অলীক ফোকাস</em> থেকে আসছে বলে মনে হয়। এটি সর্বদা <em>অলীক, সোজা, ক্ষুদ্রীকৃত</em> প্রতিবিম্ব গঠন করে — বস্তুর দূরত্ব যাই হোক না কেন।
         </p>
         <div class="formula-block">
           <div class="formula-row">
@@ -231,8 +217,8 @@
             <span class="formula-eq">R = 2f</span>
           </div>
           <div class="formula-row" style="margin-top:0.4rem">
-            <span class="formula-sub lang-en">Real-is-positive convention · u &gt; 0 (real object) · f &gt; 0, R &gt; 0 (real focus)</span>
-            <span class="formula-sub lang-bn hidden">রিয়েল-ইজ-পজিটিভ কনভেনশন · u &gt; 0 (বাস্তব বস্তু) · f &gt; 0, R &gt; 0 (বাস্তব ফোকাস)</span>
+            <span class="formula-sub lang-en">Real-is-positive convention · u &gt; 0 (real object) · f &lt; 0, R &lt; 0 (virtual focus)</span>
+            <span class="formula-sub lang-bn hidden">রিয়েল-ইজ-পজিটিভ কনভেনশন · u &gt; 0 (বাস্তব বস্তু) · f &lt; 0, R &lt; 0 (অলীক ফোকাস)</span>
           </div>
         </div>
       </div>
@@ -247,8 +233,8 @@
             <span class="lang-bn hidden">বস্তুর দূরত্ব, u (cm)</span>
           </label>
           <div class="range-row">
-            <input type="range" id="uSlider" min="5" max="140" value="50" step="1" oninput="updateAll()">
-            <span class="range-val" id="uDisplay">50 cm</span>
+            <input type="range" id="uSlider" min="10" max="150" value="60" step="1" oninput="updateAll()">
+            <span class="range-val" id="uDisplay">60 cm</span>
           </div>
         </div>
 
@@ -269,7 +255,7 @@
             <span class="lang-bn hidden">ফোকাস দৈর্ঘ্য, f (cm)</span>
           </label>
           <div class="range-row">
-            <input type="range" id="fSlider" min="5" max="50" value="20" step="1" oninput="updateAll()">
+            <input type="range" id="fSlider" min="5" max="60" value="20" step="1" oninput="updateAll()">
             <span class="range-val" id="fDisplay">20 cm</span>
           </div>
         </div>
@@ -279,13 +265,6 @@
             <span class="lang-en">↺ Reset</span>
             <span class="lang-bn hidden">↺ রিসেট</span>
           </button>
-        </div>
-
-        <div class="zone-row">
-          <button class="zone-btn" onclick="jumpZone('beyondC')"><span class="lang-en">Beyond C</span><span class="lang-bn hidden">C-এর বাইরে</span></button>
-          <button class="zone-btn" onclick="jumpZone('atC')"><span class="lang-en">At C</span><span class="lang-bn hidden">C বিন্দুতে</span></button>
-          <button class="zone-btn" onclick="jumpZone('betweenFC')"><span class="lang-en">Between F &amp; C</span><span class="lang-bn hidden">F ও C-এর মাঝে</span></button>
-          <button class="zone-btn" onclick="jumpZone('insideF')"><span class="lang-en">Inside F</span><span class="lang-bn hidden">F-এর ভেতরে</span></button>
         </div>
       </div>
 
@@ -314,7 +293,11 @@
           </div>
         </div>
 
-        <div class="nature-row" id="natureRow"></div>
+        <div class="nature-row">
+          <span class="nature-tag"><span class="lang-en">Virtual</span><span class="lang-bn hidden">অলীক</span></span>
+          <span class="nature-tag"><span class="lang-en">Erect</span><span class="lang-bn hidden">সোজা</span></span>
+          <span class="nature-tag" id="sizeTag"><span class="lang-en">Diminished</span><span class="lang-bn hidden">ক্ষুদ্রীকৃত</span></span>
+        </div>
       </div>
 
     </div><!-- /left-panel -->
@@ -378,73 +361,45 @@ document.getElementById('languageToggle').addEventListener('click', () => {
   document.querySelectorAll('.lang-en').forEach(el => el.classList.toggle('hidden', currentLang !== 'en'));
   document.querySelectorAll('.lang-bn').forEach(el => el.classList.toggle('hidden', currentLang !== 'bn'));
   document.body.classList.toggle('bangla', currentLang === 'bn');
-  updateAll(); // refresh dynamically-built nature tags in the new language
 });
 
 // ── OPTICS (Real-is-positive convention) ───────────────────────────────────
 // u = +|objectDistance|   (object always real/in front → always positive)
-// f = +|focalLength|      (positive for concave — its focus is real)
-// 1/v = 1/f - 1/u
-//   • v > 0 → REAL image (same side as object, in front of mirror)
-//   • v < 0 → VIRTUAL image (behind the mirror)
-// m = -v/u
-const EPS = 4; // cm — "close enough to f" to treat as image-at-infinity
-
+// f = -|focalLength|      (negative for convex — its focus is virtual)
+// 1/v = 1/f - 1/u  →  v is always negative here (= virtual, behind the mirror)
+// m = -v/u                (always positive → erect)
 function computeOptics(uMag, fMag) {
-  const u = uMag, f = fMag;
+  const u = uMag;
+  const f = -fMag;
   const v = 1 / (1 / f - 1 / u);
   const m = -v / u;
   return { v, m };
 }
 
-let DEFAULTS = { u: 50, ho: 25, f: 20 };
-
-function fmt(val, cap, dec) {
-  if (!isFinite(val)) return '∞';
-  if (Math.abs(val) > cap) return (val > 0 ? '> ' : '< -') + cap;
-  return val.toFixed(dec);
-}
-
-function natureTag(cls, en, bn) {
-  return `<span class="nature-tag ${cls}"><span class="lang-en${currentLang==='en'?'':' hidden'}">${en}</span><span class="lang-bn${currentLang==='bn'?'':' hidden'}">${bn}</span></span>`;
-}
+let DEFAULTS = { u: 60, ho: 25, f: 20 };
 
 function updateAll() {
   const uMag = parseFloat(document.getElementById('uSlider').value);
   const ho   = parseFloat(document.getElementById('hoSlider').value);
-  const fMag = parseFloat(document.getElementById('fSlider').value);
+  const f    = parseFloat(document.getElementById('fSlider').value);
 
   document.getElementById('uDisplay').textContent  = uMag + ' cm';
   document.getElementById('hoDisplay').textContent = ho + ' cm';
-  document.getElementById('fDisplay').textContent  = fMag + ' cm';
-  document.getElementById('statR').textContent     = (2 * fMag).toFixed(0); // positive for concave
+  document.getElementById('fDisplay').textContent  = f + ' cm';
 
-  const natureRow = document.getElementById('natureRow');
-  const atFocus = Math.abs(uMag - fMag) <= EPS;
+  const { v, m } = computeOptics(uMag, f);
+  const hi = m * ho;
 
-  if (atFocus) {
-    document.getElementById('statV').textContent  = '∞';
-    document.getElementById('statM').textContent  = '∞';
-    document.getElementById('statHi').textContent = '∞';
-    natureRow.innerHTML = natureTag('real', 'Image at Infinity', 'অসীমে প্রতিবিম্ব');
+  document.getElementById('statV').textContent  = v.toFixed(1);
+  document.getElementById('statM').textContent  = m.toFixed(2);
+  document.getElementById('statHi').textContent = hi.toFixed(1);
+  document.getElementById('statR').textContent  = (-2 * f).toFixed(0); // negative for convex
+
+  const sizeTag = document.getElementById('sizeTag');
+  if (m > 0.97) {
+    sizeTag.innerHTML = '<span class="lang-en">Same Size</span><span class="lang-bn' + (currentLang==='bn'?'':' hidden') + '">সমান আকার</span>';
   } else {
-    const { v, m } = computeOptics(uMag, fMag);
-    const hi = m * ho;
-    document.getElementById('statV').textContent  = fmt(v, 800, 1);
-    document.getElementById('statM').textContent  = fmt(m, 30, 2);
-    document.getElementById('statHi').textContent = fmt(hi, 400, 1);
-
-    const real = v > 0;
-    const erect = m > 0;
-    const ratio = Math.abs(m);
-    const sizeCls  = ratio > 1.03 ? 'mag' : (ratio < 0.97 ? '' : '');
-    const sizeEn   = ratio > 1.03 ? 'Magnified' : (ratio < 0.97 ? 'Diminished' : 'Same Size');
-    const sizeBn   = ratio > 1.03 ? 'বিবর্ধিত'   : (ratio < 0.97 ? 'ক্ষুদ্রীকৃত' : 'সমান আকার');
-
-    natureRow.innerHTML =
-      natureTag(real ? 'real' : '', real ? 'Real' : 'Virtual', real ? 'বাস্তব' : 'অলীক') +
-      natureTag(erect ? '' : 'invert', erect ? 'Erect' : 'Inverted', erect ? 'সোজা' : 'উল্টানো') +
-      natureTag(sizeCls, sizeEn, sizeBn);
+    sizeTag.innerHTML = '<span class="lang-en' + (currentLang==='en'?'':' hidden') + '">Diminished</span><span class="lang-bn' + (currentLang==='bn'?'':' hidden') + '">ক্ষুদ্রীকৃত</span>';
   }
 
   if (window.__mirrorRedraw) window.__mirrorRedraw();
@@ -457,25 +412,11 @@ function resetSim() {
   updateAll();
 }
 
-// Quick-jump buttons to showcase each classic zone
-function jumpZone(zone) {
-  const f = parseFloat(document.getElementById('fSlider').value);
-  let u;
-  if (zone === 'beyondC')    u = Math.min(140, 2 * f + Math.round(f * 0.8));
-  if (zone === 'atC')        u = 2 * f;
-  if (zone === 'betweenFC')  u = Math.round(1.5 * f);
-  if (zone === 'insideF')    u = Math.max(5, Math.round(f * 0.5));
-  document.getElementById('uSlider').value = u;
-  updateAll();
-}
-
 // ── P5 RAY-DIAGRAM SKETCH ───────────────────────────────────────────────
 new p5(function(p) {
 
   let mirrorX = 0, axisY = 0, scale = 1;
-  const U_MAX = 140, C_MAX = 100;      // slider-max-based left extent (object side)
-  const VIRT_MAX = 130;                // clamp for how far right a virtual image is drawn
-  const EXT = 900;                     // how far rays are extended for visual convergence
+  const U_MAX = 150, R_MAX = 120; // slider-max-based scale so the diagram doesn't jump
 
   p.setup = function() {
     const wrap = document.getElementById('canvasWrap');
@@ -487,12 +428,13 @@ new p5(function(p) {
   };
 
   function layout() {
-    mirrorX = p.width * 0.56;
+    mirrorX = p.width * 0.42;
     axisY   = p.height * 0.5;
     const leftPx  = mirrorX - 20;
     const rightPx = p.width - mirrorX - 20;
-    scale = Math.max(0.4, Math.min(leftPx / U_MAX, rightPx / VIRT_MAX));
-    scale *= 1.3;
+    scale = Math.max(0.5, Math.min(leftPx / U_MAX, rightPx / R_MAX));
+    scale *= 1.35; // bump everything up — mirror/object/image drawn larger
+    // (canvas-wrap clips overflow, so extreme slider values just crop cleanly)
   }
 
   p.windowResized = function() {
@@ -502,24 +444,14 @@ new p5(function(p) {
     p.redraw();
   };
 
-  function drawArrow(x, baseY, topY, col, dashed) {
-    const up = topY < baseY;
-    if (dashed) p.drawingContext.setLineDash([5, 5]);
-    p.stroke(col[0], col[1], col[2], col[3] || 255); p.strokeWeight(dashed ? 2.8 : 3.5);
-    p.line(x, baseY, x, topY);
-    if (dashed) p.drawingContext.setLineDash([]);
-    p.push(); p.translate(x, topY); p.noStroke(); p.fill(col[0], col[1], col[2], col[3] || 255);
-    if (up) p.triangle(-8, 10, 8, 10, 0, -6); else p.triangle(-8, -10, 8, -10, 0, 6);
-    p.pop();
-  }
-
   p.draw = function() {
     p.background(4, 8, 18);
 
     const uMag = parseFloat(document.getElementById('uSlider').value);
     const ho   = parseFloat(document.getElementById('hoSlider').value);
-    const fMag = parseFloat(document.getElementById('fSlider').value);
-    const atFocus = Math.abs(uMag - fMag) <= EPS;
+    const f    = parseFloat(document.getElementById('fSlider').value);
+    const { v, m } = computeOptics(uMag, f);
+    const hi = m * ho;
 
     // Subtle grid
     p.stroke(144, 205, 244, 12); p.strokeWeight(0.5);
@@ -530,22 +462,24 @@ new p5(function(p) {
     p.stroke(144, 205, 244, 70); p.strokeWeight(1);
     p.line(0, axisY, p.width, axisY);
 
-    const objX = mirrorX - uMag * scale;
-    const Fx   = mirrorX - fMag * scale;
-    const Cx   = mirrorX - 2 * fMag * scale;
+    // Positions
+    const objX   = mirrorX - uMag * scale;
+    const Fx     = mirrorX + f * scale;
+    const Cx     = mirrorX + 2 * f * scale;
+    const imgX   = mirrorX - v * scale;   // v is negative (virtual) → imgX lands to the right
     const objTopY = axisY - ho * scale;
+    const imgTopY = axisY - hi * scale;
 
-    // Mirror curve: pole sits exactly at (mirrorX, axisY). For a concave
-    // mirror the pole is the point FARTHEST from the object (deepest into
-    // the bowl), and the edges curve TOWARD the object — so
-    // surfaceX(yy) = mirrorX - bulge(yy), bulge growing from 0 at the
-    // pole outward. Rays are computed against this exact curve (not a
-    // flat plane) so they visibly meet the glass instead of floating
-    // inside/outside it.
+    // Mirror curve: pole sits exactly at (mirrorX, axisY). For a convex
+    // mirror the pole is the point CLOSEST to the object, and the edges
+    // recede AWAY from the object (curving back toward C, behind the
+    // mirror) — so surfaceX(yy) = mirrorX + bulge(yy), bulge growing
+    // from 0 at the pole outward. Rays are computed against this exact
+    // curve (not a flat plane) so they visibly meet the glass.
     const mHalf = p.height * 0.4;
     const MAXB  = 42;
     function bulge(yy) { return MAXB * (yy*yy) / (mHalf*mHalf); }
-    function surfaceX(yy) { return mirrorX - bulge(yy); }
+    function surfaceX(yy) { return mirrorX + bulge(yy); }
 
     p.noFill(); p.stroke(210, 232, 253, 240); p.strokeWeight(3.5);
     p.beginShape();
@@ -555,92 +489,73 @@ new p5(function(p) {
     p.stroke(190, 220, 250, 130); p.strokeWeight(2.5);
     for (let yy = -mHalf; yy <= mHalf; yy += 14) {
       const sx = surfaceX(yy);
-      p.line(sx - 3, axisY + yy, sx - 16, axisY + yy + 10);
+      p.line(sx + 3, axisY + yy, sx + 16, axisY + yy + 10);
     }
 
-    function marker(x, y, label, col) {
+    // F and C markers
+    drawMarker(Fx, axisY, 'F', p.color(246, 224, 94));
+    drawMarker(Cx, axisY, 'C', p.color(104, 211, 145));
+    drawMarker(mirrorX, axisY, 'P', p.color(144, 205, 244));
+
+    function drawMarker(x, y, label, col) {
       p.noStroke(); p.fill(col);
       p.ellipse(x, y, 6, 6);
       p.textFont('Consolas'); p.textSize(10); p.textAlign(p.CENTER);
       p.text(label, x, y + 18);
     }
-    marker(Fx, axisY, 'F', p.color(246, 224, 94));
-    marker(Cx, axisY, 'C', p.color(104, 211, 145));
-    marker(mirrorX, axisY, 'P', p.color(144, 205, 244));
 
-    // ── OBJECT (always solid, upright, in front of mirror) ──
-    drawArrow(objX, axisY, objTopY, [255, 210, 120, 255], false);
-    p.fill(255, 210, 120); p.noStroke(); p.textFont('Consolas'); p.textSize(10); p.textAlign(p.CENTER);
+    // ── OBJECT (solid arrow, upright, in front of mirror) ──
+    p.stroke(255, 210, 120); p.strokeWeight(3.5);
+    p.line(objX, axisY, objX, objTopY);
+    p.push(); p.translate(objX, objTopY); p.noStroke(); p.fill(255, 210, 120);
+    p.triangle(-9, 12, 9, 12, 0, -6); p.pop();
+
+    // ── IMAGE (dashed arrow, upright, behind mirror, smaller) ──
+    p.drawingContext.setLineDash([5, 5]);
+    p.stroke(144, 205, 244, 220); p.strokeWeight(2.8);
+    p.line(imgX, axisY, imgX, imgTopY);
+    p.drawingContext.setLineDash([]);
+    p.push(); p.translate(imgX, imgTopY); p.noStroke(); p.fill(144, 205, 244);
+    p.triangle(-7, 9, 7, 9, 0, -4); p.pop();
+
+    // ── RAY 1: parallel to axis → reflects as if diverging from F ──
+    const hitY1 = objTopY;
+    const hitX1 = surfaceX(hitY1 - axisY);
+    p.stroke(252, 129, 129, 210); p.strokeWeight(2);
+    p.line(objX, hitY1, hitX1, hitY1);
+    const dir1 = p.createVector(hitX1 - Fx, hitY1 - axisY).normalize();
+    p.line(hitX1, hitY1, hitX1 + dir1.x * 320, hitY1 + dir1.y * 320);
+    p.drawingContext.setLineDash([4, 5]);
+    p.stroke(252, 129, 129, 110);
+    p.line(hitX1, hitY1, imgX, imgTopY);
+    p.drawingContext.setLineDash([]);
+
+    // ── RAY 2: aimed at F → reflects parallel to the axis ──
+    const t2 = (mirrorX - objX) / (Fx - objX);
+    const hitY2raw = objTopY + (axisY - objTopY) * t2;
+    const hitX2 = surfaceX(hitY2raw - axisY);
+    p.stroke(104, 211, 145, 210); p.strokeWeight(2);
+    p.line(objX, objTopY, hitX2, hitY2raw);
+    p.line(hitX2, hitY2raw, hitX2 + 320, hitY2raw);
+    p.drawingContext.setLineDash([4, 5]);
+    p.stroke(104, 211, 145, 110);
+    p.line(hitX2, hitY2raw, imgX, imgTopY);
+    p.drawingContext.setLineDash([]);
+    p.noStroke();
+
+    // Labels
+    p.fill(255, 210, 120); p.textFont('Consolas'); p.textSize(10); p.textAlign(p.CENTER);
     p.text('Object', objX, objTopY - 12);
+    p.fill(144, 205, 244);
+    p.text('Image', imgX, imgTopY - 10 < 12 ? imgTopY + 16 : imgTopY - 10);
 
-    if (atFocus) {
-      // ── Degenerate case: object at F → reflected rays run parallel,
-      // image forms at infinity. Only Ray 1 stays well-defined (Ray 2's
-      // "aim at F" target coincides with the object itself here).
-      const hitY1 = objTopY;
-      const hitX1 = surfaceX(hitY1 - axisY);
-      p.stroke(252, 129, 129, 200); p.strokeWeight(2);
-      p.line(objX, hitY1, hitX1, hitY1);
-      const dir1 = p.createVector(Fx - hitX1, axisY - hitY1).normalize();
-      p.line(hitX1, hitY1, hitX1 + dir1.x * EXT, hitY1 + dir1.y * EXT);
-      p.noStroke();
-
-      p.fill(255, 255, 255, 170); p.textFont('Exo 2'); p.textSize(13); p.textAlign(p.CENTER);
-      p.text('Object at F — image forms at infinity', p.width / 2, 26);
-
-    } else {
-      const { v, m } = computeOptics(uMag, fMag);
-      const hi = m * ho;
-      const virtual = v < 0; // real-is-positive: negative v = virtual (behind mirror)
-
-      const drawV  = Math.max(-(VIRT_MAX - 10), Math.min(U_MAX - 10, v));
-      const drawHi = Math.max(-100, Math.min(100, hi));
-      const imgX    = mirrorX - drawV * scale; // positive v (real) → left; negative (virtual) → right
-      const imgTopY = axisY - drawHi * scale;
-
-      // ── RAY 1: parallel to axis → converges toward F ──
-      const hitY1 = objTopY;
-      const hitX1 = surfaceX(hitY1 - axisY);
-      p.stroke(252, 129, 129, 210); p.strokeWeight(2);
-      p.line(objX, hitY1, hitX1, hitY1);
-      const dir1 = p.createVector(Fx - hitX1, axisY - hitY1).normalize();
-      p.line(hitX1, hitY1, hitX1 + dir1.x * EXT, hitY1 + dir1.y * EXT);
-      if (virtual) {
-        p.drawingContext.setLineDash([4, 5]);
-        p.stroke(252, 129, 129, 110);
-        p.line(hitX1, hitY1, imgX, imgTopY);
-        p.drawingContext.setLineDash([]);
-      }
-
-      // ── RAY 2: aimed at F → reflects parallel to the axis (leftward) ──
-      const t2 = (mirrorX - objX) / (Fx - objX);
-      const hitY2raw = objTopY + (axisY - objTopY) * t2;
-      const hitX2 = surfaceX(hitY2raw - axisY);
-      p.stroke(104, 211, 145, 210); p.strokeWeight(2);
-      p.line(objX, objTopY, hitX2, hitY2raw);
-      p.line(hitX2, hitY2raw, hitX2 - EXT, hitY2raw);
-      if (virtual) {
-        p.drawingContext.setLineDash([4, 5]);
-        p.stroke(104, 211, 145, 110);
-        p.line(hitX2, hitY2raw, imgX, imgTopY);
-        p.drawingContext.setLineDash([]);
-      }
-      p.noStroke();
-
-      // ── IMAGE (dashed if virtual, solid if real) ──
-      drawArrow(imgX, axisY, imgTopY, [144, 205, 244, 255], virtual);
-      p.fill(144, 205, 244); p.textFont('Consolas'); p.textSize(10); p.textAlign(p.CENTER);
-      const labelAbove = imgTopY < axisY;
-      p.text('Image', imgX, labelAbove ? imgTopY - 10 : imgTopY + 18);
-
-      // HUD
-      p.fill(0, 0, 0, 130); p.noStroke(); p.rect(8, 8, 200, 76, 8);
-      p.fill(144, 205, 244); p.textFont('Consolas'); p.textSize(10.5); p.textAlign(p.LEFT, p.TOP);
-      p.text(`u  = ${uMag.toFixed(0)} cm`, 16, 16);
-      p.text(`f  = ${fMag.toFixed(0)} cm`, 16, 31);
-      p.text(`v  = ${fmt(v, 800, 1)} cm`,  16, 46);
-      p.text(`m  = ${fmt(m, 30, 2)}×`,     16, 61);
-    }
+    // HUD
+    p.fill(0, 0, 0, 130); p.noStroke(); p.rect(8, 8, 190, 76, 8);
+    p.fill(144, 205, 244); p.textFont('Consolas'); p.textSize(10.5); p.textAlign(p.LEFT, p.TOP);
+    p.text(`u  = ${uMag.toFixed(0)} cm`, 16, 16);
+    p.text(`f  = ${(-f).toFixed(0)} cm`, 16, 31);
+    p.text(`v  = ${v.toFixed(1)} cm`,    16, 46);
+    p.text(`m  = ${m.toFixed(2)}×`,      16, 61);
   };
 
 }, 'canvasWrap');
