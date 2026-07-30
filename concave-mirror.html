@@ -354,7 +354,7 @@ document.getElementById('languageToggle').addEventListener('click', () => {
 // • v > 0 → REAL image (same side as object, in front of mirror)
 // • v < 0 → VIRTUAL image (behind the mirror)
 // m = -v/u
-const EPS = 4; // cm — "close enough to f" to treat as image-at-infinity
+const EPS = 0.5; // cm — "close enough to f" to treat as image-at-infinity
 function computeOptics(uMag, fMag) {
   const u = uMag, f = fMag;
   const v = 1 / (1 / f - 1 / u);
