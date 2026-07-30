@@ -389,7 +389,7 @@ function updateAll() {
     const { v, m } = computeOptics(uMag, fMag);
     const hi = m * ho;
     document.getElementById('statV').textContent = fmt(v, 800, 1);
-    document.getElementById('statM').textContent = fmt(m, 30, 2);
+    document.getElementById('statM').textContent = fmt(Math.abs(m), 30, 2);   // always positive
     document.getElementById('statHi').textContent = fmt(hi, 400, 1);
     const real = v > 0;
     const erect = m > 0;
@@ -569,7 +569,7 @@ new p5(function(p) {
       p.text(`u = ${uMag.toFixed(0)} cm`, 16, 16);
       p.text(`f = ${fMag.toFixed(0)} cm`, 16, 31);
       p.text(`v = ${fmt(v, 800, 1)} cm`, 16, 46);
-      p.text(`m = ${fmt(m, 30, 2)}×`, 16, 61);
+      p.text(`m = ${fmt(Math.abs(m), 30, 2)}×`, 16, 61);   // always positive
     }
   };
 }, 'canvasWrap');
