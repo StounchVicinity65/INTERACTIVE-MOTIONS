@@ -7,19 +7,18 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;700&family=Share+Tech+Mono&family=Bebas+Neue&family=Exo+2:wght@300;400;700;900&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --blue:    #90cdf4;
-      --blue-d:  #4a90e2;
-      --gold:    #f6e05e;
-      --orange:  #f6ad55;
-      --green:   #68d391;
-      --red:     #fc8181;
-      --bg:      #010306;
-      --panel:   #080d16;
-      --card:    rgba(8,13,22,0.88);
-      --dim:     #8ba3bb;
+      --blue: #90cdf4;
+      --blue-d: #4a90e2;
+      --gold: #f6e05e;
+      --orange: #f6ad55;
+      --green: #68d391;
+      --red: #fc8181;
+      --bg: #010306;
+      --panel: #080d16;
+      --card: rgba(8,13,22,0.88);
+      --dim: #8ba3bb;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       font-family: 'Exo 2', sans-serif;
       background: var(--bg);
@@ -28,7 +27,6 @@
       overflow-x: hidden;
     }
     body.bangla { font-family: 'Noto Serif Bengali', sans-serif; }
-
     #pCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.7;}
     #bgLayer {
       position: fixed; inset: 0; z-index: 0;
@@ -44,10 +42,7 @@
         linear-gradient(90deg, rgba(144,205,244,0.02) 1px, transparent 1px);
       background-size: 40px 40px;
     }
-
     .wrapper { position: relative; z-index: 1; display: flex; flex-direction: column; min-height: 100vh; padding-bottom: 2rem; }
-
-    /* TOP BAR */
     .topbar {
       display: flex; align-items: center; justify-content: space-between;
       padding: 0.75rem 1.5rem;
@@ -78,13 +73,8 @@
       transition: all 0.2s; letter-spacing: 0.04em;
     }
     #languageToggle:hover { background: var(--blue-d); border-color: transparent; }
-
-    /* MAIN */
     .main { display: flex; gap: 1.2rem; padding: 1.1rem 1.5rem; flex: 1; }
-
-    /* LEFT PANEL */
     .left-panel { display: flex; flex-direction: column; gap: 0.9rem; width: 282px; min-width: 282px; }
-
     .panel {
       background: var(--card);
       border: 1px solid rgba(144,205,244,0.14);
@@ -98,11 +88,9 @@
       font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase;
       color: rgba(144,205,244,0.5); margin-bottom: 0.62rem;
     }
-
     .def-text { font-size: 0.86rem; line-height: 1.72; color: var(--dim); }
     .def-text strong { color: var(--blue); }
     .def-text em { color: var(--blue); opacity: .85; font-style: normal; font-family: 'Share Tech Mono', monospace; font-size: 0.81rem; }
-
     .formula-block {
       margin-top: 0.75rem;
       background: rgba(0,0,0,0.38);
@@ -113,27 +101,22 @@
     .formula-row { display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 0.28rem; }
     .formula-row:last-child { margin-bottom: 0; }
     .formula-lbl { font-size: 0.65rem; color: var(--dim); font-family: 'Share Tech Mono', monospace; min-width: 62px; }
-    .formula-eq  { font-family: 'Share Tech Mono', monospace; font-size: 0.86rem; color: var(--blue); }
+    .formula-eq { font-family: 'Share Tech Mono', monospace; font-size: 0.86rem; color: var(--blue); }
     .formula-sub { font-size: 0.65rem; color: rgba(139,163,187,0.55); font-family: 'Share Tech Mono', monospace; }
-
-    /* Controls */
     .control-row { display: flex; flex-direction: column; gap: 0.18rem; margin-bottom: 0.8rem; }
     .control-row:last-child { margin-bottom: 0; }
     .control-row label { font-size: 0.79rem; color: var(--dim); font-weight: 500; }
     .control-row input[type="range"] { width: 100%; accent-color: var(--blue-d); cursor: pointer; height: 4px; }
     .range-val { font-family: 'Share Tech Mono', monospace; font-size: 0.88rem; color: var(--blue); margin-left: 0.5rem; min-width: 52px; text-align:right; }
     .range-row { display: flex; align-items: center; }
-
     .btn-row { display: flex; gap: 0.55rem; margin-top: 0.9rem; }
     .btn {
       flex: 1; padding: 0.58rem 0; border: none; border-radius: 7px;
       font-size: 0.88rem; font-weight: 700; cursor: pointer;
       font-family: 'Exo 2', sans-serif; transition: all 0.22s; letter-spacing: 0.03em;
     }
-    .btn-reset  { background: rgba(255,255,255,0.07); color: var(--dim); border: 1px solid rgba(255,255,255,0.13); }
-    .btn-reset:hover  { background: rgba(255,255,255,0.13); color: white; }
-
-    /* Stats */
+    .btn-reset { background: rgba(255,255,255,0.07); color: var(--dim); border: 1px solid rgba(255,255,255,0.13); }
+    .btn-reset:hover { background: rgba(255,255,255,0.13); color: white; }
     .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.58rem; }
     .stat-card {
       background: rgba(0,0,0,0.38);
@@ -141,21 +124,18 @@
       border-radius: 8px; padding: 0.55rem 0.7rem;
     }
     .stat-label { font-size: 0.63rem; color: var(--dim); font-family: 'Share Tech Mono', monospace; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.18rem; }
-    .stat-val   { font-size: 1.15rem; font-weight: 700; color: var(--blue); font-family: 'Share Tech Mono', monospace; }
-    .stat-unit  { font-size: 0.62rem; color: var(--dim); margin-left: 0.12rem; }
+    .stat-val { font-size: 1.15rem; font-weight: 700; color: var(--blue); font-family: 'Share Tech Mono', monospace; }
+    .stat-unit { font-size: 0.62rem; color: var(--dim); margin-left: 0.12rem; }
     .stat-card.g1 { border-color: rgba(246,224,94,0.28); }
     .stat-card.g1 .stat-val { color: var(--gold); }
     .stat-card.g2 { border-color: rgba(104,211,145,0.25); }
     .stat-card.g2 .stat-val { color: var(--green); }
-
     .nature-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.75rem; }
     .nature-tag {
       font-family: 'Share Tech Mono', monospace; font-size: 0.66rem; letter-spacing: 0.08em;
       padding: 0.28rem 0.6rem; border-radius: 20px;
       background: rgba(74,144,226,0.1); border: 1px solid rgba(144,205,244,0.28); color: var(--blue);
     }
-
-    /* CANVAS AREA */
     .canvas-area { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; min-width: 0; }
     .canvas-wrap {
       background: var(--card);
@@ -164,9 +144,7 @@
       box-shadow: 0 0 30px rgba(0,0,0,0.55);
       flex: 1; min-height: 300px;
     }
-
     .hidden { display: none !important; }
-
     @media (max-width: 920px) {
       .main { flex-direction: column; }
       .left-panel { width: 100%; min-width: auto; flex-direction: row; flex-wrap: wrap; }
@@ -178,9 +156,7 @@
 <canvas id="pCanvas"></canvas>
 <div id="bgLayer"></div>
 <div id="bgGrid"></div>
-
 <div class="wrapper">
-  <!-- TOP BAR -->
   <div class="topbar">
     <a href="index.html" class="back-btn">← <span class="lang-en">Back</span><span class="lang-bn hidden">পিছনে</span></a>
     <div class="page-title">
@@ -189,12 +165,8 @@
     </div>
     <button id="languageToggle">বাংলা / EN</button>
   </div>
-
   <div class="main">
-    <!-- LEFT PANEL -->
     <div class="left-panel">
-
-      <!-- Definition -->
       <div class="panel">
         <div class="panel-label"><span class="lang-en">Definition</span><span class="lang-bn hidden">সংজ্ঞা</span></div>
         <p class="def-text lang-en">
@@ -222,11 +194,8 @@
           </div>
         </div>
       </div>
-
-      <!-- Controls -->
       <div class="panel">
         <div class="panel-label"><span class="lang-en">Parameters</span><span class="lang-bn hidden">প্যারামিটার</span></div>
-
         <div class="control-row">
           <label>
             <span class="lang-en">Object Distance, u (cm)</span>
@@ -237,7 +206,6 @@
             <span class="range-val" id="uDisplay">60 cm</span>
           </div>
         </div>
-
         <div class="control-row">
           <label>
             <span class="lang-en">Object Height, hₒ (cm)</span>
@@ -248,7 +216,6 @@
             <span class="range-val" id="hoDisplay">25 cm</span>
           </div>
         </div>
-
         <div class="control-row">
           <label>
             <span class="lang-en">Focal Length, f (cm)</span>
@@ -259,7 +226,6 @@
             <span class="range-val" id="fDisplay">20 cm</span>
           </div>
         </div>
-
         <div class="btn-row">
           <button class="btn btn-reset" onclick="resetSim()">
             <span class="lang-en">↺ Reset</span>
@@ -267,8 +233,6 @@
           </button>
         </div>
       </div>
-
-      <!-- Live Stats -->
       <div class="panel">
         <div class="panel-label">
           <span class="lang-en">Live Readout</span>
@@ -292,27 +256,20 @@
             <div><span class="stat-val" id="statR">—</span><span class="stat-unit">cm</span></div>
           </div>
         </div>
-
         <div class="nature-row">
           <span class="nature-tag"><span class="lang-en">Virtual</span><span class="lang-bn hidden">অলীক</span></span>
           <span class="nature-tag"><span class="lang-en">Erect</span><span class="lang-bn hidden">সোজা</span></span>
           <span class="nature-tag" id="sizeTag"><span class="lang-en">Diminished</span><span class="lang-bn hidden">ক্ষুদ্রীকৃত</span></span>
         </div>
       </div>
-
-    </div><!-- /left-panel -->
-
-    <!-- CANVAS AREA -->
+    </div>
     <div class="canvas-area">
       <div class="canvas-wrap" id="canvasWrap"></div>
     </div>
-
   </div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
 <script>
-// ── PARTICLES (background) — same pattern as the portal/motion-sim index ──
 (function(){
   const c = document.getElementById('pCanvas');
   const ctx = c.getContext('2d');
@@ -343,7 +300,7 @@
         ctx.beginPath();
         ctx.moveTo(a.x,a.y);
         ctx.lineTo(b.x,b.y);
-        ctx.strokeStyle=`rgba(144,205,244,${.07*(1-d/90)})`;
+        ctx.strokeStyle='rgba(144,205,244,'+(.07*(1-d/90))+')';
         ctx.lineWidth=.5;
         ctx.stroke();
       }
@@ -354,20 +311,15 @@
   window.addEventListener('resize',init);
 })();
 
-// ── LANGUAGE ──────────────────────────────────────────────────────────────
 let currentLang = 'en';
 document.getElementById('languageToggle').addEventListener('click', () => {
   currentLang = currentLang === 'en' ? 'bn' : 'en';
   document.querySelectorAll('.lang-en').forEach(el => el.classList.toggle('hidden', currentLang !== 'en'));
   document.querySelectorAll('.lang-bn').forEach(el => el.classList.toggle('hidden', currentLang !== 'bn'));
   document.body.classList.toggle('bangla', currentLang === 'bn');
+  updateAll();
 });
 
-// ── OPTICS (Real-is-positive convention) ───────────────────────────────────
-// u = +|objectDistance|   (object always real/in front → always positive)
-// f = -|focalLength|      (negative for convex — its focus is virtual)
-// 1/v = 1/f - 1/u  →  v is always negative here (= virtual, behind the mirror)
-// m = -v/u                (always positive → erect)
 function computeOptics(uMag, fMag) {
   const u = uMag;
   const f = -fMag;
@@ -376,7 +328,7 @@ function computeOptics(uMag, fMag) {
   return { v, m };
 }
 
-let DEFAULTS = { u: 60, ho: 25, f: 20 };
+const DEFAULTS = { u: 60, ho: 25, f: 20 };
 
 function updateAll() {
   const uMag = parseFloat(document.getElementById('uSlider').value);
@@ -391,15 +343,15 @@ function updateAll() {
   const hi = m * ho;
 
   document.getElementById('statV').textContent  = v.toFixed(1);
-  document.getElementById('statM').textContent  = m.toFixed(2);
+  document.getElementById('statM').textContent  = Math.abs(m).toFixed(2);
   document.getElementById('statHi').textContent = hi.toFixed(1);
-  document.getElementById('statR').textContent  = (-2 * f).toFixed(0); // negative for convex
+  document.getElementById('statR').textContent  = (-2 * f).toFixed(0);
 
   const sizeTag = document.getElementById('sizeTag');
-  if (m > 0.97) {
-    sizeTag.innerHTML = '<span class="lang-en">Same Size</span><span class="lang-bn' + (currentLang==='bn'?'':' hidden') + '">সমান আকার</span>';
+  if (Math.abs(m) > 0.97) {
+    sizeTag.innerHTML = '<span class="lang-en'+(currentLang==='en'?'':' hidden')+'">Same Size</span><span class="lang-bn'+(currentLang==='bn'?'':' hidden')+'">সমান আকার</span>';
   } else {
-    sizeTag.innerHTML = '<span class="lang-en' + (currentLang==='en'?'':' hidden') + '">Diminished</span><span class="lang-bn' + (currentLang==='bn'?'':' hidden') + '">ক্ষুদ্রীকৃত</span>';
+    sizeTag.innerHTML = '<span class="lang-en'+(currentLang==='en'?'':' hidden')+'">Diminished</span><span class="lang-bn'+(currentLang==='bn'?'':' hidden')+'">ক্ষুদ্রীকৃত</span>';
   }
 
   if (window.__mirrorRedraw) window.__mirrorRedraw();
@@ -412,11 +364,9 @@ function resetSim() {
   updateAll();
 }
 
-// ── P5 RAY-DIAGRAM SKETCH ───────────────────────────────────────────────
 new p5(function(p) {
-
   let mirrorX = 0, axisY = 0, scale = 1;
-  const U_MAX = 150, R_MAX = 120; // slider-max-based scale so the diagram doesn't jump
+  const U_MAX = 150, R_MAX = 120, EXT = 400;
 
   p.setup = function() {
     const wrap = document.getElementById('canvasWrap');
@@ -432,9 +382,7 @@ new p5(function(p) {
     axisY   = p.height * 0.5;
     const leftPx  = mirrorX - 20;
     const rightPx = p.width - mirrorX - 20;
-    scale = Math.max(0.5, Math.min(leftPx / U_MAX, rightPx / R_MAX));
-    scale *= 1.35; // bump everything up — mirror/object/image drawn larger
-    // (canvas-wrap clips overflow, so extreme slider values just crop cleanly)
+    scale = Math.max(0.5, Math.min(leftPx / U_MAX, rightPx / R_MAX)) * 1.35;
   }
 
   p.windowResized = function() {
@@ -453,49 +401,35 @@ new p5(function(p) {
     const { v, m } = computeOptics(uMag, f);
     const hi = m * ho;
 
-    // Subtle grid
     p.stroke(144, 205, 244, 12); p.strokeWeight(0.5);
     for (let gx = 0; gx < p.width; gx += 40) p.line(gx, 0, gx, p.height);
     for (let gy = 0; gy < p.height; gy += 40) p.line(0, gy, p.width, gy);
 
-    // Principal axis
     p.stroke(144, 205, 244, 70); p.strokeWeight(1);
     p.line(0, axisY, p.width, axisY);
 
-    // Positions
-    const objX   = mirrorX - uMag * scale;
-    const Fx     = mirrorX + f * scale;
-    const Cx     = mirrorX + 2 * f * scale;
-    const imgX   = mirrorX - v * scale;   // v is negative (virtual) → imgX lands to the right
+    const objX    = mirrorX - uMag * scale;
+    const Fx      = mirrorX + f * scale;
+    const Cx      = mirrorX + 2 * f * scale;
+    const imgX    = mirrorX - v * scale;
     const objTopY = axisY - ho * scale;
     const imgTopY = axisY - hi * scale;
 
-    // Mirror curve: pole sits exactly at (mirrorX, axisY). For a convex
-    // mirror the pole is the point CLOSEST to the object, and the edges
-    // recede AWAY from the object (curving back toward C, behind the
-    // mirror) — so surfaceX(yy) = mirrorX + bulge(yy), bulge growing
-    // from 0 at the pole outward. Rays are computed against this exact
-    // curve (not a flat plane) so they visibly meet the glass.
     const mHalf = p.height * 0.4;
     const MAXB  = 42;
-    function bulge(yy) { return MAXB * (yy*yy) / (mHalf*mHalf); }
+    function bulge(yy) { return MAXB * (yy * yy) / (mHalf * mHalf); }
     function surfaceX(yy) { return mirrorX + bulge(yy); }
 
     p.noFill(); p.stroke(210, 232, 253, 240); p.strokeWeight(3.5);
     p.beginShape();
     for (let yy = -mHalf; yy <= mHalf; yy += 4) p.curveVertex(surfaceX(yy), axisY + yy);
     p.endShape();
-    // Silvering hatch — thicker, lighter, follows the curve
+
     p.stroke(190, 220, 250, 130); p.strokeWeight(2.5);
     for (let yy = -mHalf; yy <= mHalf; yy += 14) {
       const sx = surfaceX(yy);
       p.line(sx + 3, axisY + yy, sx + 16, axisY + yy + 10);
     }
-
-    // F and C markers
-    drawMarker(Fx, axisY, 'F', p.color(246, 224, 94));
-    drawMarker(Cx, axisY, 'C', p.color(104, 211, 145));
-    drawMarker(mirrorX, axisY, 'P', p.color(144, 205, 244));
 
     function drawMarker(x, y, label, col) {
       p.noStroke(); p.fill(col);
@@ -503,14 +437,17 @@ new p5(function(p) {
       p.textFont('Consolas'); p.textSize(10); p.textAlign(p.CENTER);
       p.text(label, x, y + 18);
     }
+    drawMarker(Fx, axisY, 'F', p.color(246, 224, 94));
+    drawMarker(Cx, axisY, 'C', p.color(104, 211, 145));
+    drawMarker(mirrorX, axisY, 'P', p.color(144, 205, 244));
 
-    // ── OBJECT (solid arrow, upright, in front of mirror) ──
+    // OBJECT
     p.stroke(255, 210, 120); p.strokeWeight(3.5);
     p.line(objX, axisY, objX, objTopY);
     p.push(); p.translate(objX, objTopY); p.noStroke(); p.fill(255, 210, 120);
     p.triangle(-9, 12, 9, 12, 0, -6); p.pop();
 
-    // ── IMAGE (dashed arrow, upright, behind mirror, smaller) ──
+    // IMAGE (dashed)
     p.drawingContext.setLineDash([5, 5]);
     p.stroke(144, 205, 244, 220); p.strokeWeight(2.8);
     p.line(imgX, axisY, imgX, imgTopY);
@@ -518,49 +455,47 @@ new p5(function(p) {
     p.push(); p.translate(imgX, imgTopY); p.noStroke(); p.fill(144, 205, 244);
     p.triangle(-7, 9, 7, 9, 0, -4); p.pop();
 
-    // ── RAY 1: parallel to axis → reflects as if diverging from F ──
+    // RAY 1 (red): parallel to axis → reflects as if from F
+    // solid reflection goes LEFT; dashed extension behind mirror to image
     const hitY1 = objTopY;
     const hitX1 = surfaceX(hitY1 - axisY);
     p.stroke(252, 129, 129, 210); p.strokeWeight(2);
     p.line(objX, hitY1, hitX1, hitY1);
     const dir1 = p.createVector(hitX1 - Fx, hitY1 - axisY).normalize();
-    p.line(hitX1, hitY1, hitX1 + dir1.x * 320, hitY1 + dir1.y * 320);
+    p.line(hitX1, hitY1, hitX1 + dir1.x * EXT, hitY1 + dir1.y * EXT);
     p.drawingContext.setLineDash([4, 5]);
-    p.stroke(252, 129, 129, 110);
+    p.stroke(252, 129, 129, 120);
     p.line(hitX1, hitY1, imgX, imgTopY);
     p.drawingContext.setLineDash([]);
 
-    // ── RAY 2: aimed at F → reflects parallel to the axis ──
+    // RAY 2 (green): aimed toward F → reflects parallel to axis
+    // solid reflection goes LEFT; dashed extension behind mirror to image
     const t2 = (mirrorX - objX) / (Fx - objX);
     const hitY2raw = objTopY + (axisY - objTopY) * t2;
     const hitX2 = surfaceX(hitY2raw - axisY);
     p.stroke(104, 211, 145, 210); p.strokeWeight(2);
     p.line(objX, objTopY, hitX2, hitY2raw);
-    p.line(hitX2, hitY2raw, hitX2 + 320, hitY2raw);
+    p.line(hitX2, hitY2raw, hitX2 - EXT, hitY2raw);
     p.drawingContext.setLineDash([4, 5]);
-    p.stroke(104, 211, 145, 110);
+    p.stroke(104, 211, 145, 120);
     p.line(hitX2, hitY2raw, imgX, imgTopY);
     p.drawingContext.setLineDash([]);
-    p.noStroke();
 
-    // Labels
+    p.noStroke();
     p.fill(255, 210, 120); p.textFont('Consolas'); p.textSize(10); p.textAlign(p.CENTER);
     p.text('Object', objX, objTopY - 12);
     p.fill(144, 205, 244);
     p.text('Image', imgX, imgTopY - 10 < 12 ? imgTopY + 16 : imgTopY - 10);
 
-    // HUD
     p.fill(0, 0, 0, 130); p.noStroke(); p.rect(8, 8, 190, 76, 8);
     p.fill(144, 205, 244); p.textFont('Consolas'); p.textSize(10.5); p.textAlign(p.LEFT, p.TOP);
-    p.text(`u  = ${uMag.toFixed(0)} cm`, 16, 16);
-    p.text(`f  = ${(-f).toFixed(0)} cm`, 16, 31);
-    p.text(`v  = ${v.toFixed(1)} cm`,    16, 46);
-    p.text(`m  = ${m.toFixed(2)}×`,      16, 61);
+    p.text('u = ' + uMag.toFixed(0) + ' cm', 16, 16);
+    p.text('f = ' + (-f).toFixed(0) + ' cm', 16, 31);
+    p.text('v = ' + v.toFixed(1) + ' cm', 16, 46);
+    p.text('m = ' + Math.abs(m).toFixed(2) + 'x', 16, 61);
   };
-
 }, 'canvasWrap');
 
-// Initial draw
 updateAll();
 </script>
 </body>
