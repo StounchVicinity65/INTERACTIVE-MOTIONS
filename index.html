@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Physics Lab — Interactive Simulations</title>
+<title>Interactive Motion Simulations</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;700&family=Share+Tech+Mono&family=Bebas+Neue&family=Exo+2:ital,wght@0,300;0,400;0,700;0,900;1,700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -96,6 +96,13 @@ body.bangla .hero h1{font-family:'Noto Serif Bengali',sans-serif;font-size:2.1re
 .sim-actions{display:flex;justify-content:flex-end;}
 .sim-btn{background:var(--accent);color:#fff;padding:.5rem 1.15rem;border-radius:8px;font-size:.82rem;font-weight:700;text-decoration:none;transition:all .18s;}
 .sim-btn:hover{filter:brightness(1.16);transform:translateY(-1px);}
+
+/* Coming-soon variant for topics not built yet */
+.sim-card.coming-soon{opacity:.6;border-style:dashed;}
+.sim-card.coming-soon:hover{transform:none;box-shadow:none;border-color:rgba(144,205,244,.22);}
+.sim-card.coming-soon .sim-icon{filter:grayscale(1);opacity:.6;}
+.sim-card.coming-soon .sim-btn{pointer-events:none;opacity:.4;background:rgba(255,255,255,.08);}
+.soon-tag{font-family:'Share Tech Mono',monospace;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;color:rgba(144,205,244,.6);border:1px dashed rgba(144,205,244,.3);border-radius:4px;padding:.15rem .5rem;align-self:flex-start;}
 
 /* ============================================================
    SOLVER VIEW
@@ -201,7 +208,7 @@ body.bangla .hero h1{font-family:'Noto Serif Bengali',sans-serif;font-size:2.1re
   ============================================================ -->
   <aside class="sidebar">
     <div class="brand"><span class="logo">⚛</span>
-      <span><span class="lang-en">Physics Sim</span><span class="lang-bn hidden">পদার্থবিজ্ঞান সিম</span></span>
+      <span><span class="lang-en">Motion Sim</span><span class="lang-bn hidden">মোশন সিম</span></span>
     </div>
 
     <nav class="side-nav">
@@ -249,8 +256,8 @@ body.bangla .hero h1{font-family:'Noto Serif Bengali',sans-serif;font-size:2.1re
   <div class="main-col">
     <header class="topbar">
       <span class="topbar-title">⚛
-        <span class="lang-en" id="topTitleHome">Physics Lab — Interactive Simulations</span>
-        <span class="lang-bn hidden">পদার্থবিজ্ঞান — ইন্টারেক্টিভ সিমুলেশন</span>
+        <span class="lang-en" id="topTitleHome">Interactive Physics Simulations</span>
+        <span class="lang-bn hidden">ইন্টারেক্টিভ পদার্থবিজ্ঞান সিমুলেশন</span>
       </span>
     </header>
 
@@ -275,7 +282,7 @@ body.bangla .hero h1{font-family:'Noto Serif Bengali',sans-serif;font-size:2.1re
           </div>
           <div class="hero-stats">
             <div class="hstat"><b>11</b><span class="lang-en">Simulations</span><span class="lang-bn hidden">সিমুলেশন</span></div>
-            <div class="hstat"><b>20+</b><span class="lang-en">Formulas</span><span class="lang-bn hidden">সূত্র</span></div>
+            <div class="hstat"><b>28+</b><span class="lang-en">Formulas</span><span class="lang-bn hidden">সূত্র</span></div>
             <div class="hstat"><b>∞</b><span class="lang-en">Iterations</span><span class="lang-bn hidden">পুনরাবৃত্তি</span></div>
           </div>
         </div>
@@ -380,20 +387,53 @@ body.bangla .hero h1{font-family:'Noto Serif Bengali',sans-serif;font-size:2.1re
             <div class="sim-top">
               <div class="sim-icon">🪞</div>
               <div><div class="sim-title"><span class="lang-en">Convex Mirror</span><span class="lang-bn hidden">উত্তল দর্পণ</span></div>
-              <div class="sim-meta"><span class="lang-en">Virtual · Diminished</span><span class="lang-bn hidden">অসৎ · ক্ষুদ্রাকার</span></div></div>
+              <div class="sim-meta"><span class="lang-en">Focal Length · Magnification</span><span class="lang-bn hidden">ফোকাস দৈর্ঘ্য · বিবর্ধন</span></div></div>
             </div>
-            <div class="sim-desc"><span class="lang-en">A diverging mirror that always forms virtual, erect and diminished images.</span><span class="lang-bn hidden">একটি অপসারী দর্পণ যা সর্বদা অসৎ, সোজা ও ক্ষুদ্রাকার প্রতিবিম্ব গঠন করে।</span></div>
+            <div class="sim-desc"><span class="lang-en">A diverging mirror that always forms a virtual, erect, diminished image — trace the reflected rays yourself.</span><span class="lang-bn hidden">একটি অপসারী দর্পণ যা সর্বদা অলীক, সোজা, ক্ষুদ্রীকৃত প্রতিবিম্ব গঠন করে — প্রতিফলিত রশ্মি নিজেই অনুসরণ করুন।</span></div>
             <div class="sim-actions"><a href="convex-mirror.html" class="sim-btn"><span class="lang-en">Open Simulation →</span><span class="lang-bn hidden">সিমুলেশন খুলুন →</span></a></div>
           </div>
 
           <div class="sim-card" data-cat="Waves & Optics">
             <div class="sim-top">
-              <div class="sim-icon">🔭</div>
+              <div class="sim-icon">🪞</div>
               <div><div class="sim-title"><span class="lang-en">Concave Mirror</span><span class="lang-bn hidden">অবতল দর্পণ</span></div>
-              <div class="sim-meta"><span class="lang-en">Real · Virtual</span><span class="lang-bn hidden">সৎ · অসৎ</span></div></div>
+              <div class="sim-meta"><span class="lang-en">Real · Virtual · Inverted</span><span class="lang-bn hidden">বাস্তব · অলীক · উল্টানো</span></div></div>
             </div>
-            <div class="sim-desc"><span class="lang-en">A converging mirror that can form real or virtual images depending on object position.</span><span class="lang-bn hidden">একটি অভিসারী দর্পণ যা বস্তুর অবস্থানের উপর নির্ভর করে সৎ বা অসৎ প্রতিবিম্ব গঠন করতে পারে।</span></div>
+            <div class="sim-desc"><span class="lang-en">A converging mirror whose image flips between real/inverted and virtual/erect depending on where the object sits.</span><span class="lang-bn hidden">একটি অভিসারী দর্পণ যার প্রতিবিম্ব বস্তুর অবস্থানের উপর নির্ভর করে বাস্তব/উল্টানো ও অলীক/সোজার মধ্যে পরিবর্তিত হয়।</span></div>
             <div class="sim-actions"><a href="concave-mirror.html" class="sim-btn"><span class="lang-en">Open Simulation →</span><span class="lang-bn hidden">সিমুলেশন খুলুন →</span></a></div>
+          </div>
+
+          <div class="sim-card coming-soon" data-cat="Waves & Optics">
+            <div class="sim-top">
+              <div class="sim-icon">🪟</div>
+              <div><div class="sim-title"><span class="lang-en">Plane Mirror</span><span class="lang-bn hidden">সমতল দর্পণ</span></div>
+              <div class="sim-meta"><span class="lang-en">Reflection · Lateral Inversion</span><span class="lang-bn hidden">প্রতিফলন · পার্শ্ব বিপর্যয়</span></div></div>
+            </div>
+            <div class="sim-desc"><span class="lang-en">A flat mirror forms a virtual, erect, same-size, laterally-inverted image at equal distance behind the glass.</span><span class="lang-bn hidden">একটি সমতল দর্পণ কাচের পেছনে সমান দূরত্বে অলীক, সোজা, সমান আকারের, পার্শ্ব-বিপরীত প্রতিবিম্ব গঠন করে।</span></div>
+            <span class="soon-tag"><span class="lang-en">Coming Soon</span><span class="lang-bn hidden">শীঘ্রই আসছে</span></span>
+            <div class="sim-actions"><a href="plane-mirror.html" class="sim-btn"><span class="lang-en">Open Simulation →</span><span class="lang-bn hidden">সিমুলেশন খুলুন →</span></a></div>
+          </div>
+
+          <div class="sim-card coming-soon" data-cat="Waves & Optics">
+            <div class="sim-top">
+              <div class="sim-icon">🔍</div>
+              <div><div class="sim-title"><span class="lang-en">Convex Lens</span><span class="lang-bn hidden">উত্তল লেন্স</span></div>
+              <div class="sim-meta"><span class="lang-en">Converging · Real/Virtual Image</span><span class="lang-bn hidden">অভিসারী · বাস্তব/অলীক প্রতিবিম্ব</span></div></div>
+            </div>
+            <div class="sim-desc"><span class="lang-en">A converging lens whose image type depends on object position relative to F — just like a concave mirror.</span><span class="lang-bn hidden">একটি অভিসারী লেন্স যার প্রতিবিম্বের ধরন F-এর সাপেক্ষে বস্তুর অবস্থানের উপর নির্ভর করে — অবতল দর্পণের মতোই।</span></div>
+            <span class="soon-tag"><span class="lang-en">Coming Soon</span><span class="lang-bn hidden">শীঘ্রই আসছে</span></span>
+            <div class="sim-actions"><a href="convex-lens.html" class="sim-btn"><span class="lang-en">Open Simulation →</span><span class="lang-bn hidden">সিমুলেশন খুলুন →</span></a></div>
+          </div>
+
+          <div class="sim-card coming-soon" data-cat="Waves & Optics">
+            <div class="sim-top">
+              <div class="sim-icon">🔎</div>
+              <div><div class="sim-title"><span class="lang-en">Concave Lens</span><span class="lang-bn hidden">অবতল লেন্স</span></div>
+              <div class="sim-meta"><span class="lang-en">Diverging · Virtual Image</span><span class="lang-bn hidden">অপসারী · অলীক প্রতিবিম্ব</span></div></div>
+            </div>
+            <div class="sim-desc"><span class="lang-en">A diverging lens that always forms a virtual, erect, diminished image — the lens counterpart to a convex mirror.</span><span class="lang-bn hidden">একটি অপসারী লেন্স যা সর্বদা অলীক, সোজা, ক্ষুদ্রীকৃত প্রতিবিম্ব গঠন করে — উত্তল দর্পণের লেন্স সংস্করণ।</span></div>
+            <span class="soon-tag"><span class="lang-en">Coming Soon</span><span class="lang-bn hidden">শীঘ্রই আসছে</span></span>
+            <div class="sim-actions"><a href="concave-lens.html" class="sim-btn"><span class="lang-en">Open Simulation →</span><span class="lang-bn hidden">সিমুলেশন খুলুন →</span></a></div>
           </div>
 
         </div>
@@ -413,7 +453,7 @@ body.bangla .hero h1{font-family:'Noto Serif Bengali',sans-serif;font-size:2.1re
               <p><span class="lang-en">Use the solver on the right to work physics problems, or convert between units below.</span><span class="lang-bn hidden">ডানদিকের সমাধানকারী দিয়ে সমস্যা সমাধান করুন, বা নিচে একক রূপান্তর করুন।</span></p>
               <ul>
                 <li><span class="lang-en">11 interactive simulations</span><span class="lang-bn hidden">১১টি ইন্টারেক্টিভ সিমুলেশন</span></li>
-                <li><span class="lang-en">20+ solvable physics formulas</span><span class="lang-bn hidden">২০+ সমাধানযোগ্য সূত্র</span></li>
+                <li><span class="lang-en">28+ solvable physics formulas</span><span class="lang-bn hidden">২৮+ সমাধানযোগ্য সূত্র</span></li>
                 <li><span class="lang-en">18-category unit converter</span><span class="lang-bn hidden">১৮ শ্রেণির একক রূপান্তরকারী</span></li>
               </ul>
             </div>
@@ -1104,6 +1144,112 @@ const FORMULAS = [
       T: { formula:'T = 2πr/v',    fn:k => 2*Math.PI*k.r/k.v,     steps:(k,r)=>`T = 2πr/v\nT = 2π×${k.r}/${k.v}\nT = ${r} s` },
       r: { formula:'r = vT/2π',    fn:k => k.v*k.T/(2*Math.PI),    steps:(k,r)=>`r = vT/2π\nr = ${k.v}×${k.T}/(2π)\nr = ${r} m` },
       v: { formula:'v = 2πr/T',    fn:k => 2*Math.PI*k.r/k.T,     steps:(k,r)=>`v = 2πr/T\nv = 2π×${k.r}/${k.T}\nv = ${r} m/s` },
+    }
+  },
+  {
+    cat: 'Waves & Optics', name: 'Mirror Formula 1/v + 1/u = 1/f',
+    vars: [
+      { s:'v', label:'Image distance (v)', unit:'cm' },
+      { s:'u', label:'Object distance (u)', unit:'cm' },
+      { s:'f', label:'Focal length (f)', unit:'cm' },
+    ],
+    solvers: {
+      v: { formula:'v = 1 / (1/f − 1/u)', fn:k => 1/(1/k.f - 1/k.u),  steps:(k,r)=>`1/v + 1/u = 1/f\n1/v = 1/f − 1/u\n1/v = 1/${k.f} − 1/${k.u}\n1/v = ${(1/k.f - 1/k.u).toFixed(5)}\nv = ${r} cm` },
+      u: { formula:'u = 1 / (1/f − 1/v)', fn:k => 1/(1/k.f - 1/k.v),  steps:(k,r)=>`1/v + 1/u = 1/f\n1/u = 1/f − 1/v\n1/u = 1/${k.f} − 1/${k.v}\n1/u = ${(1/k.f - 1/k.v).toFixed(5)}\nu = ${r} cm` },
+      f: { formula:'f = 1 / (1/v + 1/u)', fn:k => 1/(1/k.v + 1/k.u),  steps:(k,r)=>`1/v + 1/u = 1/f\n1/f = 1/${k.v} + 1/${k.u}\n1/f = ${(1/k.v + 1/k.u).toFixed(5)}\nf = ${r} cm` },
+    }
+  },
+  {
+    cat: 'Waves & Optics', name: 'Mirror/Lens Magnification m = −v/u',
+    vars: [
+      { s:'m', label:'Magnification (m)', unit:'×' },
+      { s:'v', label:'Image distance (v)', unit:'cm' },
+      { s:'u', label:'Object distance (u)', unit:'cm' },
+    ],
+    solvers: {
+      m: { formula:'m = −v/u',   fn:k => -k.v/k.u,   steps:(k,r)=>`m = −v/u\nm = −(${k.v})/(${k.u})\nm = ${r}×` },
+      v: { formula:'v = −mu',    fn:k => -k.m*k.u,   steps:(k,r)=>`v = −mu\nv = −(${k.m})(${k.u})\nv = ${r} cm` },
+      u: { formula:'u = −v/m',   fn:k => -k.v/k.m,   steps:(k,r)=>`u = −v/m\nu = −(${k.v})/(${k.m})\nu = ${r} cm` },
+    }
+  },
+  {
+    cat: 'Waves & Optics', name: 'Thin Lens Formula 1/v − 1/u = 1/f',
+    vars: [
+      { s:'v', label:'Image distance (v)', unit:'cm' },
+      { s:'u', label:'Object distance (u)', unit:'cm' },
+      { s:'f', label:'Focal length (f)', unit:'cm' },
+    ],
+    solvers: {
+      v: { formula:'v = 1 / (1/f + 1/u)', fn:k => 1/(1/k.f + 1/k.u),  steps:(k,r)=>`1/v − 1/u = 1/f\n1/v = 1/f + 1/u\n1/v = 1/${k.f} + 1/${k.u}\n1/v = ${(1/k.f + 1/k.u).toFixed(5)}\nv = ${r} cm` },
+      u: { formula:'u = 1 / (1/v − 1/f)', fn:k => 1/(1/k.v - 1/k.f),  steps:(k,r)=>`1/v − 1/u = 1/f\n1/u = 1/v − 1/f\n1/u = 1/${k.v} − 1/${k.f}\n1/u = ${(1/k.v - 1/k.f).toFixed(5)}\nu = ${r} cm` },
+      f: { formula:'f = 1 / (1/v − 1/u)', fn:k => 1/(1/k.v - 1/k.u),  steps:(k,r)=>`1/v − 1/u = 1/f\n1/f = 1/v − 1/u\n1/f = 1/${k.v} − 1/${k.u}\n1/f = ${(1/k.v - 1/k.u).toFixed(5)}\nf = ${r} cm` },
+    }
+  },
+  {
+    cat: 'Waves & Optics', name: "Lens Maker's Equation 1/f = (n−1)(1/R₁−1/R₂)",
+    vars: [
+      { s:'f', label:'Focal length (f)', unit:'cm' },
+      { s:'n', label:'Refractive index (n)', unit:'' },
+      { s:'R1', label:'Radius R₁', unit:'cm' },
+      { s:'R2', label:'Radius R₂', unit:'cm' },
+    ],
+    solvers: {
+      f:  { formula:'f = 1 / [(n−1)(1/R₁−1/R₂)]', fn:k => 1/((k.n-1)*(1/k.R1 - 1/k.R2)),  steps:(k,r)=>`1/f = (n−1)(1/R₁−1/R₂)\n1/f = (${k.n}−1)(1/${k.R1}−1/${k.R2})\n1/f = ${(k.n-1)} × ${(1/k.R1-1/k.R2).toFixed(5)}\nf = ${r} cm` },
+      n:  { formula:'n = 1 + (1/f)/(1/R₁−1/R₂)',  fn:k => 1 + (1/k.f)/(1/k.R1 - 1/k.R2),   steps:(k,r)=>`1/f = (n−1)(1/R₁−1/R₂)\nn = 1 + (1/f) / (1/R₁−1/R₂)\nn = 1 + (1/${k.f}) / ${(1/k.R1-1/k.R2).toFixed(5)}\nn = ${r}` },
+      R1: { formula:'R₁ = 1 / [(1/f)/(n−1) + 1/R₂]', fn:k => 1/((1/k.f)/(k.n-1) + 1/k.R2), steps:(k,r)=>`1/f = (n−1)(1/R₁−1/R₂)\n1/R₁ = (1/f)/(n−1) + 1/R₂\n1/R₁ = ${((1/k.f)/(k.n-1)).toFixed(5)} + 1/${k.R2}\nR₁ = ${r} cm` },
+      R2: { formula:'R₂ = 1 / [1/R₁ − (1/f)/(n−1)]', fn:k => 1/(1/k.R1 - (1/k.f)/(k.n-1)), steps:(k,r)=>`1/f = (n−1)(1/R₁−1/R₂)\n1/R₂ = 1/R₁ − (1/f)/(n−1)\n1/R₂ = 1/${k.R1} − ${((1/k.f)/(k.n-1)).toFixed(5)}\nR₂ = ${r} cm` },
+    }
+  },
+  {
+    cat: 'Waves & Optics', name: "Snell's Law n₁sinθ₁ = n₂sinθ₂",
+    vars: [
+      { s:'n1', label:'Refractive index n₁', unit:'' },
+      { s:'theta1', label:'Angle of incidence θ₁', unit:'°' },
+      { s:'n2', label:'Refractive index n₂', unit:'' },
+      { s:'theta2', label:'Angle of refraction θ₂', unit:'°' },
+    ],
+    solvers: {
+      n1:     { formula:'n₁ = n₂sinθ₂ / sinθ₁', fn:k => k.n2*Math.sin(k.theta2*Math.PI/180)/Math.sin(k.theta1*Math.PI/180),  steps:(k,r)=>`n₁sinθ₁ = n₂sinθ₂\nn₁ = n₂sinθ₂ / sinθ₁\nn₁ = ${k.n2}×sin(${k.theta2}°) / sin(${k.theta1}°)\nn₁ = ${r}` },
+      theta1: { formula:'θ₁ = arcsin(n₂sinθ₂ / n₁)', fn:k => Math.asin(k.n2*Math.sin(k.theta2*Math.PI/180)/k.n1)*180/Math.PI,  steps:(k,r)=>`n₁sinθ₁ = n₂sinθ₂\nsinθ₁ = n₂sinθ₂ / n₁ = ${(k.n2*Math.sin(k.theta2*Math.PI/180)/k.n1).toFixed(4)}\nθ₁ = ${r}°` },
+      n2:     { formula:'n₂ = n₁sinθ₁ / sinθ₂', fn:k => k.n1*Math.sin(k.theta1*Math.PI/180)/Math.sin(k.theta2*Math.PI/180),  steps:(k,r)=>`n₁sinθ₁ = n₂sinθ₂\nn₂ = n₁sinθ₁ / sinθ₂\nn₂ = ${k.n1}×sin(${k.theta1}°) / sin(${k.theta2}°)\nn₂ = ${r}` },
+      theta2: { formula:'θ₂ = arcsin(n₁sinθ₁ / n₂)', fn:k => Math.asin(k.n1*Math.sin(k.theta1*Math.PI/180)/k.n2)*180/Math.PI,  steps:(k,r)=>`n₁sinθ₁ = n₂sinθ₂\nsinθ₂ = n₁sinθ₁ / n₂ = ${(k.n1*Math.sin(k.theta1*Math.PI/180)/k.n2).toFixed(4)}\nθ₂ = ${r}°` },
+    }
+  },
+  {
+    cat: 'Waves & Optics', name: 'Wave Speed v = fλ',
+    vars: [
+      { s:'v', label:'Wave speed (v)', unit:'m/s' },
+      { s:'f', label:'Frequency (f)', unit:'Hz' },
+      { s:'lambda', label:'Wavelength (λ)', unit:'m' },
+    ],
+    solvers: {
+      v:      { formula:'v = fλ',    fn:k => k.f*k.lambda,   steps:(k,r)=>`v = fλ\nv = ${k.f} × ${k.lambda}\nv = ${r} m/s` },
+      f:      { formula:'f = v/λ',   fn:k => k.v/k.lambda,   steps:(k,r)=>`f = v/λ\nf = ${k.v} / ${k.lambda}\nf = ${r} Hz` },
+      lambda: { formula:'λ = v/f',   fn:k => k.v/k.f,        steps:(k,r)=>`λ = v/f\nλ = ${k.v} / ${k.f}\nλ = ${r} m` },
+    }
+  },
+  {
+    cat: 'Waves & Optics', name: 'Critical Angle sinθc = n₂/n₁',
+    vars: [
+      { s:'thetac', label:'Critical angle θc', unit:'°' },
+      { s:'n1', label:'Refractive index n₁ (denser)', unit:'' },
+      { s:'n2', label:'Refractive index n₂ (rarer)', unit:'' },
+    ],
+    solvers: {
+      thetac: { formula:'θc = arcsin(n₂/n₁)', fn:k => Math.asin(k.n2/k.n1)*180/Math.PI,  steps:(k,r)=>`sinθc = n₂/n₁\nsinθc = ${k.n2}/${k.n1} = ${(k.n2/k.n1).toFixed(4)}\nθc = ${r}°` },
+      n1:     { formula:'n₁ = n₂ / sinθc',    fn:k => k.n2/Math.sin(k.thetac*Math.PI/180), steps:(k,r)=>`sinθc = n₂/n₁\nn₁ = n₂ / sinθc\nn₁ = ${k.n2} / sin(${k.thetac}°)\nn₁ = ${r}` },
+      n2:     { formula:'n₂ = n₁sinθc',       fn:k => k.n1*Math.sin(k.thetac*Math.PI/180), steps:(k,r)=>`sinθc = n₂/n₁\nn₂ = n₁sinθc\nn₂ = ${k.n1} × sin(${k.thetac}°)\nn₂ = ${r}` },
+    }
+  },
+  {
+    cat: 'Waves & Optics', name: 'Power of a Lens P = 1/f',
+    vars: [
+      { s:'P', label:'Power (P)', unit:'D' },
+      { s:'f', label:'Focal length (f)', unit:'m' },
+    ],
+    solvers: {
+      P: { formula:'P = 1/f',  fn:k => 1/k.f,  steps:(k,r)=>`P = 1/f\nP = 1/${k.f}\nP = ${r} D` },
+      f: { formula:'f = 1/P',  fn:k => 1/k.P,  steps:(k,r)=>`f = 1/P\nf = 1/${k.P}\nf = ${r} m` },
     }
   },
 ];
