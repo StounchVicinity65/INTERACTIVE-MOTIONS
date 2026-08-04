@@ -678,9 +678,9 @@ new p5(function(p) {
     p.ellipse(bobX, bobY, 28, 28);
     p.fill(100, 230, 150);
     p.ellipse(bobX - 4, bobY - 4, 10, 10);
-    const T = 2 * Math.PI * Math.sqrt(Lm / g);
-    updateStats(dispM, velMS, T);
-    p.fill(0, 0, 0, 120); p.noStroke(); p.rect(8, 8, 220, 102, 8);
+    const omega0P = Math.sqrt(g / Lm);
+    const T = zeta < 1 ? (2 * Math.PI) / (omega0P * Math.sqrt(1 - zeta * zeta)) : NaN;
+    updateStats(dispM, velMS, T);    p.fill(0, 0, 0, 120); p.noStroke(); p.rect(8, 8, 220, 102, 8);
     p.textFont('Consolas'); p.textAlign(p.LEFT, p.TOP); p.fill(144, 205, 244); p.textSize(10.5);
     p.text(`θ = ${p.degrees(physTheta).toFixed(2)}°`, 16, 16);
     p.text(`ω = ${physOmega.toFixed(4)} rad/s`, 16, 31);
@@ -790,7 +790,8 @@ new p5(function(p) {
     p.fill(255, 255, 255, 200); p.noStroke();
     p.textFont('Consolas'); p.textSize(10); p.textAlign(p.CENTER, p.CENTER);
     p.text(`${mass.toFixed(1)}kg`, bobPx, anchorY);
-    const T = 2 * Math.PI * Math.sqrt(mass / k);
+    const omega0S = Math.sqrt(k / mass);
+    const T = zeta < 1 ? (2 * Math.PI) / (omega0S * Math.sqrt(1 - zeta * zeta)) : NaN;
     updateStats(physX, physV, T);
     p.fill(0, 0, 0, 120); p.noStroke(); p.rect(8, 8, 220, 116, 8);
     p.textFont('Consolas'); p.textAlign(p.LEFT, p.TOP); p.fill(144, 205, 244); p.textSize(10.5);
