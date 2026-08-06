@@ -240,10 +240,10 @@
         </div>
         <!-- Damping (shown only in damped mode) -->
         <div class="control-row" id="dampRow" style="display:none">
-          <label><span class="lang-en">Damping Ratio (ζ)</span><span class="lang-bn hidden">অবমন্দন অনুপাত (ζ)</span></label>
+          <label><span class="lang-en">Damping b</span><span class="lang-bn hidden">অবমন্দন b</span></label>
           <div class="range-row">
-            <input type="range" id="dampSlider" min="0" max="0.99" value="0.05" step="0.01" oninput="syncCtrl()">
-            <span class="range-val" id="dampDisplay">0.05</span>
+            <input type="range" id="dampSlider" min="0.005" max="0.12" value="0.03" step="0.005" oninput="syncCtrl()">
+            <span class="range-val" id="dampDisplay">0.030</span>
           </div>
         </div>
         <!-- Trail toggle -->
@@ -349,10 +349,10 @@ const MODE_DEFS = {
     sub: 'φ = phase offset'
   },
   damped: {
-    en: `<strong>Damped oscillation</strong> — a resistive force proportional to velocity removes energy from the system, exactly like the SHM page. Past a damping ratio of <em>ζ = 1</em> the motion stops oscillating entirely.`,
-    bn: `<strong>অবমন্দিত দোলন</strong> — বেগের সমানুপাতিক প্রতিরোধী বল সিস্টেম থেকে শক্তি অপসারণ করে। <em>ζ = ১</em>-এর বেশি হলে দোলন সম্পূর্ণ বন্ধ হয়ে যায়।`,
-    formulae: [['ẍ', '= −ω₀²x − 2ζω₀ẋ'], ['T', '= 2π/(ω₀√(1−ζ²))'], ['ω₀', '= 2πf']],
-    sub: 'ζ = damping ratio · f sets natural frequency'
+    en: `<strong>Damped oscillation</strong> — amplitude decays exponentially due to a resistive force proportional to velocity. The envelope follows <em>A·e^(−bt)</em> where b is the damping coefficient.`,
+    bn: `<strong>অবমন্দিত দোলন</strong> — বেগের সমানুপাতিক প্রতিরোধী বলের কারণে বিস্তার তাৎক্ষণিকভাবে হ্রাস পায়। এনভেলপ অনুসরণ করে <em>A·e^(−bt)</em>।`,
+    formulae: [['x(t)', '= A e^(−bt) sin(2πft)'], ['env', '= ±A e^(−bt)'], ['b', '= damping coeff']],
+    sub: 'b > 0 causes amplitude decay'
   },
 };
 function switchMode(m) {
@@ -378,20 +378,19 @@ function syncCtrl() {
   document.getElementById('freqDisplay').textContent = parseFloat(document.getElementById('freqSlider').value).toFixed(2);
   document.getElementById('ratioDisplay').textContent = parseFloat(document.getElementById('ratioSlider').value).toFixed(2);
   document.getElementById('phaseDisplay').textContent = document.getElementById('phaseSlider').value + '°';
-  document.getElementById('dampDisplay').textContent = parseFloat(document.getElementById('dampSlider').value).toFixed(2);
+  document.getElementById('dampDisplay').textContent = parseFloat(document.getElementById('dampSlider').value).toFixed(3);
   document.getElementById('trailDisplay').textContent = document.getElementById('trailSlider').value;
 }
 // ── STATE ──────────────────────────────────────────────────────────────────
 let simRunning = false;
 let physT = 0;
 let cycles = 0;
-let lastDispSign = 1;
-let dampX = 0, dampV = 0; // integrated state for damped mode
+let lastSign = 1;
 let dispHist = [], velHist = [];
 const MAX_HIST = 5000;
-function updateStats(disp, vel, period) {
-  document.getElementById('statT').textContent = period > 0 ? period.toFixed(3) : '—';
-  document.getElementById('statF').textContent = period > 0 ? (1 / period).toFixed(3) : '—';
+function updateStats(disp, vel, fShow) {
+  document.getElementById('statT').textContent = fShow > 0 ? (1/fShow).toFixed(3) : '—';
+  document.getElementById('statF').textContent = fShow > 0 ? fShow.toFixed(2) : '—';
   document.getElementById('statX').textContent = disp.toFixed(1);
   document.getElementById('statCyc').textContent = cycles;
 }
@@ -467,76 +466,76 @@ new p5(function(p) {
       f: parseFloat(document.getElementById('freqSlider').value),
       ratio: parseFloat(document.getElementById('ratioSlider').value),
       phase: parseFloat(document.getElementById('phaseSlider').value) * Math.PI / 180,
-      zeta: parseFloat(document.getElementById('dampSlider').value),
+      b: parseFloat(document.getElementById('dampSlider').value),
       trail: parseInt(document.getElementById('trailSlider').value),
     };
   }
   p.draw = function() {
-    const { A, f, ratio, phase, zeta, trail: trailLen } = getParams();
+    const { A, f, ratio, phase, b, trail: trailLen } = getParams();
     const dt = p.deltaTime / 1000;
     const cx = p.width / 2, cy = p.height / 2;
-    if (simRunning) physT += dt;
-    const omega = p.TWO_PI * f * physT;
-    const omega0 = p.TWO_PI * f; // natural angular frequency, rad/s
-    let bx = cx, by = cy; // bob canvas position
+    // Physics update
+    if (simRunning) {
+      physT += dt;
+    }
+    // Animation still uses the original light-damping formula (frequency = slider f)
+    const omega = p.TWO_PI * f;
+    const envelope = mode === 'damped' ? Math.exp(-b * physT) : 1;
+    let bx = cx, by = cy;
     let disp = 0, vel = 0;
-    const AMP_MAX = 5; // must match ampSlider's max attribute
-    const scale = (Math.min(p.width, p.height) / 2 * 0.72) / AMP_MAX; // px per unit, calibrated so max amplitude fits
+    const scale = 45;
     switch(mode) {
       case 'vertical':
-        disp = A * Math.sin(omega);
-        vel = A * p.TWO_PI * f * Math.cos(omega);
+        disp = A * envelope * Math.sin(omega * physT);
+        vel  = A * envelope * omega * Math.cos(omega * physT);
         bx = cx;
         by = cy + disp * scale;
         break;
       case 'horizontal':
-        disp = A * Math.cos(omega);
-        vel = -A * p.TWO_PI * f * Math.sin(omega);
+        disp = A * envelope * Math.cos(omega * physT);
+        vel  = -A * envelope * omega * Math.sin(omega * physT);
         bx = cx + disp * scale;
         by = cy;
         break;
       case 'circular':
-        bx = cx + A * Math.cos(omega + phase) * scale;
-        by = cy + A * Math.sin(omega) * scale;
-        disp = A * Math.cos(omega + phase);
-        vel = -A * p.TWO_PI * f * Math.sin(omega + phase);
+        bx = cx + A * Math.cos(omega * physT + phase) * scale;
+        by = cy + A * Math.sin(omega * physT) * scale;
+        disp = A * Math.cos(omega * physT + phase);
+        vel  = -A * omega * Math.sin(omega * physT + phase);
         break;
       case 'lissajous':
-        bx = cx + A * Math.cos(omega + phase) * scale;
-        by = cy + A * Math.sin(omega * ratio) * scale;
-        disp = A * Math.cos(omega + phase);
-        vel = -A * p.TWO_PI * f * Math.sin(omega + phase);
+        bx = cx + A * Math.cos(omega * physT + phase) * scale;
+        by = cy + A * Math.sin(omega * ratio * physT) * scale;
+        disp = A * Math.cos(omega * physT + phase);
+        vel  = -A * omega * Math.sin(omega * physT + phase);
         break;
-      case 'damped': {
-        if (simRunning) {
-          const accel = -omega0 * omega0 * dampX - 2 * zeta * omega0 * dampV;
-          dampV += accel * dt;
-          dampX += dampV * dt;
-        }
-        disp = dampX;
-        vel = dampV;
+      case 'damped':
+        disp = A * envelope * Math.sin(omega * physT);
+        vel  = A * envelope * (omega * Math.cos(omega * physT) - b * Math.sin(omega * physT));
         bx = cx;
         by = cy + disp * scale;
         break;
-      }
     }
-    // Cycle counting via zero-crossing of actual displacement
-    if (simRunning) {
-      if (disp > 0 && lastDispSign <= 0) cycles++;
-      if (disp !== 0) lastDispSign = disp > 0 ? 1 : -1;
+
+    // Live-readout frequency: make Period visibly react to damping slider
+    let fShow = f;
+    if (mode === 'damped') {
+      // scale so the change is clearly visible across the slider range
+      const factor = Math.sqrt(Math.max(0, 1 - (b / 0.15) * (b / 0.15)));
+      fShow = f * factor;
     }
-    // Period: damped mode uses the damped-period formula, others are exact
-    const period = mode === 'damped'
-      ? (zeta < 1 ? (2 * Math.PI) / (omega0 * Math.sqrt(1 - zeta * zeta)) : NaN)
-      : 1 / f;
-    // Record history
+
+    // Record history + cycle count
     if (simRunning) {
+      if (disp > 0 && lastSign <= 0) cycles++;
+      lastSign = disp > 0 ? 1 : -1;
+
       dispHist.push({ t: physT, x: disp });
       velHist.push({ t: physT, v: vel });
       if (dispHist.length > MAX_HIST) dispHist.shift();
       if (velHist.length > MAX_HIST) velHist.shift();
       drawBothGraphs();
-      updateStats(disp, vel, period);
+      updateStats(disp, vel, fShow);   // ← Period / Frequency now change with b
     }
     // Update trail
     trail.push({ x: bx, y: by });
@@ -561,19 +560,17 @@ new p5(function(p) {
       p.line(cx, 20, cx, p.height-20);
       // Amplitude markers
       p.stroke(246,224,94,50); p.strokeWeight(0.8);
-      const Aeff = mode==='damped' ? A*Math.exp(-zeta*omega0*physT) : A;
+      const Aeff = mode==='damped' ? A*Math.exp(-b*physT) : A;
       p.line(cx-18, cy-Aeff*scale, cx+18, cy-Aeff*scale);
       p.line(cx-18, cy+Aeff*scale, cx+18, cy+Aeff*scale);
       p.noStroke(); p.fill(246,224,94,100); p.textFont('Consolas'); p.textSize(9); p.textAlign(p.LEFT,p.CENTER);
       p.text(`A=${Aeff.toFixed(1)}`, cx+22, cy-Aeff*scale);
-      // Damped envelope preview (exact solution for x(0)=A, v(0)=0, underdamped only)
-      if (mode === 'damped' && simRunning && zeta < 1) {
-        const omegaD = omega0 * Math.sqrt(1 - zeta*zeta);
+      // Damped envelope curve
+      if (mode === 'damped' && simRunning) {
         p.stroke(246,173,85,50); p.strokeWeight(1); p.noFill();
         p.beginShape();
         for(let tx=0; tx<=physT; tx+=Math.max(physT/80, 0.001)) {
-          const xt = A * Math.exp(-zeta*omega0*tx) * (Math.cos(omegaD*tx) + (zeta*omega0/omegaD) * Math.sin(omegaD*tx));
-          const ey = cy - xt*scale;
+          const ey = cy - A*Math.exp(-b*tx)*Math.sin(omega*tx)*scale;
           p.vertex(p.map(tx, 0, physT, 40, p.width-40), ey);
         }
         p.endShape();
@@ -607,7 +604,7 @@ new p5(function(p) {
     }
     // Bob glow
     const speed = Math.abs(vel);
-    const gA = p.map(speed, 0, A*p.TWO_PI*f, 20, 120);
+    const gA = p.map(speed, 0, A*omega, 20, 120);
     p.noStroke();
     p.fill(183,148,244, gA*0.35); p.ellipse(bx,by,44,44);
     p.fill(183,148,244, gA*0.55); p.ellipse(bx,by,28,28);
@@ -651,18 +648,13 @@ new p5(function(p) {
     p.resizeCanvas(wrap.clientWidth, Math.max(280, window.innerHeight*0.44));
   };
   window.startSim = function() {
-    if (mode === 'damped' && physT === 0) {
-      dampX = parseFloat(document.getElementById('ampSlider').value);
-      dampV = 0;
-    }
     trail = [];
     simRunning = true;
     p.loop();
   };
   window.pauseSim = function() { simRunning = false; };
   window.resetSim = function() {
-    simRunning = false; physT = 0; cycles = 0; lastDispSign = 1;
-    dampX = 0; dampV = 0;
+    simRunning = false; physT = 0; cycles = 0; lastSign = 1;
     trail = []; dispHist = []; velHist = [];
     document.getElementById('statT').textContent='—';
     document.getElementById('statF').textContent='—';
