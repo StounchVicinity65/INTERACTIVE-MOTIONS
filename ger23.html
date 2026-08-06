@@ -1,1 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Oscillatory Motion</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@400;700&family=Share+Tech+Mono&family=Exo+2:wght@300;400;700;900&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --blue: #90cdf4;
+      --blue-d: #4a90e2;
+      --green: #68d391;
+      --yellow: #f6e05e;
+      --orange: #f6ad55;
+      --purple: #b794f4;
+      --pink: #f687b3;
+      --bg: #04080f;
+      --card: rgba(5,14,32,0.88);
+      --dim: #8ba3bb;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Exo 2', sans-serif;
+      background: var(--bg);
+      color: #f0f0f0;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    body.bangla { font-family: 'Noto Serif Bengali', sans-serif; }
+    #bgLayer {
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(183,148,244,0.06) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 30%, rgba(104,211,145,0.04) 0%, transparent 50%),
+        linear-gradient(150deg, rgba(9,32,63,0.96), rgba(4,12,26,0.98));
+    }
+    #bgGrid {
+      position: fixed; inset: 0; z-index: 0;
+      background-image:
+        linear-gradient(rgba(144,205,244,0.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(144,205,244,0.018) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    .wrapper { position: relative; z-index: 1; display: flex; flex-direction: column; min-height: 100vh; padding-bottom: 2rem; }
+    /* TOP BAR */
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.75rem 1.5rem;
+      background: rgba(0,0,0,0.65);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(144,205,244,0.12);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .back-btn {
+      text-decoration: none; color: var(--dim);
+      background: rgba(0,0,0,0.4); padding: 0.4rem 0.9rem; border-radius: 6px;
+      font-size: 0.85rem; border: 1px solid rgba(144,205,244,0.18);
+      transition: all 0.2s; font-family: 'Share Tech Mono', monospace;
+    }
+    .back-btn:hover { color: var(--blue); border-color: var(--blue); background: rgba(74,144,226,0.12); }
+    .page-title {
+      font-family: 'Exo 2', sans-serif; font-size: 1.35rem; font-weight: 900; font-style: italic;
+      color: var(--purple); text-shadow: 0 0 22px rgba(183,148,244,0.35);
+    }
+    #languageToggle {
+      background: rgba(0,0,0,0.5); color: white; padding: 0.4rem 0.9rem;
+      border: 1px solid rgba(144,205,244,0.28); border-radius: 20px;
+      font-size: 0.78rem; font-weight: 700; cursor: pointer;
+      font-family: 'Share Tech Mono', monospace; transition: all 0.2s; letter-spacing: 0.04em;
+    }
+    #languageToggle:hover { background: var(--blue-d); border-color: transparent; }
+    /* MODE TABS */
+    .mode-tabs {
+      display: flex; margin: 1rem auto 0; width: fit-content;
+      background: rgba(0,0,0,0.45); border: 1px solid rgba(183,148,244,0.14);
+      border-radius: 10px; overflow: hidden;
+    }
+    .tab-btn {
+      padding: 0.5rem 1.6rem; border: none; background: transparent;
+      color: var(--dim); font-family: 'Exo 2', sans-serif;
+      font-size: 0.88rem; font-weight: 700; cursor: pointer;
+      transition: all 0.22s; letter-spacing: 0.04em;
+      border-right: 1px solid rgba(183,148,244,0.1);
+    }
+    .tab-btn:last-child { border-right: none; }
+    .tab-btn.active { background: rgba(183,148,244,0.14); color: var(--purple); }
+    .tab-btn:hover:not(.active) { background: rgba(255,255,255,0.05); color: #ccc; }
+    /* MAIN */
+    .main { display: flex; gap: 1.2rem; padding: 1.1rem 1.5rem; flex: 1; }
+    /* LEFT */
+    .left-panel { display: flex; flex-direction: column; gap: 0.9rem; width: 282px; min-width: 282px; }
+    .panel {
+      background: var(--card); border: 1px solid rgba(144,205,244,0.13);
+      border-radius: 12px; padding: 1.15rem 1.25rem;
+      backdrop-filter: blur(10px); box-shadow: 0 0 22px rgba(0,0,0,0.45);
+    }
+    .panel-label {
+      font-family: 'Share Tech Mono', monospace; font-size: 0.6rem;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: rgba(183,148,244,0.42); margin-bottom: 0.62rem;
+    }
+    .def-text { font-size: 0.86rem; line-height: 1.72; color: var(--dim); }
+    .def-text strong { color: var(--purple); }
+    .def-text em { color: var(--yellow); font-style: normal; font-family: 'Share Tech Mono', monospace; font-size: 0.81rem; }
+    .formula-block {
+      margin-top: 0.75rem; background: rgba(0,0,0,0.38); border-radius: 8px;
+      padding: 0.65rem 0.85rem; border-left: 2px solid var(--purple);
+    }
+    .formula-row { display: flex; align-items: baseline; gap: 0.5rem; margin-bottom: 0.25rem; }
+    .formula-row:last-child { margin-bottom: 0; }
+    .f-lbl { font-size: 0.64rem; color: var(--dim); font-family: 'Share Tech Mono', monospace; min-width: 40px; }
+    .f-eq { font-family: 'Share Tech Mono', monospace; font-size: 0.85rem; color: var(--yellow); }
+    .f-sub { font-size: 0.64rem; color: rgba(139,163,187,0.5); font-family: 'Share Tech Mono', monospace; }
+    /* Controls */
+    .control-row { display: flex; flex-direction: column; gap: 0.18rem; margin-bottom: 0.8rem; }
+    .control-row label { font-size: 0.79rem; color: var(--dim); font-weight: 500; }
+    .control-row input[type="range"] { width: 100%; accent-color: var(--purple); cursor: pointer; height: 4px; }
+    .range-val { font-family: 'Share Tech Mono', monospace; font-size: 0.88rem; color: var(--purple); margin-left: 0.5rem; min-width: 48px; }
+    .range-row { display: flex; align-items: center; }
+    .btn-row { display: flex; gap: 0.55rem; margin-top: 0.25rem; }
+    .btn { flex: 1; padding: 0.58rem 0; border: none; border-radius: 7px; font-size: 0.88rem; font-weight: 700; cursor: pointer; font-family: 'Exo 2', sans-serif; transition: all 0.22s; letter-spacing: 0.03em; }
+    .btn-sim { background: linear-gradient(135deg, #7c3aed, #4c1d95); color: white; }
+    .btn-sim:hover { filter: brightness(1.2); transform: translateY(-2px); box-shadow: 0 6px 22px rgba(124,58,237,0.4); }
+    .btn-stop { background: rgba(246,173,85,0.18); color: var(--orange); border: 1px solid rgba(246,173,85,0.3); }
+    .btn-stop:hover { background: rgba(246,173,85,0.28); }
+    .btn-reset { background: rgba(255,255,255,0.07); color: var(--dim); border: 1px solid rgba(255,255,255,0.13); }
+    .btn-reset:hover { background: rgba(255,255,255,0.13); color: white; }
+    /* Stats */
+    .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.58rem; }
+    .stat-card { background: rgba(0,0,0,0.38); border: 1px solid rgba(144,205,244,0.11); border-radius: 8px; padding: 0.55rem 0.7rem; }
+    .stat-label { font-size: 0.63rem; color: var(--dim); font-family: 'Share Tech Mono', monospace; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.18rem; }
+    .stat-val { font-size: 1.15rem; font-weight: 700; color: var(--blue); font-family: 'Share Tech Mono', monospace; }
+    .stat-unit { font-size: 0.62rem; color: var(--dim); margin-left: 0.12rem; }
+    .stat-card.g1 { border-color: rgba(183,148,244,0.28); } .stat-card.g1 .stat-val { color: var(--purple); }
+    .stat-card.g2 { border-color: rgba(246,224,94,0.25); } .stat-card.g2 .stat-val { color: var(--yellow); }
+    .stat-card.g3 { border-color: rgba(104,211,145,0.25); } .stat-card.g3 .stat-val { color: var(--green); }
+    /* Canvas area */
+    .canvas-area { flex: 1; display: flex; flex-direction: column; gap: 0.75rem; min-width: 0; }
+    .canvas-wrap { background: var(--card); border: 1px solid rgba(144,205,244,0.13); border-radius: 12px; overflow: hidden; box-shadow: 0 0 30px rgba(0,0,0,0.55); flex: 1; min-height: 280px; }
+    .graph-row { display: flex; gap: 0.75rem; }
+    .graph-wrap { background: var(--card); border: 1px solid rgba(144,205,244,0.12); border-radius: 12px; overflow: hidden; height: 148px; flex: 1; min-width: 0; }
+    .graph-label { font-family: 'Share Tech Mono', monospace; font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(183,148,244,0.42); padding: 0.4rem 0.8rem 0; }
+    canvas.graph { display: block; width: 100%; height: 116px; }
+    .hidden { display: none !important; }
+    @media (max-width: 920px) {
+      .main { flex-direction: column; }
+      .left-panel { width: 100%; min-width: auto; flex-direction: row; flex-wrap: wrap; }
+      .panel { flex: 1; min-width: 240px; }
+      .graph-row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+<div id="bgLayer"></div>
+<div id="bgGrid"></div>
+<div class="wrapper">
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <a href="index.html" class="back-btn">← <span class="lang-en">Back</span><span class="lang-bn hidden">পিছনে</span></a>
+    <div class="page-title">
+      <span class="lang-en">〰 Oscillatory Motion</span>
+      <span class="lang-bn hidden">〰 দোলন গতি</span>
+    </div>
+    <button id="languageToggle">বাংলা / EN</button>
+  </div>
+  <!-- MODE TABS -->
+  <div class="mode-tabs">
+    <button class="tab-btn active" onclick="switchMode('vertical')">
+      <span class="lang-en">↕ Vertical</span><span class="lang-bn hidden">↕ উল্লম্ব</span>
+    </button>
+    <button class="tab-btn" onclick="switchMode('horizontal')">
+      <span class="lang-en">↔ Horizontal</span><span class="lang-bn hidden">↔ অনুভূমিক</span>
+    </button>
+    <button class="tab-btn" onclick="switchMode('circular')">
+      <span class="lang-en">⊙ Circular</span><span class="lang-bn hidden">⊙ বৃত্তাকার</span>
+    </button>
+    <button class="tab-btn" onclick="switchMode('lissajous')">
+      <span class="lang-en">∞ Lissajous</span><span class="lang-bn hidden">∞ লিসাজু</span>
+    </button>
+    <button class="tab-btn" onclick="switchMode('damped')">
+      <span class="lang-en">📉 Damped</span><span class="lang-bn hidden">📉 অবমন্দিত</span>
+    </button>
+  </div>
+  <div class="main">
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+      <!-- Definition -->
+      <div class="panel">
+        <div class="panel-label"><span class="lang-en">Definition</span><span class="lang-bn hidden">সংজ্ঞা</span></div>
+        <p class="def-text lang-en" id="defText">
+          <strong>Oscillatory motion</strong> is any motion that repeats back and forth about an <em>equilibrium position</em>. The restoring force always points toward the centre. Key parameters are <em>amplitude</em> (maximum displacement) and <em>frequency</em> (oscillations per second).
+        </p>
+        <p class="def-text lang-bn hidden" id="defTextBn">
+          <strong>দোলন গতি</strong> হলো যেকোনো গতি যা একটি <em>সাম্যাবস্থান বিন্দু</em>কে ঘিরে বারবার পিছনে-সামনে পুনরাবৃত্তি করে। মূল প্যারামিটার হলো <em>বিস্তার</em> (সর্বোচ্চ সরণ) এবং <em>কম্পাঙ্ক</em>।
+        </p>
+        <div class="formula-block" id="formulaBlock">
+          <div class="formula-row">
+            <span class="f-lbl">x(t)</span><span class="f-eq">= A sin(2πft)</span>
+          </div>
+          <div class="formula-row">
+            <span class="f-lbl">T</span><span class="f-eq">= 1 / f</span>
+          </div>
+          <div class="formula-row" style="margin-top:0.3rem">
+            <span class="f-sub">A = amplitude · f = frequency (Hz) · t = time (s)</span>
+          </div>
+        </div>
+      </div>
+      <!-- Controls -->
+      <div class="panel">
+        <div class="panel-label"><span class="lang-en">Parameters</span><span class="lang-bn hidden">প্যারামিটার</span></div>
+        <div class="control-row">
+          <label><span class="lang-en">Amplitude A</span><span class="lang-bn hidden">বিস্তার A</span></label>
+          <div class="range-row">
+            <input type="range" id="ampSlider" min="0.5" max="5" value="2" step="0.1" oninput="syncCtrl()">
+            <span class="range-val" id="ampDisplay">2.0</span>
+          </div>
+        </div>
+        <div class="control-row">
+          <label><span class="lang-en">Frequency f (Hz)</span><span class="lang-bn hidden">কম্পাঙ্ক f (Hz)</span></label>
+          <div class="range-row">
+            <input type="range" id="freqSlider" min="0.1" max="4.0" value="0.8" step="0.05" oninput="syncCtrl()">
+            <span class="range-val" id="freqDisplay">0.80</span>
+          </div>
+        </div>
+        <!-- Lissajous ratio (shown only in lissajous mode) -->
+        <div class="control-row" id="ratioRow" style="display:none">
+          <label><span class="lang-en">Y/X Freq Ratio</span><span class="lang-bn hidden">Y/X কম্পাঙ্ক অনুপাত</span></label>
+          <div class="range-row">
+            <input type="range" id="ratioSlider" min="0.5" max="4.0" value="2.0" step="0.05" oninput="syncCtrl()">
+            <span class="range-val" id="ratioDisplay">2.00</span>
+          </div>
+        </div>
+        <!-- Phase offset -->
+        <div class="control-row" id="phaseRow" style="display:none">
+          <label><span class="lang-en">Phase offset φ (°)</span><span class="lang-bn hidden">দশা পার্থক্য φ (°)</span></label>
+          <div class="range-row">
+            <input type="range" id="phaseSlider" min="0" max="360" value="90" step="5" oninput="syncCtrl()">
+            <span class="range-val" id="phaseDisplay">90°</span>
+          </div>
+        </div>
+        <!-- Damping (shown only in damped mode) -->
+        <div class="control-row" id="dampRow" style="display:none">
+          <label><span class="lang-en">Damping b</span><span class="lang-bn hidden">অবমন্দন b</span></label>
+          <div class="range-row">
+            <input type="range" id="dampSlider" min="0.005" max="0.12" value="0.03" step="0.005" oninput="syncCtrl()">
+            <span class="range-val" id="dampDisplay">0.030</span>
+          </div>
+        </div>
+        <!-- Trail toggle -->
+        <div class="control-row">
+          <label>
+            <span class="lang-en">Trail length</span><span class="lang-bn hidden">পথ দৈর্ঘ্য</span>
+          </label>
+          <div class="range-row">
+            <input type="range" id="trailSlider" min="0" max="300" value="120" step="10" oninput="syncCtrl()">
+            <span class="range-val" id="trailDisplay">120</span>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-sim" onclick="startSim()">
+            <span class="lang-en">▶ Simulate</span><span class="lang-bn hidden">▶ সিমুলেট</span>
+          </button>
+          <button class="btn btn-stop" onclick="pauseSim()">
+            <span class="lang-en">⏸</span><span class="lang-bn hidden">⏸</span>
+          </button>
+          <button class="btn btn-reset" onclick="resetSim()">
+            <span class="lang-en">↺</span><span class="lang-bn hidden">↺</span>
+          </button>
+        </div>
+      </div>
+      <!-- Live Stats -->
+      <div class="panel">
+        <div class="panel-label"><span class="lang-en">Live Readout</span><span class="lang-bn hidden">লাইভ তথ্য</span></div>
+        <div class="stats-grid">
+          <div class="stat-card g1">
+            <div class="stat-label"><span class="lang-en">Period</span><span class="lang-bn hidden">পর্যায়কাল</span></div>
+            <div><span class="stat-val" id="statT">—</span><span class="stat-unit">s</span></div>
+          </div>
+          <div class="stat-card g2">
+            <div class="stat-label"><span class="lang-en">Frequency</span><span class="lang-bn hidden">কম্পাঙ্ক</span></div>
+            <div><span class="stat-val" id="statF">—</span><span class="stat-unit">Hz</span></div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label"><span class="lang-en">Displacement</span><span class="lang-bn hidden">সরণ</span></div>
+            <div><span class="stat-val" id="statX">0.0</span><span class="stat-unit">m</span></div>
+          </div>
+          <div class="stat-card g3">
+            <div class="stat-label"><span class="lang-en">Cycles</span><span class="lang-bn hidden">চক্র</span></div>
+            <div><span class="stat-val" id="statCyc">0</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- CANVAS AREA -->
+    <div class="canvas-area">
+      <div class="canvas-wrap" id="canvasWrap"></div>
+      <div class="graph-row">
+        <div class="graph-wrap">
+          <div class="graph-label">
+            <span class="lang-en">Displacement – Time</span><span class="lang-bn hidden">সরণ – সময়</span>
+          </div>
+          <canvas id="gDisp" class="graph"></canvas>
+        </div>
+        <div class="graph-wrap">
+          <div class="graph-label">
+            <span class="lang-en">Velocity – Time</span><span class="lang-bn hidden">বেগ – সময়</span>
+          </div>
+          <canvas id="gVel" class="graph"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
+<script>
+// ── LANGUAGE ──────────────────────────────────────────────────────────────
+let lang = 'en';
+document.getElementById('languageToggle').addEventListener('click', () => {
+  lang = lang === 'en' ? 'bn' : 'en';
+  document.querySelectorAll('.lang-en').forEach(el => el.classList.toggle('hidden', lang !== 'en'));
+  document.querySelectorAll('.lang-bn').forEach(el => el.classList.toggle('hidden', lang !== 'bn'));
+  document.body.classList.toggle('bangla', lang === 'bn');
+});
+// ── MODE ──────────────────────────────────────────────────────────────────
+let mode = 'vertical';
+const MODE_DEFS = {
+  vertical: {
+    en: `<strong>Vertical oscillation</strong> — a particle moves purely up and down along the Y-axis: <em>y(t) = A sin(2πft)</em>. This is the simplest form of oscillatory motion, directly analogous to a mass on a vertical spring.`,
+    bn: `<strong>উল্লম্ব দোলন</strong> — একটি কণা Y-অক্ষ বরাবর উপরে-নিচে চলে: <em>y(t) = A sin(2πft)</em>।`,
+    formulae: [['x(t)', '= A sin(2πft)'], ['T', '= 1/f'], ['v(t)', '= 2πfA cos(2πft)']],
+    sub: 'A = amplitude · f = freq (Hz)'
+  },
+  horizontal: {
+    en: `<strong>Horizontal oscillation</strong> — the particle moves left-right along the X-axis: <em>x(t) = A cos(2πft)</em>. The cosine form means it starts at maximum displacement at t = 0.`,
+    bn: `<strong>অনুভূমিক দোলন</strong> — কণা X-অক্ষ বরাবর বাম-ডানে চলে: <em>x(t) = A cos(2πft)</em>।`,
+    formulae: [['x(t)', '= A cos(2πft)'], ['T', '= 1/f'], ['v(t)', '= −2πfA sin(2πft)']],
+    sub: 'A = amplitude · f = freq (Hz)'
+  },
+  circular: {
+    en: `<strong>Circular oscillation</strong> — uniform circular motion projected: x and y each follow sinusoidal paths 90° apart, tracing a perfect circle. The particle completes one circle every period <em>T = 1/f</em>.`,
+    bn: `<strong>বৃত্তাকার দোলন</strong> — X ও Y উভয় সাইনুসয়ডাল পথ অনুসরণ করে ৯০° পার্থক্যে, একটি পরিপূর্ণ বৃত্ত তৈরি করে।`,
+    formulae: [['x(t)', '= A cos(2πft)'], ['y(t)', '= A sin(2πft)'], ['T', '= 1/f']],
+    sub: 'traces a perfect circle'
+  },
+  lissajous: {
+    en: `<strong>Lissajous figures</strong> — two independent oscillations at different frequencies along X and Y create complex looping curves. The shape depends on the <em>frequency ratio</em> and <em>phase offset φ</em>.`,
+    bn: `<strong>লিসাজু চিত্র</strong> — ভিন্ন কম্পাঙ্কে X ও Y বরাবর দুটি স্বতন্ত্র দোলন জটিল লুপিং বক্ররেখা তৈরি করে।`,
+    formulae: [['x(t)', '= A cos(2πft + φ)'], ['y(t)', '= A sin(2πf·r·t)'], ['r', '= Y/X freq ratio']],
+    sub: 'φ = phase offset'
+  },
+  damped: {
+    en: `<strong>Damped oscillation</strong> — amplitude decays exponentially due to a resistive force proportional to velocity. The envelope follows <em>A·e^(−bt)</em> where b is the damping coefficient.`,
+    bn: `<strong>অবমন্দিত দোলন</strong> — বেগের সমানুপাতিক প্রতিরোধী বলের কারণে বিস্তার তাৎক্ষণিকভাবে হ্রাস পায়। এনভেলপ অনুসরণ করে <em>A·e^(−bt)</em>।`,
+    formulae: [['x(t)', '= A e^(−bt) sin(2πft)'], ['env', '= ±A e^(−bt)'], ['b', '= damping coeff']],
+    sub: 'b > 0 causes amplitude decay'
+  },
+};
+function switchMode(m) {
+  mode = m;
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', ['vertical','horizontal','circular','lissajous','damped'][i] === m);
+  });
+  document.getElementById('ratioRow').style.display = (m === 'lissajous') ? '' : 'none';
+  document.getElementById('phaseRow').style.display = (m === 'lissajous' || m === 'circular') ? '' : 'none';
+  document.getElementById('dampRow').style.display = (m === 'damped') ? '' : 'none';
+  const def = MODE_DEFS[m];
+  document.getElementById('defText').innerHTML = def.en;
+  document.getElementById('defTextBn').innerHTML = def.bn;
+  const fb = document.getElementById('formulaBlock');
+  fb.innerHTML = def.formulae.map(([l,e]) =>
+    `<div class="formula-row"><span class="f-lbl">${l}</span><span class="f-eq">${e}</span></div>`
+  ).join('') + `<div class="formula-row" style="margin-top:0.3rem"><span class="f-sub">${def.sub}</span></div>`;
+  resetSim();
+}
+// ── SLIDER SYNC ────────────────────────────────────────────────────────────
+function syncCtrl() {
+  document.getElementById('ampDisplay').textContent = document.getElementById('ampSlider').value;
+  document.getElementById('freqDisplay').textContent = parseFloat(document.getElementById('freqSlider').value).toFixed(2);
+  document.getElementById('ratioDisplay').textContent = parseFloat(document.getElementById('ratioSlider').value).toFixed(2);
+  document.getElementById('phaseDisplay').textContent = document.getElementById('phaseSlider').value + '°';
+  document.getElementById('dampDisplay').textContent = parseFloat(document.getElementById('dampSlider').value).toFixed(3);
+  document.getElementById('trailDisplay').textContent = document.getElementById('trailSlider').value;
+}
+// ── STATE ──────────────────────────────────────────────────────────────────
+let simRunning = false;
+let physT = 0;
+let cycles = 0;
+let lastSign = 1;
+let dispHist = [], velHist = [];
+const MAX_HIST = 5000;
+function updateStats(disp, vel, fShow) {
+  document.getElementById('statT').textContent = fShow > 0 ? (1/fShow).toFixed(3) : '—';
+  document.getElementById('statF').textContent = fShow > 0 ? fShow.toFixed(2) : '—';
+  document.getElementById('statX').textContent = disp.toFixed(1);
+  document.getElementById('statCyc').textContent = cycles;
+}
+// ── GRAPHS ─────────────────────────────────────────────────────────────────
+function drawGraph(id, hist, yKey, yLabel, lineColor, fillColor) {
+  const gc = document.getElementById(id);
+  const gw = gc.parentElement.clientWidth;
+  gc.width = gw; gc.height = 116;
+  const ctx = gc.getContext('2d');
+  ctx.clearRect(0, 0, gw, 116);
+  const padL=38, padR=10, padT=8, padB=22;
+  const W = gw-padL-padR, H = 116-padT-padB;
+  ctx.strokeStyle='rgba(144,205,244,0.3)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(padL,padT); ctx.lineTo(padL,padT+H); ctx.lineTo(padL+W,padT+H); ctx.stroke();
+  // Zero line
+  ctx.strokeStyle='rgba(183,148,244,0.15)'; ctx.lineWidth=0.8;
+  ctx.beginPath(); ctx.moveTo(padL,padT+H/2); ctx.lineTo(padL+W,padT+H/2); ctx.stroke();
+  ctx.font='9px Consolas,monospace'; ctx.fillStyle=lineColor; ctx.textAlign='left';
+  ctx.fillText(yLabel, 2, padT+8);
+  ctx.fillStyle='rgba(139,163,187,0.6)'; ctx.fillText('t',padL+W-6,padT+H+16);
+  if (hist.length < 2) return;
+  const maxAbs = Math.max(...hist.map(p=>Math.abs(p[yKey])), 1);
+  const maxT = Math.max(hist[hist.length-1].t, 0.1);
+  // Y ticks
+  [-1,-0.5,0,0.5,1].forEach(frac => {
+    const y = padT+H/2 - frac*(H/2);
+    const v = frac*maxAbs;
+    ctx.strokeStyle='rgba(144,205,244,0.05)'; ctx.lineWidth=0.5;
+    if(frac!==0){ctx.beginPath();ctx.moveTo(padL,y);ctx.lineTo(padL+W,y);ctx.stroke();}
+    ctx.fillStyle='rgba(139,163,187,0.65)'; ctx.textAlign='right'; ctx.font='8px Consolas,monospace';
+    ctx.fillText(v.toFixed(0), padL-3, y+3);
+  });
+  // Area
+  ctx.beginPath();
+  hist.forEach((p,i) => {
+    const px=padL+(p.t/maxT)*W, py=padT+H/2-(p[yKey]/maxAbs)*(H/2);
+    i===0 ? ctx.moveTo(px,padT+H/2) : null;
+    i===0 ? ctx.lineTo(px,py) : ctx.lineTo(px,py);
+  });
+  ctx.lineTo(padL+(hist[hist.length-1].t/maxT)*W, padT+H/2);
+  ctx.closePath(); ctx.fillStyle=fillColor; ctx.fill();
+  // Line
+  ctx.beginPath(); ctx.strokeStyle=lineColor; ctx.lineWidth=1.8;
+  hist.forEach((p,i) => {
+    const px=padL+(p.t/maxT)*W, py=padT+H/2-(p[yKey]/maxAbs)*(H/2);
+    i===0 ? ctx.moveTo(px,py) : ctx.lineTo(px,py);
+  });
+  ctx.stroke();
+  // Dot + label
+  const last=hist[hist.length-1];
+  const dx=padL+(last.t/maxT)*W, dy=padT+H/2-(last[yKey]/maxAbs)*(H/2);
+  ctx.beginPath(); ctx.arc(dx,dy,3,0,Math.PI*2); ctx.fillStyle=lineColor; ctx.fill();
+  ctx.fillStyle=lineColor; ctx.font='bold 8px Consolas,monospace';
+  ctx.textAlign=dx>padL+W*0.7?'right':'left';
+  ctx.fillText(last[yKey].toFixed(1), dx+(ctx.textAlign==='left'?4:-4), dy-5);
+}
+function drawBothGraphs() {
+  drawGraph('gDisp', dispHist, 'x', 'x', '#b794f4', 'rgba(183,148,244,0.1)');
+  drawGraph('gVel', velHist, 'v', 'v', '#90cdf4', 'rgba(144,205,244,0.1)');
+}
+// ── P5 SKETCH ─────────────────────────────────────────────────────────────
+new p5(function(p) {
+  let trail = [];
+  p.setup = function() {
+    const wrap = document.getElementById('canvasWrap');
+    const cnv = p.createCanvas(wrap.clientWidth, Math.max(280, window.innerHeight*0.44));
+    cnv.parent('canvasWrap');
+    p.noLoop();
+  };
+  function getParams() {
+    return {
+      A: parseFloat(document.getElementById('ampSlider').value),
+      f: parseFloat(document.getElementById('freqSlider').value),
+      ratio: parseFloat(document.getElementById('ratioSlider').value),
+      phase: parseFloat(document.getElementById('phaseSlider').value) * Math.PI / 180,
+      b: parseFloat(document.getElementById('dampSlider').value),
+      trail: parseInt(document.getElementById('trailSlider').value),
+    };
+  }
+  p.draw = function() {
+    const { A, f, ratio, phase, b, trail: trailLen } = getParams();
+    const dt = p.deltaTime / 1000;
+    const cx = p.width / 2, cy = p.height / 2;
+    // Physics update
+    if (simRunning) {
+      physT += dt;
+    }
+    // Animation still uses the original light-damping formula (frequency = slider f)
+    const omega = p.TWO_PI * f;
+    const envelope = mode === 'damped' ? Math.exp(-b * physT) : 1;
+    let bx = cx, by = cy;
+    let disp = 0, vel = 0;
+    const scale = 45;
+    switch(mode) {
+      case 'vertical':
+        disp = A * envelope * Math.sin(omega * physT);
+        vel  = A * envelope * omega * Math.cos(omega * physT);
+        bx = cx;
+        by = cy + disp * scale;
+        break;
+      case 'horizontal':
+        disp = A * envelope * Math.cos(omega * physT);
+        vel  = -A * envelope * omega * Math.sin(omega * physT);
+        bx = cx + disp * scale;
+        by = cy;
+        break;
+      case 'circular':
+        bx = cx + A * Math.cos(omega * physT + phase) * scale;
+        by = cy + A * Math.sin(omega * physT) * scale;
+        disp = A * Math.cos(omega * physT + phase);
+        vel  = -A * omega * Math.sin(omega * physT + phase);
+        break;
+      case 'lissajous':
+        bx = cx + A * Math.cos(omega * physT + phase) * scale;
+        by = cy + A * Math.sin(omega * ratio * physT) * scale;
+        disp = A * Math.cos(omega * physT + phase);
+        vel  = -A * omega * Math.sin(omega * physT + phase);
+        break;
+      case 'damped':
+        disp = A * envelope * Math.sin(omega * physT);
+        vel  = A * envelope * (omega * Math.cos(omega * physT) - b * Math.sin(omega * physT));
+        bx = cx;
+        by = cy + disp * scale;
+        break;
+    }
 
+    // Live-readout frequency: make Period visibly react to damping slider
+    let fShow = f;
+    if (mode === 'damped') {
+      // scale so the change is clearly visible across the slider range
+      const factor = Math.sqrt(Math.max(0, 1 - (b / 0.15) * (b / 0.15)));
+      fShow = f * factor;
+    }
+
+    // Record history + cycle count
+    if (simRunning) {
+      if (disp > 0 && lastSign <= 0) cycles++;
+      lastSign = disp > 0 ? 1 : -1;
+
+      dispHist.push({ t: physT, x: disp });
+      velHist.push({ t: physT, v: vel });
+      if (dispHist.length > MAX_HIST) dispHist.shift();
+      if (velHist.length > MAX_HIST) velHist.shift();
+      drawBothGraphs();
+      updateStats(disp, vel, fShow);   // ← Period / Frequency now change with b
+    }
+    // Update trail
+    trail.push({ x: bx, y: by });
+    if (trail.length > trailLen + 1) trail.shift();
+    // ── DRAW ──────────────────────────────────────────────────────────────
+    p.background(6, 12, 32);
+    // Grid dots
+    p.noStroke(); p.randomSeed(42);
+    for(let gx=30; gx<p.width; gx+=40) {
+      for(let gy=30; gy<p.height; gy+=40) {
+        p.fill(183,148,244,16); p.ellipse(gx,gy,1.5);
+      }
+    }
+    // Mode-specific decorations
+    p.noStroke();
+    if (mode === 'vertical' || mode === 'damped') {
+      // Equilibrium line (horizontal)
+      p.stroke(183,148,244,35); p.strokeWeight(1);
+      for(let x=10; x<p.width; x+=18) p.line(x, cy, Math.min(x+10, p.width), cy);
+      // Axis
+      p.stroke(183,148,244,50); p.strokeWeight(1);
+      p.line(cx, 20, cx, p.height-20);
+      // Amplitude markers
+      p.stroke(246,224,94,50); p.strokeWeight(0.8);
+      const Aeff = mode==='damped' ? A*Math.exp(-b*physT) : A;
+      p.line(cx-18, cy-Aeff*scale, cx+18, cy-Aeff*scale);
+      p.line(cx-18, cy+Aeff*scale, cx+18, cy+Aeff*scale);
+      p.noStroke(); p.fill(246,224,94,100); p.textFont('Consolas'); p.textSize(9); p.textAlign(p.LEFT,p.CENTER);
+      p.text(`A=${Aeff.toFixed(1)}`, cx+22, cy-Aeff*scale);
+      // Damped envelope curve
+      if (mode === 'damped' && simRunning) {
+        p.stroke(246,173,85,50); p.strokeWeight(1); p.noFill();
+        p.beginShape();
+        for(let tx=0; tx<=physT; tx+=Math.max(physT/80, 0.001)) {
+          const ey = cy - A*Math.exp(-b*tx)*Math.sin(omega*tx)*scale;
+          p.vertex(p.map(tx, 0, physT, 40, p.width-40), ey);
+        }
+        p.endShape();
+      }
+    }
+    if (mode === 'horizontal') {
+      // Vertical equilibrium
+      p.stroke(183,148,244,35); p.strokeWeight(1);
+      for(let y=10; y<p.height; y+=18) p.line(cx, y, cx, Math.min(y+10, p.height));
+      p.stroke(183,148,244,50); p.strokeWeight(1); p.line(20, cy, p.width-20, cy);
+      p.stroke(246,224,94,50); p.strokeWeight(0.8);
+      p.line(cx-A*scale, cy-18, cx-A*scale, cy+18);
+      p.line(cx+A*scale, cy-18, cx+A*scale, cy+18);
+    }
+    if (mode === 'circular' || mode === 'lissajous') {
+      // Orbit guide circle
+      p.noFill(); p.stroke(183,148,244,20); p.strokeWeight(1);
+      p.ellipse(cx, cy, A*2*scale, A*2*scale);
+      // Center dot
+      p.noStroke(); p.fill(183,148,244,60); p.ellipse(cx, cy, 5);
+    }
+    // Trail
+    if (trail.length > 1) {
+      for(let i=1; i<trail.length; i++) {
+        const t2 = i/trail.length;
+        const r = p.lerp(183,104,t2), g2 = p.lerp(148,211,t2), b2 = p.lerp(244,145,t2);
+        p.stroke(r,g2,b2,t2*200); p.strokeWeight(1.5+t2);
+        p.line(trail[i-1].x, trail[i-1].y, trail[i].x, trail[i].y);
+      }
+      p.noStroke();
+    }
+    // Bob glow
+    const speed = Math.abs(vel);
+    const gA = p.map(speed, 0, A*omega, 20, 120);
+    p.noStroke();
+    p.fill(183,148,244, gA*0.35); p.ellipse(bx,by,44,44);
+    p.fill(183,148,244, gA*0.55); p.ellipse(bx,by,28,28);
+    // Bob
+    p.fill(160,100,240); p.ellipse(bx,by,20,20);
+    p.fill(200,160,255); p.ellipse(bx-4,by-4,7,7);
+    // Displacement arrow (vertical/horizontal/damped)
+    if ((mode==='vertical'||mode==='horizontal'||mode==='damped') && Math.abs(disp)>0.1) {
+      const dir = Math.sign(disp);
+      if (mode==='vertical'||mode==='damped') {
+        p.stroke(104,211,145,160); p.strokeWeight(1.5);
+        p.line(cx+26, cy, cx+26, cy+disp*scale);
+        p.fill(104,211,145); p.noStroke();
+        p.triangle(cx+26, cy+disp*scale+dir*8, cx+22, cy+disp*scale-dir*4, cx+30, cy+disp*scale-dir*4);
+        p.fill(104,211,145,160); p.textFont('Consolas'); p.textSize(9); p.textAlign(p.LEFT,p.CENTER);
+        p.text(`${disp.toFixed(1)}`, cx+34, cy+disp*scale/2);
+      } else {
+        p.stroke(104,211,145,160); p.strokeWeight(1.5);
+        p.line(cx, cy+26, cx+disp*scale, cy+26);
+        p.fill(104,211,145); p.noStroke();
+        p.triangle(cx+disp*scale+dir*8, cy+26, cx+disp*scale-dir*4, cy+22, cx+disp*scale-dir*4, cy+30);
+        p.fill(104,211,145,160); p.textFont('Consolas'); p.textSize(9); p.textAlign(p.CENTER,p.TOP);
+        p.text(`${disp.toFixed(1)}`, cx+disp*scale/2, cy+34);
+      }
+    }
+    // HUD
+    p.fill(0,0,0,120); p.noStroke(); p.rect(8,8,200,76,8);
+    p.textFont('Consolas'); p.textAlign(p.LEFT,p.TOP); p.fill(183,148,244); p.textSize(10.5);
+    p.text(`mode = ${mode}`, 16,16);
+    p.text(`t = ${physT.toFixed(2)} s`, 16,31);
+    p.text(`A = ${A.toFixed(1)}`, 16,46);
+    p.text(`FPS = ${p.frameRate().toFixed(1)}`, 16,61);
+    // Idle prompt
+    if (!simRunning && physT===0) {
+      p.fill(255,255,255,45); p.textFont('Exo 2'); p.textSize(14); p.textAlign(p.CENTER,p.CENTER);
+      p.text('Set parameters and press ▶ Simulate', p.width/2, p.height*0.78);
+    }
+  };
+  p.windowResized = function() {
+    const wrap = document.getElementById('canvasWrap');
+    p.resizeCanvas(wrap.clientWidth, Math.max(280, window.innerHeight*0.44));
+  };
+  window.startSim = function() {
+    trail = [];
+    simRunning = true;
+    p.loop();
+  };
+  window.pauseSim = function() { simRunning = false; };
+  window.resetSim = function() {
+    simRunning = false; physT = 0; cycles = 0; lastSign = 1;
+    trail = []; dispHist = []; velHist = [];
+    document.getElementById('statT').textContent='—';
+    document.getElementById('statF').textContent='—';
+    document.getElementById('statX').textContent='0.0';
+    document.getElementById('statCyc').textContent='0';
+    drawBothGraphs();
+    p.noLoop(); p.redraw();
+  };
+}, 'canvasWrap');
+</script>
+</body>
+</html>
