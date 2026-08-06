@@ -480,7 +480,8 @@ new p5(function(p) {
     const omega0 = p.TWO_PI * f; // natural angular frequency, rad/s
     let bx = cx, by = cy; // bob canvas position
     let disp = 0, vel = 0;
-    const scale = 45;
+    const AMP_MAX = 5; // must match ampSlider's max attribute
+    const scale = (Math.min(p.width, p.height) / 2 * 0.72) / AMP_MAX; // px per unit, calibrated so max amplitude fits
     switch(mode) {
       case 'vertical':
         disp = A * Math.sin(omega);
